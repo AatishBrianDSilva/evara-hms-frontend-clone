@@ -1,0 +1,32 @@
+.layout-container {
+  display: flex;
+  flex-direction: column;
+  min-height: calc(100vh - 60px); /* Adjust based on your Header's height */
+}
+
+.content-area {
+  display: flex;
+  flex-grow: 1;
+}
+
+/* Ensure Sidebar and Header have fixed sizes and do not grow or shrink */
+/* Example: */
+.sidebar {
+  flex: 0 0 312px; /* Adjust based on your Sidebar's width */
+  height: calc(100vh - 100px); /* Full viewport height */ /* Full viewport height */
+  overflow-y: auto; /* Optional: if you want the sidebar to be independently scrollable */
+}
+
+.header {
+  height: 60px;
+  width: 100%;
+  background-color: white;
+  box-shadow: 0 1px 8px rgba(0, 0, 0, 0.15);
+  z-index: 1; /* Make sure header is above content */
+}
+
+main {
+  flex-grow: 1;
+  overflow-y: auto; /* Makes main scrollable when content overflows */
+  padding: 20px; /* Adjust as needed */
+}

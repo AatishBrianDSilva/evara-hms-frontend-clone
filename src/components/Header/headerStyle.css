@@ -1,0 +1,65 @@
+.header {
+  display: flex; /* Make the header a flex container */
+  align-items: center; /* Center items vertically */
+  background-color: white;
+  box-shadow: 0 1px 8px rgba(0, 0, 0, 0.15);
+  border-bottom-left-radius: 12px;
+  border-bottom-right-radius: 12px;
+}
+
+.header-toolbar {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  padding: 10px;
+  width: 100%; /* Full width */
+}
+
+.header-logo-area {
+  display: flex;
+  align-items: center;
+  gap: 10px; /* Add space between logo and title */
+}
+
+.header-logo-text {
+  text-decoration: none;
+  color: #3B4CB8;
+  font-size: 36px;
+  font-style: normal;
+  font-weight: 900;
+  line-height: 40px; /* 111.111% */
+}
+
+.header-right-section {
+  display: flex;
+  align-items: center;
+  gap: 20px; /* Add space between items */
+  margin-inline-end: 10px;
+}
+
+/* Adjust the size of the Avatars if needed */
+.header-avatar .MuiAvatar-root {
+  border-radius: 50%;
+  height: 30px;
+  width: 30px;
+}
+
+.header-settings-menu {
+  display: none;
+  position: absolute;
+  right: 0;
+  background-color: white;
+  box-shadow: 0px 8px 16px 0px rgba(0,0,0,0.2);
+  z-index: 2;
+}
+
+.header-user-settings:hover .header-settings-menu {
+  display: block;
+}
+
+/* Additional styles for the Avatar holding the Dashboard icon */
+.header-logo-area .MuiAvatar-root {
+  background-color: transparent;
+}
+
+/* Ensure the primary color is defined or use a valid color name/hex */

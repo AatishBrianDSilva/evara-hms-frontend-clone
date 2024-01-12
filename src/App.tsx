@@ -1,35 +1,38 @@
-import { useState } from 'react'
-import reactLogo from './assets/react.svg'
-import viteLogo from '/vite.svg'
-import './App.css'
+import { Navigate, Outlet, Route, Routes } from "react-router-dom";
+import "./App.css"
+import { getUserRole } from "./utils/auth";
+import Layout from "./components/Layout/Layout";
+import Console from "./features/Console/Console";
+import IVFRegistration from "./features/IVFRegistration/IVFRegistration";
+import Patients from "./features/Patients/Patients";
+import Appointment from "./features/Appointment/Appointment";
 
-function App() {
-  const [count, setCount] = useState(0)
+type ProtectedRouteType = {
+  allowedRoles: string[];
+};
 
+const ProtectedRoute:React.FC<ProtectedRouteType> = ({ allowedRoles }) => {
+  const userRole = getUserRole(); // Get the current user's role
+
+  return allowedRoles.includes(userRole) ? <Outlet /> : <Navigate to="/login" />;
+};
+
+const App = () => {
   return (
-    <>
-      <div>
-        <a href="https://vitejs.dev" target="_blank" rel="noreferrer noopener">
-          <img src={viteLogo} className="logo" alt="Vite logo" />
-        </a>
-        <a href="https://react.dev" target="_blank" rel="noreferrer noopener">
-          <img src={reactLogo} className="logo react" alt="React logo" />
-        </a>
-      </div>
-      <h1>Vite + React</h1>
-      <div className="card">
-        <button onClick={() => setCount((count) => count + 1)}>
-          count is {count}
-        </button>
-        <p>
-          Edit <code>src/App.tsx</code> and save to test HMR
-        </p>
-      </div>
-      <p className="read-the-docs">
-        Click on the Vite and React logos to learn more
-      </p>
-    </>
-  )
-}
+      <Routes>
+          <Route path="/" element={<Layout />}>
+              <Route index element={<Console />} />
+              <Route element={<ProtectedRoute allowedRoles={['admin']} />}>
+                  <Route path="ivf-registration" element={<IVFRegistration />} />
+                  <Route path="patients" element={<Patients />} />
+                  <Route path="appointments" element={<Appointment />} />
+              </Route>
+          </Route>
+          {/* <Route path="/login" element={<LoginPage />} /> */}
+          {/* Add more routes as needed */}
+      </Routes>
+  );
+};
+
 
 export default App
