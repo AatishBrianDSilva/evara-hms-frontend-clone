@@ -1,6 +1,7 @@
 .sidebar {
   display: flex;
   margin-top: 20px;
+  flex: 0 0 312px;
   width: 275px;
   height: calc(100vh - 130px);
   padding-top: 24px;
@@ -9,7 +10,9 @@
   flex-shrink: 0;
   border-radius: 0px 12px 12px 0px;
   background: #FFF;
+  overflow-y: auto;
 }
+
 
 .sidebar-nav-list {
   margin-top: 10px;

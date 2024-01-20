@@ -1,14 +1,15 @@
-import React, { useState } from 'react'
+import React, { useEffect, useState } from 'react'
 import { useFormik } from 'formik'
 import { PatientRegistrationValidationSchema } from "../../utils/yup"
-import { Button, Checkbox, Divider, FormControlLabel, Grid, MenuItem, Radio, RadioGroup, TextField, Typography } from '@mui/material'
+import { Button, Checkbox, Divider, FormControlLabel, Grid, MenuItem, Radio, RadioGroup, TextField, Typography, useMediaQuery } from '@mui/material'
 import { styled } from '@mui/material/styles';
 import { DatePicker } from '@mui/x-date-pickers'
 import CloudUploadIcon from '@mui/icons-material/CloudUpload';
 
-import axios from 'axios'
+import { useAddPatientMutation } from '../../services/ivfRegistrationApi';
+import { set } from 'date-fns';
 
-const gridSpacing = 5;
+
 
 const VisuallyHiddenInput = styled('input')({
   clip: 'rect(0 0 0 0)',
@@ -24,30 +25,31 @@ const VisuallyHiddenInput = styled('input')({
 
 const RegistrationForm: React.FC = () => {
 
+  const isDesktop = useMediaQuery('(min-width: 600px)');
+  const [columnSpacing, setColumnSpacing] = useState(1);
+  const [rowSpacing, setRowSpacing] = useState(2.5);
+
+  useEffect(() => {
+    if (isDesktop) {
+      setColumnSpacing(2);
+      setRowSpacing(2.5);
+    } else {
+      setColumnSpacing(1);
+      setRowSpacing(2.5);
+    }
+  }, [isDesktop])
+
+
   const [selectedImage, setSelectedImage] = useState<File | null>(null);
-  const [isError, setIsError] = useState(false);
-  const [errorMessage, setErrorMessage] = useState('');
-  const [isSuccess, setIsSuccess] = useState(false);
+  const [addPatient, { isError, isLoading, isSuccess }] = useAddPatientMutation();
 
   const handleSubmit = async (values: any) => {
     try {
-      console.log(selectedImage);
-      const response = await axios.post('https://c41711b7m7.execute-api.ap-south-1.amazonaws.com/patients/add', values, {
-        headers: {
-          'Content-Type': 'application/json',
-        },
-      });
-      console.log(response.data);
+      const response = await addPatient(values).unwrap();
+      console.log(response);
       formik.resetForm();
-      setIsSuccess(true);
-      // Handle response here (e.g., showing a success message)
-
     } catch (error: any) {
-
-      setIsError(true);
-      setErrorMessage(error.message);
-      console.error('Error submitting form:', error);
-      // Handle error here (e.g., showing an error message)
+      // console.error('Error submitting form:', error);
     }
   };
 
@@ -112,11 +114,7 @@ const RegistrationForm: React.FC = () => {
       remarks: '',
     },
     validationSchema: PatientRegistrationValidationSchema,
-    onSubmit: (values) => {
-      console.log(values);
-
-      handleSubmit(values);
-    },
+    onSubmit: handleSubmit,
     validateOnBlur: true,
   })
 
@@ -135,8 +133,8 @@ const RegistrationForm: React.FC = () => {
       <Typography variant="h6" sx={{ fontSize: '18px', fontWeight: 700, marginY: 3 }}>
         Personal Information
       </Typography>
-      <Grid container spacing={gridSpacing}>
-        <Grid item xs={12} sm={6} md={2}>
+      <Grid container rowSpacing={rowSpacing} columnSpacing={columnSpacing}>
+        <Grid item xs={4} sm={6} md={2}>
           <TextField
             select
             fullWidth
@@ -153,7 +151,7 @@ const RegistrationForm: React.FC = () => {
             <MenuItem value="Miss">Miss</MenuItem>
           </TextField>
         </Grid>
-        <Grid item xs={12} sm={6} md={4}>
+        <Grid item xs={8} sm={6} md={4}>
           <TextField
             fullWidth
             id='register-firstName-id'
@@ -179,7 +177,7 @@ const RegistrationForm: React.FC = () => {
             helperText={formik.touched.lastName && formik.errors.lastName}
           />
         </Grid>
-        <Grid item xs={12} sm={6} md={2}>
+        <Grid item xs={8} sm={6} md={2}>
           <TextField
             select
             fullWidth
@@ -195,7 +193,7 @@ const RegistrationForm: React.FC = () => {
             <MenuItem value="Female">Female</MenuItem>
           </TextField>
         </Grid>
-        <Grid item xs={12} sm={6} md={2}>
+        <Grid item xs={4} sm={6} md={2}>
           <TextField
             fullWidth
             id='register-age-id'
@@ -211,6 +209,7 @@ const RegistrationForm: React.FC = () => {
         </Grid>
         <Grid item xs={12} sm={6} md={2}>
           <DatePicker
+            sx={{ width: '100%' }}
             timezone='Asia/Kolkata'
             label="Date of Birth"
             name='dob'
@@ -343,7 +342,7 @@ const RegistrationForm: React.FC = () => {
       <Typography variant="h6" sx={{ fontSize: '18px', fontWeight: 700, marginY: 3 }}>
         Contact Information
       </Typography>
-      <Grid container spacing={gridSpacing}>
+      <Grid container rowSpacing={rowSpacing} columnSpacing={columnSpacing}>
         <Grid item xs={12} sm={6} md={4}>
           <TextField
             fullWidth
@@ -389,7 +388,7 @@ const RegistrationForm: React.FC = () => {
       <Typography variant="h6" sx={{ fontSize: '18px', fontWeight: 700, marginY: 3 }}>
         Gaurdian/Partner Information
       </Typography>
-      <Grid container spacing={gridSpacing}>
+      <Grid container rowSpacing={rowSpacing} columnSpacing={columnSpacing}>
         <Grid item xs={12} sm={12} md={12}>
           <RadioGroup row aria-label="dependentType" defaultValue={"partner"} name="dependentType" value={formik.values.dependentType} onChange={formik.handleChange}>
             <FormControlLabel value="partner" control={<Radio />} label="Partner" />
@@ -454,7 +453,7 @@ const RegistrationForm: React.FC = () => {
       <Typography variant="h6" sx={{ fontSize: '18px', fontWeight: 700, marginY: 3 }}>
         Address
       </Typography>
-      <Grid container spacing={gridSpacing}>
+      <Grid container rowSpacing={rowSpacing} columnSpacing={columnSpacing}>
         <Grid item xs={12} sm={6} md={6}>
           <TextField
             fullWidth
@@ -542,7 +541,7 @@ const RegistrationForm: React.FC = () => {
       <Typography variant="h6" sx={{ fontSize: '18px', fontWeight: 700, marginY: 3 }}>
         Identity Information
       </Typography>
-      <Grid container spacing={gridSpacing}>
+      <Grid container rowSpacing={rowSpacing} columnSpacing={columnSpacing}>
         <Grid item xs={12} sm={6} md={3}>
           <TextField
             select
@@ -610,7 +609,7 @@ const RegistrationForm: React.FC = () => {
       <Typography variant="h6" sx={{ fontSize: '18px', fontWeight: 700, marginY: 3 }}>
         Additional Information
       </Typography>
-      <Grid container spacing={gridSpacing}>
+      <Grid container rowSpacing={rowSpacing} columnSpacing={columnSpacing}>
         <Grid item xs={12} sm={6} md={3}>
           <TextField
             fullWidth
@@ -719,7 +718,7 @@ const RegistrationForm: React.FC = () => {
       <Typography variant="h6" sx={{ fontSize: '18px', fontWeight: 700, marginY: 3 }}>
         Insurance Information
       </Typography>
-      <Grid container spacing={gridSpacing}>
+      <Grid container rowSpacing={rowSpacing} columnSpacing={columnSpacing}>
         <Grid item xs={12} sm={6} md={4}>
           <FormControlLabel label="Patient Insured" control={<Checkbox
             id='register-isPatientInsured-id'
@@ -789,7 +788,7 @@ const RegistrationForm: React.FC = () => {
       <Typography variant="h6" sx={{ fontSize: '18px', fontWeight: 700, marginY: 3 }}>
         Image
       </Typography>
-      <Grid container spacing={gridSpacing}>
+      <Grid container rowSpacing={rowSpacing} columnSpacing={columnSpacing}>
         <Grid item xs={12} sm={6} md={2}>
           <Button component="label" variant="outlined" startIcon={<CloudUploadIcon />}>
             Upload
@@ -814,9 +813,9 @@ const RegistrationForm: React.FC = () => {
       </Grid>
       <Divider sx={{ marginY: 6 }} />
       {/* Submit */}
-      <Grid container spacing={gridSpacing}>
+      <Grid container rowSpacing={rowSpacing} columnSpacing={columnSpacing}>
         <Grid item xs={12} sm={12} md={12} sx={{ display: 'flex', justifyContent: 'flex-end' }}>
-          {formik.isSubmitting ? (
+          {isLoading ? (
             <Button variant="outlined" disabled>
               Saving
             </Button>
@@ -828,7 +827,7 @@ const RegistrationForm: React.FC = () => {
           }
         </Grid>
         <Grid item xs={12} sm={12} md={12} sx={{ display: 'flex', justifyContent: 'flex-end' }}>
-          {isError && <Typography variant="body1" sx={{ color: 'red', marginLeft: 2 }}>{errorMessage}</Typography>}
+          {isError && <Typography variant="body1" sx={{ color: 'red', marginLeft: 2 }}>Unkown Error. Please try again</Typography>}
           {isSuccess && <Typography variant="body1" sx={{ color: 'green', marginLeft: 2 }}>Patient Successfully Registered</Typography>}
         </Grid>
       </Grid>

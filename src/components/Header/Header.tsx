@@ -13,14 +13,18 @@ import Avatar from '@mui/material/Avatar';
 // import MenuItem from '@mui/material/MenuItem';
 import { PhoneCallbackRounded, Dashboard } from '@mui/icons-material';
 import "./headerStyle.css"
+import { useMediaQuery } from '@mui/material';
 // import { Link } from 'react-router-dom';
 
 // const pages = ['Products', 'Pricing', 'Blog'];
 // const settings = ['Profile', 'Account', 'Logout'];
 
 const Header = () => {
+
+    const isDesktop = useMediaQuery('(min-width: 600px)'); // Change the breakpoint as per your requirement
+
     return (
-        <header className="header">
+        isDesktop && <header className="header">
             <div className="header-toolbar">
                 <div className="header-logo-area">
                     <Avatar className='header-logo' style={{ color: '#3B4CB8' }}>
