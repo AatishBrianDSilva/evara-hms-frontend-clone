@@ -22,6 +22,8 @@ const Sidebar: React.FC = () => {
             <div className='sidebar-nav-list'>
                 {navList.map((navItem, index) => (
                     <SideBarNavTab
+                        isAccordion={navItem.isAccordion || false}
+                        accordionItems={navItem.accordionItems || []}
                         key={index}
                         logoSrc={navItem.icon}
                         title={navItem.title}

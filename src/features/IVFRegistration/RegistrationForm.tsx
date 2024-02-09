@@ -2,26 +2,11 @@ import React, { useEffect, useState } from 'react'
 import { useFormik } from 'formik'
 import { PatientRegistrationValidationSchema } from "../../utils/yup"
 import { Button, Checkbox, Divider, FormControlLabel, Grid, MenuItem, Radio, RadioGroup, TextField, Typography, useMediaQuery } from '@mui/material'
-import { styled } from '@mui/material/styles';
 import { DatePicker } from '@mui/x-date-pickers'
 import CloudUploadIcon from '@mui/icons-material/CloudUpload';
 
 import { useAddPatientMutation } from '../../services/ivfRegistrationApi';
-import { set } from 'date-fns';
-
-
-
-const VisuallyHiddenInput = styled('input')({
-  clip: 'rect(0 0 0 0)',
-  clipPath: 'inset(50%)',
-  height: 1,
-  overflow: 'hidden',
-  position: 'absolute',
-  bottom: 0,
-  left: 0,
-  whiteSpace: 'nowrap',
-  width: 1,
-});
+import { VisuallyHiddenInput } from '../../components/Utils/VisuallyHiddenInput';
 
 const RegistrationForm: React.FC = () => {
 
@@ -75,7 +60,7 @@ const RegistrationForm: React.FC = () => {
       alernativeMobile: '',
       email: '',
       //Dependent Details
-      dependentType: '',
+      dependentType: 'partner',
       dependentName: '',
       dependentRelation: '',
       dependentMobile: '',
@@ -390,7 +375,7 @@ const RegistrationForm: React.FC = () => {
       </Typography>
       <Grid container rowSpacing={rowSpacing} columnSpacing={columnSpacing}>
         <Grid item xs={12} sm={12} md={12}>
-          <RadioGroup row aria-label="dependentType" defaultValue={"partner"} name="dependentType" value={formik.values.dependentType} onChange={formik.handleChange}>
+          <RadioGroup row aria-label="dependentType" defaultValue={formik.initialValues.dependentType} name="dependentType" value={formik.values.dependentType} onChange={formik.handleChange}>
             <FormControlLabel value="partner" control={<Radio />} label="Partner" />
             <FormControlLabel value="gaurdian" control={<Radio />} label="Gaurdian" />
           </RadioGroup>

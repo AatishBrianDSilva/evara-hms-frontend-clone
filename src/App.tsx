@@ -6,9 +6,6 @@ import Console from "./features/Console/Console";
 import IVFRegistration from "./features/IVFRegistration/IVFRegistration";
 import Patients from "./features/Patients/Patients";
 import Appointment from "./features/Appointment/Appointment";
-import Sidebar from "./components/SideBar/SideBar";
-import { useMediaQuery } from "@mui/material";
-import MobileSidebar from "./components/MobileSideBar/MobileSidebar";
 
 type ProtectedRouteType = {
   allowedRoles: string[];
@@ -22,18 +19,15 @@ const ProtectedRoute: React.FC<ProtectedRouteType> = ({ allowedRoles }) => {
 
 const App = () => {
 
-  const isMobile = useMediaQuery('(max-width: 600px)');
-
   return (
     <Routes>
       <Route path="/" element={<Layout />}>
         <Route index element={<Console />} />
         <Route element={<ProtectedRoute allowedRoles={['admin']} />}>
           <Route path="ivf-registration" element={<IVFRegistration />} />
-          <Route path="patients" element={<Patients />} />
+          <Route path="patients/*" element={<Patients />} />
           <Route path="appointments" element={<Appointment />} />
         </Route>
-        {isMobile && (<Route path="more" element={<MobileSidebar />} />)}
         <Route path="*" element={<Navigate to="/" />} />
       </Route>
       {/* <Route path="/login" element={<LoginPage />} /> */}
@@ -41,6 +35,5 @@ const App = () => {
     </Routes>
   );
 };
-
 
 export default App

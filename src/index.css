@@ -8,7 +8,7 @@ body {
   display: flex;
   flex-direction: column;
   flex: 1;
-  min-height: calc(100vh - 115px);
+  min-height: calc(100vh - 130px);
   max-height: calc(100vh - 130px);
   background-color: white;
   border-radius: 12px;

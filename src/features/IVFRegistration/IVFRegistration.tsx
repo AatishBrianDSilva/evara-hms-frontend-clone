@@ -39,7 +39,7 @@ const IVFRegistration = () => {
 
   const [value, setValue] = React.useState(0);
 
-  const handleChange = (event: React.SyntheticEvent, newValue: number) => {
+  const handleChange = (_: React.SyntheticEvent, newValue: number) => {
     setValue(newValue);
   };
 
@@ -47,7 +47,7 @@ const IVFRegistration = () => {
     <div className='main-container'>
       <Box sx={{ width: '100%' }}>
         <Box sx={{ borderBottom: 1, borderColor: 'divider' }}>
-          <Tabs value={value} onChange={handleChange} aria-label="basic tabs example">
+          <Tabs value={value} visibleScrollbar onChange={handleChange} variant='scrollable' aria-label="basic tabs example">
             <Tab label="Patients" {...a11yProps(0)} />
             <Tab label="Donor From bank" {...a11yProps(1)} />
             <Tab label="Donor From hospital" {...a11yProps(2)} />
