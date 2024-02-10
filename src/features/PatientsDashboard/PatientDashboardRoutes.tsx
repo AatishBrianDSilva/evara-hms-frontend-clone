@@ -8,6 +8,7 @@ import TreatmentCyclePregnancyOutcome from './TreatmentCyclePregnancyOutcome'
 import AndrologySemenAnalysis from './AndrologySemenAnalysis'
 import AndrologySpermDFI from './AndrologySpermDFI'
 import MedicalRecords from './MedicalRecords'
+import Investigations from './Investigations'
 
 const PatientsDashboardRoutes: React.FC = () => {
   return (
@@ -17,7 +18,7 @@ const PatientsDashboardRoutes: React.FC = () => {
       <Route path="/history" element={<div>Patients History</div>} />
       <Route path="/visit-history" element={<div>Patients Visit History</div>} />
       <Route path="/medical-records" element={<MedicalRecords />} />
-      <Route path="/invesigations" element={<div>Patients Investigation</div>} />
+      <Route path="/investigations" element={<Investigations />} />
       <Route path="/treatment/treatment-cycle" element={<TreatmentCycles />} />
       <Route path="/treatment/oocyte-aspiration-report" element={<TreatmentAspirationReport />} />
       <Route path="/treatment/treatment-drugs" element={<TreatmentDrugs />} />

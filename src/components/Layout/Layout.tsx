@@ -5,6 +5,7 @@ import PatientSidebar from '../SideBar/PatientSidebar.tsx';
 import "./layoutStyle.css"
 import BottomTabNavigator from '../BottomTabNavigator/BottomTabNavigator.tsx';
 import { useMediaQuery } from '@mui/material';
+import MobileHeader from '../MobileHeader/MobileHeader.tsx';
 
 const Layout: React.FC = () => {
     const isMobile = useMediaQuery('(max-width: 600px)');
@@ -20,7 +21,7 @@ const Layout: React.FC = () => {
 
     return (
         <div className="layout-container">
-            <Header />
+            {isMobile ? <MobileHeader /> : <Header />}
             <div className={`content-area`}>
                 {!isMobile && sidebar}
                 <main>

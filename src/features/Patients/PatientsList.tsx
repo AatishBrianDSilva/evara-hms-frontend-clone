@@ -1,9 +1,10 @@
-import { Box, Button, TextField } from '@mui/material'
+import { Box, Button, Grid, TextField } from '@mui/material'
 import React from 'react'
 import { DatePicker } from '@mui/x-date-pickers'
 import { DataGrid, GridColDef } from '@mui/x-data-grid'
 import { setSelectedPatientId } from './patientsSlice'
 import { useDispatch } from 'react-redux'
+import useResponsiveColumns from '../../hooks/useResponsiveColumn'
 
 const patients = [
   {
@@ -161,7 +162,7 @@ const PatientsList: React.FC = () => {
     return <Button variant="text" size='small' color="primary" onClick={() => handleClick(params)}>{params.formattedValue}</Button>
   }
 
-  const columns: GridColDef[] = [
+  const columnsConfig: GridColDef[] = [
     { field: 'id', headerName: 'ID', flex: 1, renderCell: viewPatient }, // Adjust the flex values based on your needs
     { field: 'name', headerName: 'Name', flex: 1, },
     { field: 'gender', headerName: 'Gender', flex: 1 },
@@ -178,15 +179,28 @@ const PatientsList: React.FC = () => {
     { field: 'status', headerName: 'Status', flex: 1 },
   ];
 
+  const columns = useResponsiveColumns(columnsConfig);
+
   return (
     <div className="main-container">
-      <Box display={"flex"} gap={3} mt={2}>
-        <DatePicker label="Start Date" format='dd-MM-yyyy' />
-        <DatePicker label="End Date" format='dd-MM-yyyy' />
-        <TextField label="Search" variant="outlined" placeholder='ID/Name/Mobile' />
-        <Button variant="outlined" color="primary">Search</Button>
-        <Button variant="outlined" color="error">Export</Button>
-      </Box>
+      <Grid container spacing={3} mt={2}>
+        {/* Use Grid item for each child */}
+        <Grid item>
+          <DatePicker label="Start Date" format='dd-MM-yyyy' />
+        </Grid>
+        <Grid item>
+          <DatePicker label="End Date" format='dd-MM-yyyy' />
+        </Grid>
+        <Grid item>
+          <TextField label="Search" variant="outlined" placeholder='ID/Name/Mobile' />
+        </Grid>
+        <Grid item>
+          <Button variant="outlined" color="primary">Search</Button>
+        </Grid>
+        <Grid item>
+          <Button variant="outlined" color="error">Export</Button>
+        </Grid>
+      </Grid>
       <Box sx={{ mt: 5, bgcolor: 'white' }}>
         <DataGrid
           autoHeight

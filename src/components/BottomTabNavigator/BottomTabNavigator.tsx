@@ -1,74 +1,74 @@
-import { BottomNavigation, BottomNavigationAction, Paper, useMediaQuery } from '@mui/material'
-import React, { useEffect } from 'react'
-
+import React, { useEffect, useState } from 'react';
+import { BottomNavigation, BottomNavigationAction, Paper, useMediaQuery } from '@mui/material';
 import { Home, Call, HealingSharp, AccountCircleOutlined, MoreHoriz } from '@mui/icons-material';
-import { Location, useLocation, useNavigate } from 'react-router-dom';
+import { useLocation, useNavigate } from 'react-router-dom';
 import { useDispatch, useSelector } from 'react-redux';
 import { openMoreModal } from '../../features/More/moreSlice';
 import More from '../../features/More/More';
 import { RootState } from '../../app/store';
 
+interface NavItem {
+  value?: string;
+  label: string;
+  icon: React.ReactElement;
+  modal?: string;
+}
 
 const BottomTabNavigator: React.FC = () => {
   const isMobile = useMediaQuery('(max-width: 600px)');
   const navigate = useNavigate();
   const location = useLocation();
   const dispatch = useDispatch();
-
-  const [value, setValue] = React.useState(location.pathname);
   const patientId = useSelector((state: RootState) => state.patients.selectedPatientId);
 
-  useEffect(() => {
-    // Update the current value based on location changes
-    const handleLocationChange = (location: Location<any>) => {
-      setValue(location.pathname);
-    };
+  const [value, setValue] = useState(location.pathname);
 
-    // Listen for location changes
-    handleLocationChange(location);
-    // Optionally, listen for changes in history if using react-router's history to manage navigation
+  useEffect(() => {
+    setValue(location.pathname);
   }, [location]);
 
-  if (isMobile && location.pathname.startsWith("/patients/dashboard")) {
-    return (
-      <Paper sx={{ position: 'fixed', bottom: 0, left: 0, right: 0 }} elevation={3}>
-        <BottomNavigation
-          showLabels
-          value={value}
-          onChange={(_, newValue) => {
-            setValue(newValue);
-            navigate(newValue);
-          }}
-        >
-          <BottomNavigationAction value={`/patients/dashboard/${patientId}`} label="Home" icon={<Home />} />
-          <BottomNavigationAction value={`/patients/dashboard/${patientId}/treatment/treatment-cycle`} label="Treatment" icon={<HealingSharp />} />
-          <BottomNavigationAction value={`/patients/dashboard/${patientId}/demographics`} label="Patient" icon={<AccountCircleOutlined />} />
-          <BottomNavigationAction onClick={() => dispatch(openMoreModal("patient"))} label="More" icon={<MoreHoriz />} />
-        </BottomNavigation>
-        <More />
-      </Paper>
-    )
-  }
-  else if (isMobile) {
-    return (
-      <Paper sx={{ position: 'fixed', bottom: 0, left: 0, right: 0 }} elevation={3}>
-        <BottomNavigation
-          showLabels
-          value={value}
-          onChange={(_, newValue) => {
-            setValue(newValue);
-            navigate(newValue);
-          }}
-        >
-          <BottomNavigationAction value={"/"} label="Home" icon={<Home />} />
-          <BottomNavigationAction value={"/support"} label="Support" icon={<Call />} />
-          <BottomNavigationAction value={"/profile"} label="Profile" icon={<AccountCircleOutlined />} />
-          <BottomNavigationAction onClick={() => dispatch(openMoreModal("home"))} label="More" icon={<MoreHoriz />} />
-        </BottomNavigation>
-        <More />
-      </Paper>
-    )
-  }
-}
+  const patientDashboardNavItems: NavItem[] = [
+    { value: `/patients/dashboard/${patientId}`, label: 'Home', icon: <Home /> },
+    { value: `/patients/dashboard/${patientId}/treatment/treatment-cycle`, label: 'Treatment', icon: <HealingSharp /> },
+    { value: `/patients/dashboard/${patientId}/demographics`, label: 'Patient', icon: <AccountCircleOutlined /> },
+    { label: 'More', icon: <MoreHoriz />, modal: "patient" },
+  ];
 
-export default BottomTabNavigator
+  const generalNavItems: NavItem[] = [
+    { value: "/", label: "Home", icon: <Home /> },
+    { value: "/support", label: "Support", icon: <Call /> },
+    { value: "/profile", label: "Profile", icon: <AccountCircleOutlined /> },
+    { label: 'More', icon: <MoreHoriz />, modal: "home" },
+  ];
+
+  const navItems = location.pathname.startsWith("/patients/dashboard") ? patientDashboardNavItems : generalNavItems;
+
+  if (!isMobile) {
+    return null; // Do not render this component on non-mobile devices
+  }
+
+  return (
+    <Paper sx={{ position: 'fixed', bottom: 0, left: 0, right: 0, zIndex: 2 }} elevation={3}>
+      <BottomNavigation
+        showLabels
+        value={value}
+        onChange={(_, newValue) => {
+          const selectedItem = navItems.find(item => item.value === newValue || item.label === newValue);
+          if (selectedItem?.modal) {
+            dispatch(openMoreModal(selectedItem.modal));
+          } else if (selectedItem?.value) {
+            setValue(newValue);
+            navigate(newValue);
+          }
+        }}
+      >
+        {navItems.map(({ value, label, icon, modal }) => (
+          <BottomNavigationAction key={label} value={value || label} label={label} icon={icon} onClick={modal ? () => dispatch(openMoreModal(modal)) : undefined} />
+        ))}
+      </BottomNavigation>
+      <More />
+    </Paper>
+  );
+};
+
+export default BottomTabNavigator;

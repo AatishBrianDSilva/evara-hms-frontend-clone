@@ -53,7 +53,7 @@ const More: React.FC = () => {
         sx={{
           width: '100%', // Takes full width
           height: '100%', // Takes full height
-          maxHeight: '80vh', // Adjusts max height to ensure it doesn't overflow the viewport
+          maxHeight: '60vh', // Adjusts max height to ensure it doesn't overflow the viewport
           overflow: 'auto', // Adds scroll to the content if overflow
           borderRadius: '10px', // Rounded borders
           bgcolor: 'background.paper', // Background color from theme
