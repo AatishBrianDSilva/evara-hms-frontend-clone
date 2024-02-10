@@ -9,6 +9,8 @@ import AndrologySemenAnalysis from './AndrologySemenAnalysis'
 import AndrologySpermDFI from './AndrologySpermDFI'
 import MedicalRecords from './MedicalRecords'
 import Investigations from './Investigations'
+import AndrologySpermFreezing from './AndrologySpermFreezing'
+import AndrologySpermPreparation from './AndrologySpermPreparation'
 
 const PatientsDashboardRoutes: React.FC = () => {
   return (
@@ -25,8 +27,8 @@ const PatientsDashboardRoutes: React.FC = () => {
       <Route path="/treatment/cycle-pregnancy-outcome" element={<TreatmentCyclePregnancyOutcome />} />
       <Route path="/andrology/semen-analysis" element={<AndrologySemenAnalysis />} />
       <Route path="/andrology/sperm-dfi" element={<AndrologySpermDFI />} />
-      <Route path="/andrology/sperm-freezing" element={<AndrologySemenAnalysis />} />
-      <Route path="/andrology/sperm-preparation" element={<AndrologySemenAnalysis />} />
+      <Route path="/andrology/sperm-freezing" element={<AndrologySpermFreezing />} />
+      <Route path="/andrology/sperm-preparation" element={<AndrologySpermPreparation />} />
       <Route path="/andrology/iui-h" element={<AndrologySemenAnalysis />} />
       <Route path="/andrology/iui-d" element={<AndrologySemenAnalysis />} />
       <Route path="/andrology/tesa" element={<AndrologySemenAnalysis />} />

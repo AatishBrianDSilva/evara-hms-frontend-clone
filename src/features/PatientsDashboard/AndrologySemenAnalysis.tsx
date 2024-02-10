@@ -7,8 +7,9 @@ import { DatePicker, TimePicker } from '@mui/x-date-pickers'
 import { DataGrid, GridColDef } from '@mui/x-data-grid'
 import { VisuallyHiddenInput } from '../../components/Utils/VisuallyHiddenInput'
 import SemenAnalysisTable from '../../components/SemenAnalysisTable/SemenAnalysisTable';
+import useResponsiveColumns from '../../hooks/useResponsiveColumn';
 
-const columns: GridColDef[] = [
+const columnsConfig: GridColDef[] = [
   { field: 'date', headerName: 'Date', type: 'date', flex: 1 },
   { field: 'time', headerName: 'Time Of Collection', type: 'time', flex: 1 },
   { field: 'createdBy', headerName: 'Created By', flex: 1 },
@@ -19,6 +20,9 @@ const columns: GridColDef[] = [
 ]
 
 const AndrologySemenAnalysis: React.FC = () => {
+
+  const columns = useResponsiveColumns(columnsConfig)
+
   return (
     <div className='main-container'>
       <PatientInfo />

@@ -6,6 +6,8 @@ import Typography from '@mui/material/Typography';
 import IconButton from '@mui/material/IconButton';
 import ArrowBackIosIcon from '@mui/icons-material/ArrowBackIos';
 import { useLocation, useNavigate } from 'react-router-dom';
+import { Avatar } from '@mui/material';
+import { Dashboard } from '@mui/icons-material';
 
 const MobileHeader: React.FC = () => {
   const location = useLocation();
@@ -29,7 +31,9 @@ const MobileHeader: React.FC = () => {
     <Box sx={{ flexGrow: 1 }}>
       <AppBar sx={{ backgroundColor: 'white' }} position="fixed">
         <Toolbar>
-          {!shouldHideBackButton() && (
+          {shouldHideBackButton() ? (<Avatar className='header-logo' style={{ color: '#3B4CB8', backgroundColor: 'transparent' }}>
+            <Dashboard />
+          </Avatar>) : (
             <IconButton
               size="small"
               edge="start"

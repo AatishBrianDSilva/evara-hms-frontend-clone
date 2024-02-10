@@ -1,10 +1,11 @@
 import React from 'react'
 import TreatmentCyclesTable from './TreatmentCyclesTable'
 import PatientInfo from './PatientInfo'
-import { Box, Button, Grid, IconButton, MenuItem, Paper, Tab, Tabs, TextField, Typography } from '@mui/material'
+import { Box, Button, Divider, Grid, IconButton, MenuItem, Paper, Tab, Tabs, TextField, Typography } from '@mui/material'
 import { DataGrid, GridColDef } from '@mui/x-data-grid';
 import { Clear, Check } from "@mui/icons-material"
 import { DateTimePicker } from '@mui/x-date-pickers';
+import useResponsiveColumns from '../../hooks/useResponsiveColumn';
 
 
 interface TabPanelProps {
@@ -13,7 +14,7 @@ interface TabPanelProps {
   value: number;
 }
 
-const medicalRecordsColumn: GridColDef[] = [
+const medicalRecordsColumnConfig: GridColDef[] = [
   { field: 'subject', headerName: 'Subject', flex: 1 },
   { field: 'description', headerName: 'Description', flex: 1 },
   { field: 'createdBy', headerName: 'Created By', flex: 1 },
@@ -22,7 +23,7 @@ const medicalRecordsColumn: GridColDef[] = [
   { field: 'modifiedAt', headerName: 'Modified At', type: 'date', flex: 1 },
 ]
 
-const physicalCharColumns: GridColDef[] = [
+const physicalCharColumnsConfig: GridColDef[] = [
   { field: 'id', headerName: 'S.No', flex: 1 },
   { field: 'body_temp', headerName: 'Body Temperature', flex: 1 },
   { field: 'heart_rate', headerName: 'Heart Rate', flex: 1 },
@@ -67,6 +68,9 @@ const MedicalRecords: React.FC = () => {
   const handleChange = (_: React.SyntheticEvent, newValue: number) => {
     setValue(newValue);
   };
+
+  const medicalRecordsColumn = useResponsiveColumns(medicalRecordsColumnConfig);
+  const physicalCharColumns = useResponsiveColumns(physicalCharColumnsConfig);
 
   const renderPhysicalCharactertistics = () => {
     return (
@@ -177,21 +181,29 @@ const MedicalRecords: React.FC = () => {
     )
   }
 
+
   const addMedicalRecord = () => {
     return (
       <>
         <Typography variant='subtitle1' mb={2}>
           Add New Record
         </Typography>
+
+        {/* Date and Time Picker */}
         <Grid container spacing={2} mb={2}>
-          <Grid item lg={12}>
+          <Grid item xs={12}> {/* Adjusted for full width on all screen sizes */}
             <DateTimePicker
               label="Date and Time"
               value={new Date()}
               onChange={() => { }}
+              sx={{ width: '100%' }}
             />
           </Grid>
-          <Grid item lg={4}>
+        </Grid>
+
+        {/* Subject */}
+        <Grid container spacing={2} mb={2}>
+          <Grid item xs={12} lg={4}> {/* Responsive adjustments */}
             <TextField
               id="subject"
               label="Subject"
@@ -204,8 +216,9 @@ const MedicalRecords: React.FC = () => {
           </Grid>
         </Grid>
 
+        {/* Descriptions */}
         <Grid container spacing={2} mb={2}>
-          <Grid item lg={6}>
+          <Grid item xs={12} lg={6}>
             <TextField
               multiline
               minRows={2}
@@ -214,10 +227,7 @@ const MedicalRecords: React.FC = () => {
               fullWidth
             />
           </Grid>
-        </Grid>
-
-        <Grid container spacing={2} mb={2}>
-          <Grid item lg={6}>
+          <Grid item xs={12} lg={6}>
             <TextField
               multiline
               minRows={2}
@@ -228,108 +238,50 @@ const MedicalRecords: React.FC = () => {
           </Grid>
         </Grid>
 
+        {/* Male Issues */}
         <Typography variant='subtitle1' color={"textSecondary"} mb={1}>
           Male Issues
         </Typography>
         <Grid container spacing={2} mb={2}>
-          <Grid item lg={1}>
-            <TextField
-              id="male-issues-age"
-              label="Age"
-              fullWidth
-            />
-          </Grid>
-          <Grid item lg={1}>
-            <TextField
-              id="male-issues-bmi"
-              label="BMI"
-              fullWidth
-            />
-          </Grid>
-          <Grid item lg={8}>
-            <TextField
-              multiline
-              minRows={1}
-              id="male-issues-sa"
-              label="SA"
-              fullWidth
-            />
+          <Grid item container gap={2} xs={12} lg={6}>
+            <TextField id="male-issues-age" label="Age" fullWidth />
+            <TextField id="male-issues-bmi" label="BMI" fullWidth />
+            <TextField multiline minRows={2} id="male-issues-sa" label="SA" fullWidth />
           </Grid>
         </Grid>
 
+        {/* Female Issues */}
         <Typography variant='subtitle1' color={"textSecondary"} mb={1}>
           Female Issues
         </Typography>
-        <Grid container spacing={2} mb={4}>
-          <Grid item lg={1}>
-            <TextField
-              id="female-issues-age"
-              label="Age"
-              fullWidth
-            />
-          </Grid>
-          <Grid item lg={1}>
-            <TextField
-              id="female-issues-bmi"
-              label="BMI"
-              fullWidth
-            />
-          </Grid>
-          <Grid item lg={4}>
-            <TextField
-              multiline
-              minRows={1}
-              id="female-issues-amh"
-              label="AMH"
-              fullWidth
-            />
-          </Grid>
-          <Grid item lg={4}>
-            <TextField
-              multiline
-              minRows={1}
-              id="female-issues-3dscan"
-              label="3D Scan"
-              fullWidth
-            />
+        <Grid container spacing={2} mb={2}>
+          <Grid item container gap={2} xs={12} lg={6}>
+            <TextField id="female-issues-age" label="Age" fullWidth />
+            <TextField id="female-issues-bmi" label="BMI" fullWidth />
+            <TextField multiline minRows={2} id="female-issues-amh" label="AMH" fullWidth />
+            <TextField multiline minRows={2} id="female-issues-3dscan" label="3D Scan" fullWidth />
           </Grid>
         </Grid>
 
-        <Grid container spacing={2} mb={2}>
-          <Grid item lg={6}>
-            <TextField
-              multiline
-              minRows={2}
-              id="prev-cycles"
-              label="Previous Cycles"
-              fullWidth
-            />
-          </Grid>
-        </Grid>
-        <Grid container spacing={2} mb={2}>
-          <Grid item lg={6}>
-            <TextField
-              multiline
-              minRows={2}
-              id="plan"
-              label="Plan"
-              fullWidth
-            />
-          </Grid>
-        </Grid>
-        <Grid container spacing={2} mb={2}>
-          <Grid item lg={6}>
-            <TextField
-              multiline
-              minRows={2}
-              id="review"
-              label="Review"
-              fullWidth
-            />
-          </Grid>
-        </Grid>
+        <Divider sx={{ mb: 2 }} />
 
-        <Box display={"flex"} justifyContent={"flex-end"} alignItems={"center"} gap={2} mb={2} >
+        {/* Additional Sections */}
+        {['Previous Cycles', 'Plan', 'Review'].map((label, index) => (
+          <Grid container spacing={2} mb={2} key={index}>
+            <Grid item xs={12} lg={6}>
+              <TextField
+                multiline
+                minRows={2}
+                id={label.toLowerCase().replace(/\s+/g, '-')}
+                label={label}
+                fullWidth
+              />
+            </Grid>
+          </Grid>
+        ))}
+
+        {/* Action Buttons */}
+        <Box sx={{ display: "flex", justifyContent: "flex-end", gap: 2, mb: 2 }}>
           <Button variant='contained' color='error' sx={{ width: 'fit-content' }}>
             Save
           </Button>
@@ -338,9 +290,8 @@ const MedicalRecords: React.FC = () => {
           </Button>
         </Box>
       </>
-    )
-  }
-
+    );
+  };
 
   const renderDonorCharactertistics = () => {
     // Dummy data for demonstration
