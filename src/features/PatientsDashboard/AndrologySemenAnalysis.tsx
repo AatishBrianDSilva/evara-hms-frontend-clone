@@ -4,10 +4,11 @@ import { Box, Button, Grid, MenuItem, TextField, Typography } from '@mui/materia
 import TreatmentCyclesTable from './TreatmentCyclesTable'
 import CloudUploadIcon from '@mui/icons-material/CloudUpload';
 import { DatePicker, TimePicker } from '@mui/x-date-pickers'
-import { DataGrid, GridColDef } from '@mui/x-data-grid'
+import { GridColDef } from '@mui/x-data-grid'
 import { VisuallyHiddenInput } from '../../components/Utils/VisuallyHiddenInput'
 import SemenAnalysisTable from '../../components/SemenAnalysisTable/SemenAnalysisTable';
 import useResponsiveColumns from '../../hooks/useResponsiveColumn';
+import CustomDataGrid from '../../components/Table/CustomDataGrid';
 
 const columnsConfig: GridColDef[] = [
   { field: 'date', headerName: 'Date', type: 'date', flex: 1 },
@@ -32,23 +33,18 @@ const AndrologySemenAnalysis: React.FC = () => {
       <Typography variant='h6' sx={{ mt: 2, mb: 2 }}>Semen Analysis </Typography>
 
       <Box display={"flex"} gap={2} mb={2} >
-        <Button variant='contained' color='error' sx={{ width: 'fit-content' }}>
+        <Button variant='outlined' color='primary' sx={{ width: 'fit-content' }}>
           Add Semen
         </Button>
-        <Button variant='contained' sx={{ width: 'fit-content' }}>
+        <Button variant='contained' color='secondary' sx={{ width: 'fit-content' }}>
           Export
         </Button>
       </Box>
       <Box sx={{ mb: 2 }}>
-        <DataGrid
+        <CustomDataGrid
           rows={[]}
           columns={columns}
-          autoHeight
-          initialState={{
-            pagination: {
-              paginationModel: { page: 0, pageSize: 5 },
-            },
-          }}
+
           pageSizeOptions={[5, 10]}
         />
       </Box>
@@ -248,10 +244,10 @@ const AndrologySemenAnalysis: React.FC = () => {
       </Grid>
 
       <Box display={"flex"} justifyContent={"center"} alignItems={"center"} gap={2} mb={2} >
-        <Button variant='contained' color='error' sx={{ width: 'fit-content' }}>
+        <Button variant='contained' color='primary' sx={{ width: 'fit-content' }}>
           Save
         </Button>
-        <Button variant='contained' sx={{ width: 'fit-content' }}>
+        <Button variant='contained' color='secondary' sx={{ width: 'fit-content' }}>
           Cancel
         </Button>
       </Box>

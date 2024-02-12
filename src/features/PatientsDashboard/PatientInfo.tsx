@@ -34,7 +34,7 @@ const PatientInfoItem: React.FC<PatientInfoItemProps> = ({ title, value, clickab
     <Box display="flex" justifyContent="space-between" alignItems="center" mb={2}>
       <Typography variant="body2" color="textSecondary">
         <strong>{title}</strong>
-        {clickable && <Button sx={{ ml: 1, color: 'blue' }} size="small" onClick={onclick}>{clickable}</Button>}
+        {clickable && <Button sx={{ ml: 1 }} color='secondary' size="small" onClick={onclick}>{clickable}</Button>}
       </Typography>
       <Typography variant="body2">{value}</Typography>
     </Box>
@@ -59,7 +59,7 @@ const PatientInfo: React.FC = () => {
     }}>
       <Box sx={{ width: isMobile ? '100%' : 'auto', textAlign: 'center', display: 'flex', flexDirection: 'column', justifyContent: 'space-between', alignItems: 'center' }}>
         <img src={data.image} alt="Patient" style={{ width: '100%', maxWidth: '100px', borderRadius: '4px' }} />
-        <Button variant='text' sx={{ color: 'blue' }}>Book Appointment</Button>
+        <Button variant='text' color='secondary' >Book Appointment</Button>
       </Box>
       <Box sx={{ flexGrow: 1 }}>
         <PatientInfoItem title="Name:" value={data.name} />
@@ -68,7 +68,7 @@ const PatientInfo: React.FC = () => {
         <PatientInfoItem title="Gender:" value={data.gender} />
         <PatientInfoItem title="Patient Id:" value={data.patientId} />
         <PatientInfoItem title="Marketing Person:" value={data.marketingPerson} />
-        <Button variant='text' sx={{ color: 'blue' }}>Print Sticker</Button>
+        <Button variant='text' color='secondary' >Print Sticker</Button>
       </Box>
       <Box sx={{ flexGrow: 1 }}>
         <PatientInfoItem title="Partner:" clickable='Add / Edit' value={data.partner} />
@@ -77,15 +77,15 @@ const PatientInfo: React.FC = () => {
         <PatientInfoItem title="Financial:" value={data.financial} />
         <PatientInfoItem title="Referred By:" value={data.referredBy} />
         <PatientInfoItem title="Gametes:" clickable='Add Gametes' value={data.gametes} />
-        <Button variant='text' sx={{ color: 'blue' }}>Print Label</Button>
+        <Button variant='text' color='secondary' >Print Label</Button>
       </Box>
       <Box sx={{ flexGrow: 1, display: 'flex', flexDirection: 'column', gap: 1 }}>
-        <Button variant='text' sx={{ color: 'blue' }}>Add Alert</Button>
-        <Box sx={{ bgcolor: '#337ab7', color: 'white', p: 1 }}>
+        <Button variant='text' color='secondary' >Add Alert</Button>
+        <Box sx={{ bgcolor: theme.palette.primary.light, color: 'white', p: 1, borderRadius: 2 }}>
           <Typography>Alerts</Typography>
         </Box>
-        <Button variant='text' sx={{ color: 'blue' }}>Add Notes</Button>
-        <Box sx={{ bgcolor: '#337ab7', color: 'white', p: 1 }}>
+        <Button variant='text' color='secondary' >Add Notes</Button>
+        <Box sx={{ bgcolor: theme.palette.primary.light, color: 'white', p: 1, borderRadius: 2 }}>
           <Typography>Notes</Typography>
           <ul style={{ margin: 0, paddingLeft: theme.spacing(2) }}>
             <li>Male Issues</li>

@@ -1,11 +1,11 @@
 import { Box, Button, Checkbox, FormControlLabel, Grid, MenuItem, Tab, Tabs, TextField, Typography } from '@mui/material'
 import React from 'react'
-import CustomTable from '../../components/Table/Table'
-import { DataGrid, GridColDef } from '@mui/x-data-grid';
+import { GridColDef } from '@mui/x-data-grid';
 import PatientInfo from './PatientInfo';
 import { DatePicker, DateTimePicker } from '@mui/x-date-pickers';
 import TreatmentCyclesTable from './TreatmentCyclesTable';
 import useResponsiveColumns from '../../hooks/useResponsiveColumn';
+import CustomDataGrid from '../../components/Table/CustomDataGrid';
 
 interface TabPanelProps {
   children?: React.ReactNode;
@@ -468,7 +468,7 @@ const TreatmentCycles: React.FC = () => {
         </Grid>
 
         <Grid item container>
-          <DataGrid autoHeight columns={biopsyColumn} rows={[]} />
+          <CustomDataGrid columns={biopsyColumn} rows={[]} />
         </Grid>
 
         {/* Action Buttons */}
@@ -570,7 +570,7 @@ const TreatmentCycles: React.FC = () => {
               />
             </Grid>
             <Grid item>
-              <Button variant='contained' color="error" sx={{ width: 'fit-content' }}>
+              <Button variant='contained' color="primary" sx={{ width: 'fit-content' }}>
                 Print
               </Button>
             </Grid>
@@ -578,7 +578,7 @@ const TreatmentCycles: React.FC = () => {
 
           {/* CustomTable for Plan Details */}
           <Grid container item xs={12}>
-            <DataGrid autoHeight columns={planDetailsColumn} rows={[]} />
+            <CustomDataGrid columns={planDetailsColumn} rows={[]} />
           </Grid>
         </Grid>
       </Box>

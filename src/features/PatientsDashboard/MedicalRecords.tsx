@@ -2,10 +2,11 @@ import React from 'react'
 import TreatmentCyclesTable from './TreatmentCyclesTable'
 import PatientInfo from './PatientInfo'
 import { Box, Button, Divider, Grid, IconButton, MenuItem, Paper, Tab, Tabs, TextField, Typography } from '@mui/material'
-import { DataGrid, GridColDef } from '@mui/x-data-grid';
+import { GridColDef } from '@mui/x-data-grid';
 import { Clear, Check } from "@mui/icons-material"
 import { DateTimePicker } from '@mui/x-date-pickers';
 import useResponsiveColumns from '../../hooks/useResponsiveColumn';
+import CustomDataGrid from '../../components/Table/CustomDataGrid';
 
 
 interface TabPanelProps {
@@ -76,23 +77,19 @@ const MedicalRecords: React.FC = () => {
     return (
       <Box>
         <Box display={"flex"} gap={2} mb={2} >
-          <Button variant='contained' color='error' sx={{ width: 'fit-content' }}>
+          <Button variant='contained' color='primary' sx={{ width: 'fit-content' }}>
             Add Record
           </Button>
-          <Button variant='contained' sx={{ width: 'fit-content' }}>
+          <Button variant='contained' color='secondary' sx={{ width: 'fit-content' }}>
             Convertor
           </Button>
         </Box>
         <Box sx={{ mb: 2 }}>
-          <DataGrid
+          <CustomDataGrid
             rows={[]}
             columns={physicalCharColumns}
-            autoHeight
-            initialState={{
-              pagination: {
-                paginationModel: { page: 0, pageSize: 5 },
-              },
-            }}
+
+
             pageSizeOptions={[5, 10]}
           />
         </Box>
@@ -156,23 +153,19 @@ const MedicalRecords: React.FC = () => {
     return (
       <Box>
         <Box display={"flex"} gap={2} mb={2} >
-          <Button variant='contained' color='error' sx={{ width: 'fit-content' }}>
+          <Button variant='outlined' color='primary' sx={{ width: 'fit-content' }}>
             Add Record
           </Button>
-          <Button variant='contained' sx={{ width: 'fit-content' }}>
+          <Button variant='outlined' color='secondary' sx={{ width: 'fit-content' }}>
             Export
           </Button>
         </Box>
         <Box sx={{ mb: 2 }}>
-          <DataGrid
+          <CustomDataGrid
             rows={[]}
             columns={medicalRecordsColumn}
-            autoHeight
-            initialState={{
-              pagination: {
-                paginationModel: { page: 0, pageSize: 5 },
-              },
-            }}
+
+
             pageSizeOptions={[5, 10]}
           />
         </Box>
@@ -282,10 +275,10 @@ const MedicalRecords: React.FC = () => {
 
         {/* Action Buttons */}
         <Box sx={{ display: "flex", justifyContent: "flex-end", gap: 2, mb: 2 }}>
-          <Button variant='contained' color='error' sx={{ width: 'fit-content' }}>
+          <Button variant='contained' sx={{ width: 'fit-content' }}>
             Save
           </Button>
-          <Button variant='contained' sx={{ width: 'fit-content' }}>
+          <Button variant='contained' color='secondary' sx={{ width: 'fit-content' }}>
             Cancel
           </Button>
         </Box>

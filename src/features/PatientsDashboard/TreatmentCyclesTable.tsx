@@ -1,6 +1,7 @@
 import { Box, Button, Typography } from '@mui/material';
-import { DataGrid, GridColDef } from '@mui/x-data-grid'
+import { GridColDef } from '@mui/x-data-grid'
 import React from 'react'
+import CustomDataGrid from '../../components/Table/CustomDataGrid';
 
 const columns: GridColDef[] = [
   { field: 'id', headerName: 'Cycle ID', width: 200 },
@@ -40,20 +41,13 @@ const TreatmentCyclesTable: React.FC = () => {
   return (
     <>
       <Typography variant='h6' sx={{ mt: 4, mb: 2 }}>Treatment Cycles</Typography>
-      <Button variant='contained' sx={{ width: 'fit-content' }}>
+      <Button variant='outlined' sx={{ width: 'fit-content' }}>
         Export
       </Button>
       <Box sx={{ mt: 1 }}>
-        <DataGrid
+        <CustomDataGrid
           rows={[]}
           columns={columns}
-          autoHeight
-          initialState={{
-            pagination: {
-              paginationModel: { page: 0, pageSize: 5 },
-            },
-          }}
-          pageSizeOptions={[5, 10]}
         />
       </Box>
     </>

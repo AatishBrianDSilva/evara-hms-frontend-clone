@@ -2,7 +2,8 @@ import { Box, Button, TextField } from '@mui/material'
 import React from 'react'
 import PatientInfo from './PatientInfo'
 import TreatmentCyclesTable from './TreatmentCyclesTable'
-import { DataGrid, GridColDef } from '@mui/x-data-grid'
+import { GridColDef } from '@mui/x-data-grid'
+import CustomDataGrid from '../../components/Table/CustomDataGrid'
 
 const columns: GridColDef[] = [
   { field: 'id', headerName: 'Patient Name', width: 600 },
@@ -22,15 +23,9 @@ const TreatmentAspirationReport: React.FC = () => {
         <TextField label="Search Patient Name" />
       </Box>
       <div style={{ width: '100%' }}>
-        <DataGrid
+        <CustomDataGrid
           rows={[]}
           columns={columns}
-          autoHeight
-          initialState={{
-            pagination: {
-              paginationModel: { page: 0, pageSize: 5 },
-            },
-          }}
           pageSizeOptions={[5, 10]}
         />
       </div>

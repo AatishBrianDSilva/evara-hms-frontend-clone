@@ -47,16 +47,31 @@ let theme = createTheme({
   },
   palette: {
     primary: {
-      main: '#0b3c5d',
+      main: '#F1168D', // Primary brand color
+      light: '#F673BA',
+      contrastText: '#fff', // Assuming white contrast text for primary color
     },
     secondary: {
-      main: '#f8f1f1',
+      main: '#248C88', // Secondary brand color
+      light: '#65AEAB',
+      contrastText: '#fff', // Assuming white contrast text for secondary color
+    },
+    error: {
+      main: '#CE2F0C', // Error state color
+    },
+    warning: {
+      main: '#F98D0E', // Warning state color
+    },
+    info: {
+      main: '#166BF4', // Info state color
+    },
+    success: {
+      main: '#44C431', // Success state color
     },
   },
 })
 
 theme = responsiveFontSizes(theme);
-
 
 ReactDOM.createRoot(document.getElementById('root')!).render(
   <React.StrictMode>

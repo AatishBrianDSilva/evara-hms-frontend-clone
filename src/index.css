@@ -1,3 +1,30 @@
+:root {
+  --primary-main: #F1168D;
+  --primary-light: #F673BA;
+  --secondary-main: #248C88;
+  --secondary-light: #65AEAB;
+  --error-main: #CE2F0C;
+  --warning-main: #F98D0E;
+  --info-main: #166BF4;
+  --success-main: #44C431;
+}
+
+/* .MuiDataGrid-columnHeaders {
+  background-color: var(--primary-main) !important; 
+  color: white !important;
+  height: 20px !important;
+  min-height: 30px !important;
+} */
+
+/* .MuiDataGrid-iconButtonContainer .MuiButtonBase-root {
+  color: white !important;
+}
+
+.MuiDataGrid-withBorderColor {
+  border-color: var(--primary-light) !important; 
+} */
+
+
 body {
   font-family: 'Roboto flex', sans-serif;
   margin: 0;

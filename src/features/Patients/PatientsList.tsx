@@ -1,10 +1,11 @@
 import { Box, Button, Grid, TextField } from '@mui/material'
 import React from 'react'
 import { DatePicker } from '@mui/x-date-pickers'
-import { DataGrid, GridColDef } from '@mui/x-data-grid'
+import { GridColDef } from '@mui/x-data-grid'
 import { setSelectedPatientId } from './patientsSlice'
 import { useDispatch } from 'react-redux'
 import useResponsiveColumns from '../../hooks/useResponsiveColumn'
+import CustomDataGrid from '../../components/Table/CustomDataGrid'
 
 const patients = [
   {
@@ -183,7 +184,7 @@ const PatientsList: React.FC = () => {
 
   return (
     <div className="main-container">
-      <Grid container spacing={3} mt={2}>
+      <Grid container spacing={3} mt={2} mb={4}>
         {/* Use Grid item for each child */}
         <Grid item>
           <DatePicker label="Start Date" format='dd-MM-yyyy' />
@@ -198,18 +199,14 @@ const PatientsList: React.FC = () => {
           <Button variant="outlined" color="primary">Search</Button>
         </Grid>
         <Grid item>
-          <Button variant="outlined" color="error">Export</Button>
+          <Button variant="outlined" color="secondary">Export</Button>
         </Grid>
       </Grid>
-      <Box sx={{ mt: 5, bgcolor: 'white' }}>
-        <DataGrid
-          autoHeight
-          columns={columns}
-          rows={patients}
-          pageSizeOptions={[25, 50]}
-          pagination={true}
-        />
-      </Box>
+      <CustomDataGrid
+        columns={columns}
+        rows={patients}
+        pageSizeOptions={[25, 50]}
+      />
     </div>
   )
 }

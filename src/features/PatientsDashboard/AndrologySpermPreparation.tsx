@@ -184,10 +184,10 @@ const AndrologySpermPreparation: React.FC = () => {
       </Grid>
 
       <Box display={"flex"} justifyContent={"center"} alignItems={"center"} gap={2} mb={2} >
-        <Button variant='contained' color='error' sx={{ width: 'fit-content' }}>
+        <Button variant='contained' color='primary' sx={{ width: 'fit-content' }}>
           Save
         </Button>
-        <Button variant='contained' sx={{ width: 'fit-content' }}>
+        <Button variant='contained' color='secondary' sx={{ width: 'fit-content' }}>
           Cancel
         </Button>
       </Box>

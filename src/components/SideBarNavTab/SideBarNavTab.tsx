@@ -1,6 +1,6 @@
 import React, { useState } from 'react';
 import './sidebarNavTabStyle.css'; // This is where you'll put the CSS
-import { Avatar, SvgIconTypeMap } from '@mui/material';
+import { Avatar, SvgIconTypeMap, useTheme } from '@mui/material';
 import { ChevronRight, ChevronLeftOutlined } from '@mui/icons-material';
 import { OverridableComponent } from '@mui/material/OverridableComponent';
 import { useLocation } from 'react-router-dom';
@@ -18,9 +18,11 @@ interface SideBarNavTabProps {
 const SideBarNavTab: React.FC<SideBarNavTabProps> = ({ logoSrc, title, path, onSelect, isAccordion, accordionItems }) => {
 
   const location = useLocation();
+  const theme = useTheme();
+
   const isSelected = location.pathname === path;
 
-  const iconColor = isSelected ? '#3B4CB8' : '#3E4954';
+  const iconColor = isSelected ? theme.palette.primary.main : '#3E4954';
 
   const [isAccordionOpen, setIsAccordionOpen] = useState(false);
 

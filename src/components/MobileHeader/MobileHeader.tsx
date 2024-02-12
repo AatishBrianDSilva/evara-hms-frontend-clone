@@ -6,12 +6,13 @@ import Typography from '@mui/material/Typography';
 import IconButton from '@mui/material/IconButton';
 import ArrowBackIosIcon from '@mui/icons-material/ArrowBackIos';
 import { useLocation, useNavigate } from 'react-router-dom';
-import { Avatar } from '@mui/material';
+import { Avatar, useTheme } from '@mui/material';
 import { Dashboard } from '@mui/icons-material';
 
 const MobileHeader: React.FC = () => {
   const location = useLocation();
   const navigate = useNavigate();
+  const theme = useTheme();
 
   // Function to determine if the pathname contains an ID or is root "/"
   const shouldHideBackButton = () => {
@@ -31,7 +32,7 @@ const MobileHeader: React.FC = () => {
     <Box sx={{ flexGrow: 1 }}>
       <AppBar sx={{ backgroundColor: 'white' }} position="fixed">
         <Toolbar>
-          {shouldHideBackButton() ? (<Avatar className='header-logo' style={{ color: '#3B4CB8', backgroundColor: 'transparent' }}>
+          {shouldHideBackButton() ? (<Avatar className='header-logo' style={{ color: theme.palette.primary.main, backgroundColor: 'transparent' }}>
             <Dashboard />
           </Avatar>) : (
             <IconButton
@@ -44,7 +45,7 @@ const MobileHeader: React.FC = () => {
               <ArrowBackIosIcon />
             </IconButton>
           )}
-          <Typography variant="inherit" color={"grey"}>
+          <Typography variant="inherit" color={theme.palette.primary.main}>
             {pageName}
           </Typography>
         </Toolbar>
