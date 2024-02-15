@@ -2,7 +2,7 @@ import { Box, Button, Typography } from '@mui/material'
 import React from 'react'
 import PatientInfo from './PatientInfo'
 import TreatmentCyclesTable from './TreatmentCyclesTable'
-import { DataGrid, GridColDef } from '@mui/x-data-grid'
+import { GridColDef } from '@mui/x-data-grid'
 import CustomDataGrid from '../../components/Table/CustomDataGrid'
 
 const columns: GridColDef[] = [

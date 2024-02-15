@@ -4,14 +4,18 @@ import PatientInfo from './PatientInfo'
 import TreatmentCyclesTable from './TreatmentCyclesTable'
 import { GridColDef } from '@mui/x-data-grid'
 import CustomDataGrid from '../../components/Table/CustomDataGrid'
+import useResponsiveColumns from '../../hooks/useResponsiveColumn'
 
-const columns: GridColDef[] = [
-  { field: 'id', headerName: 'Patient Name', width: 600 },
-  { field: 'status', headerName: 'Created At', width: 600 },
-  { field: 'treatment', headerName: 'Created By', width: 600 },
+const columnsConfig: GridColDef[] = [
+  { field: 'id', headerName: 'Patient Name', flex: 1 },
+  { field: 'status', headerName: 'Created At', flex: 1 },
+  { field: 'treatment', headerName: 'Created By', flex: 1 },
 ];
 
 const TreatmentAspirationReport: React.FC = () => {
+
+  const columns = useResponsiveColumns(columnsConfig)
+
   return (
     <Box className='main-container' gap={2} p={2}>
       <PatientInfo />
