@@ -2,7 +2,7 @@ import React, { useEffect, useState } from 'react';
 import { Box, Typography, Button, IconButton } from '@mui/material';
 import CloudUploadIcon from '@mui/icons-material/CloudUpload';
 import { styled } from '@mui/material/styles';
-import CloseIcon from '@mui/icons-material/Close';
+import CancelIcon from '@mui/icons-material/Cancel';
 
 const Input = styled('input')({
   display: 'none',
@@ -36,7 +36,7 @@ const FilePreview: React.FC<FilePreviewProps> = ({ file, onRemove, lastFile }) =
           <Box display="flex" alignItems="center">
             <Typography variant='body2' color={"GrayText"} >{file.name}</Typography>
             <IconButton color='error' onClick={() => onRemove(file)} size="small">
-              <CloseIcon />
+              <CancelIcon />
             </IconButton>
             {!lastFile && <Typography style={{ width: '20px' }}>,</Typography>}
           </Box>
@@ -45,7 +45,7 @@ const FilePreview: React.FC<FilePreviewProps> = ({ file, onRemove, lastFile }) =
         <>
           <Typography variant='body2' color={"GrayText"} >{file.name}</Typography>
           <IconButton color='error' onClick={() => onRemove(file)} size="small">
-            <CloseIcon />
+            <CancelIcon />
           </IconButton>
           {!lastFile && <Typography style={{ width: '20px' }}>,</Typography>}
         </>
