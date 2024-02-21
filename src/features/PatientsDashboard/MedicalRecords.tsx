@@ -5,7 +5,6 @@ import { Box, Button, Divider, Grid, IconButton, MenuItem, Paper, Tab, Tabs, Tex
 import { GridColDef } from '@mui/x-data-grid';
 import { Clear, Check } from "@mui/icons-material"
 import { DateTimePicker } from '@mui/x-date-pickers';
-import useResponsiveColumns from '../../hooks/useResponsiveColumn';
 import CustomDataGrid from '../../components/Table/CustomDataGrid';
 
 
@@ -15,7 +14,7 @@ interface TabPanelProps {
   value: number;
 }
 
-const medicalRecordsColumnConfig: GridColDef[] = [
+const medicalRecordsColumn: GridColDef[] = [
   { field: 'subject', headerName: 'Subject', flex: 1 },
   { field: 'description', headerName: 'Description', flex: 1 },
   { field: 'createdBy', headerName: 'Created By', flex: 1 },
@@ -24,7 +23,7 @@ const medicalRecordsColumnConfig: GridColDef[] = [
   { field: 'modifiedAt', headerName: 'Modified At', type: 'date', flex: 1 },
 ]
 
-const physicalCharColumnsConfig: GridColDef[] = [
+const physicalCharColumn: GridColDef[] = [
   { field: 'id', headerName: 'S.No', flex: 1 },
   { field: 'body_temp', headerName: 'Body Temperature', flex: 1 },
   { field: 'heart_rate', headerName: 'Heart Rate', flex: 1 },
@@ -70,9 +69,6 @@ const MedicalRecords: React.FC = () => {
     setValue(newValue);
   };
 
-  const medicalRecordsColumn = useResponsiveColumns(medicalRecordsColumnConfig);
-  const physicalCharColumns = useResponsiveColumns(physicalCharColumnsConfig);
-
   const renderPhysicalCharactertistics = () => {
     return (
       <Box>
@@ -87,9 +83,7 @@ const MedicalRecords: React.FC = () => {
         <Box sx={{ mb: 2 }}>
           <CustomDataGrid
             rows={[]}
-            columns={physicalCharColumns}
-
-
+            columns={physicalCharColumn}
             pageSizeOptions={[5, 10]}
           />
         </Box>
@@ -164,8 +158,6 @@ const MedicalRecords: React.FC = () => {
           <CustomDataGrid
             rows={[]}
             columns={medicalRecordsColumn}
-
-
             pageSizeOptions={[5, 10]}
           />
         </Box>

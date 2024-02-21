@@ -4,7 +4,6 @@ import { DatePicker } from '@mui/x-date-pickers'
 import { GridColDef } from '@mui/x-data-grid'
 import { setSelectedPatientId } from './patientsSlice'
 import { useDispatch } from 'react-redux'
-import useResponsiveColumns from '../../hooks/useResponsiveColumn'
 import CustomDataGrid from '../../components/Table/CustomDataGrid'
 
 const patients = [
@@ -180,7 +179,6 @@ const PatientsList: React.FC = () => {
     { field: 'status', headerName: 'Status', flex: 1 },
   ];
 
-  const columns = useResponsiveColumns(columnsConfig);
 
   return (
     <div className="main-container">
@@ -203,7 +201,7 @@ const PatientsList: React.FC = () => {
         </Grid>
       </Grid>
       <CustomDataGrid
-        columns={columns}
+        columns={columnsConfig}
         rows={patients}
         pageSizeOptions={[25, 50]}
       />

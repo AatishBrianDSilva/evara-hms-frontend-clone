@@ -5,7 +5,6 @@ import PatientInfo from './PatientInfo';
 import CloudUploadIcon from '@mui/icons-material/CloudUpload';
 import CustomDataGrid from '../../components/Table/CustomDataGrid';
 import { GridColDef } from '@mui/x-data-grid';
-import useResponsiveColumns from '../../hooks/useResponsiveColumn';
 import { DatePicker } from '@mui/x-date-pickers';
 import { VisuallyHiddenInput } from '../../components/Utils/VisuallyHiddenInput';
 
@@ -35,7 +34,7 @@ function CustomTabPanel(props: TabPanelProps) {
   );
 }
 
-const DTFemaleUltraSoundScanConfig: GridColDef[] = [
+const DTFemaleUltraSoundScanColumn: GridColDef[] = [
   { field: 'scan_type', headerName: 'Scan Type', flex: 1 },
   { field: 'impression', headerName: 'Impression', flex: 1 },
   { field: 'done_on', headerName: 'Done On', flex: 1 },
@@ -44,7 +43,7 @@ const DTFemaleUltraSoundScanConfig: GridColDef[] = [
   { field: 'delete', headerName: 'Delete', flex: 1 },
 ];
 
-const DTFemaleBaseLineFollicularMonitoringConfig: GridColDef[] = [
+const DTFemaleBaseLineFollicularMonitoringColumn: GridColDef[] = [
   { field: 'lmp', headerName: 'LMP', flex: 1 },
   { field: 'date', headerName: 'Date', flex: 1 },
   { field: 'day', headerName: 'Day', flex: 1 },
@@ -55,7 +54,7 @@ const DTFemaleBaseLineFollicularMonitoringConfig: GridColDef[] = [
   { field: 'action', headerName: 'Action', flex: 1 },
   { field: 'print', headerName: 'Print', flex: 1 },
 ];
-const DTFelmaleEndrometrialAssementConfig: GridColDef[] = [
+const DTFelmaleEndrometrialAssementColumn: GridColDef[] = [
   { field: 'date', headerName: 'Date', flex: 1 },
   { field: 'indication', headerName: 'Indication', flex: 1 },
   { field: 'impression', headerName: 'Impression', flex: 1 },
@@ -64,7 +63,7 @@ const DTFelmaleEndrometrialAssementConfig: GridColDef[] = [
   { field: 'view', headerName: 'View', flex: 1 },
   { field: 'delete', headerName: 'Delete', flex: 1 },
 ];
-const DTFelmaleEarlyPregancnyScanReportConfig: GridColDef[] = [
+const DTFelmaleEarlyPregancnyScanReportColumn: GridColDef[] = [
   { field: 'sacn_type', headerName: 'Scan Type', flex: 1 },
   { field: 'impression', headerName: 'Impression', flex: 1 },
   { field: 'done_on', headerName: 'Done On', flex: 1 },
@@ -73,13 +72,13 @@ const DTFelmaleEarlyPregancnyScanReportConfig: GridColDef[] = [
   { field: 'delete', headerName: 'Delete', flex: 1 },
 ];
 
-const DTMaleSemenAnalysisConfig: GridColDef[] = [
+const DTMaleSemenAnalysisColumn: GridColDef[] = [
   { field: 'processed_by', headerName: 'Processed By', flex: 1 },
   { field: 'processed_on', headerName: 'Processed On', flex: 1 },
   { field: 'view', headerName: 'View', flex: 1 },
   { field: 'delete', headerName: 'Delete', flex: 1 },
 ];
-const DTMaleSpermDFIConfig: GridColDef[] = [
+const DTMaleSpermDFIColumn: GridColDef[] = [
   { field: 'patient_name', headerName: 'Patient Name', flex: 1 },
   { field: 'created_at', headerName: 'Created At', flex: 1 },
   { field: 'created_by', headerName: 'Created By', flex: 1 },
@@ -89,13 +88,6 @@ const Investigations: React.FC = () => {
   const [value, setValue] = React.useState(0);
   const [nestedValue, setNestedValue] = React.useState(0);
 
-  const DTFemaleUltraSoundScanColumn = useResponsiveColumns(DTFemaleUltraSoundScanConfig)
-  const DTFemaleBaseLineFollicularMonitoringColumn = useResponsiveColumns(DTFemaleBaseLineFollicularMonitoringConfig)
-  const DTFelmaleEndrometrialAssementColumn = useResponsiveColumns(DTFelmaleEndrometrialAssementConfig)
-  const DTFelmaleEarlyPregancnyScanReportColumn = useResponsiveColumns(DTFelmaleEarlyPregancnyScanReportConfig)
-
-  const DTMaleSemenAnalysisColumn = useResponsiveColumns(DTMaleSemenAnalysisConfig)
-  const DTMaleSpermDFIColumn = useResponsiveColumns(DTMaleSpermDFIConfig)
 
   const handleChange = (_: React.SyntheticEvent, newValue: number) => {
     setValue(newValue);

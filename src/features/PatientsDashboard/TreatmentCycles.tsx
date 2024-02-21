@@ -4,7 +4,6 @@ import { GridColDef } from '@mui/x-data-grid';
 import PatientInfo from './PatientInfo';
 import { DatePicker, DateTimePicker } from '@mui/x-date-pickers';
 import TreatmentCyclesTable from './TreatmentCyclesTable';
-import useResponsiveColumns from '../../hooks/useResponsiveColumn';
 import CustomDataGrid from '../../components/Table/CustomDataGrid';
 
 interface TabPanelProps {
@@ -13,7 +12,7 @@ interface TabPanelProps {
   value: number;
 }
 
-const biopsyColumnConfig: GridColDef[] = [
+const biopsyColumn: GridColDef[] = [
   { field: 'id', headerName: 'PCR Tube ID', flex: 1 },
   { field: 'status', headerName: 'Embryo ID/Cycle ID	', flex: 1 },
   { field: 'treatment', headerName: 'No.of Cells Biopsied	', flex: 1 },
@@ -45,7 +44,7 @@ const biopsyColumnConfig: GridColDef[] = [
   }
 ];
 
-const planDetailsColumnConfig: GridColDef[] = [
+const planDetailsColumn: GridColDef[] = [
   { field: 'id', headerName: 'Phase', flex: 1 },
   { field: 'status', headerName: 'Dow	', flex: 1 },
   { field: 'treatment', headerName: 'Date', flex: 1 },
@@ -112,9 +111,6 @@ const TreatmentCycles: React.FC = () => {
   const handleChange = (_: React.SyntheticEvent, newValue: number) => {
     setValue(newValue);
   };
-
-  const biopsyColumn = useResponsiveColumns(biopsyColumnConfig);
-  const planDetailsColumn = useResponsiveColumns(planDetailsColumnConfig);
 
   const addNewCycle = () => {
     return (
