@@ -4,10 +4,7 @@ import TreatmentCyclesTable from './TreatmentCyclesTable'
 import { Box, Button, Divider, Grid, MenuItem, TextField, Typography } from '@mui/material'
 import CustomDataGrid from '../../components/Table/CustomDataGrid'
 import { GridColDef } from '@mui/x-data-grid'
-import { DatePicker, DateTimePicker } from '@mui/x-date-pickers'
-import { VisuallyHiddenInput } from '../../components/Utils/VisuallyHiddenInput'
-import CloudUploadIcon from '@mui/icons-material/CloudUpload';
-
+import { DatePicker } from '@mui/x-date-pickers'
 
 const columns: GridColDef[] = [
   { field: 'patientName', headerName: 'Patient Name', flex: 1 },

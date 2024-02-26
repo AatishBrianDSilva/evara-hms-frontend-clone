@@ -3,8 +3,8 @@ import TreatmentCyclesTable from './TreatmentCyclesTable'
 import PatientInfo from './PatientInfo'
 import CustomDataGrid from '../../components/Table/CustomDataGrid'
 import AddIcon from '@mui/icons-material/Add';
-import CancelIcon from '@mui/icons-material/Close';
-import { Box, Button, Grid, IconButton, MenuItem, TextField, Typography, useTheme } from '@mui/material'
+import CancelIcon from '@mui/icons-material/Cancel';
+import { Box, Button, Grid, MenuItem, TextField, Typography } from '@mui/material'
 import { GridColDef } from '@mui/x-data-grid'
 
 const summaryColumn: GridColDef[] = [
@@ -15,8 +15,6 @@ const summaryColumn: GridColDef[] = [
 
 
 const EmbryologySummary: React.FC = () => {
-
-  const theme = useTheme()
 
   return (
     <div className='main-container'>

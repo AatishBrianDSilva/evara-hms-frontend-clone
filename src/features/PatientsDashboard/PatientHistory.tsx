@@ -1,9 +1,7 @@
 import React, { useState } from 'react'
 import PatientInfo from './PatientInfo'
-import CloudUploadIcon from '@mui/icons-material/CloudUpload';
 import { Box, Button, Grid, Paper, Step, StepContent, StepLabel, Stepper, TextField, Typography } from '@mui/material'
 import { DatePicker } from '@mui/x-date-pickers';
-import { VisuallyHiddenInput } from '../../components/Utils/VisuallyHiddenInput';
 import { FileUploadAndPreview } from '../../components/FileUploadAndPreview/FileUploadAndPreview';
 
 const PatientHistory: React.FC = () => {
