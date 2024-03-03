@@ -8,8 +8,15 @@ import { LocalizationProvider } from '@mui/x-date-pickers'
 import { AdapterDateFns } from '@mui/x-date-pickers/AdapterDateFnsV3'
 import { store } from "./app/store.ts"
 import { ThemeProvider, createTheme, responsiveFontSizes } from '@mui/material'
+import { ToastProvider } from './context/ToastContext.tsx'
 
 let theme = createTheme({
+  typography: {
+    fontFamily: [
+      'Roboto Flex',
+      'sans-serif',
+    ].join(','),
+  },
   components: {
     MuiTextField: {
       defaultProps: {
@@ -32,7 +39,7 @@ let theme = createTheme({
       defaultProps: {
         sx: {
           fontSize: "13px",
-          top: 2,
+          color: "text.secondary",
         },
       },
       styleOverrides: {
@@ -43,7 +50,7 @@ let theme = createTheme({
           }),
         }),
       },
-    },
+    }
   },
   palette: {
     primary: {
@@ -67,7 +74,7 @@ let theme = createTheme({
     },
     success: {
       main: '#44C431', // Success state color
-    },
+    }
   },
 })
 
@@ -79,7 +86,9 @@ ReactDOM.createRoot(document.getElementById('root')!).render(
       <BrowserRouter>
         <LocalizationProvider dateAdapter={AdapterDateFns}>
           <ThemeProvider theme={theme}>
-            <App />
+            <ToastProvider>
+              <App />
+            </ToastProvider>
           </ThemeProvider>
         </LocalizationProvider>
       </ BrowserRouter>

@@ -28,36 +28,7 @@ input {
   border-color: var(--primary-light) !important; 
 } */
 
-
 body {
-  font-family: 'Roboto flex', sans-serif;
   margin: 0;
   background-color: #D3D6E4;
-}
-
-/* Existing styles for .main-container */
-.main-container {
-  display: flex;
-  flex-direction: column;
-  flex: 1;
-  min-height: calc(100vh - 130px);
-  max-height: calc(100vh - 130px);
-  background-color: white;
-  border-radius: 12px;
-  box-shadow: 0 1px 8px rgba(0, 0, 0, 0.15);
-  overflow-y: scroll;
-  padding: 12px 24px;
-}
-
-/* Media query for mobile screens */
-@media (max-width: 600px) {
-  .main-container {
-    padding: 12px; /* Adjust padding as needed for mobile */
-    box-shadow: none; /* Optional: Remove shadow for a cleaner look on mobile */
-    min-height: auto;
-    max-height: none;
-    overflow: visible;
-    margin-bottom: 50px;
-    margin-top: 50px;
-  }
 }
