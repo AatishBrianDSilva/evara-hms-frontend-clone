@@ -1,18 +1,16 @@
 // Inside Patients.tsx
 import { Route, Routes } from "react-router-dom";
-import PatientList from "./PatientsList";
-import PatientsDashboardRoutes from "../PatientsDashboard/PatientDashboardRoutes";
+import PatientsList from "./PatientsList";
+import PatientsDashboard from "../PatientsDashboard/PatientsDashboard";
+import PatientHistory from "../PatientsDashboard/PatientHistory";
 
 const Patients: React.FC = () => {
   return (
-    <div>
-      {/* Other content of the Patients component */}
-      {/* Define routes for patient dashboard */}
-      <Routes>
-        <Route path="/" element={<PatientList />} />
-        <Route path="dashboard/:patientId/*" element={<PatientsDashboardRoutes />} />
-      </Routes>
-    </div>
+    <Routes>
+      <Route path="/" element={<PatientsList />} />
+      <Route path="/:patientId" element={<PatientsDashboard />} />
+      <Route path="/:patientId/history" element={<PatientHistory />} />
+    </Routes>
   );
 };
 
