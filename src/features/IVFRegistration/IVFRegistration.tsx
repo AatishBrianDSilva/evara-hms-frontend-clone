@@ -1,6 +1,7 @@
 import { Box, Tab, Tabs } from '@mui/material';
 import React from 'react'
 import RegistrationForm from './RegistrationForm';
+import ContentSection from '../../components/ContentSection/ContentSection';
 
 interface TabPanelProps {
   children?: React.ReactNode;
@@ -44,26 +45,24 @@ const IVFRegistration = () => {
   };
 
   return (
-    <div className='main-container'>
-      <Box sx={{ width: '100%' }}>
-        <Box sx={{ borderBottom: 1, borderColor: 'divider' }}>
-          <Tabs value={value} visibleScrollbar scrollButtons={true} onChange={handleChange} variant='scrollable' aria-label="basic tabs example">
-            <Tab label="Patients" {...a11yProps(0)} />
-            <Tab label="Donor From bank" {...a11yProps(1)} />
-            <Tab label="Donor From hospital" {...a11yProps(2)} />
-          </Tabs>
-        </Box>
-        <CustomTabPanel value={value} index={0}>
-          <RegistrationForm />
-        </CustomTabPanel>
-        <CustomTabPanel value={value} index={1}>
-          Donor From bank
-        </CustomTabPanel>
-        <CustomTabPanel value={value} index={2}>
-          Donor From bank
-        </CustomTabPanel>
+    <ContentSection>
+      <Box sx={{ borderBottom: 1, borderColor: 'divider' }}>
+        <Tabs value={value} textColor='secondary' indicatorColor='secondary' visibleScrollbar scrollButtons={true} onChange={handleChange} variant='scrollable' aria-label="basic tabs example">
+          <Tab label="Patients" {...a11yProps(0)} />
+          <Tab label="Donor From bank" {...a11yProps(1)} />
+          <Tab label="Donor From hospital" {...a11yProps(2)} />
+        </Tabs>
       </Box>
-    </div>
+      <CustomTabPanel value={value} index={0}>
+        <RegistrationForm />
+      </CustomTabPanel>
+      <CustomTabPanel value={value} index={1}>
+        Donor From bank
+      </CustomTabPanel>
+      <CustomTabPanel value={value} index={2}>
+        Donor From bank
+      </CustomTabPanel>
+    </ContentSection>
   )
 }
 
