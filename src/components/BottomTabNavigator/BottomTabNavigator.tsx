@@ -1,5 +1,5 @@
 import React, { useEffect, useState } from 'react';
-import { BottomNavigation, BottomNavigationAction, Paper, useMediaQuery } from '@mui/material';
+import { BottomNavigation, BottomNavigationAction, Paper, useMediaQuery, useTheme } from '@mui/material';
 import { Home, Call, HealingSharp, AccountCircleOutlined, MoreHoriz } from '@mui/icons-material';
 import { useLocation, useNavigate } from 'react-router-dom';
 import { useDispatch, useSelector } from 'react-redux';
@@ -15,10 +15,13 @@ interface NavItem {
 }
 
 const BottomTabNavigator: React.FC = () => {
-  const isMobile = useMediaQuery('(max-width: 600px)');
   const navigate = useNavigate();
   const location = useLocation();
   const dispatch = useDispatch();
+  const theme = useTheme()
+
+  const isMobile = useMediaQuery(theme.breakpoints.down('sm'));
+
   const patientId = useSelector((state: RootState) => state.patients.selectedPatientId);
 
   const [value, setValue] = useState(location.pathname);
