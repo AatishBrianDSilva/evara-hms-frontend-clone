@@ -4,7 +4,7 @@ import { API_BASE_URL } from "../utils/apiConfig";
 
 export const ivfRegistrationApi = createApi({
   reducerPath: "registrationApi",
-  baseQuery: fetchBaseQuery({ baseUrl: API_BASE_URL + "/dev" }),
+  baseQuery: fetchBaseQuery({ baseUrl: API_BASE_URL }),
   endpoints: (builder) => ({
     addPatient: builder.mutation({
       query: (patientData) => ({
