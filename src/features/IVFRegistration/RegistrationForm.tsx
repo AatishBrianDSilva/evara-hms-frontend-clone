@@ -1,16 +1,21 @@
-import React, { useEffect, useState } from 'react'
+import React, { useEffect, useState, RefObject } from 'react'
 import { useFormik } from 'formik'
 import { PatientRegistrationValidationSchema } from "../../utils/yup"
-import { Button, Checkbox, Divider, FormControlLabel, Grid, MenuItem, Radio, RadioGroup, TextField, Typography, useMediaQuery } from '@mui/material'
+import { Button, Checkbox, Divider, FormControlLabel, Grid, MenuItem, TextField, Typography, useMediaQuery, useTheme } from '@mui/material'
 import { DatePicker } from '@mui/x-date-pickers'
 import CloudUploadIcon from '@mui/icons-material/CloudUpload';
 
 import { useAddPatientMutation } from '../../services/ivfRegistrationApi';
 import { VisuallyHiddenInput } from '../../components/Utils/VisuallyHiddenInput';
+import { useToast } from '../../context/ToastContext'
 
 const RegistrationForm: React.FC = () => {
 
-  const isDesktop = useMediaQuery('(min-width: 600px)');
+  const inputRefs: Record<string, RefObject<any>> = {};
+  const { showPromiseToast } = useToast();
+  const theme = useTheme();
+
+  const isDesktop = useMediaQuery(theme.breakpoints.down('sm'));
   const [columnSpacing, setColumnSpacing] = useState(1);
   const [rowSpacing, setRowSpacing] = useState(2.5);
 
@@ -26,15 +31,23 @@ const RegistrationForm: React.FC = () => {
 
 
   const [selectedImage, setSelectedImage] = useState<File | null>(null);
-  const [addPatient, { isError, isLoading, isSuccess }] = useAddPatientMutation();
+  const [addPatient, { isLoading }] = useAddPatientMutation();
 
   const handleSubmit = async (values: any) => {
+    const promise = addPatient(values).unwrap();
+
+    showPromiseToast(promise, {
+      loading: 'Adding patient',
+      success: (response) => response.message || 'Patient added successfully',
+      error: (err) => `Error: ${err.response?.data?.message || 'Failed to add patient'}`
+    });
+
     try {
-      const response = await addPatient(values).unwrap();
+      const response = await promise;
       console.log(response);
       formik.resetForm();
     } catch (error: any) {
-      // console.error('Error submitting form:', error);
+      console.error('Failed to add patient', error);
     }
   };
 
@@ -60,7 +73,7 @@ const RegistrationForm: React.FC = () => {
       alernativeMobile: '',
       email: '',
       //Dependent Details
-      dependentType: 'partner',
+      dependentType: false,
       dependentName: '',
       dependentRelation: '',
       dependentMobile: '',
@@ -80,10 +93,10 @@ const RegistrationForm: React.FC = () => {
       //Other Details
       reasonOfVisit: '',
       referredBy: '',
-      referredByDoctor: '',
+      referrerName: '',
       marketingSource: '',
       intepreter: false,
-      intepreteName: '',
+      intepreterName: '',
       isPatientSurrogate: false,
       isPatientDeceased: false,
       detailsOfDeath: '',
@@ -103,6 +116,10 @@ const RegistrationForm: React.FC = () => {
     validateOnBlur: true,
   })
 
+  Object.keys(formik.initialValues).forEach(key => {
+    inputRefs[key] = React.createRef();
+  });
+
   const handleImageChange = (event: React.ChangeEvent<HTMLInputElement>) => {
     const files = event.target.files;
     if (files && files.length > 0) {
@@ -112,15 +129,27 @@ const RegistrationForm: React.FC = () => {
     }
   };
 
+  useEffect(() => {
+    if (Object.keys(formik.errors).length > 0 && formik.isSubmitting) {
+      const firstErrorKey = Object.keys(formik.errors)[0];
+      const errorRef = inputRefs[firstErrorKey];
+      if (errorRef && errorRef.current) {
+        errorRef.current.scrollIntoView({ behavior: 'smooth', block: 'center' });
+      }
+    }
+  }, [formik.errors, formik.isSubmitting]);
+
+
   return (
     <form onSubmit={formik.handleSubmit}>
       {/* Personal Details */}
-      <Typography variant="h6" sx={{ fontSize: '18px', fontWeight: 700, marginY: 3 }}>
+      <Typography variant="h6">
         Personal Information
       </Typography>
-      <Grid container rowSpacing={rowSpacing} columnSpacing={columnSpacing}>
+      <Grid container rowSpacing={rowSpacing} columnSpacing={columnSpacing} mt={1}>
         <Grid item xs={4} sm={6} md={2}>
           <TextField
+            ref={inputRefs["title"]}
             select
             fullWidth
             id='register-title-id'
@@ -138,6 +167,7 @@ const RegistrationForm: React.FC = () => {
         </Grid>
         <Grid item xs={8} sm={6} md={4}>
           <TextField
+            ref={inputRefs["firstName"]}
             fullWidth
             id='register-firstName-id'
             name="firstName"
@@ -151,6 +181,7 @@ const RegistrationForm: React.FC = () => {
         </Grid>
         <Grid item xs={12} sm={6} md={4}>
           <TextField
+            ref={inputRefs["lastName"]}
             fullWidth
             id='register-lastName-id'
             name="lastName"
@@ -164,6 +195,7 @@ const RegistrationForm: React.FC = () => {
         </Grid>
         <Grid item xs={8} sm={6} md={2}>
           <TextField
+            ref={inputRefs["gender"]}
             select
             fullWidth
             id='register-gender-id'
@@ -180,6 +212,7 @@ const RegistrationForm: React.FC = () => {
         </Grid>
         <Grid item xs={4} sm={6} md={2}>
           <TextField
+            ref={inputRefs["age"]}
             fullWidth
             id='register-age-id'
             name="age"
@@ -194,6 +227,7 @@ const RegistrationForm: React.FC = () => {
         </Grid>
         <Grid item xs={12} sm={6} md={2}>
           <DatePicker
+            ref={inputRefs["dob"]}
             sx={{ width: '100%' }}
             timezone='Asia/Kolkata'
             label="Date of Birth"
@@ -207,6 +241,7 @@ const RegistrationForm: React.FC = () => {
         </Grid>
         <Grid item xs={12} sm={6} md={4}>
           <TextField
+            ref={inputRefs["education"]}
             fullWidth
             id='register-education-id'
             name="education"
@@ -220,6 +255,7 @@ const RegistrationForm: React.FC = () => {
         </Grid>
         <Grid item xs={12} sm={6} md={2}>
           <TextField
+            ref={inputRefs["maritalStatus"]}
             select
             fullWidth
             id='register-maritalStatus-id'
@@ -236,6 +272,7 @@ const RegistrationForm: React.FC = () => {
         </Grid>
         <Grid item xs={12} sm={6} md={2}>
           <TextField
+            ref={inputRefs["bloodGroup"]}
             select
             fullWidth
             id='register-bloodGroup-id'
@@ -258,6 +295,7 @@ const RegistrationForm: React.FC = () => {
         </Grid>
         <Grid item xs={12} sm={6} md={2}>
           <TextField
+            ref={inputRefs["countryBirth"]}
             fullWidth
             id='register-countryBirth-id'
             name="countryBirth"
@@ -271,6 +309,7 @@ const RegistrationForm: React.FC = () => {
         </Grid>
         <Grid item xs={12} sm={6} md={2}>
           <TextField
+            ref={inputRefs["nationality"]}
             fullWidth
             id='register-nationality-id'
             name="nationality"
@@ -284,6 +323,7 @@ const RegistrationForm: React.FC = () => {
         </Grid>
         <Grid item xs={12} sm={6} md={2}>
           <TextField
+            ref={inputRefs["motherTounge"]}
             fullWidth
             id='register-motherTounge-id'
             name="motherTounge"
@@ -297,6 +337,7 @@ const RegistrationForm: React.FC = () => {
         </Grid>
         <Grid item xs={12} sm={6} md={4}>
           <TextField
+            ref={inputRefs["occupation"]}
             fullWidth
             id='register-occupation-id'
             name="occupation"
@@ -310,6 +351,7 @@ const RegistrationForm: React.FC = () => {
         </Grid>
         <Grid item xs={12} sm={6} md={2}>
           <TextField
+            ref={inputRefs["religion"]}
             fullWidth
             id='register-religion-id'
             name="religion"
@@ -324,12 +366,13 @@ const RegistrationForm: React.FC = () => {
       </Grid>
       <Divider sx={{ marginY: 6 }} />
       {/* Contact Details */}
-      <Typography variant="h6" sx={{ fontSize: '18px', fontWeight: 700, marginY: 3 }}>
+      <Typography variant="h6" >
         Contact Information
       </Typography>
-      <Grid container rowSpacing={rowSpacing} columnSpacing={columnSpacing}>
+      <Grid container rowSpacing={rowSpacing} columnSpacing={columnSpacing} mt={1}>
         <Grid item xs={12} sm={6} md={4}>
           <TextField
+            ref={inputRefs["mobile"]}
             fullWidth
             id='register-mobile-id'
             name="mobile"
@@ -343,6 +386,7 @@ const RegistrationForm: React.FC = () => {
         </Grid>
         <Grid item xs={12} sm={6} md={4}>
           <TextField
+            ref={inputRefs["alernativeMobile"]}
             fullWidth
             id='register-alernativeMobile-id'
             name="alernativeMobile"
@@ -356,6 +400,7 @@ const RegistrationForm: React.FC = () => {
         </Grid>
         <Grid item xs={12} sm={6} md={4}>
           <TextField
+            ref={inputRefs["email"]}
             fullWidth
             id='register-email-id'
             name="email"
@@ -370,77 +415,88 @@ const RegistrationForm: React.FC = () => {
       </Grid>
       <Divider sx={{ marginY: 6 }} />
       {/* Dependent Details */}
-      <Typography variant="h6" sx={{ fontSize: '18px', fontWeight: 700, marginY: 3 }}>
-        Gaurdian/Partner Information
+      <Typography variant="h6">
+        Gaurdian Information
       </Typography>
-      <Grid container rowSpacing={rowSpacing} columnSpacing={columnSpacing}>
+      <Grid container rowSpacing={rowSpacing} columnSpacing={columnSpacing} mt={1}>
         <Grid item xs={12} sm={12} md={12}>
-          <RadioGroup row aria-label="dependentType" defaultValue={formik.initialValues.dependentType} name="dependentType" value={formik.values.dependentType} onChange={formik.handleChange}>
-            <FormControlLabel value="partner" control={<Radio />} label="Partner" />
-            <FormControlLabel value="gaurdian" control={<Radio />} label="Gaurdian" />
-          </RadioGroup>
-        </Grid>
-        <Grid item xs={12} sm={6} md={3}>
-          <TextField
-            fullWidth
-            id='register-dependentName-id'
-            name="dependentName"
-            label="Dependent Name"
-            placeholder='Dependent Name'
-            value={formik.values.dependentName}
+          <FormControlLabel label="Gaurdian" control={<Checkbox
+            id='dependentType-id'
+            name="dependentType"
+            value={formik.values.dependentType}
             onChange={formik.handleChange}
-            error={formik.touched.dependentName && Boolean(formik.errors.dependentName)}
-            helperText={formik.touched.dependentName && formik.errors.dependentName}
-          />
+          />} />
         </Grid>
-        <Grid item xs={12} sm={6} md={3}>
-          <TextField
-            fullWidth
-            id='register-dependentRelation-id'
-            name="dependentRelation"
-            label="Dependent Relation"
-            placeholder='Dependent Relation'
-            value={formik.values.dependentRelation}
-            onChange={formik.handleChange}
-            error={formik.touched.dependentRelation && Boolean(formik.errors.dependentRelation)}
-            helperText={formik.touched.dependentRelation && formik.errors.dependentRelation}
-          />
-        </Grid>
-        <Grid item xs={12} sm={6} md={3}>
-          <TextField
-            fullWidth
-            id='register-dependentMobile-id'
-            name="dependentMobile"
-            label="Dependent Mobile"
-            placeholder='Dependent Mobile'
-            value={formik.values.dependentMobile}
-            onChange={formik.handleChange}
-            error={formik.touched.dependentMobile && Boolean(formik.errors.dependentMobile)}
-            helperText={formik.touched.dependentMobile && formik.errors.dependentMobile}
-          />
-        </Grid>
-        <Grid item xs={12} sm={6} md={3}>
-          <TextField
-            fullWidth
-            id='register-dependentEmail-id'
-            name="dependentEmail"
-            label="Dependent Email"
-            placeholder='Dependent Email'
-            value={formik.values.dependentEmail}
-            onChange={formik.handleChange}
-            error={formik.touched.dependentEmail && Boolean(formik.errors.dependentEmail)}
-            helperText={formik.touched.dependentEmail && formik.errors.dependentEmail}
-          />
-        </Grid>
+        {formik.values.dependentType && (
+          <>
+            <Grid item xs={12} sm={6} md={3}>
+              <TextField
+                ref={inputRefs["dependentName"]}
+                fullWidth
+                id='register-dependentName-id'
+                name="dependentName"
+                label="Dependent Name"
+                placeholder='Dependent Name'
+                value={formik.values.dependentName}
+                onChange={formik.handleChange}
+                error={formik.touched.dependentName && Boolean(formik.errors.dependentName)}
+                helperText={formik.touched.dependentName && formik.errors.dependentName}
+              />
+            </Grid>
+            <Grid item xs={12} sm={6} md={3}>
+              <TextField
+                ref={inputRefs["dependentRelation"]}
+                fullWidth
+                id='register-dependentRelation-id'
+                name="dependentRelation"
+                label="Dependent Relation"
+                placeholder='Dependent Relation'
+                value={formik.values.dependentRelation}
+                onChange={formik.handleChange}
+                error={formik.touched.dependentRelation && Boolean(formik.errors.dependentRelation)}
+                helperText={formik.touched.dependentRelation && formik.errors.dependentRelation}
+              />
+            </Grid>
+            <Grid item xs={12} sm={6} md={3}>
+              <TextField
+                ref={inputRefs["dependentMobile"]}
+                fullWidth
+                id='register-dependentMobile-id'
+                name="dependentMobile"
+                label="Dependent Mobile"
+                placeholder='Dependent Mobile'
+                value={formik.values.dependentMobile}
+                onChange={formik.handleChange}
+                error={formik.touched.dependentMobile && Boolean(formik.errors.dependentMobile)}
+                helperText={formik.touched.dependentMobile && formik.errors.dependentMobile}
+              />
+            </Grid>
+            <Grid item xs={12} sm={6} md={3}>
+              <TextField
+                ref={inputRefs["dependentEmail"]}
+                fullWidth
+                id='register-dependentEmail-id'
+                name="dependentEmail"
+                label="Dependent Email"
+                placeholder='Dependent Email'
+                value={formik.values.dependentEmail}
+                onChange={formik.handleChange}
+                error={formik.touched.dependentEmail && Boolean(formik.errors.dependentEmail)}
+                helperText={formik.touched.dependentEmail && formik.errors.dependentEmail}
+              />
+            </Grid>
+          </>
+        )}
       </Grid>
       <Divider sx={{ marginY: 6 }} />
       {/* Address Details */}
-      <Typography variant="h6" sx={{ fontSize: '18px', fontWeight: 700, marginY: 3 }}>
+      <Typography variant="h6">
         Address
       </Typography>
-      <Grid container rowSpacing={rowSpacing} columnSpacing={columnSpacing}>
+      <Grid container rowSpacing={rowSpacing} columnSpacing={columnSpacing} mt={1}>
         <Grid item xs={12} sm={6} md={6}>
           <TextField
+            ref={inputRefs["addressLine1"]}
             fullWidth
             id='register-addressLine1-id'
             name="addressLine1"
@@ -454,6 +510,7 @@ const RegistrationForm: React.FC = () => {
         </Grid>
         <Grid item xs={12} sm={6} md={6}>
           <TextField
+            ref={inputRefs["addressLine2"]}
             fullWidth
             id='register-addressLine2-id'
             name="addressLine2"
@@ -467,6 +524,7 @@ const RegistrationForm: React.FC = () => {
         </Grid>
         <Grid item xs={12} sm={6} md={4}>
           <TextField
+            ref={inputRefs["state"]}
             fullWidth
             id='register-state-id'
             name="state"
@@ -480,6 +538,7 @@ const RegistrationForm: React.FC = () => {
         </Grid>
         <Grid item xs={12} sm={6} md={4}>
           <TextField
+            ref={inputRefs["city"]}
             fullWidth
             id='register-city-id'
             name="city"
@@ -493,6 +552,7 @@ const RegistrationForm: React.FC = () => {
         </Grid>
         <Grid item xs={12} sm={6} md={4}>
           <TextField
+            ref={inputRefs["pincode"]}
             fullWidth
             id='register-pincode-id'
             name="pincode"
@@ -506,6 +566,7 @@ const RegistrationForm: React.FC = () => {
         </Grid>
         {/* <Grid item xs={12} sm={6} md={2}>
           <TextField
+          ref={inputRefs["firstName"]}
             select
             fullWidth
             id='register-country-id'
@@ -523,12 +584,13 @@ const RegistrationForm: React.FC = () => {
       </Grid>
       <Divider sx={{ marginY: 6 }} />
       {/* ID Proof Details */}
-      <Typography variant="h6" sx={{ fontSize: '18px', fontWeight: 700, marginY: 3 }}>
+      <Typography variant="h6">
         Identity Information
       </Typography>
-      <Grid container rowSpacing={rowSpacing} columnSpacing={columnSpacing}>
+      <Grid container rowSpacing={rowSpacing} columnSpacing={columnSpacing} mt={1}>
         <Grid item xs={12} sm={6} md={3}>
           <TextField
+            ref={inputRefs["idProofType"]}
             select
             fullWidth
             id='register-idProof-id'
@@ -548,6 +610,7 @@ const RegistrationForm: React.FC = () => {
         </Grid>
         <Grid item xs={12} sm={6} md={3}>
           <TextField
+            ref={inputRefs["idProofNumber"]}
             fullWidth
             id='register-idProofNumber-id'
             name="idProofNumber"
@@ -561,6 +624,7 @@ const RegistrationForm: React.FC = () => {
         </Grid>
         <Grid item xs={12} sm={6} md={3}>
           <TextField
+            ref={inputRefs["idProofIssuedCountry"]}
             select
             fullWidth
             id='register-idProofIssuedCountry-id'
@@ -577,6 +641,7 @@ const RegistrationForm: React.FC = () => {
         </Grid>
         <Grid item xs={12} sm={6} md={3}>
           <TextField
+            ref={inputRefs["ABHANumber"]}
             fullWidth
             id='register-idProofAbhaNumber-id'
             name="ABHANumber"
@@ -591,12 +656,13 @@ const RegistrationForm: React.FC = () => {
       </Grid>
       <Divider sx={{ marginY: 6 }} />
       {/* Additional Details */}
-      <Typography variant="h6" sx={{ fontSize: '18px', fontWeight: 700, marginY: 3 }}>
+      <Typography variant="h6">
         Additional Information
       </Typography>
-      <Grid container rowSpacing={rowSpacing} columnSpacing={columnSpacing}>
+      <Grid container rowSpacing={rowSpacing} columnSpacing={columnSpacing} mt={1}>
         <Grid item xs={12} sm={6} md={3}>
           <TextField
+            ref={inputRefs["reasonOfVisit"]}
             fullWidth
             id='register-reasonOfVisit-id'
             name="reasonOfVisit"
@@ -610,6 +676,7 @@ const RegistrationForm: React.FC = () => {
         </Grid>
         <Grid item xs={12} sm={6} md={3}>
           <TextField
+            ref={inputRefs["referredBy"]}
             fullWidth
             id='register-referredBy-id'
             name="referredBy"
@@ -623,19 +690,21 @@ const RegistrationForm: React.FC = () => {
         </Grid>
         <Grid item xs={12} sm={6} md={3}>
           <TextField
+            ref={inputRefs["referrerName"]}
             fullWidth
             id='register-referredByDoctor-id'
-            name="referredByDoctor"
-            label="Referred By Doctor"
-            placeholder='Referred By Doctor'
-            value={formik.values.referredByDoctor}
+            name="referrerName"
+            label="Referred Name"
+            placeholder='Referred Name'
+            value={formik.values.referrerName}
             onChange={formik.handleChange}
-            error={formik.touched.referredByDoctor && Boolean(formik.errors.referredByDoctor)}
-            helperText={formik.touched.referredByDoctor && formik.errors.referredByDoctor}
+            error={formik.touched.referrerName && Boolean(formik.errors.referrerName)}
+            helperText={formik.touched.referrerName && formik.errors.referrerName}
           />
         </Grid>
         <Grid item xs={12} sm={6} md={3}>
           <TextField
+            ref={inputRefs["marketingSource"]}
             fullWidth
             id='register-marketingSource-id'
             name="marketingSource"
@@ -655,19 +724,20 @@ const RegistrationForm: React.FC = () => {
             onChange={formik.handleChange}
           />} />
         </Grid>
-        <Grid item xs={12} sm={6} md={3.5}>
+        {formik.values.intepreter && (<Grid item xs={12} sm={6} md={3.5}>
           <TextField
+            ref={inputRefs["intepreterName"]}
             fullWidth
-            id='register-intepreteName-id'
-            name="intepreteName"
+            id='register-intepreterName-id'
+            name="intepreterName"
             label="Inteprete Name"
             placeholder='Inteprete Name'
-            value={formik.values.intepreteName}
+            value={formik.values.intepreterName}
             onChange={formik.handleChange}
-            error={formik.touched.intepreteName && Boolean(formik.errors.intepreteName)}
-            helperText={formik.touched.intepreteName && formik.errors.intepreteName}
+            error={formik.touched.intepreterName && Boolean(formik.errors.intepreterName)}
+            helperText={formik.touched.intepreterName && formik.errors.intepreterName}
           />
-        </Grid>
+        </Grid>)}
         <Grid item xs={12} sm={6} md={3.5}>
           <FormControlLabel label="Patient Surrogate" control={<Checkbox
             id='register-isPatientSurrogate-id'
@@ -684,26 +754,28 @@ const RegistrationForm: React.FC = () => {
             onChange={formik.handleChange}
           />} />
         </Grid>
-        <Grid item xs={12} sm={6} md={8}>
-          <TextField
-            fullWidth
-            id='register-detailsOfDeath-id'
-            name="detailsOfDeath"
-            label="Details Of Death"
-            placeholder='Details Of Death'
-            value={formik.values.detailsOfDeath}
-            onChange={formik.handleChange}
-            error={formik.touched.detailsOfDeath && Boolean(formik.errors.detailsOfDeath)}
-            helperText={formik.touched.detailsOfDeath && formik.errors.detailsOfDeath}
-          />
-        </Grid>
+        {formik.values.isPatientDeceased && (
+          <Grid item xs={12} sm={6} md={8}>
+            <TextField
+              ref={inputRefs["detailsOfDeath"]}
+              fullWidth
+              id='register-detailsOfDeath-id'
+              name="detailsOfDeath"
+              label="Details Of Death"
+              placeholder='Details Of Death'
+              value={formik.values.detailsOfDeath}
+              onChange={formik.handleChange}
+              error={formik.touched.detailsOfDeath && Boolean(formik.errors.detailsOfDeath)}
+              helperText={formik.touched.detailsOfDeath && formik.errors.detailsOfDeath}
+            />
+          </Grid>)}
       </Grid>
       <Divider sx={{ marginY: 6 }} />
       {/* Insurance Details */}
-      <Typography variant="h6" sx={{ fontSize: '18px', fontWeight: 700, marginY: 3 }}>
+      <Typography variant="h6">
         Insurance Information
       </Typography>
-      <Grid container rowSpacing={rowSpacing} columnSpacing={columnSpacing}>
+      <Grid container rowSpacing={rowSpacing} columnSpacing={columnSpacing} mt={1}>
         <Grid item xs={12} sm={6} md={4}>
           <FormControlLabel label="Patient Insured" control={<Checkbox
             id='register-isPatientInsured-id'
@@ -712,68 +784,74 @@ const RegistrationForm: React.FC = () => {
             onChange={formik.handleChange}
           />} />
         </Grid>
-        <Grid item xs={12} sm={6} md={8}>
-          {/* Spacer */}
-        </Grid>
-        <Grid item xs={12} sm={6} md={3}>
-          <TextField
-            fullWidth
-            id='register-insuranceCompany-id'
-            name="insuranceSponsorName"
-            label="Insurance Company"
-            placeholder='Insurance Company'
-            value={formik.values.insuranceSponsorName}
-            onChange={formik.handleChange}
-            error={formik.touched.insuranceSponsorName && Boolean(formik.errors.insuranceSponsorName)}
-            helperText={formik.touched.insuranceSponsorName && formik.errors.insuranceSponsorName}
-          />
-        </Grid>
-        <Grid item xs={12} sm={6} md={3}>
-          <TextField
-            fullWidth
-            id='register-insuranceNumber-id'
-            name="insurancePolicyHolderName"
-            label="Insurance Policy Holder Name"
-            placeholder='Insurance Name'
-            value={formik.values.insurancePolicyHolderName}
-            onChange={formik.handleChange}
-            error={formik.touched.insurancePolicyNumber && Boolean(formik.errors.insurancePolicyNumber)}
-            helperText={formik.touched.insurancePolicyNumber && formik.errors.insurancePolicyNumber}
-          />
-        </Grid>
-        <Grid item xs={12} sm={6} md={3}>
-          <TextField
-            fullWidth
-            id='register-insurancePolicyNumber-id'
-            name="insurancePolicyNumber"
-            label="Insurance Policy Number"
-            placeholder='Insurance Policy Number'
-            value={formik.values.insurancePolicyNumber}
-            onChange={formik.handleChange}
-            error={formik.touched.insurancePolicyNumber && Boolean(formik.errors.insurancePolicyNumber)}
-            helperText={formik.touched.insurancePolicyNumber && formik.errors.insurancePolicyNumber}
-          />
-        </Grid>
-        <Grid item xs={12} sm={6} md={3}>
-          <TextField
-            fullWidth
-            id='register-insuranceAmountEligible-id'
-            name="insuranceAmountEligible"
-            label="Amount Eligible"
-            placeholder='Amount Eligible'
-            value={formik.values.insuranceAmountEligible}
-            onChange={formik.handleChange}
-            error={formik.touched.insuranceAmountEligible && Boolean(formik.errors.insuranceAmountEligible)}
-            helperText={formik.touched.insuranceAmountEligible && formik.errors.insuranceAmountEligible}
-          />
-        </Grid>
+        {formik.values.isPatientInsured && (
+          <><Grid item xs={12} sm={6} md={8}>
+            {/* Spacer */}
+          </Grid>
+            <Grid item xs={12} sm={6} md={3}>
+              <TextField
+                ref={inputRefs["insuranceSponsorName"]}
+                fullWidth
+                id='register-insuranceCompany-id'
+                name="insuranceSponsorName"
+                label="Insurance Company"
+                placeholder='Insurance Company'
+                value={formik.values.insuranceSponsorName}
+                onChange={formik.handleChange}
+                error={formik.touched.insuranceSponsorName && Boolean(formik.errors.insuranceSponsorName)}
+                helperText={formik.touched.insuranceSponsorName && formik.errors.insuranceSponsorName}
+              />
+            </Grid>
+            <Grid item xs={12} sm={6} md={3}>
+              <TextField
+                ref={inputRefs["insurancePolicyHolderName"]}
+                fullWidth
+                id='register-insuranceNumber-id'
+                name="insurancePolicyHolderName"
+                label="Insurance Policy Holder Name"
+                placeholder='Insurance Name'
+                value={formik.values.insurancePolicyHolderName}
+                onChange={formik.handleChange}
+                error={formik.touched.insurancePolicyNumber && Boolean(formik.errors.insurancePolicyNumber)}
+                helperText={formik.touched.insurancePolicyNumber && formik.errors.insurancePolicyNumber}
+              />
+            </Grid>
+            <Grid item xs={12} sm={6} md={3}>
+              <TextField
+                ref={inputRefs["insurancePolicyNumber"]}
+                fullWidth
+                id='register-insurancePolicyNumber-id'
+                name="insurancePolicyNumber"
+                label="Insurance Policy Number"
+                placeholder='Insurance Policy Number'
+                value={formik.values.insurancePolicyNumber}
+                onChange={formik.handleChange}
+                error={formik.touched.insurancePolicyNumber && Boolean(formik.errors.insurancePolicyNumber)}
+                helperText={formik.touched.insurancePolicyNumber && formik.errors.insurancePolicyNumber}
+              />
+            </Grid>
+            <Grid item xs={12} sm={6} md={3}>
+              <TextField
+                ref={inputRefs["insuranceAmountEligible"]}
+                fullWidth
+                id='register-insuranceAmountEligible-id'
+                name="insuranceAmountEligible"
+                label="Amount Eligible"
+                placeholder='Amount Eligible'
+                value={formik.values.insuranceAmountEligible}
+                onChange={formik.handleChange}
+                error={formik.touched.insuranceAmountEligible && Boolean(formik.errors.insuranceAmountEligible)}
+                helperText={formik.touched.insuranceAmountEligible && formik.errors.insuranceAmountEligible}
+              />
+            </Grid>
+          </>)}
       </Grid>
       <Divider sx={{ marginY: 6 }} />
       {/* Image */}
-      <Typography variant="h6" sx={{ fontSize: '18px', fontWeight: 700, marginY: 3 }}>
+      <Typography variant="h6">
         Image
       </Typography>
-      <Grid container rowSpacing={rowSpacing} columnSpacing={columnSpacing}>
+      <Grid container rowSpacing={rowSpacing} columnSpacing={columnSpacing} mt={1}>
         <Grid item xs={12} sm={6} md={2}>
           <Button component="label" variant="outlined" startIcon={<CloudUploadIcon />}>
             Upload
@@ -782,6 +860,7 @@ const RegistrationForm: React.FC = () => {
         </Grid>
         <Grid item xs={12} sm={6} md={10}>
           <TextField
+            ref={inputRefs["remarks"]}
             multiline
             minRows={1}
             fullWidth
@@ -798,7 +877,7 @@ const RegistrationForm: React.FC = () => {
       </Grid>
       <Divider sx={{ marginY: 6 }} />
       {/* Submit */}
-      <Grid container rowSpacing={rowSpacing} columnSpacing={columnSpacing}>
+      <Grid container rowSpacing={rowSpacing} columnSpacing={columnSpacing} mt={1}>
         <Grid item xs={12} sm={12} md={12} sx={{ display: 'flex', justifyContent: 'flex-end' }}>
           {isLoading ? (
             <Button variant="outlined" disabled>
@@ -810,10 +889,6 @@ const RegistrationForm: React.FC = () => {
             </Button>
           )
           }
-        </Grid>
-        <Grid item xs={12} sm={12} md={12} sx={{ display: 'flex', justifyContent: 'flex-end' }}>
-          {isError && <Typography variant="body1" sx={{ color: 'red', marginLeft: 2 }}>Unkown Error. Please try again</Typography>}
-          {isSuccess && <Typography variant="body1" sx={{ color: 'green', marginLeft: 2 }}>Patient Successfully Registered</Typography>}
         </Grid>
       </Grid>
     </form>
