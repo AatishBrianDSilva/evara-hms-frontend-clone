@@ -1,40 +1,31 @@
 import React from 'react';
-import { DataGrid, GridColDef, GridRowsProp, GridActionsCellItem, GridToolbarContainer } from '@mui/x-data-grid';
+import { DataGrid, GridColDef, GridRowsProp, GridToolbarContainer } from '@mui/x-data-grid';
 import { SxProps, useTheme, Theme } from '@mui/material/styles';
 import { LinearProgress, Button } from '@mui/material';
 
 import AddIcon from '@mui/icons-material/Add';
-import DeleteIcon from '@mui/icons-material/DeleteOutlined';
-import EditIcon from '@mui/icons-material/Edit';
-import SaveIcon from '@mui/icons-material/Save';
-import CancelIcon from '@mui/icons-material/Close';
+
 import useResponsiveColumns from '../../hooks/useResponsiveColumn';
 
 interface CustomDataGridProps {
   columns: GridColDef[];
   rows: GridRowsProp;
   rowHeight?: number;
+  rowHover?: boolean;
+  onRowClick?: (params: any) => void;
   columnHeaderHeight?: number;
   pageSizeOptions?: number[];
   sx?: SxProps<Theme>;
   onAdd?: () => Promise<void>; // Handler for adding a new row
-  onEdit?: (id: any) => Promise<void>; // Handler for starting to edit a row
-  onSave?: (id: any) => Promise<void>; // Handler for saving changes to a row
-  onCancel?: (id: any) => Promise<void>; // Handler for canceling edits
-  onDelete?: (id: any) => Promise<void>; // Handler for deleting a row
-  canAdd?: boolean;
-  canEdit?: boolean;
-  canDelete?: boolean;
 }
 
 interface CustomToolbarProps {
   onAdd: () => void;
-  canAdd: boolean;
 }
 
-const CustomToolbar: React.FC<CustomToolbarProps> = ({ onAdd, canAdd }) => (
+const CustomToolbar: React.FC<CustomToolbarProps> = ({ onAdd }) => (
   <GridToolbarContainer sx={{ p: 0.5 }}>
-    {canAdd && (
+    {onAdd && (
       <Button color="primary" size='small' variant='contained' startIcon={<AddIcon />} onClick={onAdd}>
         Add Row
       </Button>
@@ -45,48 +36,14 @@ const CustomToolbar: React.FC<CustomToolbarProps> = ({ onAdd, canAdd }) => (
 const CustomDataGrid: React.FC<CustomDataGridProps> = ({
   columns,
   rows,
-  rowHeight = 30,
-  columnHeaderHeight = 35,
+  rowHover = false,
+  rowHeight = 40,
+  columnHeaderHeight = 40,
   sx = {},
   pageSizeOptions = [25, 50, 100],
   onAdd,
-  onEdit,
-  onSave,
-  onCancel,
-  onDelete,
-  canAdd,
-  canEdit,
-  canDelete,
   ...rest
 }) => {
-
-
-  const actionColumn: GridColDef = {
-    field: 'actions',
-    type: 'actions',
-    headerName: 'Actions',
-    flex: 1,
-    getActions: (params) => {
-      const actions = [];
-      if (canEdit && onEdit && onSave && onCancel) {
-        actions.push(
-          <GridActionsCellItem icon={<EditIcon />} label="Edit" onClick={() => onEdit(params.id)} />,
-          <GridActionsCellItem icon={<SaveIcon />} label="Save" onClick={() => onSave(params.id)} />,
-          <GridActionsCellItem icon={<CancelIcon />} label="Cancel" onClick={() => onCancel(params.id)} />
-        );
-      }
-      if (canDelete && onDelete) {
-        actions.push(
-          <GridActionsCellItem icon={<DeleteIcon />} label="Delete" onClick={() => onDelete(params.id)} />
-        );
-      }
-      return actions;
-    },
-  };
-
-  if (canEdit || canDelete) {
-    columns = [...columns, actionColumn];
-  }
 
   const responsiveColumns = useResponsiveColumns(columns);
 
@@ -102,7 +59,7 @@ const CustomDataGrid: React.FC<CustomDataGridProps> = ({
         toolbar: CustomToolbar,
       }}
       slotProps={{
-        toolbar: { onAdd, canAdd },
+        toolbar: { onAdd },
       }}
       pagination
       pageSizeOptions={pageSizeOptions}
@@ -110,9 +67,9 @@ const CustomDataGrid: React.FC<CustomDataGridProps> = ({
       rows={rows}
       sx={{
         ...sx,
-        borderColor: theme.palette.primary.light,
+        // borderColor: theme.palette.primary.light,
         '& .MuiDataGrid-columnHeaders': {
-          backgroundColor: theme.palette.primary.main,
+          backgroundColor: theme.palette.secondary.main,
           color: '#fff',
           fontSize: '12px',
           fontWeight: 'bold',
@@ -120,7 +77,16 @@ const CustomDataGrid: React.FC<CustomDataGridProps> = ({
         '& .MuiDataGrid-iconButtonContainer .MuiButtonBase-root': {
           color: "white"
         },
+        ...(rowHover && {
+          '& .MuiDataGrid-row': {
+            cursor: 'pointer', // Apply cursor style conditionally based on rowHover prop
+            '&:hover': {
+              backgroundColor: 'rgba(0, 0, 0, 0.04)', // Optional: change row background on hover
+            }
+          },
+        }),
         fontSize: '12px',
+        color: theme.palette.text.secondary,
         fontWeight: '500',
       }}
       {...rest}
