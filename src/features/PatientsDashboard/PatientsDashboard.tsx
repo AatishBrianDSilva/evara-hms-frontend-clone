@@ -1,7 +1,7 @@
-import { AppBar, Avatar, Box, Button, Card, CardContent, CardMedia, Collapse, Divider, Grid, Icon, IconButton, MenuItem, Paper, Step, StepContent, StepLabel, Stepper, Tab, Tabs, TextField, Tooltip, Typography, useTheme } from '@mui/material'
+import { AppBar, Avatar, Box, Button, Collapse, Grid, IconButton, MenuItem, Paper, Step, StepContent, StepLabel, Stepper, Tab, Tabs, TextField, Tooltip, Typography, useTheme } from '@mui/material'
 import React, { useState } from 'react'
 import ContentSection from '../../components/ContentSection/ContentSection';
-import { AcUnit, Add, Edit, Expand, ExpandCircleDownOutlined, ExpandLessOutlined, ExpandMore, ExpandMoreOutlined, ExpandMoreSharp, Healing, HomeRepairService, Loop, Moving, Note, NoteAdd, Notes, PrecisionManufacturing, Receipt, Restore, Science, Summarize, SwapHoriz, TextSnippet } from '@mui/icons-material';
+import { AcUnit, Add, Edit, ExpandLessOutlined, ExpandMoreOutlined, Healing, HomeRepairService, Loop, Moving, PrecisionManufacturing, Receipt, Restore, Science, Summarize, SwapHoriz, TextSnippet } from '@mui/icons-material';
 import { CalendarIcon, DatePicker } from '@mui/x-date-pickers';
 import { FileUploadAndPreview } from '../../components/FileUploadAndPreview/FileUploadAndPreview';
 // import { setSelectedPatientId } from '../Patients/patientsSlice';

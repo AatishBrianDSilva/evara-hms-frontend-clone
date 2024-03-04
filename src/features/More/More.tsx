@@ -11,7 +11,9 @@ import { RootState } from '../../app/store'
 const More: React.FC = () => {
   const navigate = useNavigate();
   const dispatch = useDispatch();
-  const { isMoreModalOpen, modalType } = useSelector((state: RootState) => state.more);
+  const isMoreModalOpen = true;
+  const modalType = 'patient';
+
   const patientId = useSelector((state: RootState) => state.patients.selectedPatientId);
   const currentNavList = modalType === "patient" ? patientNavList : navList;
 
