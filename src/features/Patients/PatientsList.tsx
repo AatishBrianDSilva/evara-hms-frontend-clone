@@ -33,7 +33,7 @@ const PatientsList: React.FC = () => {
   };
 
   const columnsConfig: GridColDef[] = [
-    { field: 'id', headerName: 'ID', flex: 1 }, // Adjust the flex values based on your needs
+    { field: 'patientId', headerName: 'ID', flex: 1 }, // Adjust the flex values based on your needs
     { field: 'firstName', headerName: 'Name', flex: 1, },
     { field: 'gender', headerName: 'Gender', flex: 1 },
     { field: 'age', headerName: 'Age', flex: 1 },
@@ -74,8 +74,9 @@ const PatientsList: React.FC = () => {
             onPageSizeChange={handlePageSizeChange}
             loading={isLoading || isFetching}
             rowHover={true}
-            onRowClick={(row) => navigation(`/patients/${row.row.id}`)}
+            onRowClick={(row) => navigation(`/patients/${row.row.patientId}`)}
             sx={{ height: "100%" }}
+            enablePagination={true}
           />
         </Box>
       )}

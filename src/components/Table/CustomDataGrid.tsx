@@ -10,11 +10,11 @@ import useResponsiveColumns from '../../hooks/useResponsiveColumn';
 interface CustomDataGridProps {
   columns: GridColDef[];
   rows: GridRowsProp;
-  page: number;
-  pageSize: number;
-  totalRows: number;
-  onPageChange: (page: number) => void;
-  onPageSizeChange: (pageSize: number) => void;
+  page?: number; // Made optional
+  pageSize?: number; // Made optional
+  totalRows?: number; // Made optional
+  onPageChange?: (page: number) => void; // Made optional
+  onPageSizeChange?: (pageSize: number) => void; // Made optional
   rowHeight?: number;
   rowHover?: boolean;
   onRowClick?: (params: any) => void;
@@ -23,13 +23,15 @@ interface CustomDataGridProps {
   sx?: SxProps<Theme>;
   loading?: boolean;
   autoHeight?: boolean;
-  onAdd?: () => Promise<void>; // Handler for adding a new row
+  onAdd?: () => Promise<void>;
+  enablePagination?: boolean; // New prop to control pagination
 }
 
 interface CustomToolbarProps {
-  onAdd: () => void;
+  onAdd?: () => void;
 }
 
+// CustomToolbar remains unchanged
 const CustomToolbar: React.FC<CustomToolbarProps> = ({ onAdd }) => (
   <GridToolbarContainer sx={{ p: 0.5 }}>
     {onAdd && (
@@ -56,6 +58,7 @@ const CustomDataGrid: React.FC<CustomDataGridProps> = ({
   pageSize,
   totalRows,
   autoHeight = true,
+  enablePagination = false, // Default to false
   ...rest
 }) => {
 
@@ -76,23 +79,11 @@ const CustomDataGrid: React.FC<CustomDataGridProps> = ({
       slotProps={{
         toolbar: { onAdd },
       }}
-      pagination
-      paginationModel={{
-        page: page - 1,
-        pageSize,
-      }}
-      pageSizeOptions={[25, 50, 100]} // Customize as needed
-      rowCount={totalRows}
-      paginationMode="server" // Important for server-side pagination
-      onPaginationModelChange={(model) => {
-        onPageChange(model.page + 1);
-        onPageSizeChange(model.pageSize);
-      }} // Adjust for zero-based index
+      rowCount={totalRows || 0} // Use 0 as a default value
       columns={responsiveColumns}
       rows={rows}
       sx={{
         ...sx,
-        // borderColor: theme.palette.primary.light,
         '& .MuiDataGrid-columnHeaders': {
           backgroundColor: theme.palette.secondary.main,
           color: '#fff',
@@ -104,9 +95,9 @@ const CustomDataGrid: React.FC<CustomDataGridProps> = ({
         },
         ...(rowHover && {
           '& .MuiDataGrid-row': {
-            cursor: 'pointer', // Apply cursor style conditionally based on rowHover prop
+            cursor: 'pointer',
             '&:hover': {
-              backgroundColor: 'rgba(0, 0, 0, 0.04)', // Optional: change row background on hover
+              backgroundColor: 'rgba(0, 0, 0, 0.04)',
             }
           },
         }),
@@ -114,6 +105,19 @@ const CustomDataGrid: React.FC<CustomDataGridProps> = ({
         color: theme.palette.text.secondary,
         fontWeight: '500',
       }}
+      {...(enablePagination && {
+        pagination: true,
+        pageSizeOptions: pageSizeOptions,
+        paginationMode: "server",
+        paginationModel: {
+          page: page ? page - 1 : 0, // Adjust for zero-based index
+          pageSize: pageSize || 25, // Default page size
+        },
+        onPaginationModelChange: (model) => {
+          if (onPageChange) onPageChange(model.page + 1);
+          if (onPageSizeChange) onPageSizeChange(model.pageSize);
+        },
+      })}
       {...rest}
     />
   );
