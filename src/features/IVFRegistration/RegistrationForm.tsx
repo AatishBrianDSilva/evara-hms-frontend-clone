@@ -5,7 +5,7 @@ import { Button, Checkbox, Divider, FormControlLabel, Grid, MenuItem, TextField,
 import { DatePicker } from '@mui/x-date-pickers'
 import CloudUploadIcon from '@mui/icons-material/CloudUpload';
 
-import { useAddPatientMutation } from '../../services/ivfRegistrationApi';
+import { useAddPatientMutation } from '../../services/patientsApi';
 import { VisuallyHiddenInput } from '../../components/Utils/VisuallyHiddenInput';
 import { useToast } from '../../context/ToastContext'
 
