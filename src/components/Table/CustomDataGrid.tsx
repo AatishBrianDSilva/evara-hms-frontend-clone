@@ -10,12 +10,19 @@ import useResponsiveColumns from '../../hooks/useResponsiveColumn';
 interface CustomDataGridProps {
   columns: GridColDef[];
   rows: GridRowsProp;
+  page: number;
+  pageSize: number;
+  totalRows: number;
+  onPageChange: (page: number) => void;
+  onPageSizeChange: (pageSize: number) => void;
   rowHeight?: number;
   rowHover?: boolean;
   onRowClick?: (params: any) => void;
   columnHeaderHeight?: number;
   pageSizeOptions?: number[];
   sx?: SxProps<Theme>;
+  loading?: boolean;
+  autoHeight?: boolean;
   onAdd?: () => Promise<void>; // Handler for adding a new row
 }
 
@@ -42,6 +49,13 @@ const CustomDataGrid: React.FC<CustomDataGridProps> = ({
   sx = {},
   pageSizeOptions = [25, 50, 100],
   onAdd,
+  loading,
+  onPageChange,
+  onPageSizeChange,
+  page,
+  pageSize,
+  totalRows,
+  autoHeight = true,
   ...rest
 }) => {
 
@@ -53,7 +67,8 @@ const CustomDataGrid: React.FC<CustomDataGridProps> = ({
     <DataGrid
       rowHeight={rowHeight}
       columnHeaderHeight={columnHeaderHeight}
-      autoHeight
+      loading={loading}
+      autoHeight={autoHeight}
       slots={{
         loadingOverlay: LinearProgress,
         toolbar: CustomToolbar,
@@ -62,7 +77,17 @@ const CustomDataGrid: React.FC<CustomDataGridProps> = ({
         toolbar: { onAdd },
       }}
       pagination
-      pageSizeOptions={pageSizeOptions}
+      paginationModel={{
+        page: page - 1,
+        pageSize,
+      }}
+      pageSizeOptions={[25, 50, 100]} // Customize as needed
+      rowCount={totalRows}
+      paginationMode="server" // Important for server-side pagination
+      onPaginationModelChange={(model) => {
+        onPageChange(model.page + 1);
+        onPageSizeChange(model.pageSize);
+      }} // Adjust for zero-based index
       columns={responsiveColumns}
       rows={rows}
       sx={{
