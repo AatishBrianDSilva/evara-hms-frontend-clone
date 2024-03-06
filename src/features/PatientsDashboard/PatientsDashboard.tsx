@@ -4,6 +4,7 @@ import ContentSection from '../../components/ContentSection/ContentSection';
 import { AcUnit, Add, Edit, ExpandLessOutlined, ExpandMoreOutlined, Healing, HomeRepairService, Loop, Moving, PrecisionManufacturing, Receipt, Restore, Science, Summarize, SwapHoriz, TextSnippet } from '@mui/icons-material';
 import { CalendarIcon, DatePicker } from '@mui/x-date-pickers';
 import { FileUploadAndPreview } from '../../components/FileUploadAndPreview/FileUploadAndPreview';
+import PatientNotes from './PatientNotes';
 // import { setSelectedPatientId } from '../Patients/patientsSlice';
 // import { useDispatch } from 'react-redux';
 
@@ -353,9 +354,7 @@ const PatientsDashboard: React.FC = () => {
   const renderNotes = () => {
     return (
       <Box>
-        <Typography variant="h6" color="text.secondary" component="div">
-          Patient Notes
-        </Typography>
+        <PatientNotes />
       </Box>
     )
   }
