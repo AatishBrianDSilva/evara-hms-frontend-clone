@@ -14,6 +14,13 @@ export const patientsApi = createApi({
         body: patientData,
       }),
     }),
+    addPartner: builder.mutation({
+      query: ({ partnerData, patientId }) => ({
+        url: `patients/${patientId}/partners/add`,
+        method: "POST",
+        body: partnerData,
+      }),
+    }),
     getPatients: builder.query({
       query: (options: IPaginateOptions) => {
         const { page, limit, sort, select, lean, leanWithId } = options;
@@ -38,6 +45,7 @@ export const patientsApi = createApi({
 
 export const {
   useAddPatientMutation,
+  useAddPartnerMutation,
   useGetPatientsQuery,
   useGetPatientByIdQuery,
 } = patientsApi;
