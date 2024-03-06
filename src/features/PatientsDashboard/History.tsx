@@ -1,10 +1,9 @@
 import React, { useState } from 'react'
-import PatientInfo from './PatientInfo'
 import { Box, Button, Grid, Paper, Step, StepContent, StepLabel, Stepper, TextField, Typography } from '@mui/material'
 import { DatePicker } from '@mui/x-date-pickers';
 import { FileUploadAndPreview } from '../../components/FileUploadAndPreview/FileUploadAndPreview';
 
-const PatientHistory: React.FC = () => {
+const History: React.FC = () => {
 
   const [activeStep, setActiveStep] = useState(0);
 
@@ -21,9 +20,7 @@ const PatientHistory: React.FC = () => {
   };
 
   return (
-    <div className='main-container'>
-      <PatientInfo />
-
+    <>
       <Box mt={2} boxShadow={2} p={2} borderRadius={2} height={'200px'}>
         <Typography variant='h6'>Synopsis</Typography>
       </Box>
@@ -612,8 +609,8 @@ const PatientHistory: React.FC = () => {
           <FileUploadAndPreview handleUpload={() => { }} />
         </Box>
       </Box>
-    </div >
+    </ >
   )
 }
 
-export default PatientHistory
+export default History

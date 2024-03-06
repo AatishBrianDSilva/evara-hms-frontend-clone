@@ -17,7 +17,6 @@ export const patientsApi = createApi({
     getPatients: builder.query({
       query: (options: IPaginateOptions) => {
         const { page, limit, sort, select, lean, leanWithId } = options;
-        // Construct query parameters from options
         const queryParams = new URLSearchParams({
           ...(page ? { page: page.toString() } : {}),
           ...(limit ? { limit: limit.toString() } : {}),
@@ -26,11 +25,19 @@ export const patientsApi = createApi({
           ...(lean ? { lean: lean.toString() } : {}),
           ...(leanWithId ? { leanWithId: leanWithId.toString() } : {}),
         }).toString();
-
         return { url: `patients?${queryParams}`, method: "GET" };
+      },
+    }),
+    getPatientById: builder.query({
+      query: (id: string) => {
+        return { url: `patients/${id}`, method: "GET" };
       },
     }),
   }),
 });
 
-export const { useAddPatientMutation, useGetPatientsQuery } = patientsApi;
+export const {
+  useAddPatientMutation,
+  useGetPatientsQuery,
+  useGetPatientByIdQuery,
+} = patientsApi;
