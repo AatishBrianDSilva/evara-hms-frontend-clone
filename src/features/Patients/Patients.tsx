@@ -2,7 +2,7 @@
 import { Route, Routes } from "react-router-dom";
 import PatientsList from "./PatientsList";
 import PatientsDashboard from "../PatientsDashboard/PatientsDashboard";
-import PatientHistory from "../PatientsDashboard/PatientHistory";
+import PatientHistory from "../PatientsDashboard/History";
 
 const Patients: React.FC = () => {
   return (
