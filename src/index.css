@@ -9,10 +9,6 @@
   --success-main: #44C431;
 }
 
-input {
-  font-size: 12px !important;
-}
-
 /* .MuiDataGrid-columnHeaders {
   background-color: var(--primary-main) !important; 
   color: white !important;

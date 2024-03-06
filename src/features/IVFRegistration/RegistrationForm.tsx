@@ -9,26 +9,13 @@ import { useAddPatientMutation } from '../../services/patientsApi';
 import { VisuallyHiddenInput } from '../../components/Utils/VisuallyHiddenInput';
 import { useToast } from '../../context/ToastContext'
 
+const columnSpacing = 2;
+const rowSpacing = 2;
+
 const RegistrationForm: React.FC = () => {
 
   const inputRefs: Record<string, RefObject<any>> = {};
   const { showPromiseToast } = useToast();
-  const theme = useTheme();
-
-  const isDesktop = useMediaQuery(theme.breakpoints.down('sm'));
-  const [columnSpacing, setColumnSpacing] = useState(1);
-  const [rowSpacing, setRowSpacing] = useState(2.5);
-
-  useEffect(() => {
-    if (isDesktop) {
-      setColumnSpacing(2);
-      setRowSpacing(2.5);
-    } else {
-      setColumnSpacing(1);
-      setRowSpacing(2.5);
-    }
-  }, [isDesktop])
-
 
   const [selectedImage, setSelectedImage] = useState<File | null>(null);
   const [addPatient, { isLoading }] = useAddPatientMutation();

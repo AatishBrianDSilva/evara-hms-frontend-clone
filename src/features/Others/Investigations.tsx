@@ -1,7 +1,7 @@
 import React from 'react';
 import { Box, Button, Checkbox, FormControlLabel, Grid, MenuItem, Tab, Tabs, TextField, Typography } from '@mui/material';
-import TreatmentCyclesTable from '../Others/TreatmentCyclesTable';
-import PatientInfo from '../Others/PatientInfo';
+import TreatmentCyclesTable from './TreatmentCyclesTable';
+import PatientInfo from './PatientInfo';
 import CloudUploadIcon from '@mui/icons-material/CloudUpload';
 import CustomDataGrid from '../../components/Table/CustomDataGrid';
 import { GridColDef } from '@mui/x-data-grid';

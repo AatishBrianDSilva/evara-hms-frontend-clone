@@ -10,6 +10,8 @@ import { store } from "./app/store.ts"
 import { ThemeProvider, createTheme, responsiveFontSizes } from '@mui/material'
 import { ToastProvider } from './context/ToastContext.tsx'
 
+const fontSize = "13px"
+
 let theme = createTheme({
   typography: {
     fontFamily: [
@@ -23,17 +25,27 @@ let theme = createTheme({
         size: "small",
       }
     },
-    MuiInput: {
-      defaultProps: {
-        sx: {
-          fontSize: "10px",
+    MuiInputBase: {
+      styleOverrides: {
+        root: {
+          height: "35px",
         }
       }
     },
     MuiFormControl: {
-      defaultProps: {
-        size: "small",
-      },
+      styleOverrides: {
+        root: {
+          height: "35px",
+          fontSize: fontSize,
+        }
+      }
+    },
+    MuiOutlinedInput: {
+      styleOverrides: {
+        root: {
+          fontSize: fontSize,
+        }
+      }
     },
     MuiInputLabel: {
       defaultProps: {
@@ -45,7 +57,7 @@ let theme = createTheme({
       styleOverrides: {
         shrink: ({ ownerState }) => ({
           ...(ownerState.shrink && {
-            fontSize: "1rem !important",
+            fontSize: "15px !important",
             top: "-1 !important",
           }),
         }),
