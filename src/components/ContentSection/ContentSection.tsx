@@ -13,7 +13,7 @@ const ContentSection: React.FC<ContentSectionProps> = ({ title, icon, children, 
   return (
     <Box component="section" display={"flex"} flexDirection={"column"} height={"calc(100vh - 75px)"}>
       <Paper sx={{ height: "100%", overflow: 'auto', display: "flex", flex: "1 1 auto" }}>
-        <Box padding={2} display={"flex"} flexDirection={"column"} flex="1 1 auto">
+        <Box padding={2} pb={0} display={"flex"} flexDirection={"column"} flex="1 1 auto">
           {title ? (
             <>
               <Typography variant="button" color="secondary" sx={{ display: 'flex', alignItems: 'center', mb: 1, ...titleSx }}>
@@ -21,7 +21,7 @@ const ContentSection: React.FC<ContentSectionProps> = ({ title, icon, children, 
                 {title}
               </Typography>
               <Divider />
-              <Box mt={2} display={"flex"} flexDirection={"column"} flex="1 1 auto">
+              <Box mt={2} pb={2} display={"flex"} flexDirection={"column"} flex="1 1 auto">
                 {children}
               </Box>
             </>
