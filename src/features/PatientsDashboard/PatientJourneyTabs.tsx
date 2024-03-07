@@ -3,6 +3,7 @@ import TabPanel from '../../components/Utils/TabPanel'
 import { Box, Tab, Tabs, Typography } from '@mui/material'
 import { AcUnit, HomeRepairService, Loop, PrecisionManufacturing, Science } from '@mui/icons-material'
 import Investigations from './Investigations'
+import Procedures from './Procedures'
 
 const PatientJourneyTabs = () => {
 
@@ -40,9 +41,7 @@ const PatientJourneyTabs = () => {
         </TabPanel>
         <TabPanel id="patient-secondary" value={tabValue} index={1}>
           <Box>
-            <Typography variant="h6" color="text.secondary" component="div">
-              Procedure
-            </Typography>
+           <Procedures />
           </Box>
         </TabPanel>
         <TabPanel id="patient-secondary" value={tabValue} index={2}>

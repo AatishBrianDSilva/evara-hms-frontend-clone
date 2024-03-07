@@ -1,4 +1,4 @@
-import { Button, Grid, Typography, Box, IconButton, Dialog, DialogTitle, Paper, DialogContent, DialogActions, FormControlLabel, TextField, Checkbox } from '@mui/material'
+import { Button, Grid, Typography, Box, Dialog, DialogTitle, Paper, DialogContent, DialogActions, FormControlLabel, TextField, Checkbox } from '@mui/material'
 import React, { useState } from 'react'
 import CustomDataGrid from '../../components/Table/CustomDataGrid'
 import { GridColDef, GridActionsCellItem } from '@mui/x-data-grid'
@@ -8,7 +8,7 @@ import { FileUploadAndPreview } from '../../components/FileUploadAndPreview/File
 import { useFormik } from 'formik'
 import DeleteConfirmationModal from '../../components/DeleteConfirmationModal/DeleteConfirmationModal'
 
-const Investigations: React.FC = () => {
+const Procedures: React.FC = () => {
     // State variables for controlling various dialogs
     const [dialogOpen, setDialogOpen] = useState<boolean>(false)
     const [isInEditMode, setIsInEditMode] = useState<any>({ id: 0, status: false })
@@ -22,7 +22,7 @@ const Investigations: React.FC = () => {
             status: false,
             file: null
         },
-        onSubmit: (values) => { 
+        onSubmit: (values) => {
             console.log(values)
         }
     })
@@ -30,7 +30,7 @@ const Investigations: React.FC = () => {
     // Columns configuration for the data grid
     const columns: GridColDef[] = [
         { field: 'date', headerName: 'Date', flex: 1 },
-        { field: 'investigation', headerName: 'Investigation', flex: 1 },
+        { field: 'procedure', headerName: 'Procedure', flex: 1 },
         { field: 'doctor', headerName: 'Doctor', flex: 1 },
         { field: 'status', headerName: 'Status', flex: 1 },
         { field: 'notes', headerName: 'Notes', flex: 1 },
@@ -91,8 +91,8 @@ const Investigations: React.FC = () => {
 
     // Dummy data 
     const dummyRows: any[] = [
-        { id: 1, date: '2024-02-01', investigation: 'Blood Test', doctor: 'Dr. John Doe', status: 'Scheduled', notes: 'Some notes' },
-        { id: 2, date: '2024-02-02', investigation: 'Urine Test', doctor: 'Dr. Jane Doe', status: 'Completed', notes: 'Some notes' },
+        { id: 1, date: '2024-02-01', procedure: 'MRI Scan', doctor: 'Dr. John Doe', status: 'Pending', notes: 'Some notes' },
+        { id: 2, date: '2024-02-02', procedure: 'X-ray', doctor: 'Dr. Jane Doe', status: 'Completed', notes: 'Some notes' },
     ];
 
     const handlePrintClick = (rowData: any) => {
@@ -111,7 +111,7 @@ const Investigations: React.FC = () => {
     };
 
     const editDialog = (selectedRowData: any) => {
-        const { id, date, investigation, doctor } = selectedRowData;
+        const { id, date, procedure, doctor } = selectedRowData;
 
         console.log(id)
 
@@ -120,7 +120,7 @@ const Investigations: React.FC = () => {
                 <DialogTitle variant='h5' >
                     <Grid container direction={'column'} justifyContent="space-between" alignItems="center" borderBottom={1} py={2}>
                         <Typography variant="h5" position={'absolute'} display={'flex'} justifyContent={'center'} width={'100%'}>
-                            {investigation}
+                            {procedure}
                         </Typography>
                         <Grid container justifyContent={'space-between'} position={'relative'} alignItems="center" sx={{ width: '100%' }}>
                             <Typography>Patient Name: Suman Mahato</Typography>
@@ -212,7 +212,7 @@ const Investigations: React.FC = () => {
                                 <Typography>Patient Name: Suman Mahato</Typography>
                             </Box>
                             <Box display="flex" flexDirection="column" alignItems="start" justifyContent="flex-start">
-                                <Typography>Test Name: {data.investigation}</Typography>
+                                <Typography>Test Name: {data.procedure}</Typography>
                                 <Typography>Date: {data.date}</Typography>
                                 <Typography>Doc: {data.doctor}</Typography>
                             </Box>
@@ -250,14 +250,14 @@ const Investigations: React.FC = () => {
             open={isInDeleteMode}
             onClose={() => setIsInDeleteMode({ id: 0, status: false })}
             onConfirm={() => handleDelete(id)}
-            text='this investigation'
+            text='this procedure'
         />
     }
 
     const createForm = useFormik({
         initialValues: {
             fields: [
-                { investigation: null, doctor: null, date: new Date() },
+                { procedure: null, doctor: null, date: new Date() },
 
             ],
         },
@@ -269,7 +269,7 @@ const Investigations: React.FC = () => {
     const handleAddFields = () => {
         createForm.setFieldValue('fields', [
             ...createForm.values.fields,
-            { investigation: null, doctor: null, date: new Date() }
+            { procedure: null, doctor: null, date: new Date() }
         ]);
     };
 
@@ -289,7 +289,7 @@ const Investigations: React.FC = () => {
         <Box p={2}>
             <Grid container justifyContent="space-between" alignItems="center" mb={3}>
                 <Typography variant="h6" color="text.secondary">
-                    Investigations
+                    Procedures
                 </Typography>
                 <Button variant="contained" color="primary" onClick={() => setDialogOpen(true)}><Add />Create New</Button>
             </Grid>
@@ -298,7 +298,7 @@ const Investigations: React.FC = () => {
 
             {dialogOpen && (
                 <FormForJourney
-                    title="Investigation"
+                    title="procedure"
                     onClose={closeForm}
                     open={dialogOpen}
                     form={createForm}
@@ -318,7 +318,7 @@ const Investigations: React.FC = () => {
     )
 }
 
-export default Investigations
+export default Procedures
 
 // rendering the actions column
 // renderCell: (_) => (
