@@ -1,6 +1,5 @@
-import { Button, Dialog, DialogActions, DialogContent, DialogTitle, Grid, Box, InputLabel, IconButton, Autocomplete, TextField, Paper } from '@mui/material'
+import { Button, Dialog, DialogActions, DialogContent, DialogTitle, Grid, Box, IconButton, Autocomplete, TextField, Paper } from '@mui/material'
 import React from 'react'
-import CustomAutocomplete from '../AutoCompleteBox/AutoCompleteBox'
 import { Add } from '@mui/icons-material'
 import { DatePicker } from '@mui/x-date-pickers'
 import { useFormik } from 'formik'
@@ -33,7 +32,7 @@ const FormForJourney: React.FC<AlertDialogProps> = ({ title, open, onClose, onCo
     const formik = useFormik({
         initialValues: {
             fields: [
-                { investigation: '', doctor: '', date: new Date() },
+                { investigation: null, doctor: null, date: new Date() },
 
             ],
         },
@@ -49,7 +48,7 @@ const FormForJourney: React.FC<AlertDialogProps> = ({ title, open, onClose, onCo
         ]);
     };
 
-    console.log(formik.values.fields)
+    // console.log(formik.values.fields)
 
     return (
         <Dialog open={open || false} onClose={onClose || (() => { })} fullWidth maxWidth="md" scroll="paper">
@@ -62,28 +61,15 @@ const FormForJourney: React.FC<AlertDialogProps> = ({ title, open, onClose, onCo
                         {formik.values.fields.map((field, index) => (
                             <Grid key={index} container direction={'row'} gap={2}>
                                 <Grid item flex={3}>
-                                    {/* <CustomAutocomplete
-                                    label="Investigation"
-                                    options={dummyData.investigationData}
-                                    value={field.investigation}
-                                    onChange={(_, newValue) =>
-                                        formik.setFieldValue(`fields.${index}.investigation`, newValue)
-                                    }
-                                /> */}
                                     < Autocomplete
                                         options={dummyData.investigationData}
                                         value={field.investigation}
+                                        isOptionEqualToValue={(option, value) => option === value}
                                         onChange={(_, newValue) => formik.setFieldValue(`fields.${index}.investigation`, newValue)}
                                         renderInput={(params) => <TextField {...params} label="Investigation" />}
                                     />
                                 </Grid>
                                 <Grid item flex={3}>
-                                    {/* <CustomAutocomplete
-                                    label="Doctor"
-                                    options={dummyData.doctorData}
-                                    value={field.doctor}
-                                    onChange={(_, newValue) => formik.setFieldValue(`fields.${index}.doctor`, newValue)}
-                                /> */}
                                     < Autocomplete
                                         options={dummyData.doctorData}
                                         value={field.doctor}

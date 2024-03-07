@@ -1,9 +1,7 @@
 import {
   Box, Button, FormControl,
-  InputLabel, MenuItem, Select,
   TextField, List, ListItem,
-  ListItemText, Typography, Checkbox,
-  SelectChangeEvent, Step, Stepper,
+  Typography, Step, Stepper,
   StepLabel, StepContent, styled,
   StepConnector, Grid, Dialog, DialogTitle,
   DialogContent, DialogActions, Autocomplete
@@ -69,49 +67,24 @@ const notesDummyData = [
     date: '05 Feb 2024',
   },
 ]
-
-interface PatientNotesProps {
-  consultantDoctor: string;
-  observations: string[];
-  treatmentAdvices: string[];
-  investigations: string[];
-  scans: string[];
-  medications: string[];
-  notes: string;
-  [key: string]: string | string[];
-}
-
 const Notes: React.FC = () => {
-
-  const modalStyle = {
-    position: 'absolute',
-    top: 0,
-    left: 0,
-    width: '100%',
-    height: '100%',
-    backgroundColor: 'rgba(0, 0, 0, 0.3)',
-    display: 'flex',
-    justifyContent: 'center',
-    pt: 2,
-    alignItems: 'center',
-  }
-
+  // state for add and edit modal
   const [addModal, setAddModal] = useState(false);
   const [editModal, setEditModal] = useState(false);
   // console.log(formik.values.observations);
 
   const renderAddModal = () => {
-    const [selectedItems, setSelectedItems] = useState<{ [key: string]: string[] }>({
-      observations: [],
-      treatmentAdvices: [],
-      investigations: [],
-      scans: [],
-      medications: [],
-    });
+    // const [selectedItems, setSelectedItems] = useState<{ [key: string]: string[] }>({
+    //   observations: [],
+    //   treatmentAdvices: [],
+    //   investigations: [],
+    //   scans: [],
+    //   medications: [],
+    // });
 
-    const formik = useFormik<PatientNotesProps>({
+    const formik = useFormik({
       initialValues: {
-        consultantDoctor: '',
+        consultantDoctor: null,
         observations: [],
         treatmentAdvices: [],
         investigations: [],
@@ -222,7 +195,7 @@ const Notes: React.FC = () => {
         observations: {},
         medications: {},
         treatmentAdvices: {},
-        comments: '',
+        comments: null,
       },
       onSubmit: (_) => {
         // Handle form submission
@@ -373,8 +346,10 @@ const Notes: React.FC = () => {
           </Box>
           <Grid container sx={{ flex: 1 }}>
             <List>
-              {items.map((item) => (
-                <Typography sx={{ fontSize: '0.9rem' }}>{item}</Typography>
+              {items.map((item, index) => (
+                <Box key={index}>
+                  <Typography sx={{ fontSize: '0.9rem' }}>{item}</Typography>
+                </Box>
               ))}
             </List>
           </Grid>
