@@ -2,6 +2,7 @@ import React, { useState } from 'react'
 import TabPanel from '../../components/Utils/TabPanel'
 import { Box, Tab, Tabs, Typography } from '@mui/material'
 import { AcUnit, HomeRepairService, Loop, PrecisionManufacturing, Science } from '@mui/icons-material'
+import Investigations from './Investigations'
 
 const PatientJourneyTabs = () => {
 
@@ -35,11 +36,7 @@ const PatientJourneyTabs = () => {
         mt={2}
       >
         <TabPanel id="patient-secondary" value={tabValue} index={0}>
-          <Box>
-            <Typography variant="h6" color="text.secondary" component="div">
-              Investigations
-            </Typography>
-          </Box>
+         <Investigations />
         </TabPanel>
         <TabPanel id="patient-secondary" value={tabValue} index={1}>
           <Box>

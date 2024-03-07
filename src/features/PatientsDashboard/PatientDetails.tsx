@@ -53,33 +53,33 @@ const PatientDetails: React.FC<{ patient: IPatient }> = ({ patient }) => {
         <Grid display={"flex"} justifyContent={"center"} alignItems={"center"} item xs={3}>
           <Avatar
             alt="Patient Image"
-            src={primaryProfile.image}
+            src={primaryProfile?.image}
             style={{ width: '100px', height: '100px', borderRadius: '50%', border: '2px solid', borderColor: theme.palette.secondary.light }}
           />
         </Grid>
 
         {/* Column 2: Basic Information */}
         <Grid item xs={3}>
-          <Typography variant="subtitle2" color="text.secondary" component="div"><strong>Name:</strong> {primaryProfile.firstName} {primaryProfile.lastName}</Typography>
-          <Typography variant="subtitle2" color="text.secondary" component="div"><strong>Phone:</strong> {primaryProfile.mobile}</Typography>
-          <Typography variant="subtitle2" color="text.secondary" component="div"><strong>Occupation:</strong> {primaryProfile.occupation}</Typography>
-          <Typography variant="subtitle2" color="text.secondary" component="div"><strong>Address:</strong> {primaryProfile.addressLine1}{"\n"}{primaryProfile.addressLine2} </Typography>
-          <Typography variant="subtitle2" color="text.secondary" component="div"><strong>City:</strong> {primaryProfile.city}</Typography>
+          <Typography variant="subtitle2" color="text.secondary" component="div"><strong>Name:</strong> {primaryProfile?.firstName} {primaryProfile?.lastName}</Typography>
+          <Typography variant="subtitle2" color="text.secondary" component="div"><strong>Phone:</strong> {primaryProfile?.mobile}</Typography>
+          <Typography variant="subtitle2" color="text.secondary" component="div"><strong>Occupation:</strong> {primaryProfile?.occupation}</Typography>
+          <Typography variant="subtitle2" color="text.secondary" component="div"><strong>Address:</strong> {primaryProfile?.addressLine1}{"\n"}{primaryProfile?.addressLine2} </Typography>
+          <Typography variant="subtitle2" color="text.secondary" component="div"><strong>City:</strong> {primaryProfile?.city}</Typography>
         </Grid>
 
         {/* Column 3: Demographic Information */}
         <Grid item xs={3}>
-          <Typography variant="subtitle2" color="text.secondary" component="div"><strong>DOB:</strong> {new Date(primaryProfile.dob).toLocaleDateString()}</Typography>
-          <Typography variant="subtitle2" color="text.secondary" component="div"><strong>Gender:</strong> {primaryProfile.gender}</Typography>
-          <Typography variant="subtitle2" color="text.secondary" component="div"><strong>Marital Status:</strong> {primaryProfile.maritalStatus}</Typography>
-          <Typography variant="subtitle2" color="text.secondary" component="div"><strong>Mother Tongue:</strong> {primaryProfile.motherTounge}</Typography>
-          <Typography variant="subtitle2" color="text.secondary" component="div"><strong>Insurance:</strong> {primaryProfile.insuranceSponsorName}</Typography>
+          <Typography variant="subtitle2" color="text.secondary" component="div"><strong>DOB:</strong> {new Date(primaryProfile?.dob).toLocaleDateString()}</Typography>
+          <Typography variant="subtitle2" color="text.secondary" component="div"><strong>Gender:</strong> {primaryProfile?.gender}</Typography>
+          <Typography variant="subtitle2" color="text.secondary" component="div"><strong>Marital Status:</strong> {primaryProfile?.maritalStatus}</Typography>
+          <Typography variant="subtitle2" color="text.secondary" component="div"><strong>Mother Tongue:</strong> {primaryProfile?.motherTounge}</Typography>
+          <Typography variant="subtitle2" color="text.secondary" component="div"><strong>Insurance:</strong> {primaryProfile?.insuranceSponsorName}</Typography>
         </Grid>
 
         {/* Column 4: Source Information */}
         <Grid item xs={3} style={{ position: 'relative' }}>
-          <Typography variant="subtitle2" color="text.secondary" component="div"><strong>Marketing Source:</strong> {primaryProfile.marketingSource}</Typography>
-          <Typography variant="subtitle2" color="text.secondary" component="div"><strong>Referrer:</strong> {primaryProfile.referredBy}</Typography>
+          <Typography variant="subtitle2" color="text.secondary" component="div"><strong>Marketing Source:</strong> {primaryProfile?.marketingSource}</Typography>
+          <Typography variant="subtitle2" color="text.secondary" component="div"><strong>Referrer:</strong> {primaryProfile?.referredBy}</Typography>
           <Tooltip title="Edit Patient">
             <IconButton color='secondary' style={{ position: 'absolute', top: 0, right: 0 }}>
               <Edit fontSize='small' />
@@ -91,7 +91,7 @@ const PatientDetails: React.FC<{ patient: IPatient }> = ({ patient }) => {
   )
 
   const renderDonorInfo = () => {
-    if (!primaryProfile.donor) {
+    if (!primaryProfile?.donor) {
       return (
         <Box height={160} display={"flex"} justifyContent={"center"} alignItems={"center"} gap={20}>
           <TextField
@@ -116,17 +116,17 @@ const PatientDetails: React.FC<{ patient: IPatient }> = ({ patient }) => {
         <Grid display={"flex"} justifyContent={"center"} alignItems={"center"} item xs={3}>
           <Avatar
             alt="Patient Image"
-            src={primaryProfile?.donor.image}
+            src={primaryProfile?.donor?.image}
             style={{ width: '100px', height: '100px', borderRadius: '50%', border: '2px solid', borderColor: theme.palette.secondary.light }}
           />
         </Grid>
 
         {/* Column 2: Basic Information */}
         <Grid item xs={3}>
-          <Typography variant="subtitle2" color="text.secondary" component="div"><strong>Name:</strong> {primaryProfile?.donor.name}</Typography>
-          <Typography variant="subtitle2" color="text.secondary" component="div"><strong>Age:</strong> {primaryProfile?.donor.age}</Typography>
-          <Typography variant="subtitle2" color="text.secondary" component="div"><strong>DOB:</strong> {primaryProfile?.donor.dob}</Typography>
-          <Typography variant="subtitle2" color="text.secondary" component="div"><strong>Gender:</strong> {primaryProfile?.donor.gender}</Typography>
+          <Typography variant="subtitle2" color="text.secondary" component="div"><strong>Name:</strong> {primaryProfile?.donor?.name}</Typography>
+          <Typography variant="subtitle2" color="text.secondary" component="div"><strong>Age:</strong> {primaryProfile?.donor?.age}</Typography>
+          <Typography variant="subtitle2" color="text.secondary" component="div"><strong>DOB:</strong> {primaryProfile?.donor?.dob}</Typography>
+          <Typography variant="subtitle2" color="text.secondary" component="div"><strong>Gender:</strong> {primaryProfile?.donor?.gender}</Typography>
         </Grid>
       </Grid>
     </Box>)
@@ -248,10 +248,10 @@ const PatientDetails: React.FC<{ patient: IPatient }> = ({ patient }) => {
             <Grid container spacing={2}>
               <Grid item xs={12}>
                 <Typography variant="subtitle2" color="text.secondary" component="div">
-                  <strong>Upcoming Appointment:</strong> {primaryProfile.appointment?.upcomingAppointment || "NA"}
+                  <strong>Upcoming Appointment:</strong> {primaryProfile?.appointment?.upcomingAppointment || "NA"}
                 </Typography>
                 <Typography variant="subtitle2" color="text.secondary" component="div">
-                  <strong>Last Appointment:</strong> {primaryProfile.appointment?.lastAppointment || "NA"}
+                  <strong>Last Appointment:</strong> {primaryProfile?.appointment?.lastAppointment || "NA"}
                 </Typography>
               </Grid>
             </Grid>
@@ -263,18 +263,18 @@ const PatientDetails: React.FC<{ patient: IPatient }> = ({ patient }) => {
           <Grid container spacing={2}>
             <Grid item xs={12} md={6}>
               <Typography variant="subtitle2" color="text.secondary" component="div">
-                <strong>Case ID:</strong> {primaryProfile.case.caseId}
+                <strong>Case ID:</strong> {primaryProfile?.case?.caseId}
               </Typography>
               <Typography variant="subtitle2" color="text.secondary" component="div">
-                <strong>Patient ID:</strong> {primaryProfile.patientId}
+                <strong>Patient ID:</strong> {primaryProfile?.patientId}
               </Typography>
             </Grid>
             <Grid item xs={12} md={6}>
               <Typography variant="subtitle2" color="text.secondary" component="div">
-                <strong>Reg. Date:</strong> {new Date(primaryProfile.createdAt).toLocaleDateString()}
+                <strong>Reg. Date:</strong> {new Date(primaryProfile?.createdAt).toLocaleDateString()}
               </Typography>
               <Typography variant="subtitle2" color="text.secondary" component="div">
-                <strong>Source:</strong> {primaryProfile.marketingSource}
+                <strong>Source:</strong> {primaryProfile?.marketingSource}
               </Typography>
             </Grid>
           </Grid>

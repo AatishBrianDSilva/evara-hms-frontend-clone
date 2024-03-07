@@ -5,7 +5,7 @@ interface CustomAutocompleteProps {
     options: any[];
     value: any;
     onChange: (event: any, newValue: any) => void;
-    label: string;
+    label?: string;
     multiple?: boolean;
 }
 
@@ -29,6 +29,7 @@ const CustomAutocomplete: React.FC<CustomAutocompleteProps> = ({ options, value,
             multiple={multiple || false}
             options={options}
             value={value}
+            fullWidth
             onChange={onChange}
             inputValue={inputValue}
             onInputChange={(e, _) => {
