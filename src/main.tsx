@@ -6,9 +6,10 @@ import { Provider } from 'react-redux'
 import { BrowserRouter } from 'react-router-dom'
 import { LocalizationProvider } from '@mui/x-date-pickers'
 import { AdapterDateFns } from '@mui/x-date-pickers/AdapterDateFnsV3'
-import { store } from "./app/store.ts"
-import { ThemeProvider, createTheme, responsiveFontSizes } from '@mui/material'
+import { persistor, store } from "./app/store.ts"
+import { LinearProgress, ThemeProvider, createTheme, responsiveFontSizes } from '@mui/material'
 import { ToastProvider } from './context/ToastContext.tsx'
+import { PersistGate } from 'redux-persist/integration/react'
 
 const fontSize = "13px"
 
@@ -25,17 +26,17 @@ let theme = createTheme({
         size: "small",
       }
     },
-    MuiInputBase: {
-      styleOverrides: {
-        root: {
-          height: "35px",
-        }
-      }
-    },
+    // MuiInputBase: {
+    //   styleOverrides: {
+    //     root: {
+    //       height: "35px",
+    //     }
+    //   }
+    // },
     MuiFormControl: {
       styleOverrides: {
         root: {
-          height: "35px",
+          // height: "35px",
           fontSize: fontSize,
         }
       }
@@ -95,15 +96,17 @@ theme = responsiveFontSizes(theme);
 ReactDOM.createRoot(document.getElementById('root')!).render(
   <React.StrictMode>
     <Provider store={store}>
-      <BrowserRouter>
-        <LocalizationProvider dateAdapter={AdapterDateFns}>
-          <ThemeProvider theme={theme}>
-            <ToastProvider>
-              <App />
-            </ToastProvider>
-          </ThemeProvider>
-        </LocalizationProvider>
-      </ BrowserRouter>
+      <PersistGate loading={<LinearProgress />} persistor={persistor}>
+        <BrowserRouter>
+          <LocalizationProvider dateAdapter={AdapterDateFns}>
+            <ThemeProvider theme={theme}>
+              <ToastProvider>
+                <App />
+              </ToastProvider>
+            </ThemeProvider>
+          </LocalizationProvider>
+        </ BrowserRouter>
+      </PersistGate>
     </Provider>
   </React.StrictMode>,
 )

@@ -10,11 +10,13 @@ import ContentSection from '../../components/ContentSection/ContentSection'
 import { useNavigate } from 'react-router-dom'
 import { useGetPatientsQuery } from '../../services/patientsApi'
 import ErrorAlertWithRetry from '../../components/ErrorAlertWithRetry/ErrorAlertWithRetry'
+import { setPatientId } from './patientsSlice'
+import { useDispatch } from 'react-redux'
 
 const PatientsList: React.FC = () => {
 
-  // const dispatch = useDispatch();
   const navigation = useNavigate();
+  const dispatch = useDispatch();
 
   const [page, setPage] = React.useState(1);
   const [pageSize, setPageSize] = React.useState(25);
@@ -51,6 +53,11 @@ const PatientsList: React.FC = () => {
     }
   ];
 
+  const handleRowClick = (row: any) => {
+    dispatch(setPatientId(row.row.patientId));
+    navigation(`/patients/${row.row.patientId}`);
+  }
+
   return (
     <ContentSection title="Patients" titleSx={{ justifyContent: 'space-between' }}>
       <Box display="flex" justifyContent="flex-end" gap={2}>
@@ -74,7 +81,7 @@ const PatientsList: React.FC = () => {
             onPageSizeChange={handlePageSizeChange}
             loading={isLoading || isFetching}
             rowHover={true}
-            onRowClick={(row) => navigation(`/patients/${row.row.patientId}`)}
+            onRowClick={handleRowClick}
             sx={{ height: "100%" }}
             enablePagination={true}
           />

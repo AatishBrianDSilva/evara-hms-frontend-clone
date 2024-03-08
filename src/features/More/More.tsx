@@ -14,7 +14,7 @@ const More: React.FC = () => {
   const isMoreModalOpen = true;
   const modalType = 'patient';
 
-  const patientId = useSelector((state: RootState) => state.patients.selectedPatientId);
+  const patientId = useSelector((state: RootState) => state.patients.patientId);
   const currentNavList = modalType === "patient" ? patientNavList : navList;
 
   const updatedNavList = currentNavList.map((navItem) => {

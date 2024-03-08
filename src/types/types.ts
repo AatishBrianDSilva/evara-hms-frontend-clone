@@ -90,5 +90,7 @@ export interface IPatient {
   case: ICase;
   donor: IDonor;
   appointment: IAppointment;
-  partner: IPatient;
+  partnerDetails: IPatient;
+  referrerName: string;
+  intepreterName: string;
 }

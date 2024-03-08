@@ -14,7 +14,6 @@ const Home: React.FC = () => {
         <Box display={"flex"} justifyContent={"flex-end"} alignItems={"center"} mb={2}>
           <DatePicker
             value={new Date()}
-            onChange={(date) => console.log(date)}
           />
         </Box>
         {appointments.length === 0 ? (

@@ -22,7 +22,7 @@ const BottomTabNavigator: React.FC = () => {
 
   const isMobile = useMediaQuery(theme.breakpoints.down('sm'));
 
-  const patientId = useSelector((state: RootState) => state.patients.selectedPatientId);
+  const patientId = useSelector((state: RootState) => state.patients.patientId);
 
   const [value, setValue] = useState(location.pathname);
 

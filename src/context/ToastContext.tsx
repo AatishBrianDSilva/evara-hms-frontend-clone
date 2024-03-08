@@ -34,14 +34,11 @@ export const ToastProvider: React.FC<{ children: ReactNode }> = ({ children }) =
         pending: messages.loading,
         success: {
           render({ data }) {
-            console.log("Data", data);
             return messages.success(data);
           }
         },
         error: {
           render({ data }) {
-            console.log("Data", data);
-            // Assuming 'data' is where the error message is located; adjust according to your error object structure
             return messages.error(data);
           }
         },

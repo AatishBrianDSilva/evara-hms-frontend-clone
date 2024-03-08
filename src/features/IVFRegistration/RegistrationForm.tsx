@@ -1,7 +1,7 @@
 import React, { useEffect, useState, RefObject } from 'react'
 import { useFormik } from 'formik'
 import { PatientRegistrationValidationSchema } from "../../utils/yup"
-import { Button, Checkbox, Divider, FormControlLabel, Grid, MenuItem, TextField, Typography, useMediaQuery, useTheme } from '@mui/material'
+import { Button, Checkbox, Divider, FormControlLabel, Grid, MenuItem, TextField, Typography, } from '@mui/material'
 import { DatePicker } from '@mui/x-date-pickers'
 import CloudUploadIcon from '@mui/icons-material/CloudUpload';
 
@@ -17,7 +17,7 @@ const RegistrationForm: React.FC = () => {
   const inputRefs: Record<string, RefObject<any>> = {};
   const { showPromiseToast } = useToast();
 
-  const [selectedImage, setSelectedImage] = useState<File | null>(null);
+  const [_selectedImage, setSelectedImage] = useState<File | null>(null);
   const [addPatient, { isLoading }] = useAddPatientMutation();
 
   const handleSubmit = async (values: any) => {
@@ -30,8 +30,7 @@ const RegistrationForm: React.FC = () => {
     });
 
     try {
-      const response = await promise;
-      console.log(response);
+      await promise;
       formik.resetForm();
     } catch (error: any) {
       console.error('Failed to add patient', error);
@@ -45,7 +44,6 @@ const RegistrationForm: React.FC = () => {
       firstName: '',
       lastName: '',
       gender: '',
-      age: '',
       dob: Date.now(),
       education: '',
       maritalStatus: '',
@@ -111,7 +109,7 @@ const RegistrationForm: React.FC = () => {
     const files = event.target.files;
     if (files && files.length > 0) {
       setSelectedImage(files[0]);
-      console.log(selectedImage);
+      // console.log(selectedImage);
       formik.setFieldValue('image', files[0].name);
     }
   };
@@ -197,21 +195,21 @@ const RegistrationForm: React.FC = () => {
             <MenuItem value="Female">Female</MenuItem>
           </TextField>
         </Grid>
-        <Grid item xs={4} sm={6} md={2}>
+        {/* <Grid item xs={4} sm={6} md={2}>
           <TextField
             ref={inputRefs["age"]}
             fullWidth
             id='register-age-id'
             name="age"
             label="Age"
-            // type='number'
+            disabled
             placeholder='Age'
-            value={formik.values.age}
+            value={formik.values.dob ? Math.floor((Date.now() - new Date(formik.values.dob).getTime()) / (1000 * 60 * 60 * 24 * 365)) : ''}
             onChange={formik.handleChange}
             error={formik.touched.age && Boolean(formik.errors.age)}
             helperText={formik.touched.age && formik.errors.age}
           />
-        </Grid>
+        </Grid> */}
         <Grid item xs={12} sm={6} md={2}>
           <DatePicker
             ref={inputRefs["dob"]}
@@ -222,8 +220,8 @@ const RegistrationForm: React.FC = () => {
             format='dd/MM/yyyy'
             value={formik.values.dob}
             onChange={(value) => formik.setFieldValue('dob', value)}
-            onAccept={console.log}
-            onError={console.log}
+          // onAccept={console.log}
+          // onError={console.log}
           />
         </Grid>
         <Grid item xs={12} sm={6} md={4}>
@@ -365,10 +363,12 @@ const RegistrationForm: React.FC = () => {
             name="mobile"
             label="Mobile"
             placeholder='Mobile'
+            inputMode='numeric'
             value={formik.values.mobile}
             onChange={formik.handleChange}
             error={formik.touched.mobile && Boolean(formik.errors.mobile)}
             helperText={formik.touched.mobile && formik.errors.mobile}
+            inputProps={{ maxLength: 10 }}
           />
         </Grid>
         <Grid item xs={12} sm={6} md={4}>
@@ -379,10 +379,12 @@ const RegistrationForm: React.FC = () => {
             name="alernativeMobile"
             label="Alternative Mobile"
             placeholder='Alternative Mobile'
+            inputMode='numeric'
             value={formik.values.alernativeMobile}
             onChange={formik.handleChange}
             error={formik.touched.alernativeMobile && Boolean(formik.errors.alernativeMobile)}
             helperText={formik.touched.alernativeMobile && formik.errors.alernativeMobile}
+            inputProps={{ maxLength: 10 }}
           />
         </Grid>
         <Grid item xs={12} sm={6} md={4}>
@@ -393,6 +395,7 @@ const RegistrationForm: React.FC = () => {
             name="email"
             label="Email"
             placeholder='Email'
+            type='email'
             value={formik.values.email}
             onChange={formik.handleChange}
             error={formik.touched.email && Boolean(formik.errors.email)}
@@ -545,10 +548,12 @@ const RegistrationForm: React.FC = () => {
             name="pincode"
             label="Pincode"
             placeholder='Pincode'
+            type='number'
             value={formik.values.pincode}
             onChange={formik.handleChange}
             error={formik.touched.pincode && Boolean(formik.errors.pincode)}
             helperText={formik.touched.pincode && formik.errors.pincode}
+            inputProps={{ maxLength: 6 }}
           />
         </Grid>
         {/* <Grid item xs={12} sm={6} md={2}>
@@ -866,16 +871,9 @@ const RegistrationForm: React.FC = () => {
       {/* Submit */}
       <Grid container rowSpacing={rowSpacing} columnSpacing={columnSpacing} mt={1}>
         <Grid item xs={12} sm={12} md={12} sx={{ display: 'flex', justifyContent: 'flex-end' }}>
-          {isLoading ? (
-            <Button variant="outlined" disabled>
-              Saving
-            </Button>
-          ) : (
-            <Button variant="outlined" type="submit">
-              Save
-            </Button>
-          )
-          }
+          <Button type='submit' variant="outlined" disabled={isLoading} >
+            {isLoading ? 'Adding patient' : 'Save'}
+          </Button>
         </Grid>
       </Grid>
     </form>
