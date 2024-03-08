@@ -14,8 +14,13 @@ export const PatientRegistrationValidationSchema = Yup.object().shape({
   motherTounge: Yup.string(),
   occupation: Yup.string(),
   religion: Yup.string(),
-  mobile: Yup.string().required("Mobile number is required"),
-  alernativeMobile: Yup.string(),
+  mobile: Yup.string()
+    .required("Mobile number is required")
+    .max(10, "Invalid mobile number")
+    .min(10, "Invalid mobile number"),
+  alernativeMobile: Yup.string()
+    .max(10, "Invalid mobile number")
+    .min(10, "Invalid mobile number"),
   email: Yup.string()
     .email("Invalid email format")
     .required("Email is required"),

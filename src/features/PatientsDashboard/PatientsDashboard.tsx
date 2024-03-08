@@ -1,14 +1,16 @@
 import { Box, CircularProgress } from '@mui/material'
-import React from 'react'
+import React, { useEffect } from 'react'
 import ContentSection from '../../components/ContentSection/ContentSection';
-import { useParams } from 'react-router-dom';
 import { useGetPatientByIdQuery } from '../../services/patientsApi';
-import { IPatient } from '../../types/types';
 import PatientDetails from './PatientDetails';
 import PatientMainTab from './PatientMainTab';
+import { useDispatch } from 'react-redux';
+import { setCase, setPartnerId, setPatientId, setPatient, setPartner } from '../Patients/patientsSlice';
+import { useParams } from 'react-router-dom';
 
 const PatientsDashboard: React.FC = () => {
 
+  const dispatch = useDispatch()
   const { patientId } = useParams<{ patientId: string }>();
 
   if (!patientId) {
@@ -16,21 +18,37 @@ const PatientsDashboard: React.FC = () => {
   }
 
   const { data, isLoading, isFetching } = useGetPatientByIdQuery(patientId, {
-    skip: !patientId
+    skip: !patientId,
   });
 
-  const patient: IPatient = data?.data
-  console.log("patient", patient)
+  useEffect(() => {
+    if (data && data.status === "success") {
+      const { patient, partner, case: patientCase } = data.data;
+
+      if (patientCase) {
+        dispatch(setCase(patientCase));
+      }
+
+      // Dispatch actions in response to successfully fetched data
+      dispatch(setPatientId(patient.patientId));
+      dispatch(setPatient(patient));
+
+      if (partner) {
+        dispatch(setPartnerId(partner.patientId));
+        dispatch(setPartner(partner));
+      }
+    }
+  }, [data, dispatch]);
 
   const renderDashboard = () => {
-    if (isLoading || isFetching) {
+    if (isLoading || isFetching || !patientId) {
       return (<Box display={"flex"} justifyContent={"center"} alignItems={"center"} height={"100%"}>
         <CircularProgress />
       </Box>)
     } else {
       return (
         <>
-          <PatientDetails patient={patient} />
+          <PatientDetails />
           <PatientMainTab />
         </>
       )
