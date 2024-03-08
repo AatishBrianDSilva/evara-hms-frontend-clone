@@ -31,7 +31,7 @@ export const patientsSlice = createSlice({
       const patient = action.payload;
       state.patient = patient;
     },
-    setPartner: (state, action: PayloadAction<IPatient>) => {
+    setPartner: (state, action: PayloadAction<IPatient | null>) => {
       const patient = action.payload;
       state.partner = patient;
     },

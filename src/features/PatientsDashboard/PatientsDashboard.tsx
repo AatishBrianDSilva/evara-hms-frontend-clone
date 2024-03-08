@@ -36,6 +36,9 @@ const PatientsDashboard: React.FC = () => {
       if (partner) {
         dispatch(setPartnerId(partner.patientId));
         dispatch(setPartner(partner));
+      } else {
+        dispatch(setPartnerId(null));
+        dispatch(setPartner(null));
       }
     }
   }, [data, dispatch]);

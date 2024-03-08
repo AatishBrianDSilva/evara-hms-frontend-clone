@@ -145,7 +145,7 @@ const DesktopHeader: React.FC = () => {
           </Typography>
         </Grid>
         <Grid item display={"flex"} flexDirection={"column"} md={6} lg={4}>
-          <IconButton sx={{ color: 'gray', width: 'fit-content', margin: 'auto' }}>
+          <IconButton sx={{ color: 'gray', width: 'fit-content', margin: 'auto' }} onClick={() => handleAppsMenuNavigation("/appointments")} >
             <DateRangeIcon />
           </IconButton>
           <Typography variant="caption" align="center">
@@ -193,7 +193,7 @@ const DesktopHeader: React.FC = () => {
           </Typography>
         </Grid>
       </Grid>
-    </Menu>
+    </Menu >
   );
 
   return (
