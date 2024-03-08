@@ -1,10 +1,13 @@
-import { Box, Divider, Grid, MenuItem, Modal, TextField, Typography } from '@mui/material'
+import { Box, Button, Divider, Grid, MenuItem, Modal, TextField, Typography } from '@mui/material'
 import { useFormik } from 'formik'
 import React from 'react'
 import { PatientRegistrationValidationSchema } from '../../utils/yup'
 import { useAddPartnerMutation } from '../../services/patientsApi'
 import { useToast } from '../../context/ToastContext'
 import { DatePicker } from '@mui/x-date-pickers'
+import { FileUploadAndPreview } from '../../components/FileUploadAndPreview/FileUploadAndPreview'
+import { useSelector } from 'react-redux'
+import { RootState } from '../../app/store'
 
 interface IPatientDashboardAddPartnerProps {
   openAddPartnerModal: boolean
@@ -16,21 +19,23 @@ const PatientDashboardAddPartner: React.FC<IPatientDashboardAddPartnerProps> = (
   const { showPromiseToast } = useToast();
   const [addPartner, { isLoading }] = useAddPartnerMutation();
 
+  const patientId = useSelector((state: RootState) => state.patients.patientId)
+
   const handleSubmit = async (values: any) => {
-    const promise = addPartner(values).unwrap();
+    const promise = addPartner({ partnerData: values, patientId: patientId }).unwrap();
 
     showPromiseToast(promise, {
-      loading: 'Adding patient',
-      success: (response) => response.message || 'Patient added successfully',
-      error: (err) => `Error: ${err.response?.data?.message || 'Failed to add patient'}`
+      loading: 'Adding Partner',
+      success: (response) => response.message || 'Partner added successfully',
+      error: (err) => `Error: ${err.response?.data?.message || 'Failed to add partner'}`
     });
 
     try {
       const response = await promise;
       console.log(response);
-      formik.resetForm();
+      handleFormClose()
     } catch (error: any) {
-      console.error('Failed to add patient', error);
+      console.error('Failed to add partner', error);
     }
   };
 
@@ -71,50 +76,39 @@ const PatientDashboardAddPartner: React.FC<IPatientDashboardAddPartnerProps> = (
       idProofNumber: '',
       idProofIssuedCountry: '',
       ABHANumber: '',
-      //Other Details
-      reasonOfVisit: '',
-      referredBy: '',
-      referrerName: '',
-      marketingSource: '',
-      intepreter: false,
-      intepreterName: '',
-      isPatientSurrogate: false,
-      isPatientDeceased: false,
-      detailsOfDeath: '',
-      //Insurance Details
-      isPatientInsured: false,
-      // insuranceCompany: '',
-      insuranceSponsorName: '',
-      insurancePolicyNumber: '',
-      insurancePolicyHolderName: '',
-      insuranceAmountEligible: '',
       //Image
       image: '',
-      remarks: '',
     },
     validationSchema: PatientRegistrationValidationSchema,
     onSubmit: handleSubmit,
     validateOnBlur: true,
   })
 
+  const handleFormClose = () => {
+    onClose(false)
+    formik.resetForm()
+  }
+
   return (
     <Modal
       open={openAddPartnerModal}
-      onClose={() => onClose(false)}
+      onClose={() => {
+        handleFormClose()
+      }}
       aria-labelledby="modal-patient-dashboard-add-partner-title"
       aria-describedby="modal-modal-patient-dashboard-add-partner-description"
     >
-      <Box position={"absolute"} top={"50%"} left={"50%"} width={"40%"} borderRadius={1} boxShadow={5} p={4} bgcolor={"background.paper"} sx={{
+      <Box position={"absolute"} top={"50%"} left={"50%"} width={"40%"} borderRadius={1} boxShadow={5} px={8} py={5} bgcolor={"background.paper"} sx={{
         transform: 'translate(-50%, -50%)',
       }}>
-        <Typography id="modal-modal-title" textAlign={"center"} variant="h6" component="h2">
+        <Typography id="modal-patient-title" textAlign={"center"} variant="h6" component="h2" mb={2}>
           Register Partner
         </Typography>
         <form onSubmit={formik.handleSubmit}>
-          <Typography variant="h6">
+          <Typography variant="subtitle1" my={1}>
             Personal Information
           </Typography>
-          <Grid container spacing={2} mt={1}>
+          <Grid container spacing={2} mb={2}>
             <Grid item xs={12} sm={6} md={4}>
               <TextField
                 fullWidth
@@ -179,6 +173,7 @@ const PatientDashboardAddPartner: React.FC<IPatientDashboardAddPartnerProps> = (
                 onChange={formik.handleChange}
                 error={formik.touched.mobile && Boolean(formik.errors.mobile)}
                 helperText={formik.touched.mobile && formik.errors.mobile}
+                inputProps={{ maxLength: 10 }}
               />
             </Grid>
             <Grid item xs={12} sm={6} md={4}>
@@ -228,9 +223,12 @@ const PatientDashboardAddPartner: React.FC<IPatientDashboardAddPartnerProps> = (
             </Grid>
           </Grid>
 
+          <Divider />
 
-
-          <Grid container spacing={2} mt={2}>
+          <Typography variant="subtitle1" my={1}>
+            Address
+          </Typography>
+          <Grid container spacing={2} mb={2}>
             <Grid item xs={12} sm={6} md={6}>
               <TextField
                 fullWidth
@@ -294,10 +292,108 @@ const PatientDashboardAddPartner: React.FC<IPatientDashboardAddPartnerProps> = (
                 onChange={formik.handleChange}
                 error={formik.touched.pincode && Boolean(formik.errors.pincode)}
                 helperText={formik.touched.pincode && formik.errors.pincode}
+                inputProps={{ maxLength: 6 }}
               />
             </Grid>
           </Grid>
-          <Divider sx={{ marginY: 6 }} />
+
+          <Divider />
+
+          <Typography variant="subtitle1" my={1}>
+            Identity Information
+          </Typography>
+          <Grid container spacing={2}>
+            <Grid item xs={12} sm={6} md={3}>
+              <TextField
+                select
+                fullWidth
+                id='register-idProof-id'
+                name='idProofType'
+                label="ID Proof"
+                value={formik.values.idProofType}
+                onChange={formik.handleChange}
+                error={formik.touched.idProofType && Boolean(formik.errors.idProofType)}
+                helperText={formik.touched.idProofType && formik.errors.idProofType}
+              >
+                <MenuItem value="Aadhar Card">Aadhar Card</MenuItem>
+                <MenuItem value="Passport">Passport</MenuItem>
+                <MenuItem value="Driving License">Driving License</MenuItem>
+                <MenuItem value="Voter ID">Voter ID</MenuItem>
+                <MenuItem value="PAN Card">PAN Card</MenuItem>
+              </TextField>
+            </Grid>
+            <Grid item xs={12} sm={6} md={3}>
+              <TextField
+                fullWidth
+                id='register-idProofNumber-id'
+                name="idProofNumber"
+                label="ID Proof Number"
+                placeholder='ID Proof Number'
+                value={formik.values.idProofNumber}
+                onChange={formik.handleChange}
+                error={formik.touched.idProofNumber && Boolean(formik.errors.idProofNumber)}
+                helperText={formik.touched.idProofNumber && formik.errors.idProofNumber}
+              />
+            </Grid>
+            <Grid item xs={12} sm={6} md={3}>
+              <TextField
+                select
+                fullWidth
+                id='register-idProofIssuedCountry-id'
+                name='idProofIssuedCountry'
+                label="ID Proof Issued Country"
+                value={formik.values.idProofIssuedCountry}
+                onChange={formik.handleChange}
+                error={formik.touched.idProofIssuedCountry && Boolean(formik.errors.idProofIssuedCountry)}
+                helperText={formik.touched.idProofIssuedCountry && formik.errors.idProofIssuedCountry}
+              >
+                <MenuItem value="India">India</MenuItem>
+                <MenuItem value="USA">USA</MenuItem>
+              </TextField>
+            </Grid>
+            <Grid item xs={12} sm={6} md={3}>
+              <TextField
+                fullWidth
+                id='register-idProofAbhaNumber-id'
+                name="ABHANumber"
+                label="ABHA Number"
+                placeholder='ABHA Number'
+                value={formik.values.ABHANumber}
+                onChange={formik.handleChange}
+                error={formik.touched.ABHANumber && Boolean(formik.errors.ABHANumber)}
+                helperText={formik.touched.ABHANumber && formik.errors.ABHANumber}
+              />
+            </Grid>
+          </Grid>
+
+          <Box display={"flex"} justifyContent={"center"} gap={1} mt={2} mb={2}>
+            <Box flex={1}>
+              <FileUploadAndPreview
+                labelName='Identity Document'
+                color='secondary'
+                maxFiles={2}
+                previewDirection='column'
+                buttonStyle={{ width: '200px', justifyContent: 'center' }} // Adjust the width as needed
+              />
+            </Box>
+            <Box flex={1}>
+              <FileUploadAndPreview
+                labelName='Photo'
+                maxFiles={1}
+                color='secondary'
+                previewDirection='column'
+                buttonStyle={{ width: '200px', justifyContent: 'center' }} // Ensure this matches the width above
+              />
+            </Box>
+          </Box>
+
+          <Divider />
+
+          <Box display={"flex"} gap={2} mt={2}>
+            <Button variant='outlined' sx={{ width: '100px' }} onClick={() => handleFormClose()}>Cancel</Button>
+            <Button type='submit' disabled={isLoading} variant='contained' sx={{ width: '100px' }}>Save</Button>
+          </Box>
+
         </form>
       </Box>
     </Modal>
