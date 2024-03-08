@@ -39,7 +39,7 @@ const EditPatient: React.FC<IEditPatient> = ({ openEditPatientModal, onClose }) 
       });
 
       try {
-        const response = await promise;
+        await promise;
         // console.log(response);
         handleFormClose()
       } catch (error: any) {

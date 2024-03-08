@@ -10,7 +10,7 @@ import { RootState } from '../../app/store';
 const PatientSidebar: React.FC = () => {
 
   const navigate = useNavigate();
-  const patientId = useSelector((state: RootState) => state.patients.selectedPatientId);
+  const patientId = useSelector((state: RootState) => state.patients.patientId);
 
   // Create a new array with updated nav items
   const updatedNavList = patientNavList.map((navItem) => ({

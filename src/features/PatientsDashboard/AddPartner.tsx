@@ -31,7 +31,7 @@ const PatientDashboardAddPartner: React.FC<IPatientDashboardAddPartnerProps> = (
     });
 
     try {
-      const response = await promise;
+      await promise;
       handleFormClose()
     } catch (error: any) {
       console.error('Failed to add partner', error);

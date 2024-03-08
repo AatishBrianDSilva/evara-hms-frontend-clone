@@ -17,7 +17,7 @@ const RegistrationForm: React.FC = () => {
   const inputRefs: Record<string, RefObject<any>> = {};
   const { showPromiseToast } = useToast();
 
-  const [selectedImage, setSelectedImage] = useState<File | null>(null);
+  const [_selectedImage, setSelectedImage] = useState<File | null>(null);
   const [addPatient, { isLoading }] = useAddPatientMutation();
 
   const handleSubmit = async (values: any) => {
@@ -30,7 +30,7 @@ const RegistrationForm: React.FC = () => {
     });
 
     try {
-      const response = await promise;
+      await promise;
       formik.resetForm();
     } catch (error: any) {
       console.error('Failed to add patient', error);
