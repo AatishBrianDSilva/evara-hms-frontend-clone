@@ -31,7 +31,6 @@ const RegistrationForm: React.FC = () => {
 
     try {
       const response = await promise;
-      console.log(response);
       formik.resetForm();
     } catch (error: any) {
       console.error('Failed to add patient', error);
@@ -110,7 +109,7 @@ const RegistrationForm: React.FC = () => {
     const files = event.target.files;
     if (files && files.length > 0) {
       setSelectedImage(files[0]);
-      console.log(selectedImage);
+      // console.log(selectedImage);
       formik.setFieldValue('image', files[0].name);
     }
   };
@@ -221,8 +220,8 @@ const RegistrationForm: React.FC = () => {
             format='dd/MM/yyyy'
             value={formik.values.dob}
             onChange={(value) => formik.setFieldValue('dob', value)}
-            onAccept={console.log}
-            onError={console.log}
+          // onAccept={console.log}
+          // onError={console.log}
           />
         </Grid>
         <Grid item xs={12} sm={6} md={4}>
