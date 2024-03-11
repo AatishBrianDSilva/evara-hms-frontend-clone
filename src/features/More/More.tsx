@@ -3,7 +3,8 @@ import { navList, patientNavList } from '../../utils/constants'
 import clinicLogo from '../../assets/clinic-logo.png'
 import SideBarNavTab from '../../components/SideBarNavTab/SideBarNavTab'
 import { useNavigate } from 'react-router-dom'
-import { Box, Modal } from '@mui/material'
+import Box from '@mui/material/Box';
+import Modal from '@mui/material/Modal';
 import { useDispatch, useSelector } from 'react-redux'
 import { closeMoreModal } from './moreSlice'
 import { RootState } from '../../app/store'

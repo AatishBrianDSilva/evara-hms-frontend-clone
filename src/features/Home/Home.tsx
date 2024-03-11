@@ -1,5 +1,6 @@
 import { CalendarMonth } from '@mui/icons-material'
-import { Box, Typography } from '@mui/material'
+import Box from '@mui/material/Box';
+import Typography from '@mui/material/Typography';
 import { DatePicker } from '@mui/x-date-pickers'
 import React from 'react'
 import ContentSection from '../../components/ContentSection/ContentSection'

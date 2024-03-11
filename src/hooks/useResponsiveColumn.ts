@@ -1,4 +1,5 @@
-import { useMediaQuery, useTheme } from "@mui/material";
+import useMediaQuery from "@mui/material/useMediaQuery";
+import { useTheme } from "@mui/material";
 import { GridColDef } from "@mui/x-data-grid";
 
 // Custom hook to generate responsive columns

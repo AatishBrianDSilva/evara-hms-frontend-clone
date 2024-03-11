@@ -4,7 +4,12 @@ import PatientInfo from './PatientInfo'
 import CustomDataGrid from '../../components/Table/CustomDataGrid'
 import AddIcon from '@mui/icons-material/Add';
 import CancelIcon from '@mui/icons-material/Cancel';
-import { Box, Button, Grid, MenuItem, TextField, Typography } from '@mui/material'
+import Box from '@mui/material/Box';
+import Button from '@mui/material/Button';
+import Grid from '@mui/material/Grid';
+import MenuItem from '@mui/material/MenuItem';
+import TextField from '@mui/material/TextField';
+import Typography from '@mui/material/Typography';
 import { GridColDef } from '@mui/x-data-grid'
 
 const summaryColumn: GridColDef[] = [

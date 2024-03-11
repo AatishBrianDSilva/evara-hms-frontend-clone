@@ -9,7 +9,7 @@ const Sidebar: React.FC = () => {
 
     const navigate = useNavigate();
 
-    for (let navItem of navList) {
+    for (const navItem of navList) {
         navItem.onSelect = () => navigate(navItem.path);
     }
 

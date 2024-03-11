@@ -1,7 +1,8 @@
 import React from 'react'
 import PatientInfo from './PatientInfo'
 import TreatmentCyclesTable from './TreatmentCyclesTable'
-import { Box, Typography } from '@mui/material'
+import Box from '@mui/material/Box';
+import Typography from '@mui/material/Typography';
 import CustomDataGrid from '../../components/Table/CustomDataGrid'
 import { GridColDef } from '@mui/x-data-grid'
 

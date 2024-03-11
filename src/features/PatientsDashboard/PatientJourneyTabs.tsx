@@ -1,6 +1,9 @@
 import React, { useState } from 'react'
 import TabPanel from '../../components/Utils/TabPanel'
-import { Box, Tab, Tabs, Typography } from '@mui/material'
+import Box from '@mui/material/Box';
+import Tab from '@mui/material/Tab';
+import Tabs from '@mui/material/Tabs';
+import Typography from '@mui/material/Typography';
 import { AcUnit, HomeRepairService, Loop, PrecisionManufacturing, Science } from '@mui/icons-material'
 import Investigations from './Investigations'
 import Procedures from './Procedures'

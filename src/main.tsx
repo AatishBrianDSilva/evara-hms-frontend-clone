@@ -1,14 +1,17 @@
 import React from 'react'
 import ReactDOM from 'react-dom/client'
-import App from './App.tsx'
+import App from './App'
 import "./index.css"
 import { Provider } from 'react-redux'
 import { BrowserRouter } from 'react-router-dom'
 import { LocalizationProvider } from '@mui/x-date-pickers'
 import { AdapterDateFns } from '@mui/x-date-pickers/AdapterDateFnsV3'
-import { persistor, store } from "./app/store.ts"
-import { LinearProgress, ThemeProvider, createTheme, responsiveFontSizes } from '@mui/material'
-import { ToastProvider } from './context/ToastContext.tsx'
+import { persistor, store } from "./app/store"
+import LinearProgress from '@mui/material/LinearProgress';
+import ThemeProvider from '@mui/material/styles/ThemeProvider';
+import createTheme from '@mui/material/styles/createTheme';
+import responsiveFontSizes from '@mui/material/styles/responsiveFontSizes';
+import { ToastProvider } from './context/ToastContext'
 import { PersistGate } from 'redux-persist/integration/react'
 
 const fontSize = "13px"

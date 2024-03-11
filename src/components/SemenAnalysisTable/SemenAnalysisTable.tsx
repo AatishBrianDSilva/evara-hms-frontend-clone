@@ -1,5 +1,7 @@
 import React from 'react';
-import { Typography, Grid, Box } from '@mui/material';
+import Typography from '@mui/material/Typography';
+import Grid from '@mui/material/Grid';
+import Box from '@mui/material/Box';
 
 const semenAnalysisReferenceValues = [
   { parameter: 'Volume', referenceValue: '> 1.4 ml' },

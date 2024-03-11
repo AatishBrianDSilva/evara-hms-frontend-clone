@@ -1,5 +1,14 @@
 import React, { useState } from 'react'
-import { Box, Button, Grid, Paper, Step, StepContent, StepLabel, Stepper, TextField, Typography } from '@mui/material'
+import Box from '@mui/material/Box';
+import Button from '@mui/material/Button';
+import Grid from '@mui/material/Grid';
+import Paper from '@mui/material/Paper';
+import Step from '@mui/material/Step';
+import StepContent from '@mui/material/StepContent';
+import StepLabel from '@mui/material/StepLabel';
+import Stepper from '@mui/material/Stepper';
+import TextField from '@mui/material/TextField';
+import Typography from '@mui/material/Typography';
 import { DatePicker } from '@mui/x-date-pickers';
 import { FileUploadAndPreview } from '../../components/FileUploadAndPreview/FileUploadAndPreview';
 

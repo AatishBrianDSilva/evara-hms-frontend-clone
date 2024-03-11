@@ -1,5 +1,8 @@
 import React, { useEffect, useState } from 'react';
-import { Box, Typography, Button, IconButton } from '@mui/material';
+import Box from '@mui/material/Box';
+import Typography from '@mui/material/Typography';
+import Button from '@mui/material/Button';
+import IconButton from '@mui/material/IconButton';
 import CloudUploadIcon from '@mui/icons-material/CloudUpload';
 import { styled } from '@mui/material/styles';
 import CancelIcon from '@mui/icons-material/Cancel';
@@ -30,11 +33,11 @@ const FilePreview: React.FC<FilePreviewProps> = ({ file, onRemove, lastFile, pre
   }, [file]);
 
   return (
-    <Box mt={2} display="flex" alignItems="center" style={previewStyle}>
+    (<Box mt={2} display="flex" alignItems="center" style={previewStyle}>
       {previewUrl ? (
         <img src={previewUrl} alt="Preview" style={{ width: '60px', height: 'auto', borderRadius: "4px" }} />
       ) : (
-        <FilePresentIcon color='secondary' style={{ fontSize: 40 }} /> // Placeholder for non-image files
+        (<FilePresentIcon color='secondary' style={{ fontSize: 40 }} />) // Placeholder for non-image files
       )}
       <Box display="flex" alignItems="center" ml={1}>
         <Typography variant="body2" color={"GrayText"}>{file.name}</Typography>
@@ -43,7 +46,7 @@ const FilePreview: React.FC<FilePreviewProps> = ({ file, onRemove, lastFile, pre
         </IconButton>
         {!lastFile && <Typography style={{ width: '15px' }}>,</Typography>}
       </Box>
-    </Box>
+    </Box>)
   );
 };
 

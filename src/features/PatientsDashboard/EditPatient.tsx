@@ -1,4 +1,13 @@
-import { Box, Button, Checkbox, Divider, FormControlLabel, Grid, MenuItem, Modal, TextField, Typography } from '@mui/material'
+import Box from '@mui/material/Box';
+import Button from '@mui/material/Button';
+import Checkbox from '@mui/material/Checkbox';
+import Divider from '@mui/material/Divider';
+import FormControlLabel from '@mui/material/FormControlLabel';
+import Grid from '@mui/material/Grid';
+import MenuItem from '@mui/material/MenuItem';
+import Modal from '@mui/material/Modal';
+import TextField from '@mui/material/TextField';
+import Typography from '@mui/material/Typography';
 import { useFormik } from 'formik'
 import React, { RefObject, useEffect } from 'react'
 import { PatientRegistrationValidationSchema } from '../../utils/yup'
@@ -117,7 +126,7 @@ const EditPatient: React.FC<IEditPatient> = ({ openEditPatientModal, onClose }) 
     if (Object.keys(formik.errors).length > 0 && formik.isSubmitting) {
       const firstErrorKey = Object.keys(formik.errors)[0];
       const errorRef = inputRefs[firstErrorKey];
-      if (errorRef && errorRef.current) {
+      if (errorRef?.current) {
         errorRef.current.scrollIntoView({ behavior: 'smooth', block: 'center' });
       }
     }
@@ -162,7 +171,7 @@ const EditPatient: React.FC<IEditPatient> = ({ openEditPatientModal, onClose }) 
           <Grid container rowSpacing={rowSpacing} columnSpacing={columnSpacing} mt={1}>
             <Grid item xs={4} sm={6} md={2}>
               <TextField
-                ref={inputRefs["title"]}
+                ref={inputRefs.title}
                 select
                 fullWidth
                 id='register-title-id'
@@ -180,7 +189,7 @@ const EditPatient: React.FC<IEditPatient> = ({ openEditPatientModal, onClose }) 
             </Grid>
             <Grid item xs={8} sm={6} md={4}>
               <TextField
-                ref={inputRefs["firstName"]}
+                ref={inputRefs.firstName}
                 fullWidth
                 id='register-firstName-id'
                 name="firstName"
@@ -194,7 +203,7 @@ const EditPatient: React.FC<IEditPatient> = ({ openEditPatientModal, onClose }) 
             </Grid>
             <Grid item xs={12} sm={6} md={4}>
               <TextField
-                ref={inputRefs["lastName"]}
+                ref={inputRefs.lastName}
                 fullWidth
                 id='register-lastName-id'
                 name="lastName"
@@ -208,7 +217,7 @@ const EditPatient: React.FC<IEditPatient> = ({ openEditPatientModal, onClose }) 
             </Grid>
             <Grid item xs={8} sm={6} md={2}>
               <TextField
-                ref={inputRefs["gender"]}
+                ref={inputRefs.gender}
                 select
                 fullWidth
                 id='register-gender-id'
@@ -240,7 +249,7 @@ const EditPatient: React.FC<IEditPatient> = ({ openEditPatientModal, onClose }) 
         </Grid> */}
             <Grid item xs={12} sm={6} md={2}>
               <DatePicker
-                ref={inputRefs["dob"]}
+                ref={inputRefs.dob}
                 sx={{ width: '100%' }}
                 timezone='Asia/Kolkata'
                 label="Date of Birth"
@@ -254,7 +263,7 @@ const EditPatient: React.FC<IEditPatient> = ({ openEditPatientModal, onClose }) 
             </Grid>
             <Grid item xs={12} sm={6} md={4}>
               <TextField
-                ref={inputRefs["education"]}
+                ref={inputRefs.education}
                 fullWidth
                 id='register-education-id'
                 name="education"
@@ -268,7 +277,7 @@ const EditPatient: React.FC<IEditPatient> = ({ openEditPatientModal, onClose }) 
             </Grid>
             <Grid item xs={12} sm={6} md={2}>
               <TextField
-                ref={inputRefs["maritalStatus"]}
+                ref={inputRefs.maritalStatus}
                 select
                 fullWidth
                 id='register-maritalStatus-id'
@@ -285,7 +294,7 @@ const EditPatient: React.FC<IEditPatient> = ({ openEditPatientModal, onClose }) 
             </Grid>
             <Grid item xs={12} sm={6} md={2}>
               <TextField
-                ref={inputRefs["bloodGroup"]}
+                ref={inputRefs.bloodGroup}
                 select
                 fullWidth
                 id='register-bloodGroup-id'
@@ -308,7 +317,7 @@ const EditPatient: React.FC<IEditPatient> = ({ openEditPatientModal, onClose }) 
             </Grid>
             <Grid item xs={12} sm={6} md={2}>
               <TextField
-                ref={inputRefs["countryBirth"]}
+                ref={inputRefs.countryBirth}
                 fullWidth
                 id='register-countryBirth-id'
                 name="countryBirth"
@@ -322,7 +331,7 @@ const EditPatient: React.FC<IEditPatient> = ({ openEditPatientModal, onClose }) 
             </Grid>
             <Grid item xs={12} sm={6} md={2}>
               <TextField
-                ref={inputRefs["nationality"]}
+                ref={inputRefs.nationality}
                 fullWidth
                 id='register-nationality-id'
                 name="nationality"
@@ -336,7 +345,7 @@ const EditPatient: React.FC<IEditPatient> = ({ openEditPatientModal, onClose }) 
             </Grid>
             <Grid item xs={12} sm={6} md={2}>
               <TextField
-                ref={inputRefs["motherTounge"]}
+                ref={inputRefs.motherTounge}
                 fullWidth
                 id='register-motherTounge-id'
                 name="motherTounge"
@@ -350,7 +359,7 @@ const EditPatient: React.FC<IEditPatient> = ({ openEditPatientModal, onClose }) 
             </Grid>
             <Grid item xs={12} sm={6} md={4}>
               <TextField
-                ref={inputRefs["occupation"]}
+                ref={inputRefs.occupation}
                 fullWidth
                 id='register-occupation-id'
                 name="occupation"
@@ -364,7 +373,7 @@ const EditPatient: React.FC<IEditPatient> = ({ openEditPatientModal, onClose }) 
             </Grid>
             <Grid item xs={12} sm={6} md={2}>
               <TextField
-                ref={inputRefs["religion"]}
+                ref={inputRefs.religion}
                 fullWidth
                 id='register-religion-id'
                 name="religion"
@@ -385,7 +394,7 @@ const EditPatient: React.FC<IEditPatient> = ({ openEditPatientModal, onClose }) 
           <Grid container rowSpacing={rowSpacing} columnSpacing={columnSpacing} mt={1}>
             <Grid item xs={12} sm={6} md={4}>
               <TextField
-                ref={inputRefs["mobile"]}
+                ref={inputRefs.mobile}
                 fullWidth
                 id='register-mobile-id'
                 name="mobile"
@@ -401,7 +410,7 @@ const EditPatient: React.FC<IEditPatient> = ({ openEditPatientModal, onClose }) 
             </Grid>
             <Grid item xs={12} sm={6} md={4}>
               <TextField
-                ref={inputRefs["alernativeMobile"]}
+                ref={inputRefs.alernativeMobile}
                 fullWidth
                 id='register-alernativeMobile-id'
                 name="alernativeMobile"
@@ -417,7 +426,7 @@ const EditPatient: React.FC<IEditPatient> = ({ openEditPatientModal, onClose }) 
             </Grid>
             <Grid item xs={12} sm={6} md={4}>
               <TextField
-                ref={inputRefs["email"]}
+                ref={inputRefs.email}
                 fullWidth
                 id='register-email-id'
                 name="email"
@@ -449,7 +458,7 @@ const EditPatient: React.FC<IEditPatient> = ({ openEditPatientModal, onClose }) 
               <>
                 <Grid item xs={12} sm={6} md={3}>
                   <TextField
-                    ref={inputRefs["dependentName"]}
+                    ref={inputRefs.dependentName}
                     fullWidth
                     id='register-dependentName-id'
                     name="dependentName"
@@ -463,7 +472,7 @@ const EditPatient: React.FC<IEditPatient> = ({ openEditPatientModal, onClose }) 
                 </Grid>
                 <Grid item xs={12} sm={6} md={3}>
                   <TextField
-                    ref={inputRefs["dependentRelation"]}
+                    ref={inputRefs.dependentRelation}
                     fullWidth
                     id='register-dependentRelation-id'
                     name="dependentRelation"
@@ -477,7 +486,7 @@ const EditPatient: React.FC<IEditPatient> = ({ openEditPatientModal, onClose }) 
                 </Grid>
                 <Grid item xs={12} sm={6} md={3}>
                   <TextField
-                    ref={inputRefs["dependentMobile"]}
+                    ref={inputRefs.dependentMobile}
                     fullWidth
                     id='register-dependentMobile-id'
                     name="dependentMobile"
@@ -491,7 +500,7 @@ const EditPatient: React.FC<IEditPatient> = ({ openEditPatientModal, onClose }) 
                 </Grid>
                 <Grid item xs={12} sm={6} md={3}>
                   <TextField
-                    ref={inputRefs["dependentEmail"]}
+                    ref={inputRefs.dependentEmail}
                     fullWidth
                     id='register-dependentEmail-id'
                     name="dependentEmail"
@@ -514,7 +523,7 @@ const EditPatient: React.FC<IEditPatient> = ({ openEditPatientModal, onClose }) 
           <Grid container rowSpacing={rowSpacing} columnSpacing={columnSpacing} mt={1}>
             <Grid item xs={12} sm={6} md={6}>
               <TextField
-                ref={inputRefs["addressLine1"]}
+                ref={inputRefs.addressLine1}
                 fullWidth
                 id='register-addressLine1-id'
                 name="addressLine1"
@@ -528,7 +537,7 @@ const EditPatient: React.FC<IEditPatient> = ({ openEditPatientModal, onClose }) 
             </Grid>
             <Grid item xs={12} sm={6} md={6}>
               <TextField
-                ref={inputRefs["addressLine2"]}
+                ref={inputRefs.addressLine2}
                 fullWidth
                 id='register-addressLine2-id'
                 name="addressLine2"
@@ -542,7 +551,7 @@ const EditPatient: React.FC<IEditPatient> = ({ openEditPatientModal, onClose }) 
             </Grid>
             <Grid item xs={12} sm={6} md={4}>
               <TextField
-                ref={inputRefs["state"]}
+                ref={inputRefs.state}
                 fullWidth
                 id='register-state-id'
                 name="state"
@@ -556,7 +565,7 @@ const EditPatient: React.FC<IEditPatient> = ({ openEditPatientModal, onClose }) 
             </Grid>
             <Grid item xs={12} sm={6} md={4}>
               <TextField
-                ref={inputRefs["city"]}
+                ref={inputRefs.city}
                 fullWidth
                 id='register-city-id'
                 name="city"
@@ -570,7 +579,7 @@ const EditPatient: React.FC<IEditPatient> = ({ openEditPatientModal, onClose }) 
             </Grid>
             <Grid item xs={12} sm={6} md={4}>
               <TextField
-                ref={inputRefs["pincode"]}
+                ref={inputRefs.pincode}
                 fullWidth
                 id='register-pincode-id'
                 name="pincode"
@@ -610,7 +619,7 @@ const EditPatient: React.FC<IEditPatient> = ({ openEditPatientModal, onClose }) 
           <Grid container rowSpacing={rowSpacing} columnSpacing={columnSpacing} mt={1}>
             <Grid item xs={12} sm={6} md={3}>
               <TextField
-                ref={inputRefs["idProofType"]}
+                ref={inputRefs.idProofType}
                 select
                 fullWidth
                 id='register-idProof-id'
@@ -630,7 +639,7 @@ const EditPatient: React.FC<IEditPatient> = ({ openEditPatientModal, onClose }) 
             </Grid>
             <Grid item xs={12} sm={6} md={3}>
               <TextField
-                ref={inputRefs["idProofNumber"]}
+                ref={inputRefs.idProofNumber}
                 fullWidth
                 id='register-idProofNumber-id'
                 name="idProofNumber"
@@ -644,7 +653,7 @@ const EditPatient: React.FC<IEditPatient> = ({ openEditPatientModal, onClose }) 
             </Grid>
             <Grid item xs={12} sm={6} md={3}>
               <TextField
-                ref={inputRefs["idProofIssuedCountry"]}
+                ref={inputRefs.idProofIssuedCountry}
                 select
                 fullWidth
                 id='register-idProofIssuedCountry-id'
@@ -661,7 +670,7 @@ const EditPatient: React.FC<IEditPatient> = ({ openEditPatientModal, onClose }) 
             </Grid>
             <Grid item xs={12} sm={6} md={3}>
               <TextField
-                ref={inputRefs["ABHANumber"]}
+                ref={inputRefs.ABHANumber}
                 fullWidth
                 id='register-idProofAbhaNumber-id'
                 name="ABHANumber"
@@ -682,7 +691,7 @@ const EditPatient: React.FC<IEditPatient> = ({ openEditPatientModal, onClose }) 
           <Grid container rowSpacing={rowSpacing} columnSpacing={columnSpacing} mt={1}>
             <Grid item xs={12} sm={6} md={3}>
               <TextField
-                ref={inputRefs["reasonOfVisit"]}
+                ref={inputRefs.reasonOfVisit}
                 fullWidth
                 id='register-reasonOfVisit-id'
                 name="reasonOfVisit"
@@ -696,7 +705,7 @@ const EditPatient: React.FC<IEditPatient> = ({ openEditPatientModal, onClose }) 
             </Grid>
             <Grid item xs={12} sm={6} md={3}>
               <TextField
-                ref={inputRefs["referredBy"]}
+                ref={inputRefs.referredBy}
                 fullWidth
                 id='register-referredBy-id'
                 name="referredBy"
@@ -710,7 +719,7 @@ const EditPatient: React.FC<IEditPatient> = ({ openEditPatientModal, onClose }) 
             </Grid>
             <Grid item xs={12} sm={6} md={3}>
               <TextField
-                ref={inputRefs["referrerName"]}
+                ref={inputRefs.referrerName}
                 fullWidth
                 id='register-referredByDoctor-id'
                 name="referrerName"
@@ -724,7 +733,7 @@ const EditPatient: React.FC<IEditPatient> = ({ openEditPatientModal, onClose }) 
             </Grid>
             <Grid item xs={12} sm={6} md={3}>
               <TextField
-                ref={inputRefs["marketingSource"]}
+                ref={inputRefs.marketingSource}
                 fullWidth
                 id='register-marketingSource-id'
                 name="marketingSource"
@@ -746,7 +755,7 @@ const EditPatient: React.FC<IEditPatient> = ({ openEditPatientModal, onClose }) 
             </Grid>
             {formik.values.intepreter && (<Grid item xs={12} sm={6} md={3.5}>
               <TextField
-                ref={inputRefs["intepreterName"]}
+                ref={inputRefs.intepreterName}
                 fullWidth
                 id='register-intepreterName-id'
                 name="intepreterName"
@@ -777,7 +786,7 @@ const EditPatient: React.FC<IEditPatient> = ({ openEditPatientModal, onClose }) 
             {formik.values.isPatientDeceased && (
               <Grid item xs={12} sm={6} md={8}>
                 <TextField
-                  ref={inputRefs["detailsOfDeath"]}
+                  ref={inputRefs.detailsOfDeath}
                   fullWidth
                   id='register-detailsOfDeath-id'
                   name="detailsOfDeath"
@@ -810,7 +819,7 @@ const EditPatient: React.FC<IEditPatient> = ({ openEditPatientModal, onClose }) 
               </Grid>
                 <Grid item xs={12} sm={6} md={3}>
                   <TextField
-                    ref={inputRefs["insuranceSponsorName"]}
+                    ref={inputRefs.insuranceSponsorName}
                     fullWidth
                     id='register-insuranceCompany-id'
                     name="insuranceSponsorName"
@@ -824,7 +833,7 @@ const EditPatient: React.FC<IEditPatient> = ({ openEditPatientModal, onClose }) 
                 </Grid>
                 <Grid item xs={12} sm={6} md={3}>
                   <TextField
-                    ref={inputRefs["insurancePolicyHolderName"]}
+                    ref={inputRefs.insurancePolicyHolderName}
                     fullWidth
                     id='register-insuranceNumber-id'
                     name="insurancePolicyHolderName"
@@ -838,7 +847,7 @@ const EditPatient: React.FC<IEditPatient> = ({ openEditPatientModal, onClose }) 
                 </Grid>
                 <Grid item xs={12} sm={6} md={3}>
                   <TextField
-                    ref={inputRefs["insurancePolicyNumber"]}
+                    ref={inputRefs.insurancePolicyNumber}
                     fullWidth
                     id='register-insurancePolicyNumber-id'
                     name="insurancePolicyNumber"
@@ -852,7 +861,7 @@ const EditPatient: React.FC<IEditPatient> = ({ openEditPatientModal, onClose }) 
                 </Grid>
                 <Grid item xs={12} sm={6} md={3}>
                   <TextField
-                    ref={inputRefs["insuranceAmountEligible"]}
+                    ref={inputRefs.insuranceAmountEligible}
                     fullWidth
                     id='register-insuranceAmountEligible-id'
                     name="insuranceAmountEligible"
@@ -877,7 +886,7 @@ const EditPatient: React.FC<IEditPatient> = ({ openEditPatientModal, onClose }) 
             </Grid>
             <Grid item xs={12} sm={6} md={10}>
               <TextField
-                ref={inputRefs["remarks"]}
+                ref={inputRefs.remarks}
                 multiline
                 minRows={1}
                 fullWidth

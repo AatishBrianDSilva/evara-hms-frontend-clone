@@ -1,7 +1,13 @@
 import React from 'react'
 import PatientInfo from './PatientInfo'
 import TreatmentCyclesTable from './TreatmentCyclesTable'
-import { Box, Button, Divider, Grid, MenuItem, TextField, Typography } from '@mui/material'
+import Box from '@mui/material/Box';
+import Button from '@mui/material/Button';
+import Divider from '@mui/material/Divider';
+import Grid from '@mui/material/Grid';
+import MenuItem from '@mui/material/MenuItem';
+import TextField from '@mui/material/TextField';
+import Typography from '@mui/material/Typography';
 import CustomDataGrid from '../../components/Table/CustomDataGrid'
 import { GridColDef } from '@mui/x-data-grid'
 import { DatePicker, DateTimePicker } from '@mui/x-date-pickers'

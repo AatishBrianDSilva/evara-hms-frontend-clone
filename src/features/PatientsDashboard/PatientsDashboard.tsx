@@ -1,4 +1,5 @@
-import { Box, CircularProgress } from '@mui/material'
+import Box from '@mui/material/Box';
+import CircularProgress from '@mui/material/CircularProgress';
 import React, { useEffect } from 'react'
 import ContentSection from '../../components/ContentSection/ContentSection';
 import { useGetPatientByIdQuery } from '../../services/patientsApi';
@@ -36,6 +37,9 @@ const PatientsDashboard: React.FC = () => {
       if (partner) {
         dispatch(setPartnerId(partner.patientId));
         dispatch(setPartner(partner));
+      } else {
+        dispatch(setPartnerId(null));
+        dispatch(setPartner(null));
       }
     }
   }, [data, dispatch]);
