@@ -17,35 +17,30 @@ const PatientJourneyTabs = () => {
   };
 
   return (
-    <>
-      <Box>
-        <Tabs
-          centered
-          value={tabValue}
-          onChange={handleTabChange}
-          indicatorColor="secondary"
-          textColor="secondary"
-          aria-label="Patient Secondary Tabs"
-        >
-          <Tab icon={<Science fontSize='small' />} iconPosition='top' label="Investigations" id='patient-secondary-tabpanel-0' />
-          <Tab icon={<PrecisionManufacturing fontSize='small' />} iconPosition='top' label="Procedure" id='patient-secondary-tabpanel-1' />
-          <Tab icon={<AcUnit fontSize='small' />} iconPosition='top' label="Cryo Preservation" id='patient-secondary-tabpanel-2' />
-          <Tab icon={<HomeRepairService fontSize='small' />} iconPosition='top' label="Services" id='patient-secondary-tabpanel-3' />
-          <Tab icon={<Loop fontSize='small' />} iconPosition='top' label="Cycle" id='patient-secondary-tabpanel-4' />
-        </Tabs>
-      </Box>
+    <Box>
+      <Tabs
+        centered
+        value={tabValue}
+        onChange={handleTabChange}
+        indicatorColor="secondary"
+        textColor="secondary"
+        aria-label="Patient Secondary Tabs"
+      >
+        <Tab icon={<Science fontSize='small' />} iconPosition='top' label="Investigations" id='patient-secondary-tabpanel-0' />
+        <Tab icon={<PrecisionManufacturing fontSize='small' />} iconPosition='top' label="Procedure" id='patient-secondary-tabpanel-1' />
+        <Tab icon={<AcUnit fontSize='small' />} iconPosition='top' label="Cryo Preservation" id='patient-secondary-tabpanel-2' />
+        <Tab icon={<HomeRepairService fontSize='small' />} iconPosition='top' label="Services" id='patient-secondary-tabpanel-3' />
+        <Tab icon={<Loop fontSize='small' />} iconPosition='top' label="Cycle" id='patient-secondary-tabpanel-4' />
+      </Tabs>
 
       <Box
         p={2}
-        mt={2}
       >
         <TabPanel id="patient-secondary" value={tabValue} index={0}>
-         <Investigations />
+          <Investigations />
         </TabPanel>
         <TabPanel id="patient-secondary" value={tabValue} index={1}>
-          <Box>
-           <Procedures />
-          </Box>
+          <Procedures />
         </TabPanel>
         <TabPanel id="patient-secondary" value={tabValue} index={2}>
           <Box>
@@ -69,7 +64,7 @@ const PatientJourneyTabs = () => {
           </Box>
         </TabPanel>
       </Box>
-    </>
+    </Box>
   )
 }
 

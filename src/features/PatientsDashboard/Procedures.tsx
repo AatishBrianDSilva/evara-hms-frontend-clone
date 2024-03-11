@@ -1,12 +1,29 @@
-import { Button, Grid, Typography, Box, Dialog, DialogTitle, Paper, DialogContent, DialogActions, FormControlLabel, TextField, Checkbox } from '@mui/material'
-import React, { useState } from 'react'
-import CustomDataGrid from '../../components/Table/CustomDataGrid'
-import { GridColDef, GridActionsCellItem } from '@mui/x-data-grid'
-import { CheckCircle, Circle, Edit, Print, Add, Delete } from '@mui/icons-material'
-import FormForJourney from '../../components/FormForJourney/FormForJourney'
-import { FileUploadAndPreview } from '../../components/FileUploadAndPreview/FileUploadAndPreview'
-import { useFormik } from 'formik'
-import DeleteConfirmationModal from '../../components/DeleteConfirmationModal/DeleteConfirmationModal'
+import Button from '@mui/material/Button';
+import Grid from '@mui/material/Grid';
+import Typography from '@mui/material/Typography';
+import Box from '@mui/material/Box';
+import Dialog from '@mui/material/Dialog';
+import DialogTitle from '@mui/material/DialogTitle';
+import Paper from '@mui/material/Paper';
+import DialogContent from '@mui/material/DialogContent';
+import DialogActions from '@mui/material/DialogActions';
+import FormControlLabel from '@mui/material/FormControlLabel';
+import TextField from '@mui/material/TextField';
+import Checkbox from '@mui/material/Checkbox';
+import React, { useState } from 'react';
+import Add from '@mui/icons-material/Add';
+import Delete from '@mui/icons-material/Delete';
+import CheckCircle from '@mui/icons-material/CheckCircle';
+import Circle from '@mui/icons-material/Circle';
+import Edit from '@mui/icons-material/Edit';
+import Print from '@mui/icons-material/Print';
+// Additional imports remain unchanged
+import CustomDataGrid from '../../components/Table/CustomDataGrid';
+import { GridColDef, GridActionsCellItem } from '@mui/x-data-grid';
+import FormForJourney from '../../components/FormForJourney/FormForJourney';
+import { FileUploadAndPreview } from '../../components/FileUploadAndPreview/FileUploadAndPreview';
+import { useFormik } from 'formik';
+import DeleteConfirmationModal from '../../components/DeleteConfirmationModal/DeleteConfirmationModal';
 
 const Procedures: React.FC = () => {
     // State variables for controlling various dialogs

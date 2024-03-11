@@ -13,7 +13,8 @@ const TabPanel: React.FC<ITabPanelProps> = (props) => {
   const { children, value, index, id, ...other } = props;
 
   return (
-    <div
+    <Box
+      height={"100%"}
       role="tabpanel"
       hidden={value !== index}
       id={`${id}-tabpanel-${index}`}
@@ -21,11 +22,11 @@ const TabPanel: React.FC<ITabPanelProps> = (props) => {
       {...other}
     >
       {value === index && (
-        <Box>
+        <>
           {children}
-        </Box>
+        </>
       )}
-    </div>
+    </Box>
   );
 
 }

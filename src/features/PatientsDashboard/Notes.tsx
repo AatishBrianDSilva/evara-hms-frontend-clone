@@ -1,15 +1,37 @@
-import {
-  Box, Button, FormControl,
-  TextField, List, ListItem,
-  Typography, Step, Stepper,
-  StepLabel, StepContent, styled,
-  StepConnector, Grid, Dialog, DialogTitle,
-  DialogContent, DialogActions, Autocomplete
-} from '@mui/material'
-import React, { useState, } from 'react'
-import { useFormik } from 'formik'
-import { Description, Edit, Medication, MonitorHeart, Person, PersonSearch, Print, Troubleshoot } from '@mui/icons-material';
-import CustomAutocomplete from '../../components/AutoCompleteBox/AutoCompleteBox';
+import React, { useState } from 'react';
+import { useFormik } from 'formik';
+// MUI Component Imports
+import Box from '@mui/material/Box';
+import Button from '@mui/material/Button';
+import FormControl from '@mui/material/FormControl';
+import TextField from '@mui/material/TextField';
+import List from '@mui/material/List';
+import ListItem from '@mui/material/ListItem';
+import Typography from '@mui/material/Typography';
+import Step from '@mui/material/Step';
+import Stepper from '@mui/material/Stepper';
+import StepLabel from '@mui/material/StepLabel';
+import StepContent from '@mui/material/StepContent';
+import { styled } from '@mui/material/styles';
+import StepConnector from '@mui/material/StepConnector';
+import Grid from '@mui/material/Grid';
+import Dialog from '@mui/material/Dialog';
+import DialogTitle from '@mui/material/DialogTitle';
+import DialogContent from '@mui/material/DialogContent';
+import DialogActions from '@mui/material/DialogActions';
+import Autocomplete from '@mui/material/Autocomplete';
+// MUI Icon Imports
+import Description from '@mui/icons-material/Description';
+import Edit from '@mui/icons-material/Edit';
+import Medication from '@mui/icons-material/Medication';
+import MonitorHeart from '@mui/icons-material/MonitorHeart';
+import Person from '@mui/icons-material/Person';
+import PersonSearch from '@mui/icons-material/PersonSearch';
+import Print from '@mui/icons-material/Print';
+import Troubleshoot from '@mui/icons-material/Troubleshoot';
+
+
+
 
 const dummyData = {
   consultantDoctor: ['Dr. John Doe', 'Dr. Jane Doe'],
@@ -116,57 +138,67 @@ const Notes: React.FC = () => {
               </FormControl>
               <Box sx={{ display: 'flex', gap: 2 }}>
                 <FormControl fullWidth>
-                  <CustomAutocomplete
-                    options={dummyData.observations}
+                  <Autocomplete
+                    multiple
                     value={formik.values.observations}
+                    options={dummyData.observations}
                     onChange={(_, newValue) => {
                       formik.setFieldValue('observations', newValue);
                     }}
-                    label="Observations"
-                    multiple
+                    renderInput={(params) => (
+                      <TextField {...params} label="Observations" />
+                    )}
                   />
                 </FormControl>
                 <FormControl fullWidth>
-                  <CustomAutocomplete
-                    options={dummyData.treatmentAdvices}
+                  <Autocomplete
+                    multiple
                     value={formik.values.treatmentAdvices}
+                    options={dummyData.treatmentAdvices}
                     onChange={(_, newValue) => {
                       formik.setFieldValue('treatmentAdvices', newValue);
                     }}
-                    label="Treatment Advices"
-                    multiple
+                    renderInput={(params) => (
+                      <TextField {...params} label="Treatment Advices" />
+                    )}
                   />
                 </FormControl>
                 <FormControl fullWidth>
-                  <CustomAutocomplete
-                    options={dummyData.investigations}
+                  <Autocomplete
+                    multiple
                     value={formik.values.investigations}
+                    options={dummyData.investigations}
                     onChange={(_, newValue) => {
                       formik.setFieldValue('investigations', newValue);
                     }}
-                    label="Investigations"
-                    multiple
+                    renderInput={(params) => (
+                      <TextField {...params} label="Investigations" />
+                    )}
                   />
                 </FormControl>
                 <FormControl fullWidth>
-                  <CustomAutocomplete
-                    options={dummyData.scans}
+                  <Autocomplete
+                    multiple
                     value={formik.values.scans}
+                    options={dummyData.scans}
                     onChange={(_, newValue) => {
                       formik.setFieldValue('scans', newValue);
                     }}
-                    label="Scans"
-                    multiple
+                    renderInput={(params) => (
+                      <TextField {...params} label="Scans" />
+                    )}
                   />
                 </FormControl>
                 <FormControl fullWidth>
-                  <CustomAutocomplete
+                  <Autocomplete
                     options={dummyData.medications}
                     value={formik.values.medications}
                     onChange={(_, newValue) => {
                       formik.setFieldValue('medications', newValue);
                     }}
-                    label="Medications"
+                    renderInput={(params) => (
+                      <TextField {...params} label="Medications" />
+                    )}
                     multiple
                   />
                 </FormControl>
