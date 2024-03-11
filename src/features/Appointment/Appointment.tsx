@@ -53,11 +53,6 @@ const Appointment: React.FC = () => {
     setDateRange(range);
   }, [selectedMonth]);
 
-  const handleScroll = () => {
-    if (scrollRef.current) {
-      setScrollPosition(scrollRef.current.scrollLeft);
-    }
-  };
 
   useEffect(() => {
     const handleScroll = () => {
