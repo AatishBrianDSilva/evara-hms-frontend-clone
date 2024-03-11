@@ -16,7 +16,7 @@ import NotificationsIcon from '@mui/icons-material/Notifications';
 import Dashboard from '@mui/icons-material/Dashboard';
 import AppsIcon from '@mui/icons-material/Apps';
 import PersonAddIcon from '@mui/icons-material/PersonAdd';
-import { Grid } from '@mui/material';
+import Grid from '@mui/material/Grid';
 import { DateRangeIcon } from '@mui/x-date-pickers';
 import { Analytics, Diversity1, Diversity3, LocalPharmacy, Settings } from '@mui/icons-material';
 import { useNavigate } from 'react-router-dom';

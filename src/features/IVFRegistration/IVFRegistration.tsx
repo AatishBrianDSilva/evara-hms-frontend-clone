@@ -1,4 +1,6 @@
-import { Box, Tab, Tabs } from '@mui/material';
+import Box from '@mui/material/Box';
+import Tab from '@mui/material/Tab';
+import Tabs from '@mui/material/Tabs';
 import React from 'react'
 import RegistrationForm from './RegistrationForm';
 import ContentSection from '../../components/ContentSection/ContentSection';

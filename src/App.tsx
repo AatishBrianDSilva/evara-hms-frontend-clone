@@ -7,9 +7,9 @@ import IVFRegistration from "./features/IVFRegistration/IVFRegistration";
 import Patients from "./features/Patients/Patients";
 import Appointment from "./features/Appointment/Appointment";
 
-type ProtectedRouteType = {
+interface ProtectedRouteType {
   allowedRoles: string[];
-};
+}
 
 const ProtectedRoute: React.FC<ProtectedRouteType> = ({ allowedRoles }) => {
   const userRole = getUserRole(); // Get the current user's role

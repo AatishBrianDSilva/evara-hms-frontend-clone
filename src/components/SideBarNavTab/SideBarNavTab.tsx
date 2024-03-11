@@ -1,6 +1,7 @@
 import React, { useState } from 'react';
 import './sidebarNavTabStyle.css'; // This is where you'll put the CSS
-import { Avatar, SvgIconTypeMap, useTheme } from '@mui/material';
+import Avatar from '@mui/material/Avatar';
+import { useTheme, SvgIconTypeMap } from '@mui/material';
 import { ChevronRight, ChevronLeftOutlined } from '@mui/icons-material';
 import { OverridableComponent } from '@mui/material/OverridableComponent';
 import { useLocation } from 'react-router-dom';

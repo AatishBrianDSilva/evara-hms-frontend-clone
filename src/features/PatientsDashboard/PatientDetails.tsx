@@ -1,5 +1,18 @@
 import { Add, Edit, ExpandLessOutlined, ExpandMoreOutlined, SwapHoriz } from '@mui/icons-material'
-import { AppBar, Avatar, Box, Button, Collapse, Grid, IconButton, MenuItem, Tab, Tabs, TextField, Tooltip, Typography, useTheme } from '@mui/material'
+import AppBar from '@mui/material/AppBar';
+import Avatar from '@mui/material/Avatar';
+import Box from '@mui/material/Box';
+import Button from '@mui/material/Button';
+import Collapse from '@mui/material/Collapse';
+import Grid from '@mui/material/Grid';
+import IconButton from '@mui/material/IconButton';
+import MenuItem from '@mui/material/MenuItem';
+import Tab from '@mui/material/Tab';
+import Tabs from '@mui/material/Tabs';
+import TextField from '@mui/material/TextField';
+import Tooltip from '@mui/material/Tooltip';
+import Typography from '@mui/material/Typography';
+import { useTheme } from '@mui/material';
 import React, { useState } from 'react'
 import AddPartner from './AddPartner';
 import TabPanel from '../../components/Utils/TabPanel';

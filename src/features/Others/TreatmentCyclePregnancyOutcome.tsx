@@ -1,4 +1,12 @@
-import { Box, Button, Grid, Checkbox, Divider, FormControlLabel, MenuItem, TextField, Typography } from '@mui/material'
+import Box from '@mui/material/Box';
+import Button from '@mui/material/Button';
+import Grid from '@mui/material/Grid';
+import Checkbox from '@mui/material/Checkbox';
+import Divider from '@mui/material/Divider';
+import FormControlLabel from '@mui/material/FormControlLabel';
+import MenuItem from '@mui/material/MenuItem';
+import TextField from '@mui/material/TextField';
+import Typography from '@mui/material/Typography';
 import React from 'react'
 import PatientInfo from './PatientInfo'
 import { DatePicker } from '@mui/x-date-pickers'

@@ -1,6 +1,11 @@
 import React, { ReactNode } from 'react';
-import { Box, Paper, Typography, Divider, SxProps, Theme } from '@mui/material';
-import { SvgIconProps } from '@mui/material/SvgIcon';
+import Box from '@mui/material/Box';
+import Paper from '@mui/material/Paper';
+import Typography from '@mui/material/Typography';
+import Divider from '@mui/material/Divider';
+// Import Theme, SvgIconProps, and SxProps from the main package or specific utilities
+import { Theme, SvgIconProps, SxProps } from '@mui/material';
+
 
 interface ContentSectionProps {
   title?: string;
@@ -11,9 +16,9 @@ interface ContentSectionProps {
 
 const ContentSection: React.FC<ContentSectionProps> = ({ title, icon, children, titleSx }) => {
   return (
-    <Box component="section" display={"flex"} flexDirection={"column"} height={"calc(100vh - 75px)"}>
-      <Paper sx={{ height: "100%", overflow: 'auto', display: "flex", flex: "1 1 auto" }}>
-        <Box padding={2} display={"flex"} flexDirection={"column"} flex="1 1 auto">
+    <Box component="section" sx={{ display: "flex", flexDirection: "column", flex: "1 1 auto", maxWidth: "100%" }}>
+      <Paper sx={{ height: "100%", display: "flex", maxWidth: "100%" }}>
+        <Box padding={2} sx={{ display: "flex", flexDirection: "column", flex: "1 1 auto", overflow: 'auto' }}>
           {title ? (
             <>
               <Typography variant="button" color="secondary" sx={{ display: 'flex', alignItems: 'center', mb: 1, ...titleSx }}>
@@ -21,12 +26,12 @@ const ContentSection: React.FC<ContentSectionProps> = ({ title, icon, children, 
                 {title}
               </Typography>
               <Divider />
-              <Box mt={2} display={"flex"} flexDirection={"column"} flex="1 1 auto">
+              <Box mt={2} sx={{ display: "flex", flexDirection: "column", flex: "1 1 auto", }}>
                 {children}
               </Box>
             </>
           ) : (
-            <Box display={"flex"} flexDirection={"column"} flex="1 1 auto">
+            <Box sx={{ display: "flex", flexDirection: "column", flex: "1 1 auto" }}>
               {children}
             </Box>
           )}
@@ -35,5 +40,6 @@ const ContentSection: React.FC<ContentSectionProps> = ({ title, icon, children, 
     </Box>
   );
 };
+
 
 export default ContentSection;

@@ -1,7 +1,7 @@
 export interface IPaginateOptions {
   page?: number;
   limit?: number;
-  sort?: { [key: string]: any };
+  sort?: Record<string, any>;
   select?: string;
   lean?: boolean;
   leanWithId?: boolean;

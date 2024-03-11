@@ -1,5 +1,14 @@
 import React from 'react';
-import { Box, Button, Checkbox, FormControlLabel, Grid, MenuItem, Tab, Tabs, TextField, Typography } from '@mui/material';
+import Box from '@mui/material/Box';
+import Button from '@mui/material/Button';
+import Checkbox from '@mui/material/Checkbox';
+import FormControlLabel from '@mui/material/FormControlLabel';
+import Grid from '@mui/material/Grid';
+import MenuItem from '@mui/material/MenuItem';
+import Tab from '@mui/material/Tab';
+import Tabs from '@mui/material/Tabs';
+import TextField from '@mui/material/TextField';
+import Typography from '@mui/material/Typography';
 import TreatmentCyclesTable from './TreatmentCyclesTable';
 import PatientInfo from './PatientInfo';
 import CloudUploadIcon from '@mui/icons-material/CloudUpload';

@@ -1,4 +1,13 @@
-import { Box, Button, Checkbox, FormControlLabel, Grid, MenuItem, Tab, Tabs, TextField, Typography } from '@mui/material'
+import Box from '@mui/material/Box';
+import Button from '@mui/material/Button';
+import Checkbox from '@mui/material/Checkbox';
+import FormControlLabel from '@mui/material/FormControlLabel';
+import Grid from '@mui/material/Grid';
+import MenuItem from '@mui/material/MenuItem';
+import Tab from '@mui/material/Tab';
+import Tabs from '@mui/material/Tabs';
+import TextField from '@mui/material/TextField';
+import Typography from '@mui/material/Typography';
 import React from 'react'
 import { GridColDef } from '@mui/x-data-grid';
 import PatientInfo from './PatientInfo';
@@ -224,7 +233,7 @@ const TreatmentCycles: React.FC = () => {
 
   const renderGametes = () => {
     return (
-      <Box sx={{ flexGrow: 1 }}>
+      (<Box sx={{ flexGrow: 1 }}>
         <Grid container spacing={4} direction="column">
           {/* 1st row - Gametes Egg 1 & 2 */}
           <Grid item container spacing={4}>
@@ -329,7 +338,7 @@ const TreatmentCycles: React.FC = () => {
             </Button>
           </Grid>
         </Grid>
-      </Box>
+      </Box>)
     );
   }
 

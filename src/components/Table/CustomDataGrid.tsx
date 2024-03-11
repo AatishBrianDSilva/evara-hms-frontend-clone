@@ -1,7 +1,8 @@
 import React from 'react';
 import { DataGrid, GridColDef, GridRowsProp, GridToolbarContainer } from '@mui/x-data-grid';
 import { SxProps, useTheme, Theme } from '@mui/material/styles';
-import { LinearProgress, Button } from '@mui/material';
+import LinearProgress from '@mui/material/LinearProgress';
+import Button from '@mui/material/Button';
 
 import AddIcon from '@mui/icons-material/Add';
 

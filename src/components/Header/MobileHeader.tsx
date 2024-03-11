@@ -6,7 +6,8 @@ import Typography from '@mui/material/Typography';
 import IconButton from '@mui/material/IconButton';
 import ArrowBackIosIcon from '@mui/icons-material/ArrowBackIos';
 import { useLocation, useNavigate } from 'react-router-dom';
-import { Avatar, useTheme } from '@mui/material';
+import Avatar from '@mui/material/Avatar';
+import { useTheme } from '@mui/material';
 import { Dashboard } from '@mui/icons-material';
 
 const MobileHeader: React.FC = () => {

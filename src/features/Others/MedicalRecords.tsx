@@ -1,7 +1,17 @@
 import React from 'react'
 import TreatmentCyclesTable from './TreatmentCyclesTable'
 import PatientInfo from './PatientInfo'
-import { Box, Button, Divider, Grid, IconButton, MenuItem, Paper, Tab, Tabs, TextField, Typography } from '@mui/material'
+import Box from '@mui/material/Box';
+import Button from '@mui/material/Button';
+import Divider from '@mui/material/Divider';
+import Grid from '@mui/material/Grid';
+import IconButton from '@mui/material/IconButton';
+import MenuItem from '@mui/material/MenuItem';
+import Paper from '@mui/material/Paper';
+import Tab from '@mui/material/Tab';
+import Tabs from '@mui/material/Tabs';
+import TextField from '@mui/material/TextField';
+import Typography from '@mui/material/Typography';
 import { GridColDef } from '@mui/x-data-grid';
 import { Clear, Check } from "@mui/icons-material"
 import { DateTimePicker } from '@mui/x-date-pickers';
@@ -168,114 +178,104 @@ const MedicalRecords: React.FC = () => {
 
 
   const addMedicalRecord = () => {
-    return (
-      <>
-        <Typography variant='subtitle1' mb={2}>
-          Add New Record
-        </Typography>
-
-        {/* Date and Time Picker */}
-        <Grid container spacing={2} mb={2}>
-          <Grid item xs={12}> {/* Adjusted for full width on all screen sizes */}
-            <DateTimePicker
-              label="Date and Time"
-              value={new Date()}
-              onChange={() => { }}
-              sx={{ width: '100%' }}
-            />
-          </Grid>
+    return (<>
+      <Typography variant='subtitle1' mb={2}>
+        Add New Record
+      </Typography>
+      {/* Date and Time Picker */}
+      <Grid container spacing={2} mb={2}>
+        <Grid item xs={12}> {/* Adjusted for full width on all screen sizes */}
+          <DateTimePicker
+            label="Date and Time"
+            value={new Date()}
+            onChange={() => { }}
+            sx={{ width: '100%' }}
+          />
         </Grid>
-
-        {/* Subject */}
-        <Grid container spacing={2} mb={2}>
-          <Grid item xs={12} lg={4}> {/* Responsive adjustments */}
-            <TextField
-              id="subject"
-              label="Subject"
-              select
-              fullWidth
-            >
-              <MenuItem value="1">Subject 1</MenuItem>
-              <MenuItem value="2">Subject 2</MenuItem>
-            </TextField>
-          </Grid>
+      </Grid>
+      {/* Subject */}
+      <Grid container spacing={2} mb={2}>
+        <Grid item xs={12} lg={4}> {/* Responsive adjustments */}
+          <TextField
+            id="subject"
+            label="Subject"
+            select
+            fullWidth
+          >
+            <MenuItem value="1">Subject 1</MenuItem>
+            <MenuItem value="2">Subject 2</MenuItem>
+          </TextField>
         </Grid>
-
-        {/* Descriptions */}
-        <Grid container spacing={2} mb={2}>
+      </Grid>
+      {/* Descriptions */}
+      <Grid container spacing={2} mb={2}>
+        <Grid item xs={12} lg={6}>
+          <TextField
+            multiline
+            minRows={2}
+            id="description"
+            label="Description"
+            fullWidth
+          />
+        </Grid>
+        <Grid item xs={12} lg={6}>
+          <TextField
+            multiline
+            minRows={2}
+            id="pri-sec-male-female-couple-married-in"
+            label="Primary / Secondary Male Female Couple Married In"
+            fullWidth
+          />
+        </Grid>
+      </Grid>
+      {/* Male Issues */}
+      <Typography variant='subtitle1' color={"textSecondary"} mb={1}>
+        Male Issues
+      </Typography>
+      <Grid container spacing={2} mb={2}>
+        <Grid item container gap={2} xs={12} lg={6}>
+          <TextField id="male-issues-age" label="Age" fullWidth />
+          <TextField id="male-issues-bmi" label="BMI" fullWidth />
+          <TextField multiline minRows={2} id="male-issues-sa" label="SA" fullWidth />
+        </Grid>
+      </Grid>
+      {/* Female Issues */}
+      <Typography variant='subtitle1' color={"textSecondary"} mb={1}>
+        Female Issues
+      </Typography>
+      <Grid container spacing={2} mb={2}>
+        <Grid item container gap={2} xs={12} lg={6}>
+          <TextField id="female-issues-age" label="Age" fullWidth />
+          <TextField id="female-issues-bmi" label="BMI" fullWidth />
+          <TextField multiline minRows={2} id="female-issues-amh" label="AMH" fullWidth />
+          <TextField multiline minRows={2} id="female-issues-3dscan" label="3D Scan" fullWidth />
+        </Grid>
+      </Grid>
+      <Divider sx={{ mb: 2 }} />
+      {/* Additional Sections */}
+      {['Previous Cycles', 'Plan', 'Review'].map((label, index) => (
+        <Grid container spacing={2} mb={2} key={index}>
           <Grid item xs={12} lg={6}>
             <TextField
               multiline
               minRows={2}
-              id="description"
-              label="Description"
-              fullWidth
-            />
-          </Grid>
-          <Grid item xs={12} lg={6}>
-            <TextField
-              multiline
-              minRows={2}
-              id="pri-sec-male-female-couple-married-in"
-              label="Primary / Secondary Male Female Couple Married In"
+              id={label.toLowerCase().replace(/\s+/g, '-')}
+              label={label}
               fullWidth
             />
           </Grid>
         </Grid>
-
-        {/* Male Issues */}
-        <Typography variant='subtitle1' color={"textSecondary"} mb={1}>
-          Male Issues
-        </Typography>
-        <Grid container spacing={2} mb={2}>
-          <Grid item container gap={2} xs={12} lg={6}>
-            <TextField id="male-issues-age" label="Age" fullWidth />
-            <TextField id="male-issues-bmi" label="BMI" fullWidth />
-            <TextField multiline minRows={2} id="male-issues-sa" label="SA" fullWidth />
-          </Grid>
-        </Grid>
-
-        {/* Female Issues */}
-        <Typography variant='subtitle1' color={"textSecondary"} mb={1}>
-          Female Issues
-        </Typography>
-        <Grid container spacing={2} mb={2}>
-          <Grid item container gap={2} xs={12} lg={6}>
-            <TextField id="female-issues-age" label="Age" fullWidth />
-            <TextField id="female-issues-bmi" label="BMI" fullWidth />
-            <TextField multiline minRows={2} id="female-issues-amh" label="AMH" fullWidth />
-            <TextField multiline minRows={2} id="female-issues-3dscan" label="3D Scan" fullWidth />
-          </Grid>
-        </Grid>
-
-        <Divider sx={{ mb: 2 }} />
-
-        {/* Additional Sections */}
-        {['Previous Cycles', 'Plan', 'Review'].map((label, index) => (
-          <Grid container spacing={2} mb={2} key={index}>
-            <Grid item xs={12} lg={6}>
-              <TextField
-                multiline
-                minRows={2}
-                id={label.toLowerCase().replace(/\s+/g, '-')}
-                label={label}
-                fullWidth
-              />
-            </Grid>
-          </Grid>
-        ))}
-
-        {/* Action Buttons */}
-        <Box sx={{ display: "flex", justifyContent: "flex-end", gap: 2, mb: 2 }}>
-          <Button variant='contained' sx={{ width: 'fit-content' }}>
-            Save
-          </Button>
-          <Button variant='contained' color='secondary' sx={{ width: 'fit-content' }}>
-            Cancel
-          </Button>
-        </Box>
-      </>
-    );
+      ))}
+      {/* Action Buttons */}
+      <Box sx={{ display: "flex", justifyContent: "flex-end", gap: 2, mb: 2 }}>
+        <Button variant='contained' sx={{ width: 'fit-content' }}>
+          Save
+        </Button>
+        <Button variant='contained' color='secondary' sx={{ width: 'fit-content' }}>
+          Cancel
+        </Button>
+      </Box>
+    </>);
   };
 
   const renderDonorCharactertistics = () => {

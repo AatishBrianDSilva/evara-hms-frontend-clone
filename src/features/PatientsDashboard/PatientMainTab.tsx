@@ -1,5 +1,8 @@
 import { Healing, Moving, Receipt, Restore, Summarize, TextSnippet } from '@mui/icons-material';
-import { Box, Tab, Tabs, useTheme } from '@mui/material';
+import Box from '@mui/material/Box';
+import Tab from '@mui/material/Tab';
+import Tabs from '@mui/material/Tabs';
+import { useTheme } from '@mui/material';
 import { CalendarIcon } from '@mui/x-date-pickers';
 import React, { useState } from 'react'
 import TabPanel from '../../components/Utils/TabPanel';

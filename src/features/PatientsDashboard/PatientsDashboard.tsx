@@ -1,4 +1,5 @@
-import { Box, CircularProgress } from '@mui/material'
+import Box from '@mui/material/Box';
+import CircularProgress from '@mui/material/CircularProgress';
 import React, { useEffect } from 'react'
 import ContentSection from '../../components/ContentSection/ContentSection';
 import { useGetPatientByIdQuery } from '../../services/patientsApi';
