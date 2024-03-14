@@ -43,7 +43,8 @@ const dummyData: any = {
 }
 
 const FormForJourney: React.FC<AlertDialogProps> = ({ title, open, onClose, onConfirm, doctorData, investigationData, handleAddFields, handleDeleteField, form }) => {
-
+    console.log("Doctor Data", doctorData);
+    console.log("Investigation Data", investigationData);
     return (
         <Dialog open={open || false} onClose={onClose || (() => { })} fullWidth maxWidth="md" scroll="paper">
             <DialogTitle sx={{ textAlign: 'center', pt: 3 }} variant="h5">

@@ -1,4 +1,4 @@
-import { CalendarMonth, HomeMax, HomeOutlined } from '@mui/icons-material'
+import { HomeOutlined } from '@mui/icons-material'
 import Box from '@mui/material/Box';
 import Typography from '@mui/material/Typography';
 import { DatePicker } from '@mui/x-date-pickers'
