@@ -1,10 +1,12 @@
-export interface IPaginateOptions {
+export interface IQueryOptions {
   page?: number;
   limit?: number;
   sort?: Record<string, any>;
   select?: string;
   lean?: boolean;
   leanWithId?: boolean;
+  paginate?: boolean;
+  filters?: Record<string, any>; // Generic filtering options
 }
 
 export interface ICase {
@@ -29,8 +31,21 @@ export interface IDonor {
 }
 
 export interface IAppointment {
-  upcomingAppointment: string;
-  lastAppointment: string;
+  _id: string;
+  clinicId: string;
+  branchId: string;
+  doctorId: string;
+  patientId?: string;
+  date: Date;
+  time: string;
+  fullName?: string;
+  phone?: string;
+  city?: string;
+  reason: string;
+  mode: string;
+  source: string;
+  notes: string;
+  status: string;
 }
 
 export interface IPatient {
@@ -89,8 +104,35 @@ export interface IPatient {
   __v: number;
   case: ICase;
   donor: IDonor;
-  appointment: IAppointment;
+  appointment: {
+    upcomingAppointment: string;
+    lastAppointment: string;
+  };
   partnerDetails: IPatient;
   referrerName: string;
   intepreterName: string;
+}
+export interface IDoctor {
+  _id: string;
+  clinicId: string;
+  branchId: string;
+  firstName: string;
+  lastName: string;
+  gender: string;
+  age: number;
+  dob: string;
+  education: string;
+  mobile: string;
+  email: string;
+  addressLine1: string;
+  addressLine2: string;
+  state: string;
+  city: string;
+  licenceNumber: string;
+  image: string;
+  designation: string;
+  status: string;
+  createdAt: string;
+  updatedAt: string;
+  __v: number;
 }

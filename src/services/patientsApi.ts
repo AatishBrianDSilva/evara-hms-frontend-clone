@@ -1,7 +1,7 @@
-// services/registrationApi.js
 import { createApi, fetchBaseQuery } from "@reduxjs/toolkit/query/react";
 import { API_BASE_URL } from "../utils/apiConfig";
-import { IPaginateOptions } from "../types/types";
+import { IQueryOptions } from "../types/types";
+import generateQueryParams from "../utils/generateQueryParams";
 
 export const patientsApi = createApi({
   reducerPath: "patientsApi",
@@ -33,16 +33,8 @@ export const patientsApi = createApi({
       invalidatesTags: ["Patient"],
     }),
     getPatients: builder.query({
-      query: (options: IPaginateOptions) => {
-        const { page, limit, sort, select, lean, leanWithId } = options;
-        const queryParams = new URLSearchParams({
-          ...(page ? { page: page.toString() } : {}),
-          ...(limit ? { limit: limit.toString() } : {}),
-          ...(sort ? { sort: JSON.stringify(sort) } : {}),
-          ...(select ? { select } : {}),
-          ...(lean ? { lean: lean.toString() } : {}),
-          ...(leanWithId ? { leanWithId: leanWithId.toString() } : {}),
-        }).toString();
+      query: (options: IQueryOptions) => {
+        const queryParams = generateQueryParams(options);
         return { url: `patients?${queryParams}`, method: "GET" };
       },
       providesTags: ["Patient"],

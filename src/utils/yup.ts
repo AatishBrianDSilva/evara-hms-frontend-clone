@@ -58,3 +58,17 @@ export const PatientRegistrationValidationSchema = Yup.object().shape({
   image: Yup.mixed(),
   remarks: Yup.string(),
 });
+
+export const AppointmentValidationSchema = Yup.object({
+  fullName: Yup.string().required("Full name is required"),
+  phone: Yup.string()
+    .required("Phone number is required")
+    .matches(/^[0-9]+$/, "Must be only digits")
+    .min(10, "Must be exactly 10 digits")
+    .max(10, "Must be exactly 10 digits"),
+  city: Yup.string().required("City is required"),
+  reason: Yup.string().required("Reason for visit is required"),
+  mode: Yup.string().required("Mode of consultation is required"),
+  source: Yup.string().required("Source of referral is required"),
+  notes: Yup.string(),
+});
