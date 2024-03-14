@@ -3,10 +3,8 @@ import Button from '@mui/material/Button';
 import IconButton from '@mui/material/IconButton';
 import TextField from '@mui/material/TextField';
 import React from 'react'
-// import { DatePicker } from '@mui/x-date-pickers'
 import { GridColDef } from '@mui/x-data-grid'
-// import { setSelectedPatientId } from './patientsSlice'
-// import { useDispatch } from 'react-redux'
+
 import CustomDataGrid from '../../components/Table/CustomDataGrid'
 import { Add, Delete, Edit } from '@mui/icons-material'
 import ContentSection from '../../components/ContentSection/ContentSection'
@@ -15,6 +13,7 @@ import { useGetPatientsQuery } from '../../services/patientsApi'
 import ErrorAlertWithRetry from '../../components/ErrorAlertWithRetry/ErrorAlertWithRetry'
 import { setPatientId } from './patientsSlice'
 import { useDispatch } from 'react-redux'
+import { calculateAge } from '../../utils/calculateAge';
 
 const PatientsList: React.FC = () => {
 
@@ -41,7 +40,11 @@ const PatientsList: React.FC = () => {
     { field: 'patientId', headerName: 'ID', flex: 1 }, // Adjust the flex values based on your needs
     { field: 'firstName', headerName: 'Name', flex: 1, },
     { field: 'gender', headerName: 'Gender', flex: 1 },
-    { field: 'age', headerName: 'Age', flex: 1 },
+    {
+      field: 'dob', headerName: 'Age', flex: 1, valueGetter: (params) => {
+        return calculateAge(params.row.dob);
+      },
+    },
     { field: 'mobile', headerName: 'Phone', flex: 1 },
     { field: 'referredBy', headerName: 'Referred By', flex: 1 },
     { field: 'createdAt', headerName: 'Registered On', type: 'date', flex: 1, valueFormatter: (params) => new Date(params.value as string).toLocaleDateString() },
@@ -66,7 +69,7 @@ const PatientsList: React.FC = () => {
       <Box display="flex" justifyContent="flex-end" gap={2}>
         <TextField label="Search" size="small" variant="outlined" />
         <Button variant="contained" startIcon={<Add />} color="secondary" onClick={() => navigation("/ivf-registration")}>
-          Add Patient
+          Patient
         </Button>
       </Box>
       {error && <ErrorAlertWithRetry onRetry={() => refetch()} />}

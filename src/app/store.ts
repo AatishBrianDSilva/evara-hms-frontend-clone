@@ -1,6 +1,6 @@
-// store.js
 import { configureStore, combineReducers } from "@reduxjs/toolkit";
 import { patientsApi } from "../services/patientsApi";
+import { doctorsApi } from "../services/doctorsApi";
 import patientsReducer from "../features/Patients/patientsSlice";
 
 import storage from "redux-persist/lib/storage"; // defaults to localStorage for web
@@ -14,15 +14,23 @@ import {
   PURGE,
   REGISTER,
 } from "redux-persist";
+import { appointmentsApi } from "../services/appointmentsApi";
 
 const persistConfig = {
   key: "root",
   storage,
-  // whitelist: ["patients"],
+  blacklist: [
+    patientsApi.reducerPath,
+    doctorsApi.reducerPath,
+    appointmentsApi.reducerPath,
+    "patients",
+  ],
 };
 
 const rootReducer = combineReducers({
   [patientsApi.reducerPath]: patientsApi.reducer,
+  [doctorsApi.reducerPath]: doctorsApi.reducer,
+  [appointmentsApi.reducerPath]: appointmentsApi.reducer,
   patients: patientsReducer,
 });
 
@@ -35,7 +43,10 @@ export const store = configureStore({
       serializableCheck: {
         ignoredActions: [FLUSH, REHYDRATE, PAUSE, PERSIST, PURGE, REGISTER], // These actions are ignored during serializability checks. It's required by redux-persist
       },
-    }).concat(patientsApi.middleware),
+    })
+      .concat(patientsApi.middleware)
+      .concat(doctorsApi.middleware)
+      .concat(appointmentsApi.middleware),
 });
 
 export const persistor = persistStore(store);
