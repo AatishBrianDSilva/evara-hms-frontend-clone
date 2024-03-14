@@ -1,4 +1,4 @@
-import { CalendarMonth } from '@mui/icons-material'
+import { CalendarMonth, HomeMax, HomeOutlined } from '@mui/icons-material'
 import Box from '@mui/material/Box';
 import Typography from '@mui/material/Typography';
 import { DatePicker } from '@mui/x-date-pickers'
@@ -10,7 +10,7 @@ const Home: React.FC = () => {
   const appointments = []
 
   return (
-    <ContentSection title="Appointments" icon={<CalendarMonth />}>
+    <ContentSection title="Home" icon={<HomeOutlined />}>
       <Box>
         <Box display={"flex"} justifyContent={"flex-end"} alignItems={"center"} mb={2}>
           <DatePicker
@@ -20,7 +20,7 @@ const Home: React.FC = () => {
         {appointments.length === 0 ? (
           <Box minHeight={200} display={"flex"} justifyContent={"center"} alignItems={"center"}>
             <Typography variant="body2" color="textSecondary">
-              No appointments available
+              No appointments today
             </Typography>
           </Box>) : (
           <Box>

@@ -9,6 +9,18 @@ export interface IQueryOptions {
   filters?: Record<string, any>; // Generic filtering options
 }
 
+export interface IPagination {
+  totalDocs: number;
+  limit: number;
+  totalPages: number;
+  page: number | undefined;
+  pagingCounter: number;
+  hasPrevPage: boolean;
+  hasNextPage: boolean;
+  prevPage: number | null | undefined;
+  nextPage: number | null | undefined;
+}
+
 export interface ICase {
   _id: string;
   patientId: string;
@@ -34,7 +46,7 @@ export interface IAppointment {
   _id: string;
   clinicId: string;
   branchId: string;
-  doctorId: string;
+  doctorId: string | IDoctor;
   patientId?: string;
   date: Date;
   time: string;
