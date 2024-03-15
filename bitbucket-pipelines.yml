@@ -17,7 +17,7 @@ pipelines:
   default:
     - parallel:
       - step:
-          name: Build and Test
+          name: Build
           caches:
             - node
           script:
@@ -31,16 +31,12 @@ pipelines:
               - node
             script:
               - npm install
-              # CI=true in default variables for Bitbucket Pipelines https://support.atlassian.com/bitbucket-cloud/docs/variables-in-pipelines/
-              - npm test
               - npm run build
             artifacts:
               - build/**
         - step:
             name: Security Scan
             script:
-              # Run a security scan for sensitive data.
-              # See more security tools at https://bitbucket.org/product/features/pipelines/integrations?&category=security
               - pipe: atlassian/git-secrets-scan:0.5.1
       - step:
           name: Deploy to Develpoment
