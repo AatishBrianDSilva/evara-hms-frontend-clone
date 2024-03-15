@@ -44,7 +44,6 @@ pipelines:
               - pipe: atlassian/git-secrets-scan:0.5.1
       - step:
           name: Deploy to Develpoment
-          deployment: Development
           clone:
             enabled: false
           script:
