@@ -391,7 +391,7 @@ const BookAppointment: React.FC<BookAppointmentProps> = ({ openModal, onClose })
                       <ArrowForwardIosIcon />
                     </IconButton>
                   </Box>
-                  <Box height={"38vh"} px={1} mt={2} flexDirection={"column"} display={"flex"} justifyContent={"center"} alignItems={appointmentLoading ? "center" : "flex-start"}>
+                  <Box height={"50vh"} px={1} mt={2} flexDirection={"column"} display={"flex"} justifyContent={"center"} alignItems={appointmentLoading ? "center" : "flex-start"}>
                     {appointmentLoading ?
                       <CircularProgress />
                       : renderAppointmentTimeslots()}

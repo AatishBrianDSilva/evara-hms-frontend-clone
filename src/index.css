@@ -1,12 +1,14 @@
 :root {
-  --primary-main: #F1168D;
-  --primary-light: #F673BA;
-  --secondary-main: #248C88;
-  --secondary-light: #65AEAB;
-  --error-main: #CE2F0C;
-  --warning-main: #F98D0E;
-  --info-main: #166BF4;
-  --success-main: #44C431;
+  --primary-main: #FF5C00;
+  --primary-light: #FF8442;
+  --primary-dark: #C75000;
+  --secondary-main: #5981DE;
+  --secondary-light: #84A2FF;
+  --secondary-dark: #3C5FA0;
+  --error-main: #FF3F46;
+  --warning-main: #FF9321;
+  --info-main: #288BDB;
+  --success-main: #3FC138;
 }
 
 /* .MuiDataGrid-columnHeaders {
