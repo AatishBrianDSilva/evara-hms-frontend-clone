@@ -19,14 +19,21 @@ import BookAppointment from '../Appointment/BookAppointment'
 import { useGetDoctorsQuery } from '../../services/doctorsApi'
 import { IAppointment, IDoctor, IPagination } from '../../types/types'
 import { useGetAppointmentsQuery } from '../../services/appointmentsApi'
+import { useDispatch } from 'react-redux'
+import { resetAppointment } from './appointmentSlice'
+import EditAppointment from './EditAppointment'
 
 const AppointmentsList: React.FC = () => {
+
+  const dispatch = useDispatch()
 
   const [page, setPage] = useState<number>(1);
   const [pageSize, setPageSize] = useState<number>(25);
   const [isModalOpen, setIsModalOpen] = useState<boolean>(false);
-  const [selectedDate, setSelectedDate] = useState<Date>(new Date());
-  const [selectedDoctor, setSelectedDoctor] = useState<IDoctor | null>(null);
+  const [isEditModalOpen, setIsEditModalOpen] = useState<boolean>(false);
+  const [selectedAppointment, setSelectedAppointment] = useState<IAppointment | null>(null);
+  const [mainSelectedDate, setMainSelectedDate] = useState<Date>(new Date());
+  const [mainSelectedDoctor, setMainSelectedDoctor] = useState<IDoctor | null>(null);
 
   // Fetch all the doctors
   const { data, error: doctorError, isLoading, isFetching, refetch: refetchDoctors } = useGetDoctorsQuery({})
@@ -35,11 +42,11 @@ const AppointmentsList: React.FC = () => {
   // Fetch all the appointments
   const { data: appointmenetData, error: appointmentError, isLoading: isAppointmentLoading, isFetching: isAppointmentFetching, refetch: refetchAppointment } = useGetAppointmentsQuery({
     filters: {
-      date: selectedDate.toISOString(),
-      doctorId: selectedDoctor?._id
+      date: mainSelectedDate.toISOString(),
+      doctorId: mainSelectedDoctor?._id
     }
   }, {
-    skip: !selectedDate
+    skip: !mainSelectedDate
   })
   const appointments: IAppointment[] = appointmenetData?.data?.records || [];
   const appointmentsPagination: IPagination = appointmenetData?.data?.pagination || {};
@@ -71,11 +78,42 @@ const AppointmentsList: React.FC = () => {
     { field: 'status', headerName: 'Status', flex: 1 },
     {
       field: 'actions', headerName: 'Actions', flex: 1, type: 'actions', getActions: (params) => {
+        // const appointment = appointments.find(appointment => appointment._id === params.id);
+        // console.log(appointment);
+
         return [
-          <IconButton size='small' key="edit" onClick={() => console.log('Edit', params.id)}> <Edit sx={{ fontSize: 16 }} /> </IconButton>,
-        ]
+          <IconButton
+            size='small'
+            key="edit"
+            onClick={() => {
+              console.log("Edit Appointment", params.row);
+              // dispatch
+              // if (appointment) {
+              //   let doctorId: string;
+
+              //   if (typeof appointment?.doctorId === 'string') {
+              //     doctorId = appointment.doctorId;
+              //   } else {
+              //     doctorId = appointment.doctorId._id;
+              //   }
+
+              //   const doctor = doctors.find(doctor => doctor._id === doctorId);
+              //   console.log("Doctor", doctor)
+              //   if (doctor) {
+              //     dispatch(setSelectedDate(new Date(appointment.date).toISOString()))
+              //     dispatch(setSelectedDoctor(doctor))
+              //     setSelectedAppointment(appointment || null); // Set the selected appointment
+              //     setIsEditModalOpen(true); // Open the edit modal
+              //   }
+              // }
+
+            }}
+          >
+            <Edit sx={{ fontSize: 16 }} />
+          </IconButton>,
+        ];
       }
-    }
+    },
   ];
 
   const handleRowClick = (_: any) => {
@@ -88,7 +126,10 @@ const AppointmentsList: React.FC = () => {
 
   // Function to close the modal
   const closeModal = () => {
+    dispatch(resetAppointment());
     setIsModalOpen(false);
+    setIsEditModalOpen(false);
+    setSelectedAppointment(null);
   };
 
   return (
@@ -98,8 +139,8 @@ const AppointmentsList: React.FC = () => {
           <DatePicker
             label="Date"
             format='dd/MM/yyyy'
-            value={selectedDate}
-            onChange={(newValue) => newValue && setSelectedDate(newValue)}
+            value={mainSelectedDate}
+            onChange={(newValue) => newValue && setMainSelectedDate(newValue)}
             slots={TextField}
             slotProps={{ textField: { fullWidth: true } }} />
         </Grid>
@@ -108,9 +149,9 @@ const AppointmentsList: React.FC = () => {
             options={doctors}
             getOptionLabel={(option) => `${option.firstName} ${option.lastName}`}
             isOptionEqualToValue={(option, value) => option._id === value._id}
-            value={selectedDoctor}
+            value={mainSelectedDoctor}
             onChange={(_, newValue) => {
-              setSelectedDoctor(newValue);
+              setMainSelectedDoctor(newValue);
             }}
             renderInput={(params) => (
               <TextField
@@ -164,6 +205,9 @@ const AppointmentsList: React.FC = () => {
 
       {isModalOpen && (
         <BookAppointment openModal={isModalOpen} onClose={closeModal} />
+      )}
+      {isEditModalOpen && selectedAppointment && (
+        <EditAppointment appointment={selectedAppointment} openModal={isEditModalOpen} onClose={closeModal} />
       )}
     </>
   )

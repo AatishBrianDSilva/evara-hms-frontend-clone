@@ -10,13 +10,15 @@ import AppointmentDetailsForm from './AppointmentDetailsForm';
 import AppointmentConfirmation from './AppointmentConfirmation';
 import { useDispatch } from 'react-redux';
 import { resetAppointment } from './appointmentSlice';
+import { IAppointment } from '../../types/types';
 
-interface BookAppointmentProps {
+interface EditAppointmentProps {
   openModal: boolean;
   onClose: (value: boolean) => void;
+  appointment: IAppointment
 }
 
-const BookAppointment: React.FC<BookAppointmentProps> = ({ openModal, onClose }) => {
+const EditAppointment: React.FC<EditAppointmentProps> = ({ openModal, onClose, appointment }) => {
 
   const dispatch = useDispatch()
   const [activeStep, setActiveStep] = useState(0);
@@ -52,7 +54,7 @@ const BookAppointment: React.FC<BookAppointmentProps> = ({ openModal, onClose })
         bgcolor: 'background.paper',
       }}>
         <Typography variant="h6" align='center' gutterBottom>
-          Book Appointment
+          Edit Appointment
         </Typography>
         <Stepper activeStep={activeStep} orientation='vertical'>
           <Step key={0}>
@@ -68,7 +70,7 @@ const BookAppointment: React.FC<BookAppointmentProps> = ({ openModal, onClose })
               Appointment Details
             </Typography></StepLabel>
             <StepContent >
-              <AppointmentDetailsForm onBack={handleBack} onNext={handleNext} />
+              <AppointmentDetailsForm appointment={appointment} onBack={handleBack} onNext={handleNext} />
             </StepContent>
           </Step>
           <Step key={2}>
@@ -85,4 +87,4 @@ const BookAppointment: React.FC<BookAppointmentProps> = ({ openModal, onClose })
   )
 }
 
-export default BookAppointment
+export default EditAppointment

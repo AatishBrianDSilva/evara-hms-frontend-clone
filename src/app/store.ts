@@ -15,6 +15,7 @@ import {
   REGISTER,
 } from "redux-persist";
 import { appointmentsApi } from "../services/appointmentsApi";
+import appointmentReducer from "../features/Appointment/appointmentSlice";
 
 const persistConfig = {
   key: "root",
@@ -24,6 +25,7 @@ const persistConfig = {
     doctorsApi.reducerPath,
     appointmentsApi.reducerPath,
     "patients",
+    "appointments",
   ],
 };
 
@@ -32,6 +34,7 @@ const rootReducer = combineReducers({
   [doctorsApi.reducerPath]: doctorsApi.reducer,
   [appointmentsApi.reducerPath]: appointmentsApi.reducer,
   patients: patientsReducer,
+  appointments: appointmentReducer,
 });
 
 const persistedReducer = persistReducer(persistConfig, rootReducer);
