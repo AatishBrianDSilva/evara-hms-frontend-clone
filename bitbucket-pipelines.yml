@@ -14,16 +14,8 @@ image: node:18
 # Workflow Configuration
 
 pipelines:
-  default:
-    - parallel:
-      - step:
-          name: Build
-          caches:
-            - node
-          script:
-            - npm install 
   branches:
-    master:
+    development:
       - parallel:
         - step:
             name: Build and Test
