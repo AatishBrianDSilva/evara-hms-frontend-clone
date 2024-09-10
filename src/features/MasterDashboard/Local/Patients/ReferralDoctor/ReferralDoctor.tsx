@@ -1,0 +1,196 @@
+import React, { useState } from "react";
+import ContentSection from "../../../../../components/ContentSection/ContentSection";
+import { Box, Button } from "@mui/material";
+import { Add, Edit } from "@mui/icons-material";
+import CustomDataGrid from "../../../../../components/CustomDataGrid/CustomDataGrid";
+import { GridActionsCellItem, GridColDef, GridRowParams } from "@mui/x-data-grid";
+import Delete from "@mui/icons-material/Delete";
+import DeleteConfirmationModal from "../../../../../components/DeleteConfirmationModal/DeleteConfirmationModal";
+import { useToast } from "../../../../../context/ToastContext";
+import _ from "lodash";
+import {
+  useGetReferralDoctorsQuery,
+  useDeleteReferralDoctorMutation,
+} from "../../../../../services/masterDashboardService/local/referralDoctorApi";
+import AddLocalReferralDoctor from "./AddReferralDoctor";
+import EditLocalReferralDoctor from "./EditReferralDoctor";
+
+interface RowType {
+  _id: string;
+}
+
+const LocalReferralDoctor: React.FC = () => {
+  const { showPromiseToast } = useToast();
+
+  const [selectedRow, setSelectedRow] = useState<string>("");
+  const [isAddModalOpen, setIsAddModalOpen] = useState<boolean>(false);
+  const [isEditModalOpen, setIsEditModalOpen] = useState<boolean>(false);
+  const [isDeleteModalOpen, setIsDeleteModalOpen] = useState<boolean>(false);
+
+  const {
+    data: DoctorData,
+    isLoading: DoctorLoading,
+    isFetching: DoctorFetching,
+  } = useGetReferralDoctorsQuery({ paginate: false, filters: { isAdmin: true, isGlobal: false } });
+
+  const Doctors = DoctorData?.data || [];
+
+  console.log("Doctor Data", Doctors);
+
+  const getRowId = (row: RowType) => row._id;
+
+  const columnsConfig: GridColDef[] = [
+    {
+      field: "clinicId",
+      headerName: "Clinic Id",
+      flex: 1,
+    },
+    { field: "branchId", headerName: "Branch Id", flex: 1 },
+    {
+      field: "name",
+      headerName: "Name",
+      flex: 1,
+    },
+    {
+      field: "phone",
+      headerName: "Phone",
+      flex: 1,
+    },
+    {
+      field: "city",
+      headerName: "City",
+      flex: 1,
+    },
+    {
+      field: "speciality",
+      headerName: "Speciality",
+      flex: 1,
+    },
+    {
+      field: "actions",
+      headerName: "Actions",
+      flex: 1,
+      type: "actions",
+      getActions: (params: GridRowParams) => {
+        const row = params.row;
+        return [
+          <GridActionsCellItem
+            icon={<Edit />}
+            label="Edit"
+            onClick={() => handleEditClick(row._id)}
+          />,
+          <GridActionsCellItem
+            icon={<Delete />}
+            label="Delete"
+            onClick={() => handleDeleteClick(row._id)}
+          />,
+        ];
+      },
+    },
+  ];
+
+  const [deleteUser, { isLoading: DeleteLoading }] = useDeleteReferralDoctorMutation();
+
+  const handleDelete = async () => {
+    const promise = deleteUser(selectedRow).unwrap();
+
+    showPromiseToast(promise, {
+      loading: "Deleting...",
+      success: (data) => data || "Deleted Successfully",
+      error: (data) => data || "Failed to Delete",
+    });
+
+    try {
+      await promise;
+    } catch (error) {
+      console.log(error);
+    }
+
+    closeDeleteModal();
+  };
+
+  // Add Modal
+  const openAddModal = () => {
+    setIsAddModalOpen(true);
+  };
+  const closeAddModal = () => {
+    setIsAddModalOpen(false);
+  };
+
+  // Edit Modal
+  const openEditModal = () => {
+    setIsEditModalOpen(true);
+  };
+  const closeEditModal = () => {
+    setIsEditModalOpen(false);
+  };
+
+  // Delete Modal
+  const openDeleteModal = () => {
+    setIsDeleteModalOpen(true);
+  };
+  const closeDeleteModal = () => {
+    setIsDeleteModalOpen(false);
+  };
+
+  const handleEditClick = (id: string) => {
+    setSelectedRow(id);
+    openEditModal();
+  };
+
+  const handleDeleteClick = (id: string) => {
+    setSelectedRow(id);
+    openDeleteModal();
+  };
+
+  return (
+    <ContentSection title="Referral Doctors">
+      <Box display="flex" justifyContent="flex-end" gap={2}>
+        <Button
+          variant="contained"
+          startIcon={<Add />}
+          color="primary"
+          // disabled={}
+          onClick={openAddModal}
+        >
+          Add Referral Doctors
+        </Button>
+      </Box>
+
+      <Box mt={2} flex={"1 1 auto"}>
+        <CustomDataGrid
+          autoHeight={false}
+          columns={columnsConfig}
+          rows={Doctors}
+          loading={DoctorLoading || DoctorFetching}
+          sx={{ height: "100%" }}
+          getRowId={getRowId}
+        />
+      </Box>
+
+      {isAddModalOpen && (
+        <AddLocalReferralDoctor openModal={isAddModalOpen} onClose={closeAddModal} />
+      )}
+
+      {isEditModalOpen && (
+        <EditLocalReferralDoctor
+          openModal={isEditModalOpen}
+          onClose={closeEditModal}
+          id={selectedRow}
+        />
+      )}
+
+      {isDeleteModalOpen && (
+        <DeleteConfirmationModal
+          text="this Doctor"
+          open={isDeleteModalOpen}
+          onClose={closeDeleteModal}
+          onConfirm={handleDelete}
+          loading={DeleteLoading}
+        />
+      )}
+    </ContentSection>
+  );
+};
+
+export default LocalReferralDoctor;

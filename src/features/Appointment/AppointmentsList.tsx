@@ -1,63 +1,125 @@
-import Box from '@mui/material/Box'
-import React, { useState } from 'react'
-import CustomDataGrid from '../../components/Table/CustomDataGrid'
-import Add from '@mui/icons-material/Add'
-import Button from '@mui/material/Button'
-import TextField from '@mui/material/TextField'
-import IconButton from '@mui/material/IconButton'
-import Grid from '@mui/material/Grid'
-import CircularProgress from '@mui/material/CircularProgress'
-import Autocomplete from '@mui/material/Autocomplete'
+import Box from "@mui/material/Box";
+import React, { useCallback, useState } from "react";
+import CustomDataGrid from "../../components/CustomDataGrid/CustomDataGrid";
+import Button from "@mui/material/Button";
+import TextField from "@mui/material/TextField";
+import IconButton from "@mui/material/IconButton";
+import Grid from "@mui/material/Grid";
+import CircularProgress from "@mui/material/CircularProgress";
+import Autocomplete from "@mui/material/Autocomplete";
+import { Add, Edit, Delete, TaskAlt, } from "@mui/icons-material";
 
-import { GridColDef } from '@mui/x-data-grid'
-import { DatePicker } from '@mui/x-date-pickers'
+import { GridColDef } from "@mui/x-data-grid";
 
-import Edit from '@mui/icons-material/Edit'
-
-import ErrorAlertWithRetry from '../../components/ErrorAlertWithRetry/ErrorAlertWithRetry'
-import BookAppointment from '../Appointment/BookAppointment'
-import { useGetDoctorsQuery } from '../../services/doctorsApi'
-import { IAppointment, IDoctor, IPagination } from '../../types/types'
-import { useGetAppointmentsQuery } from '../../services/appointmentsApi'
-import { useDispatch } from 'react-redux'
-import { resetAppointment } from './appointmentSlice'
-import EditAppointment from './EditAppointment'
+import ErrorAlertWithRetry from "../../components/ErrorAlertWithRetry/ErrorAlertWithRetry";
+import BookAppointment from "../Appointment/BookAppointment";
+import { useGetDoctorsQuery } from "../../services/doctorsApi";
+import {
+  useDeleteAppointmentMutation,
+  useGetAppointmentsQuery,
+} from "../../services/appointmentApi";
+import { useDispatch } from "react-redux";
+import { resetAppointment } from "./appointmentSlice";
+import { IAppointment } from "../../types/appointment";
+import { IDoctor } from "../../types/doctor";
+import CustomDatePicker from "../../components/CustomDatePicker/CustomDatePicker";
+import DeleteConfirmationModal from "../../components/DeleteConfirmationModal/DeleteConfirmationModal";
+import { useToast } from "../../context/ToastContext";
+import EditAppointment from "./EditAppointment";
+import EditAppointmentStatus from "./EditAppointmentStatus";
+import { format } from "date-fns";
+import { Typography } from "@mui/material";
+import { Link } from "react-router-dom";
+import _ from "lodash";
 
 const AppointmentsList: React.FC = () => {
+  const dispatch = useDispatch();
 
-  const dispatch = useDispatch()
+  const [searchQuery, setSearchQuery] = useState('');
+  const [page, setPage] = useState<number>(1)
+  const [pageSize, setPageSize] = React.useState(25);
 
-  const [page, setPage] = useState<number>(1);
-  const [pageSize, setPageSize] = useState<number>(25);
+
+  const handleSearchChange = useCallback((query: string) => {
+    setPage(1);  // Reset the page
+    setSearchQuery(query);
+  }, []);
+
+  // Debounce the search handling
+  const debouncedSearchChange = useCallback(
+    _.debounce(handleSearchChange, 500),
+    [handleSearchChange] // Ensure that handleSearchChange is stable
+  );
+
   const [isModalOpen, setIsModalOpen] = useState<boolean>(false);
   const [isEditModalOpen, setIsEditModalOpen] = useState<boolean>(false);
+  const [isEditStatusModalOpen, setIsEditStatusModalOpen] = useState<boolean>(false);
+
+  const [isDeleteModalOpen, setIsDeleteModalOpen] = useState<boolean>(false);
   const [selectedAppointment, setSelectedAppointment] = useState<IAppointment | null>(null);
-  const [mainSelectedDate, setMainSelectedDate] = useState<Date>(new Date());
-  const [mainSelectedDoctor, setMainSelectedDoctor] = useState<IDoctor | null>(null);
+  const [selectedDate, setSelectedDate] = useState<Date>(new Date());
+  const [selectedDoctor, setSelectedDoctor] = useState<IDoctor | null>(null);
+
 
   // Fetch all the doctors
-  const { data, error: doctorError, isLoading, isFetching, refetch: refetchDoctors } = useGetDoctorsQuery({})
-  const doctors: IDoctor[] = data?.data || [];
+  const {
+    data,
+    error: doctorError,
+    isLoading,
+    isFetching,
+    refetch: refetchDoctors,
+  } = useGetDoctorsQuery({});
+  const doctors = data?.data?.records || [];
 
   // Fetch all the appointments
-  const { data: appointmenetData, error: appointmentError, isLoading: isAppointmentLoading, isFetching: isAppointmentFetching, refetch: refetchAppointment } = useGetAppointmentsQuery({
-    filters: {
-      date: mainSelectedDate.toISOString(),
-      doctorId: mainSelectedDoctor?._id
+  const {
+    data: appointmentData,
+    error: appointmentError,
+    isLoading: isAppointmentLoading,
+    isFetching: isAppointmentFetching,
+    refetch: refetchAppointment,
+  } = useGetAppointmentsQuery(
+    {
+      filters: {
+        date: selectedDate.toISOString(),
+        doctorId: selectedDoctor?._id,
+      },
+      searchQuery: searchQuery,
+    },
+    {
+      skip: !selectedDate,
     }
-  }, {
-    skip: !mainSelectedDate
-  })
-  const appointments: IAppointment[] = appointmenetData?.data?.records || [];
-  const appointmentsPagination: IPagination = appointmenetData?.data?.pagination || {};
+  );
+  const appointments = appointmentData?.data?.records || [];
+
+  const appointmentsPagination = appointmentData?.data?.pagination;
   const appointmentLoading = isAppointmentLoading || isAppointmentFetching;
 
   const error = appointmentError || doctorError;
 
+  const [deleteAppointment, { isLoading: isDeleteLoading }] = useDeleteAppointmentMutation();
+
+  const handleDelete = async () => {
+    const promise = deleteAppointment(selectedRow).unwrap();
+    showPromiseToast(promise, {
+      loading: "Deleting...",
+      success: (data) => data || "Deleted Successfully",
+      error: (data) => data || "Failed to Delete",
+    });
+
+    try {
+      await promise;
+    } catch (error) {
+      console.log(error);
+    }
+
+    closeDeleteModal();
+  };
+
   const retry = () => {
     refetchAppointment();
     refetchDoctors();
-  }
+  };
 
   const handlePageChange = (newPage: number) => {
     setPage(newPage);
@@ -69,55 +131,79 @@ const AppointmentsList: React.FC = () => {
 
   const columnsConfig: GridColDef[] = [
     // { field: 'date', headerName: 'Date', flex: 1, type: 'date', valueFormatter: (params) => new Date(params.value as string).toLocaleDateString() },
-    { field: 'time', headerName: 'Time', flex: 1 },
-    { field: 'fullName', headerName: 'Patient', flex: 1, },
-    { field: 'doctor', headerName: 'Doctor', flex: 1, valueGetter: (params) => params.row.doctorId?.firstName + " " + params.row.doctorId?.lastName },
-    { field: 'reason', headerName: 'Reason', flex: 1 },
-    { field: 'notes', headerName: 'Notes', flex: 1 },
-    { field: 'reportedTime', headerName: 'Reported Time', flex: 1 },
-    { field: 'status', headerName: 'Status', flex: 1 },
+    { field: "time", headerName: "Time", flex: 1 },
     {
-      field: 'actions', headerName: 'Actions', flex: 1, type: 'actions', getActions: (params) => {
-        // const appointment = appointments.find(appointment => appointment._id === params.id);
-        // console.log(appointment);
-
+      field: "fullName", headerName: "Patient", flex: 1, renderCell: (params) => {
+        const hasPatientId = !!params.row.patientId; // Check if patientId exists
+        return (
+          <Typography
+            variant="subtitle2"
+            fontSize={12}
+            component={hasPatientId ? Link : 'span'}
+            to={hasPatientId ? `/patient/${params.row.patientId}` : '#'}
+            style={{ textDecoration: hasPatientId ? 'underline' : 'none' }}
+          >
+            {params.value}
+          </Typography>
+        );
+      }
+    },
+    { field: "phone", headerName: "Phone", flex: 1 },
+    {
+      field: "doctor",
+      headerName: "Doctor",
+      flex: 1,
+      valueGetter: (params) => params.row.doctorId?.firstName + " " + params.row.doctorId?.lastName,
+    },
+    { field: "reason", headerName: "Reason", flex: 1 },
+    { field: "notes", headerName: "Notes", flex: 1 },
+    { field: "reportedTime", headerName: "Reported Time", flex: 1, valueFormatter: (params) => params.value ? format(params.value, "hh:mm aa") : "" },
+    { field: "status", headerName: "Status", flex: 1 },
+    {
+      field: "actions",
+      headerName: "Actions",
+      flex: 1,
+      type: "actions",
+      getActions: (params) => {
         return [
           <IconButton
-            size='small'
+            size="small"
             key="edit"
             onClick={() => {
-              console.log("Edit Appointment", params.row);
-              // dispatch
-              // if (appointment) {
-              //   let doctorId: string;
-
-              //   if (typeof appointment?.doctorId === 'string') {
-              //     doctorId = appointment.doctorId;
-              //   } else {
-              //     doctorId = appointment.doctorId._id;
-              //   }
-
-              //   const doctor = doctors.find(doctor => doctor._id === doctorId);
-              //   console.log("Doctor", doctor)
-              //   if (doctor) {
-              //     dispatch(setSelectedDate(new Date(appointment.date).toISOString()))
-              //     dispatch(setSelectedDoctor(doctor))
-              //     setSelectedAppointment(appointment || null); // Set the selected appointment
-              //     setIsEditModalOpen(true); // Open the edit modal
-              //   }
-              // }
-
+              setSelectedAppointment(params.row);
+              setIsEditModalOpen(true);
             }}
           >
             <Edit sx={{ fontSize: 16 }} />
           </IconButton>,
+          <IconButton
+            size="small"
+            key="update-status"
+            onClick={() => {
+              setSelectedAppointment(params.row);
+              setIsEditStatusModalOpen(true);
+            }}>
+            <TaskAlt sx={{ fontSize: 16 }} />
+          </IconButton>,
+          <IconButton size="small" key="delete" onClick={() => handleDeleteClick(params.row.id)}>
+            <Delete sx={{ fontSize: 16 }} />
+          </IconButton>,
+
         ];
-      }
+      },
     },
+    {
+      field: 'stage', headerName: 'Stage', align: "center", renderCell(params) {
+        return (
+          <Grid container >
+            {renderStatusCircle(params.row.status)}
+          </Grid>
+        )
+      },
+    }
   ];
 
-  const handleRowClick = (_: any) => {
-  }
+  const handleRowClick = (_: any) => { };
 
   // Function to open the modal
   const openModal = () => {
@@ -132,26 +218,79 @@ const AppointmentsList: React.FC = () => {
     setSelectedAppointment(null);
   };
 
+  // Delete Modal
+
+  const { showPromiseToast } = useToast();
+  const [selectedRow, setSelectedRow] = useState<string>("");
+
+  const openDeleteModal = () => {
+    setIsDeleteModalOpen(true);
+  };
+  const closeDeleteModal = () => {
+    setIsDeleteModalOpen(false);
+  };
+
+
+  const closeStatusModal = () => {
+    setIsEditStatusModalOpen(false);
+  };
+
+  const handleDeleteClick = (id: string) => {
+    setSelectedRow(id);
+    openDeleteModal();
+  };
+
+  const renderStatusCircle = (status: string) => {
+    let color: string;
+
+    switch (status) {
+      case "Scheduled":
+        color = "#EF988D";
+        break;
+      case "Reported":
+        color = "#CAC891";
+        break;
+      case "Completed":
+        color = "#3DA02C";
+        break;
+      case "Cancelled":
+        color = "#FF0000";
+        break;
+      default:
+        color = "#fff"; // Default color
+    }
+
+    return (
+      <div
+        style={{
+          width: 15,
+          height: 15,
+          borderRadius: "50%",
+          backgroundColor: color,
+          // margin: "auto",
+        }}
+      />
+    );
+  };
+
   return (
     <>
       <Grid container gap={2}>
         <Grid item xs={12} md={2}>
-          <DatePicker
+          <CustomDatePicker
             label="Date"
-            format='dd/MM/yyyy'
-            value={mainSelectedDate}
-            onChange={(newValue) => newValue && setMainSelectedDate(newValue)}
-            slots={TextField}
-            slotProps={{ textField: { fullWidth: true } }} />
+            value={selectedDate}
+            onChange={(newValue) => newValue && setSelectedDate(newValue)}
+          />
         </Grid>
         <Grid item xs={12} md={2}>
           <Autocomplete
             options={doctors}
             getOptionLabel={(option) => `${option.firstName} ${option.lastName}`}
             isOptionEqualToValue={(option, value) => option._id === value._id}
-            value={mainSelectedDoctor}
+            value={selectedDoctor}
             onChange={(_, newValue) => {
-              setMainSelectedDoctor(newValue);
+              setSelectedDoctor(newValue);
             }}
             renderInput={(params) => (
               <TextField
@@ -162,7 +301,9 @@ const AppointmentsList: React.FC = () => {
                   ...params.InputProps,
                   endAdornment: (
                     <>
-                      {isLoading || isFetching ? <CircularProgress color="primary" size={20} /> : null}
+                      {isLoading || isFetching ? (
+                        <CircularProgress color="primary" size={20} />
+                      ) : null}
                       {params.InputProps.endAdornment}
                     </>
                   ),
@@ -176,7 +317,7 @@ const AppointmentsList: React.FC = () => {
       </Grid>
 
       <Box display="flex" justifyContent="flex-end" gap={2}>
-        <TextField label="Search" size="small" variant="outlined" />
+        <TextField label="Search" placeholder="Patient/Phone" size="small" variant="outlined" onChange={(e) => debouncedSearchChange(e.target.value)} />
         <Button variant="contained" startIcon={<Add />} color="secondary" onClick={openModal}>
           Appointment
         </Button>
@@ -191,11 +332,10 @@ const AppointmentsList: React.FC = () => {
             rows={appointments}
             page={page}
             pageSize={pageSize}
-            totalRows={appointmentsPagination.totalDocs || 0}
+            totalRows={appointmentsPagination?.totalDocs || 0}
             onPageChange={handlePageChange}
             onPageSizeChange={handlePageSizeChange}
             loading={appointmentLoading}
-            rowHover={true}
             onRowClick={handleRowClick}
             sx={{ height: "100%" }}
             enablePagination={true}
@@ -203,14 +343,35 @@ const AppointmentsList: React.FC = () => {
         </Box>
       )}
 
-      {isModalOpen && (
-        <BookAppointment openModal={isModalOpen} onClose={closeModal} />
-      )}
+      {isModalOpen && <BookAppointment openModal={isModalOpen} onClose={closeModal} />}
+
       {isEditModalOpen && selectedAppointment && (
-        <EditAppointment appointment={selectedAppointment} openModal={isEditModalOpen} onClose={closeModal} />
+        <EditAppointment
+          openModal={isEditModalOpen}
+          onClose={closeModal}
+          id={selectedAppointment?._id}
+          doctors={doctors}
+        />
+      )}
+      {isEditStatusModalOpen && selectedAppointment && (
+        <EditAppointmentStatus
+          openModal={isEditStatusModalOpen}
+          onClose={closeStatusModal}
+          id={selectedAppointment?._id}
+        />
+      )}
+
+      {isDeleteModalOpen && (
+        <DeleteConfirmationModal
+          text="Appointment"
+          open={isDeleteModalOpen}
+          onClose={closeDeleteModal}
+          onConfirm={handleDelete}
+          loading={isDeleteLoading}
+        />
       )}
     </>
-  )
-}
+  );
+};
 
-export default AppointmentsList
+export default AppointmentsList;

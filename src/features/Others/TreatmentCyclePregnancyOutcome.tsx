@@ -9,7 +9,7 @@ import TextField from '@mui/material/TextField';
 import Typography from '@mui/material/Typography';
 import React from 'react'
 import PatientInfo from './PatientInfo'
-import { DatePicker } from '@mui/x-date-pickers'
+import CustomDatePicker from '../../components/CustomDatePicker/CustomDatePicker';
 
 const TreatmentCyclePregnancyOutcome: React.FC = () => {
   return (
@@ -35,7 +35,7 @@ const TreatmentCyclePregnancyOutcome: React.FC = () => {
         </Grid>
         <Grid item container spacing={2} alignItems={"center"}>
           <Grid item xs={6} md={3} >
-            <DatePicker sx={{ width: "100%" }} format='dd-mm-yyyy' label="Day Of Outcome" value={null} onChange={() => { }} />
+            <CustomDatePicker label="Day Of Outcome" />
           </Grid>
           <Grid item xs={6} md={3}>
             <TextField label="No Of Babies" value="" fullWidth />

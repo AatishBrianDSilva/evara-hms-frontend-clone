@@ -6,13 +6,14 @@ import MenuItem from '@mui/material/MenuItem';
 import TextField from '@mui/material/TextField';
 import Typography from '@mui/material/Typography';
 import React from 'react'
-import CustomDataGrid from '../../components/Table/CustomDataGrid'
+import CustomDataGrid from '../../components/CustomDataGrid/CustomDataGrid'
 import PatientInfo from './PatientInfo'
 import TreatmentCyclesTable from './TreatmentCyclesTable'
 import CloudUploadIcon from '@mui/icons-material/CloudUpload';
-import { DatePicker, TimePicker } from '@mui/x-date-pickers'
 import { VisuallyHiddenInput } from '../../components/Utils/VisuallyHiddenInput'
 import { GridColDef } from '@mui/x-data-grid'
+import CustomDatePicker from '../../components/CustomDatePicker/CustomDatePicker';
+import CustomTimePicker from '../../components/CustomDatePicker/CustomTimePicker';
 
 const columns: GridColDef[] = [
   { field: 'patientName', headerName: 'Patient Name', flex: 1 },
@@ -97,22 +98,22 @@ const EmbryologyArtReport: React.FC = () => {
           <TextField label="Stimulation Protocol" fullWidth />
         </Grid>
         <Grid item xs={12} md={4} lg={2}>
-          <DatePicker label="Date Of Stimulation" sx={{ width: '100%' }} />
+          <CustomDatePicker value={null} label="Date Of Stimulation" />
         </Grid>
         <Grid item xs={12} md={4} lg={2}>
           <TextField label="E2 on the day of hCG" fullWidth />
         </Grid>
         <Grid item xs={12} md={4} lg={2}>
-          <DatePicker label="Trigger / Thaw Date" sx={{ width: '100%' }} />
+          <CustomDatePicker value={null} label="Trigger / Thaw Date" />
         </Grid>
         <Grid item xs={12} md={4} lg={2}>
-          <TimePicker label="Trigger / Thaw Time" sx={{ width: '100%' }} />
+          <CustomTimePicker value={null} label="Trigger / Thaw Time" />
         </Grid>
         <Grid item xs={12} md={4} lg={2}>
-          <DatePicker label="Egg Collection Date" sx={{ width: '100%' }} />
+          <CustomDatePicker value={null} label="Egg Collection Date" />
         </Grid>
         <Grid item xs={12} md={4} lg={2}>
-          <TimePicker label="Egg Collection Time" sx={{ width: '100%' }} />
+          <CustomTimePicker value={null} label="Egg Collection Time" />
         </Grid>
       </Grid>
 
@@ -135,7 +136,7 @@ const EmbryologyArtReport: React.FC = () => {
           <TextField label="OOCYTES Fertilized" fullWidth />
         </Grid>
         <Grid item xs={12} md={4} lg={2}>
-          <DatePicker label="Date Of Transfer" sx={{ width: '100%' }} />
+          <CustomDatePicker value={null} label="Date Of Transfer" />
         </Grid>
         <Grid item xs={12} md={4} lg={2}>
           <TextField label="No.of Embryos Transferred" fullWidth />
@@ -156,10 +157,10 @@ const EmbryologyArtReport: React.FC = () => {
           <TextField label="Embryos Discarded" fullWidth />
         </Grid>
         <Grid item xs={12} md={4} lg={2}>
-          <DatePicker label="Embryo Freezing Done On" sx={{ width: '100%' }} />
+          <CustomDatePicker value={null} label="Embryo Freezing Done On" />
         </Grid>
         <Grid item xs={12} md={4} lg={2}>
-          <DatePicker label="Vitrification of Maintenance of embryos will expire on" sx={{ width: '100%' }} />
+          <CustomDatePicker value={null} label="Vitrification of Maintenance of embryos will expire on" />
         </Grid>
         <Grid item xs={12} md={4} lg={2}>
           <TextField label="No Of Embryos" fullWidth />
@@ -168,7 +169,7 @@ const EmbryologyArtReport: React.FC = () => {
           <TextField label="No Of Cryoleafs" fullWidth />
         </Grid>
         <Grid item xs={12} md={4} lg={2}>
-          <DatePicker label="Vitrification of Maintenance of embryos will expire on" sx={{ width: '100%' }} />
+          <CustomDatePicker value={null} label="Vitrification of Maintenance of embryos will expire on" />
         </Grid>
         <Grid item xs={12} md={4} lg={2}>
           <TextField label="Laser Hatching" fullWidth select >

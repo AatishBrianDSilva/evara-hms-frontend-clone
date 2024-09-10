@@ -8,8 +8,9 @@ import TextField from '@mui/material/TextField';
 import Typography from '@mui/material/Typography';
 import CloudUploadIcon from '@mui/icons-material/CloudUpload';
 import TreatmentCyclesTable from './TreatmentCyclesTable';
-import { DatePicker, TimePicker } from '@mui/x-date-pickers';
 import { VisuallyHiddenInput } from '../../components/Utils/VisuallyHiddenInput';
+import CustomDatePicker from '../../components/CustomDatePicker/CustomDatePicker';
+import CustomTimePicker from '../../components/CustomDatePicker/CustomTimePicker';
 
 const AndrologySpermDFI: React.FC = () => {
   return (
@@ -23,13 +24,13 @@ const AndrologySpermDFI: React.FC = () => {
       <Typography variant="subtitle1" sx={{ mt: 2, mb: 2 }}>Sperm DNA Integrity Test</Typography>
       <Grid container spacing={2} marginBottom={2}>
         <Grid item xs={12} sm={6} md={3}>
-          <DatePicker label="Date of Test" value={new Date()} sx={{ width: '100%' }} />
+          <CustomDatePicker label="Date of Test" value={new Date()} />
         </Grid>
         <Grid item xs={12} sm={6} md={3}>
-          <TimePicker label="Time of Collection" value={null} sx={{ width: '100%' }} />
+          <CustomTimePicker label="Time of Collection" value={null} />
         </Grid>
         <Grid item xs={12} sm={6} md={3}>
-          <TimePicker label="Time of Evaluation" value={null} sx={{ width: '100%' }} />
+          <CustomTimePicker label="Time of Evaluation" value={null} />
         </Grid>
       </Grid>
 

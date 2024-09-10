@@ -8,9 +8,9 @@ import Grid from '@mui/material/Grid';
 import MenuItem from '@mui/material/MenuItem';
 import TextField from '@mui/material/TextField';
 import Typography from '@mui/material/Typography';
-import CustomDataGrid from '../../components/Table/CustomDataGrid'
+import CustomDataGrid from '../../components/CustomDataGrid/CustomDataGrid'
 import { GridColDef } from '@mui/x-data-grid'
-import { DatePicker } from '@mui/x-date-pickers'
+import CustomDatePicker from '../../components/CustomDatePicker/CustomDatePicker';
 
 const columns: GridColDef[] = [
   { field: 'patientName', headerName: 'Patient Name', flex: 1 },
@@ -173,10 +173,10 @@ const EmbryologyIVFChecklist: React.FC = () => {
           </TextField>
         </Grid>
         <Grid item xs={12} md={4} lg={3}>
-          <DatePicker label="Sperm Freezing Back Up (Optional)" sx={{ width: '100%' }} />
+          <CustomDatePicker label="Sperm Freezing Back Up (Optional)" />
         </Grid>
         <Grid item xs={12} md={4} lg={2}>
-          <DatePicker label="Cx Length/Uterine Length" sx={{ width: '100%' }} />
+          <CustomDatePicker label="Cx Length/Uterine Length" />
         </Grid>
         <Grid item xs={12} md={4} lg={4}>
           <TextField label="Embryologist To Be Informed About The Timing Of hCG" select fullWidth >

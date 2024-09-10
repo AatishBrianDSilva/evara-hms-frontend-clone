@@ -8,11 +8,12 @@ import TextField from '@mui/material/TextField';
 import Typography from '@mui/material/Typography';
 import TreatmentCyclesTable from './TreatmentCyclesTable'
 import CloudUploadIcon from '@mui/icons-material/CloudUpload';
-import { DatePicker, TimePicker } from '@mui/x-date-pickers'
 import { GridColDef } from '@mui/x-data-grid'
 import { VisuallyHiddenInput } from '../../components/Utils/VisuallyHiddenInput'
 import SemenAnalysisTable from '../../components/SemenAnalysisTable/SemenAnalysisTable';
-import CustomDataGrid from '../../components/Table/CustomDataGrid';
+import CustomDataGrid from '../../components/CustomDataGrid/CustomDataGrid';
+import CustomDatePicker from '../../components/CustomDatePicker/CustomDatePicker';
+import CustomTimePicker from '../../components/CustomDatePicker/CustomTimePicker';
 
 const columnsConfig: GridColDef[] = [
   { field: 'date', headerName: 'Date', type: 'date', flex: 1 },
@@ -53,13 +54,13 @@ const AndrologySemenAnalysis: React.FC = () => {
       <Typography variant='h6' sx={{ mb: 2 }}>Add Semen</Typography>
       <Grid container spacing={2} marginBottom={2}>
         <Grid item xs={12} sm={6} md={3}>
-          <DatePicker label="Date" value={new Date()} sx={{ width: '100%' }} />
+          <CustomDatePicker label="Date" value={new Date()} />
         </Grid>
         <Grid item xs={12} sm={6} md={3}>
-          <TextField label="Sperm DFI" name='sperm-dfi' sx={{ width: '100%' }} />
+          <TextField label="Sperm DFI" name='sperm-dfi' />
         </Grid>
         <Grid item xs={12} sm={6} md={3}>
-          <TimePicker label="Time of sample received at hospital" value={null} sx={{ width: '100%' }} />
+          <CustomTimePicker label="Time of sample received at hospital" value={null} />
         </Grid>
       </Grid>
 
@@ -68,10 +69,10 @@ const AndrologySemenAnalysis: React.FC = () => {
           <TextField label="Place of Collection" fullWidth />
         </Grid>
         <Grid item xs={12} sm={6} md={3}>
-          <TimePicker label="Time Of Collection" value={null} sx={{ width: '100%' }} />
+          <CustomTimePicker label="Time Of Collection" value={null} />
         </Grid>
         <Grid item xs={12} sm={6} md={3}>
-          <TimePicker label="Time Of Evaluation" value={null} sx={{ width: '100%' }} />
+          <CustomTimePicker label="Time Of Evaluation" value={null} />
         </Grid>
       </Grid>
       <Grid container spacing={2} marginBottom={2}>

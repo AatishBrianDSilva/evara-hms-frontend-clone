@@ -5,11 +5,10 @@ import { useTheme, SvgIconTypeMap } from '@mui/material';
 import { ChevronRight, ChevronLeftOutlined } from '@mui/icons-material';
 import { OverridableComponent } from '@mui/material/OverridableComponent';
 import { useLocation } from 'react-router-dom';
-import { navListType } from '../../utils/types';
 
 interface SideBarNavTabProps {
   isAccordion: boolean; // Whether this tab is an accordion tab
-  accordionItems: navListType[] | undefined; // The list of items to show in the accordion
+  accordionItems: any[] | undefined; // The list of items to show in the accordion
   logoSrc: OverridableComponent<SvgIconTypeMap<{}, "svg">> | null; // The material icon component for the logo
   title: string; // The text title for the tab
   path: string; // The path to navigate to when this tab is selected

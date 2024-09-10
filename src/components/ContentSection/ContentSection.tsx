@@ -14,7 +14,7 @@ interface ContentSectionProps {
   titleSx?: SxProps<Theme>;
 }
 
-const ContentSection: React.FC<ContentSectionProps> = ({ title, icon, children, titleSx }) => {
+const ContentSection: React.FC<ContentSectionProps> = ({ title, icon, children, titleSx, }) => {
   return (
     <Box component="section" sx={{ display: "flex", flexDirection: "column", flex: "1 1 auto", maxWidth: "100%" }}>
       <Paper sx={{ height: "100%", display: "flex", maxWidth: "100%" }}>

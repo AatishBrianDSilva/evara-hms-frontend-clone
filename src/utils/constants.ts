@@ -1,7 +1,6 @@
-import { navListType } from "./types";
 import ArticleIcon from "@mui/icons-material/Article";
 
-export const navList: navListType[] = [
+export const navList: any[] = [
   {
     id: 0,
     title: "Console",
@@ -32,7 +31,7 @@ export const navList: navListType[] = [
   },
 ];
 
-export const patientNavList: navListType[] = [
+export const patientNavList: any[] = [
   {
     id: 0,
     title: "Home",

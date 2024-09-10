@@ -5,7 +5,7 @@ import React from 'react'
 import PatientInfo from './PatientInfo'
 import TreatmentCyclesTable from './TreatmentCyclesTable'
 import { GridColDef } from '@mui/x-data-grid'
-import CustomDataGrid from '../../components/Table/CustomDataGrid'
+import CustomDataGrid from '../../components/CustomDataGrid/CustomDataGrid'
 
 const columns: GridColDef[] = [
   { field: 'id', headerName: 'Patient Name', width: 600 },

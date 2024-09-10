@@ -1,32 +1,23 @@
 :root {
-  --primary-main: #FF5C00;
-  --primary-light: #FF8442;
-  --primary-dark: #C75000;
-  --secondary-main: #5981DE;
-  --secondary-light: #84A2FF;
-  --secondary-dark: #3C5FA0;
-  --error-main: #FF3F46;
-  --warning-main: #FF9321;
-  --info-main: #288BDB;
-  --success-main: #3FC138;
+  --primary-main: #ff5c00;
+  --primary-light: #ff8442;
+  --primary-dark: #c75000;
+  --secondary-main: #10535e;
+  --secondary-light: #10535e;
+  --secondary-dark: #10535e;
+  --error-main: #ff3f46;
+  --warning-main: #ff9321;
+  --info-main: #288bdb;
+  --success-main: #3fc138;
 }
-
-/* .MuiDataGrid-columnHeaders {
-  background-color: var(--primary-main) !important; 
-  color: white !important;
-  height: 20px !important;
-  min-height: 30px !important;
-} */
-
-/* .MuiDataGrid-iconButtonContainer .MuiButtonBase-root {
-  color: white !important;
-}
-
-.MuiDataGrid-withBorderColor {
-  border-color: var(--primary-light) !important; 
-} */
 
 body {
   margin: 0;
-  background-color: #D3D6E4;
+  background-color: #d3d6e4;
+}
+
+@media print {
+  .print-hide {
+    display: none;
+  }
 }

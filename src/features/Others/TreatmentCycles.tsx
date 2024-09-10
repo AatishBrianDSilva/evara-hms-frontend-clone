@@ -11,9 +11,10 @@ import Typography from '@mui/material/Typography';
 import React from 'react'
 import { GridColDef } from '@mui/x-data-grid';
 import PatientInfo from './PatientInfo';
-import { DatePicker, DateTimePicker } from '@mui/x-date-pickers';
 import TreatmentCyclesTable from './TreatmentCyclesTable';
-import CustomDataGrid from '../../components/Table/CustomDataGrid';
+import CustomDataGrid from '../../components/CustomDataGrid/CustomDataGrid';
+import CustomDateTimePicker from '../../components/CustomDatePicker/CustomDateTimePicker';
+import CustomDatePicker from '../../components/CustomDatePicker/CustomDatePicker';
 
 interface TabPanelProps {
   children?: React.ReactNode;
@@ -180,7 +181,7 @@ const TreatmentCycles: React.FC = () => {
               <MenuItem value="Mrs">Xysad - 897</MenuItem>
               <MenuItem value="Miss">Zyfdf - 154</MenuItem>
             </TextField>
-            <DateTimePicker label="Est. start of treatment" value={null} onChange={() => { }} sx={{ width: '100%' }} />
+            <CustomDateTimePicker label="Est. start of treatment" />
             <TextField id="attempts" label="Attempts" fullWidth />
             <TextField id="female-factor" label="Female Factor" select fullWidth>
               <MenuItem value="Mr">Absdcef - 123</MenuItem>
@@ -215,15 +216,15 @@ const TreatmentCycles: React.FC = () => {
             <Button variant='contained' sx={{ width: 'fit-content' }}>
               Day 1
             </Button>
-            <DatePicker label="Start of follicular phase (LMP)" value={null} onChange={() => { }} sx={{ width: '100%' }} />
-            <DatePicker label="Baseline scan" value={null} onChange={() => { }} sx={{ width: '100%' }} />
-            <DatePicker label="Start date of stim medications" value={null} onChange={() => { }} sx={{ width: '100%' }} />
-            <DateTimePicker label="Trigger Date" value={null} onChange={() => { }} sx={{ width: '100%' }} />
-            <DateTimePicker label="Egg Collection Date" value={null} onChange={() => { }} sx={{ width: '100%' }} />
-            <DateTimePicker label="IUI Date" value={null} onChange={() => { }} sx={{ width: '100%' }} />
-            <DateTimePicker label="LPS Date" value={null} onChange={() => { }} sx={{ width: '100%' }} />
-            <DateTimePicker label="Embryo Transfer Date" value={null} onChange={() => { }} sx={{ width: '100%' }} />
-            <DateTimePicker label="Pregnancy Test Date" value={null} onChange={() => { }} sx={{ width: '100%' }} />
+            <CustomDatePicker label="Start of follicular phase (LMP)" />
+            <CustomDatePicker label="Baseline scan" />
+            <CustomDatePicker label="Start date of stim medications" />
+            <CustomDateTimePicker label="Trigger Date" />
+            <CustomDateTimePicker label="Egg Collection Date" />
+            <CustomDateTimePicker label="IUI Date" />
+            <CustomDateTimePicker label="LPS Date" />
+            <CustomDateTimePicker label="Embryo Transfer Date" />
+            <CustomDateTimePicker label="Pregnancy Test Date" />
           </Grid>
         </Grid>
       </Grid>
@@ -424,16 +425,16 @@ const TreatmentCycles: React.FC = () => {
                 <MenuItem value="no">No</MenuItem>
               </TextField>
             </Grid>
-            {/* Assuming DatePicker and DateTimePicker are properly imported or replaced with equivalent */}
+            {/* Assuming CustomDatePicker and CustomDateTimePicker are properly imported or replaced with equivalent */}
             <Grid item>
-              <DatePicker
+              <CustomDatePicker
                 label="Biopsy Date"
                 value={null}
                 onChange={() => { }}
               />
             </Grid>
             <Grid item>
-              <DateTimePicker
+              <CustomDateTimePicker
                 label="Planned Date/Time of Embryo Transfer"
                 value={null}
                 onChange={() => { }}
@@ -504,14 +505,14 @@ const TreatmentCycles: React.FC = () => {
             {['Treatment plan assigned', 'Menstr.day1 before downreg', 'Baseline scan', 'Start of follicular phase (LMP)', 'Start date of stim medications', 'Trigger Date', 'Egg collection Date', 'IUI Date', 'LPS', 'Thaw date', 'Embryo transfer date', 'Pregnancy test', 'Clinical pregnancy date', 'Estimate delivery date'].map((label, index) => (
               <Grid item key={index}>
                 {label.includes('Date') ? (
-                  <DateTimePicker
+                  <CustomDateTimePicker
                     label={label}
                     value={null}
                     onChange={() => { }}
                     sx={{ width: '100%' }}
                   />
                 ) : (
-                  <DatePicker
+                  <CustomDatePicker
                     label={label}
                     value={null}
                     onChange={() => { }}
@@ -551,7 +552,7 @@ const TreatmentCycles: React.FC = () => {
     return (
       <Box sx={{ flexGrow: 1 }}>
         <Grid container direction="column" spacing={2}>
-          {/* Action Buttons and DatePickers */}
+          {/* Action Buttons and CustomDatePickers */}
           <Grid item container justifyContent="space-between" alignItems="center" spacing={2}>
             <Grid item>
               <Button variant='contained' sx={{ width: 'fit-content' }}>
@@ -559,7 +560,7 @@ const TreatmentCycles: React.FC = () => {
               </Button>
             </Grid>
             <Grid item>
-              <DatePicker
+              <CustomDatePicker
                 label="Start Date"
                 value={new Date()}
                 onChange={() => { }}
@@ -567,7 +568,7 @@ const TreatmentCycles: React.FC = () => {
               />
             </Grid>
             <Grid item>
-              <DatePicker
+              <CustomDatePicker
                 label="End Date"
                 value={new Date()}
                 onChange={() => { }}

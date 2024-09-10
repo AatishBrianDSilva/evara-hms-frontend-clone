@@ -3,7 +3,7 @@ import PatientInfo from './PatientInfo'
 import TreatmentCyclesTable from './TreatmentCyclesTable'
 import Box from '@mui/material/Box';
 import Typography from '@mui/material/Typography';
-import CustomDataGrid from '../../components/Table/CustomDataGrid'
+import CustomDataGrid from '../../components/CustomDataGrid/CustomDataGrid'
 import { GridColDef } from '@mui/x-data-grid'
 
 const column: GridColDef[] = [

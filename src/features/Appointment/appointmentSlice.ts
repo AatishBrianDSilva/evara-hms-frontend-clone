@@ -1,6 +1,5 @@
 import { createSlice, PayloadAction } from "@reduxjs/toolkit";
-import { IDoctor } from "../../types/types";
-import { startOfDay } from "date-fns";
+import { IDoctor } from "../../types/doctor";
 
 interface AppointmentState {
   selectedDate: string;
@@ -10,7 +9,7 @@ interface AppointmentState {
 }
 
 const initialState: AppointmentState = {
-  selectedDate: startOfDay(new Date()).toISOString(),
+  selectedDate: new Date().toISOString(),
   selectedTimeslot: null,
   selectedDoctor: null,
   editingAppointmentId: null,
@@ -21,8 +20,11 @@ export const appointmentSlice = createSlice({
   initialState,
   reducers: {
     setSelectedDate: (state, action: PayloadAction<string>) => {
-      state.selectedDate = startOfDay(new Date(action.payload)).toISOString();
+      console.log("paylaod", action.payload);
+      state.selectedDate = new Date(action.payload).toISOString();
+      console.log("Updated selectedDate Payload:", state.selectedDate);
     },
+
     setSelectedTimeslot: (state, action: PayloadAction<string | null>) => {
       state.selectedTimeslot = action.payload;
     },
@@ -41,11 +43,7 @@ export const appointmentSlice = createSlice({
   },
 });
 
-export const {
-  setSelectedDate,
-  setSelectedTimeslot,
-  setSelectedDoctor,
-  resetAppointment,
-} = appointmentSlice.actions;
+export const { setSelectedDate, setSelectedTimeslot, setSelectedDoctor, resetAppointment } =
+  appointmentSlice.actions;
 
 export default appointmentSlice.reducer;

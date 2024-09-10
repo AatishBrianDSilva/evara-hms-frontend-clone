@@ -8,11 +8,12 @@ import Grid from '@mui/material/Grid';
 import MenuItem from '@mui/material/MenuItem';
 import TextField from '@mui/material/TextField';
 import Typography from '@mui/material/Typography';
-import CustomDataGrid from '../../components/Table/CustomDataGrid'
+import CustomDataGrid from '../../components/CustomDataGrid/CustomDataGrid'
 import { GridColDef } from '@mui/x-data-grid'
-import { DatePicker, DateTimePicker } from '@mui/x-date-pickers'
 import { VisuallyHiddenInput } from '../../components/Utils/VisuallyHiddenInput'
 import CloudUploadIcon from '@mui/icons-material/CloudUpload';
+import CustomDateTimePicker from '../../components/CustomDatePicker/CustomDateTimePicker';
+import CustomDatePicker from '../../components/CustomDatePicker/CustomDatePicker';
 
 
 const columns: GridColDef[] = [
@@ -105,7 +106,7 @@ const EmbryologyFETDischarge: React.FC = () => {
 
       <Grid container spacing={2} mb={2}>
         <Grid item xs={12} md={4} lg={2}>
-          <DateTimePicker label="Date and Time of Thawing" sx={{ width: '100%' }} />
+          <CustomDateTimePicker label="Date and Time of Thawing" />
         </Grid>
         <Grid item xs={12} md={4} lg={2}>
           <TextField label="Desc. Of Embryos Remaining" fullWidth />
@@ -132,10 +133,10 @@ const EmbryologyFETDischarge: React.FC = () => {
           <TextField label="Status Of Remaining Embryos" fullWidth />
         </Grid>
         <Grid item xs={12} md={4} lg={2}>
-          <DatePicker label="Embryos Expiry Date" sx={{ width: '100%' }} />
+          <CustomDatePicker label="Embryos Expiry Date" />
         </Grid>
         <Grid item xs={12} md={4} lg={3}>
-          <DateTimePicker label="Date and Time of Embryo Transfer" sx={{ width: '100%' }} />
+          <CustomDateTimePicker label="Date and Time of Embryo Transfer" />
         </Grid>
         <Grid item xs={12} md={4} lg={2}>
           <TextField label="No. of Embryos Transfered" fullWidth />
@@ -159,7 +160,7 @@ const EmbryologyFETDischarge: React.FC = () => {
           <TextField label="Embryos Discarded" fullWidth />
         </Grid>
         <Grid item xs={12} md={4} lg={2}>
-          <DatePicker label="Serum Beta HCG Date" sx={{ width: '100%' }} />
+          <CustomDatePicker label="Serum Beta HCG Date" />
         </Grid>
         <Grid item xs={12} md={4} lg={2}>
           <TextField label="Assisted Hatching" fullWidth />

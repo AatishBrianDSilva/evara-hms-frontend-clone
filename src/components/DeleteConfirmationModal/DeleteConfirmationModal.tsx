@@ -11,13 +11,10 @@ interface DeleteConfirmationModalProps {
     onClose: () => void;
     onConfirm: () => void;
     text: string;
+    loading: boolean;
 }
 
-const DeleteConfirmationModal: React.FC<DeleteConfirmationModalProps> = ({ open, onClose, onConfirm, text }) => {
-
-    const handleDelete = () => {
-        onConfirm();
-    };
+const DeleteConfirmationModal: React.FC<DeleteConfirmationModalProps> = ({ open, onClose, onConfirm, text, loading }) => {
 
     return (
 
@@ -27,11 +24,11 @@ const DeleteConfirmationModal: React.FC<DeleteConfirmationModalProps> = ({ open,
             </DialogTitle>
             <DialogContent sx={{ p: 2, px: 3 }}>
                 <DialogContentText>
-                    Are you sure you want to delete {text}?
+                    Are you sure you want to delete <strong>{text}</strong>?
                 </DialogContentText>
             </DialogContent>
             <DialogActions sx={{ p: 2 }}>
-                <Button onClick={handleDelete} color="primary" autoFocus>
+                <Button disabled={loading} onClick={onConfirm} color="primary" autoFocus>
                     Delete
                 </Button>
                 <Button onClick={onClose} color="primary">

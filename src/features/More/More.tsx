@@ -29,7 +29,7 @@ const More: React.FC = () => {
       },
       isAccordion: !!navItem.accordionItems,
       logoSrc: navItem.icon,
-      accordionItems: navItem.accordionItems?.map((accItem) => ({
+      accordionItems: navItem.accordionItems?.map((accItem: any) => ({
         ...accItem,
         path: `/patients/dashboard/${patientId}${accItem.path}`,
         onSelect: () => {

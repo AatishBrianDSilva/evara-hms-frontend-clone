@@ -12,6 +12,18 @@ let theme = createTheme({
         size: "small",
       },
     },
+    MuiSkeleton: {
+      defaultProps: {
+        animation: "wave",
+      },
+    },
+    MuiInputAdornment: {
+      styleOverrides: {
+        root: {
+          fontSize: fontSize,
+        },
+      },
+    },
     // MuiInputBase: {
     //   styleOverrides: {
     //     root: {
@@ -58,9 +70,9 @@ let theme = createTheme({
       dark: "#C75000",
     },
     secondary: {
-      main: "#5981DE", // Secondary brand color
-      light: "#84A2FF",
-      dark: "#3C5FA0",
+      main: "#10535E", // Secondary brand color
+      light: "#10535E",
+      dark: "#10535E",
     },
     error: {
       main: "#FF3F46", // Error state color

@@ -1,17 +1,14 @@
 // Inside Patients.tsx
-import { Route, Routes } from "react-router-dom";
+import ContentSection from "../../components/ContentSection/ContentSection";
 import PatientsList from "./PatientsList";
-import PatientsDashboard from "../PatientsDashboard/PatientsDashboard";
-import PatientHistory from "../PatientsDashboard/History";
+import GroupsIcon from '@mui/icons-material/Groups';
 
 const Patients: React.FC = () => {
   return (
-    <Routes>
-      <Route path="/" element={<PatientsList />} />
-      <Route path="/:patientId" element={<PatientsDashboard />} />
-      <Route path="/:patientId/history" element={<PatientHistory />} />
-    </Routes>
-  );
+    <ContentSection title="Patients" icon={<GroupsIcon />} >
+      <PatientsList />
+    </ContentSection>
+  )
 };
 
 export default Patients;

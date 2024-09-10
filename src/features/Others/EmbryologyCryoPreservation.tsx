@@ -8,11 +8,12 @@ import Grid from '@mui/material/Grid';
 import MenuItem from '@mui/material/MenuItem';
 import TextField from '@mui/material/TextField';
 import Typography from '@mui/material/Typography';
-import CustomDataGrid from '../../components/Table/CustomDataGrid'
+import CustomDataGrid from '../../components/CustomDataGrid/CustomDataGrid'
 import { GridColDef } from '@mui/x-data-grid'
-import { DatePicker, TimePicker } from '@mui/x-date-pickers'
 import { VisuallyHiddenInput } from '../../components/Utils/VisuallyHiddenInput'
 import CloudUploadIcon from '@mui/icons-material/CloudUpload';
+import CustomTimePicker from '../../components/CustomDatePicker/CustomTimePicker';
+import CustomDatePicker from '../../components/CustomDatePicker/CustomDatePicker';
 
 const columns: GridColDef[] = [
   { field: 'dateOfFreezing', headerName: 'Date of Freezing', flex: 1 },
@@ -67,10 +68,10 @@ const EmbryologyCryoPreservation: React.FC = () => {
           </TextField>
         </Grid>
         <Grid item xs={12} md={4} lg={2}>
-          <DatePicker label="Date Of Freezing" sx={{ width: '100%' }} />
+          <CustomDatePicker label="Date Of Freezing" />
         </Grid>
         <Grid item xs={12} md={4} lg={2}>
-          <TimePicker label="Time" sx={{ width: '100%' }} />
+          <CustomTimePicker label="Time" />
         </Grid>
         <Grid item xs={12} md={4} lg={2}>
           <TextField label="Embryologist-1" fullWidth select >
@@ -160,7 +161,7 @@ const EmbryologyCryoPreservation: React.FC = () => {
           <TextField label="Expiry Of Months" fullWidth />
         </Grid>
         <Grid item xs={12} md={4} lg={2}>
-          <DatePicker label="Date Of Expiry" sx={{ width: '100%' }} />
+          <CustomDatePicker label="Date Of Expiry" />
         </Grid>
         <Grid item xs={12} md={4} lg={2}>
           <TextField label="Cryo Can No." fullWidth />

@@ -19,7 +19,7 @@ const PatientSidebar: React.FC = () => {
     onSelect: () => {
       navigate(`/patients/dashboard/${patientId}${navItem.path}`);
     },
-    accordionItems: navItem.accordionItems?.map((accItem) => ({
+    accordionItems: navItem.accordionItems?.map((accItem: any) => ({
       ...accItem,
       path: `/patients/dashboard/${patientId}${accItem.path}`,
       onSelect: () => {

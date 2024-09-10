@@ -8,11 +8,11 @@ import Grid from '@mui/material/Grid';
 import MenuItem from '@mui/material/MenuItem';
 import TextField from '@mui/material/TextField';
 import Typography from '@mui/material/Typography';
-import CustomDataGrid from '../../components/Table/CustomDataGrid'
+import CustomDataGrid from '../../components/CustomDataGrid/CustomDataGrid'
 import { GridColDef } from '@mui/x-data-grid'
-import { DateTimePicker } from '@mui/x-date-pickers'
 import { VisuallyHiddenInput } from '../../components/Utils/VisuallyHiddenInput'
 import CloudUploadIcon from '@mui/icons-material/CloudUpload';
+import CustomDateTimePicker from '../../components/CustomDatePicker/CustomDateTimePicker';
 
 
 const columns: GridColDef[] = [
@@ -89,7 +89,7 @@ const EmbryologyDonorEmbryoTransfer: React.FC = () => {
           <TextField label="Embryo Quality" fullWidth />
         </Grid>
         <Grid item xs={12} md={4} lg={3}>
-          <DateTimePicker label="Date and Time of Transfer" sx={{ width: '100%' }} />
+          <CustomDateTimePicker label="Date and Time of Transfer" />
         </Grid>
         <Grid item xs={12} md={4} lg={2}>
           <TextField label="No. of Embryos Transfered" fullWidth />
@@ -116,7 +116,7 @@ const EmbryologyDonorEmbryoTransfer: React.FC = () => {
           </TextField>
         </Grid>
         <Grid item xs={12} md={4} lg={3}>
-          <DateTimePicker label="Date and Time of Thawing" sx={{ width: '100%' }} />
+          <CustomDateTimePicker label="Date and Time of Thawing" />
         </Grid>
         <Grid item xs={12} md={4} lg={2}>
           <TextField label="Thaw Transfer" fullWidth />

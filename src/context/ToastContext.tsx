@@ -1,6 +1,7 @@
 import React, { createContext, useContext, ReactNode } from 'react';
-import { ToastContainer, ToastOptions, toast } from 'react-toastify';
+import { Id, ToastContainer, ToastContentProps, ToastOptions, toast } from 'react-toastify';
 import 'react-toastify/dist/ReactToastify.css';
+import { ApiResponse } from '../types/global';
 
 const ToastContext = createContext({
   showToast: (_message: string, _type: "success" | "error" | "info" | "warning" = "info") => { },
@@ -12,7 +13,9 @@ const ToastContext = createContext({
       error: (error: any) => string;
     }
   ) => { },
-  showProgressToast: (_message: string, _progress: number, _toastId?: string | number, _options?: ToastOptions) => { }
+  showProgressToast: (_message: string, _progress: number, _toastId?: Id, _options?: ToastOptions): Id => {
+    return "" || 0;
+  }
 });
 
 export const ToastProvider: React.FC<{ children: ReactNode }> = ({ children }) => {
@@ -24,8 +27,8 @@ export const ToastProvider: React.FC<{ children: ReactNode }> = ({ children }) =
     promise: Promise<any>,
     messages: {
       loading: string;
-      success: (response: any) => string;
-      error: (error: any) => string;
+      success: (message: string) => string;
+      error: (message: string) => string;
     }
   ) => {
     toast.promise(
@@ -33,20 +36,22 @@ export const ToastProvider: React.FC<{ children: ReactNode }> = ({ children }) =
       {
         pending: messages.loading,
         success: {
-          render({ data }) {
-            return messages.success(data);
+          render: ({ data }: ToastContentProps<ApiResponse<any>>) => {
+            console.log("Success", data);
+            return messages.success(data?.message || "Success");
           }
         },
         error: {
-          render({ data }) {
-            return messages.error(data);
+          render({ data }: ToastContentProps<ApiResponse<any>>) {
+            console.log("Error", data);
+            return messages.error(data?.data?.message);
           }
         },
       }
     );
   };
 
-  const showProgressToast = (message: string, progress: number, toastId?: string | number, options = {}) => {
+  const showProgressToast = (message: string, progress: number, toastId?: Id, options = {}): Id => {
     const isUpdate = toastId != null;
     const toastOptions = {
       ...options,
@@ -55,6 +60,7 @@ export const ToastProvider: React.FC<{ children: ReactNode }> = ({ children }) =
 
     if (isUpdate) {
       toast.update(toastId, { render: message, ...toastOptions });
+      return toastId;
     } else {
       return toast(message, toastOptions);
     }
@@ -65,7 +71,7 @@ export const ToastProvider: React.FC<{ children: ReactNode }> = ({ children }) =
       {children}
       <ToastContainer
         position="top-center"
-        autoClose={5000}
+        autoClose={2000}
         hideProgressBar={false}
         newestOnTop={true}
         closeOnClick

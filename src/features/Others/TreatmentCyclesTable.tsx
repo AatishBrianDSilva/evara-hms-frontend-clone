@@ -3,7 +3,7 @@ import Button from '@mui/material/Button';
 import Typography from '@mui/material/Typography';
 import { GridColDef } from '@mui/x-data-grid'
 import React from 'react'
-import CustomDataGrid from '../../components/Table/CustomDataGrid';
+import CustomDataGrid from '../../components/CustomDataGrid/CustomDataGrid';
 
 const columns: GridColDef[] = [
   { field: 'id', headerName: 'Cycle ID', width: 200 },

@@ -4,10 +4,11 @@ import Grid from '@mui/material/Grid';
 import MenuItem from '@mui/material/MenuItem';
 import TextField from '@mui/material/TextField';
 import Typography from '@mui/material/Typography';
-import { DatePicker, TimePicker } from '@mui/x-date-pickers'
 import React from 'react'
 import TreatmentCyclesTable from './TreatmentCyclesTable'
 import PatientInfo from './PatientInfo'
+import CustomDatePicker from '../../components/CustomDatePicker/CustomDatePicker';
+import CustomTimePicker from '../../components/CustomDatePicker/CustomTimePicker';
 
 const AndrologySpermFreezing: React.FC = () => {
   return (
@@ -28,13 +29,13 @@ const AndrologySpermFreezing: React.FC = () => {
       {/* Add Semen Form */}
       <Grid container spacing={2} marginBottom={2}>
         <Grid item xs={12} sm={6} md={3}>
-          <DatePicker label="Date" value={new Date()} sx={{ width: '100%' }} />
+          <CustomDatePicker label="Date" value={new Date()} sx={{ width: '100%' }} />
         </Grid>
         <Grid item xs={12} sm={6} md={3}>
           <TextField label="Sperm DFI" name='sperm-dfi' sx={{ width: '100%' }} />
         </Grid>
         <Grid item xs={12} sm={6} md={3}>
-          <TimePicker label="Time of sample received at hospital" value={null} sx={{ width: '100%' }} />
+          <CustomTimePicker label="Time of sample received at hospital" value={null} sx={{ width: '100%' }} />
         </Grid>
       </Grid>
 
@@ -43,10 +44,10 @@ const AndrologySpermFreezing: React.FC = () => {
           <TextField label="Place of Collection" fullWidth />
         </Grid>
         <Grid item xs={12} sm={6} md={3}>
-          <TimePicker label="Time Of Collection" value={null} sx={{ width: '100%' }} />
+          <CustomTimePicker label="Time Of Collection" value={null} sx={{ width: '100%' }} />
         </Grid>
         <Grid item xs={12} sm={6} md={3}>
-          <TimePicker label="Time Of Evaluation" value={null} sx={{ width: '100%' }} />
+          <CustomTimePicker label="Time Of Evaluation" value={null} sx={{ width: '100%' }} />
         </Grid>
       </Grid>
       <Grid container spacing={2} marginBottom={2}>

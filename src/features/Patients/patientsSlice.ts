@@ -1,5 +1,6 @@
 import { createSlice, PayloadAction } from "@reduxjs/toolkit";
-import { ICase, IPatient } from "../../types/types"; // Adjust import path as necessary
+import { IPatient } from "../../types/patient";
+import { ICase } from "../../types/case";
 
 interface PatientState {
   patientId: string | null;
@@ -38,10 +39,25 @@ export const patientsSlice = createSlice({
     setCase: (state, action: PayloadAction<ICase>) => {
       state.case = action.payload;
     },
+    swapPatientAndPartner: (state) => {
+      const tempPatient = state.patient;
+      state.patient = state.partner;
+      state.partner = tempPatient;
+
+      const tempPatientId = state.patientId;
+      state.patientId = state.partnerId;
+      state.partnerId = tempPatientId;
+    },
   },
 });
 
-export const { setPatientId, setPartnerId, setPartner, setPatient, setCase } =
-  patientsSlice.actions;
+export const {
+  setPatientId,
+  setPartnerId,
+  setPartner,
+  setPatient,
+  setCase,
+  swapPatientAndPartner,
+} = patientsSlice.actions;
 
 export default patientsSlice.reducer;

@@ -12,10 +12,10 @@ import Typography from '@mui/material/Typography';
 import TreatmentCyclesTable from './TreatmentCyclesTable';
 import PatientInfo from './PatientInfo';
 import CloudUploadIcon from '@mui/icons-material/CloudUpload';
-import CustomDataGrid from '../../components/Table/CustomDataGrid';
+import CustomDataGrid from '../../components/CustomDataGrid/CustomDataGrid';
 import { GridColDef } from '@mui/x-data-grid';
-import { DatePicker } from '@mui/x-date-pickers';
 import { VisuallyHiddenInput } from '../../components/Utils/VisuallyHiddenInput';
+import CustomDatePicker from '../../components/CustomDatePicker/CustomDatePicker';
 
 interface TabPanelProps {
   children?: React.ReactNode;
@@ -152,8 +152,8 @@ const Investigations: React.FC = () => {
           <Button variant='contained' sx={{ width: 'fit-content' }}>
             Add Follicular Tracking
           </Button>
-          <DatePicker label='Start Date' format='dd-MM-yyyy' />
-          <DatePicker label='End Date' format='dd-MM-yyyy' />
+          <CustomDatePicker label='Start Date' />
+          <CustomDatePicker label='End Date' />
         </Box>
 
         <CustomDataGrid
@@ -192,13 +192,13 @@ const Investigations: React.FC = () => {
             </TextField>
           </Grid>
           <Grid item xs={12} md={6} lg={2}>
-            <DatePicker label="LMP Date" sx={{ width: '100%' }} />
+            <CustomDatePicker label="LMP Date" />
           </Grid>
           <Grid item xs={12} md={6} lg={2}>
-            <DatePicker label="Requested Date" sx={{ width: '100%' }} />
+            <CustomDatePicker label="Requested Date" />
           </Grid>
           <Grid item xs={12} md={6} lg={2}>
-            <DatePicker label="Date Of Scan" sx={{ width: '100%' }} />
+            <CustomDatePicker label="Date Of Scan" />
           </Grid>
           <Grid item xs={12} md={6} lg={2}>
             <TextField label="Day Of Cycle" fullWidth />

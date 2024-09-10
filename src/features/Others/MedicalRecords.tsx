@@ -14,8 +14,8 @@ import TextField from '@mui/material/TextField';
 import Typography from '@mui/material/Typography';
 import { GridColDef } from '@mui/x-data-grid';
 import { Clear, Check } from "@mui/icons-material"
-import { DateTimePicker } from '@mui/x-date-pickers';
-import CustomDataGrid from '../../components/Table/CustomDataGrid';
+import CustomDataGrid from '../../components/CustomDataGrid/CustomDataGrid';
+import CustomDateTimePicker from '../../components/CustomDatePicker/CustomDateTimePicker';
 
 
 interface TabPanelProps {
@@ -185,11 +185,8 @@ const MedicalRecords: React.FC = () => {
       {/* Date and Time Picker */}
       <Grid container spacing={2} mb={2}>
         <Grid item xs={12}> {/* Adjusted for full width on all screen sizes */}
-          <DateTimePicker
+          <CustomDateTimePicker
             label="Date and Time"
-            value={new Date()}
-            onChange={() => { }}
-            sx={{ width: '100%' }}
           />
         </Grid>
       </Grid>

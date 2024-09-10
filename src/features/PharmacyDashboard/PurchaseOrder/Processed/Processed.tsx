@@ -1,0 +1,142 @@
+import { Visibility } from "@mui/icons-material";
+import { Box, Tooltip } from "@mui/material";
+import React, { useState } from "react";
+import CustomDataGrid from "../../../../components/CustomDataGrid/CustomDataGrid";
+import { GridActionsCellItem, GridColDef, GridRowParams } from "@mui/x-data-grid";
+import { useGetProcessedPurchaseOrdersQuery } from "../../../../services/pharmacyDashboardService/purchaseOrderApi";
+import {
+  EPurchaseOrderStatus,
+  IPurchaseOrder,
+} from "../../../../types/pharmacyDashboard/purchaseOrder";
+import ViewProcessedPurchaseOrder from "./ViewProcessedPurchaseOrder";
+
+const Processed: React.FC = () => {
+  const [page, setPage] = useState<number>(1);
+  const [pageSize, setPageSize] = useState<number>(25);
+  const handlePageChange = (newPage: number) => {
+    setPage(newPage);
+  };
+  const handlePageSizeChange = (newPageSize: number) => {
+    setPageSize(newPageSize);
+  };
+
+  const {
+    data: purchaseOrdersData,
+    isLoading: purchaseOrdersLoading,
+    isFetching: purchaseOrdersFetching,
+  } = useGetProcessedPurchaseOrdersQuery({
+    paginate: true,
+    page,
+    limit: pageSize,
+    sort: { createdAt: -1 },
+    filters: { status: EPurchaseOrderStatus.Processed },
+  });
+
+  const purchaseOrders = purchaseOrdersData?.data?.records || [];
+  const purchaseOrdersPagination = purchaseOrdersData?.data?.pagination;
+  const purchaseOrderLoading = purchaseOrdersLoading || purchaseOrdersFetching;
+
+  const [selectedRow, setSelectedRow] = useState<IPurchaseOrder | null>(null);
+  const [isViewModalOpen, setIsViewModalOpen] = useState<boolean>(false);
+
+  const openViewModal = (order: IPurchaseOrder) => {
+    setSelectedRow(order);
+    setIsViewModalOpen(true);
+  };
+
+  const closeViewModal = () => {
+    setSelectedRow(null);
+    setIsViewModalOpen(false);
+  };
+
+  const columnsConfig: GridColDef[] = [
+    { field: "poNumber", headerName: "PO Number", flex: 1 },
+    {
+      field: "date",
+      type: "date",
+      headerName: "PO Date",
+      flex: 1,
+      valueFormatter(params) {
+        const date = new Date(params.value);
+        const day = String(date.getDate()).padStart(2, "0");
+        const month = String(date.getMonth() + 1).padStart(2, "0"); // Months are 0-based
+        const year = String(date.getFullYear()).slice(-2); // Get last two digits of the year
+        return `${day}/${month}/${year}`;
+      },
+    },
+    {
+      field: "vendor",
+      headerName: "Vendor Name",
+      flex: 1,
+      valueGetter: (params) => params.row.vendor?.name || "N/A",
+    },
+    {
+      field: "netAmount",
+      headerName: "Amount",
+      flex: 1,
+      valueGetter: (params) => `₹ ${params.row.response?.netAmount || 0}`,
+    },
+    { field: "createdBy", headerName: "Created By", flex: 1 },
+    { field: "authorizedBy", headerName: "Processed By", flex: 1 },
+    {
+      field: "invoiceNumber",
+      headerName: "Invoice Number",
+      flex: 1,
+      valueGetter: (params) => params.row.response?.invoiceNumber || "N/A",
+    },
+    {
+      field: "actions",
+      headerName: "Actions",
+      flex: 1,
+      type: "actions",
+      getActions: (params: GridRowParams) => {
+        const row = params.row;
+        return [
+          <Tooltip title="View">
+            <GridActionsCellItem
+              icon={<Visibility />}
+              label="View"
+              onClick={() => openViewModal(row)}
+            />
+          </Tooltip>,
+        ];
+      },
+    },
+  ];
+
+  const rows = purchaseOrders.map((order: IPurchaseOrder) => ({
+    ...order,
+    id: order.response._id, // Use response._id for unique row identifier
+  }));
+
+  return (
+    <Box height={"100%"} display={"flex"} flexDirection={"column"}>
+      <Box mt={2} flex={"1 1 auto"}>
+        <CustomDataGrid
+          autoHeight={false}
+          columns={columnsConfig}
+          rows={rows}
+          page={page}
+          pageSize={pageSize}
+          totalRows={purchaseOrdersPagination?.totalDocs || 0}
+          loading={purchaseOrderLoading}
+          sx={{ height: "100%" }}
+          enablePagination={true}
+          onPageChange={handlePageChange}
+          onPageSizeChange={handlePageSizeChange}
+        />
+      </Box>
+
+      {isViewModalOpen && selectedRow && (
+        <ViewProcessedPurchaseOrder
+          openModal={isViewModalOpen}
+          onClose={closeViewModal}
+          id={selectedRow.response._id} // Use response._id for modal data
+          purchaseOrderId={selectedRow._id} // Pass the purchase order's _id
+        />
+      )}
+    </Box>
+  );
+};
+
+export default Processed;

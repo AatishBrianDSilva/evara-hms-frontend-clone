@@ -1,6 +1,6 @@
 import React from 'react'
 import { Route, Routes } from 'react-router-dom'
-import PatientsDashboard from '../PatientsDashboard/PatientsDashboard'
+import PatientsDashboard from '../PatientDashboard/PatientDashboard'
 import TreatmentCycles from './TreatmentCycles'
 import TreatmentAspirationReport from './TreatmentAspirationReport'
 import TreatmentDrugs from './TreatmentDrugs'
@@ -18,14 +18,14 @@ import EmbryologyCryoPreservation from './EmbryologyCryoPreservation'
 import EmbryologyFETDischarge from './EmbryologyFETDischarge'
 import EmbryologyDonorEmbryoTransfer from './EmbryologyDonorEmbryoTransfer'
 import EmbryologyIVFChecklist from './EmbryologyIVFChecklist'
-import PatientHistory from '../PatientsDashboard/History'
+// import PatientHistory from '../PatientsDashboard/History'
 
 const PatientsDashboardRoutes: React.FC = () => {
   return (
     <Routes>
       <Route path="/" element={<PatientsDashboard />} />
       <Route path="/demographics" element={<div>Patients Demographics</div>} />
-      <Route path="/history" element={<PatientHistory />} />
+      {/* <Route path="/history" element={<PatientHistory />} /> */}
       <Route path="/visit-history" element={<div>Patients Visit History</div>} />
       <Route path="/medical-records" element={<MedicalRecords />} />
       <Route path="/investigations" element={<Investigations />} />
