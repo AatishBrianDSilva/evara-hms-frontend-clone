@@ -10,7 +10,7 @@ import "react-toastify/dist/ReactToastify.css";
 interface PrintPDFContextProps {
   fetchAndPrintPdf: (
     id: string,
-    type?: "report" | "invoice" | "uploadedFiles",
+    type?: "report" | "invoice" | "uploadedFiles" | "POInvoice",
     sourceType?: "patient" | "pharmacy"
   ) => void;
   fetchAndPrintUploadedPDF: (fileUrl: string) => void;
@@ -18,9 +18,7 @@ interface PrintPDFContextProps {
 
 const PrintContext = createContext<PrintPDFContextProps | undefined>(undefined);
 
-export const PrintProvider: React.FC<{ children: React.ReactNode }> = ({
-  children,
-}) => {
+export const PrintProvider: React.FC<{ children: React.ReactNode }> = ({ children }) => {
   const token = useSelector((state: RootState) => state.auth.tokens?.authToken);
 
   const axiosConfig: AxiosRequestConfig = {
@@ -46,12 +44,15 @@ export const PrintProvider: React.FC<{ children: React.ReactNode }> = ({
 
   const fetchAndPrintPdf = async (
     reportId: string,
-    type: "report" | "invoice" | "uploadedFiles" = "report",
+    type: "report" | "invoice" | "uploadedFiles" | "POInvoice" = "report",
     sourceType: "patient" | "pharmacy" = "patient"
   ) => {
-    if (reportId) {
-      let url = "";
-      // Determine the URL based on type and sourceType
+    let url = "";
+    if (type === "POInvoice") {
+      // If type is POInvoice, map to downloadPOInvoice endpoint
+      url = `${API_BASE_URL}/pharmacy-dashboard/purchase-order/download/${reportId}`;
+    } else if (reportId) {
+      // Handle regular reportId-based fetching logic
       if (type === "report" && sourceType === "patient") {
         url = `${API_BASE_URL}/reports/download/${reportId}`;
       } else if (type === "invoice" && sourceType === "patient") {
@@ -65,34 +66,31 @@ export const PrintProvider: React.FC<{ children: React.ReactNode }> = ({
         toast.error("Invalid document type or source type");
         return;
       }
-
-      toast.info("Fetching PDF...", {
-        autoClose: false,
-        toastId: "fetch-toast",
-      });
-
-      try {
-        const response = await axios.get(url, axiosConfig);
-
-        // Convert binary data to base64
-        const base64String = btoa(
-          new Uint8Array(response.data).reduce(
-            (data, byte) => data + String.fromCharCode(byte),
-            ""
-          )
-        );
-
-        setPdfData(base64String);
-        toast.dismiss("fetch-toast");
-        toast.success("PDF fetched successfully!");
-      } catch (error) {
-        console.error("Error fetching PDF:", error);
-        toast.dismiss("fetch-toast");
-        toast.error("Error fetching PDF");
-      }
+      console.log("Generated URL for report:", url);
     } else {
       toast.error("No report ID provided");
-      setPdfData(null);
+      return;
+    }
+
+    toast.info("Fetching PDF...", {
+      autoClose: false,
+      toastId: "fetch-toast",
+    });
+
+    try {
+      const response = await axios.get(url, axiosConfig);
+
+      const base64String = btoa(
+        new Uint8Array(response.data).reduce((data, byte) => data + String.fromCharCode(byte), "")
+      );
+
+      setPdfData(base64String);
+      toast.dismiss("fetch-toast");
+      toast.success("PDF fetched successfully!");
+    } catch (error) {
+      console.error("Error fetching PDF:", error);
+      toast.dismiss("fetch-toast");
+      toast.error("Error fetching PDF");
     }
   };
 
@@ -110,10 +108,7 @@ export const PrintProvider: React.FC<{ children: React.ReactNode }> = ({
 
         // Convert binary data to base64
         const base64String = btoa(
-          new Uint8Array(response.data).reduce(
-            (data, byte) => data + String.fromCharCode(byte),
-            ""
-          )
+          new Uint8Array(response.data).reduce((data, byte) => data + String.fromCharCode(byte), "")
         );
 
         setPdfData(base64String);
@@ -148,9 +143,7 @@ export const PrintProvider: React.FC<{ children: React.ReactNode }> = ({
   }, [pdfData]);
 
   return (
-    <PrintContext.Provider
-      value={{ fetchAndPrintPdf, fetchAndPrintUploadedPDF }}
-    >
+    <PrintContext.Provider value={{ fetchAndPrintPdf, fetchAndPrintUploadedPDF }}>
       {children}
     </PrintContext.Provider>
   );

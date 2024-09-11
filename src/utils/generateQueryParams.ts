@@ -33,7 +33,7 @@ function generateQueryParams(options: IQueryOptions = {}): string {
     addParam(key, value);
   });
 
-  console.log({ queryParams });
+  // console.log({ queryParams });
 
   return queryParams.toString();
 }

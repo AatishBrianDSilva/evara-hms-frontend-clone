@@ -52,35 +52,35 @@ const Local = () => {
 
       path: "/master/local/consents",
     },
-    {
-      icon: CorporateFareIcon,
-      primaryText: "Cryo Parameters",
+    // {
+    //   icon: CorporateFareIcon,
+    //   primaryText: "Cryo Parameters",
 
-      path: "/master/local/cryo-parameters",
-    },
+    //   path: "/master/local/cryo-parameters",
+    // },
     {
       icon: CorporateFareIcon,
       primaryText: "Consultant Doctors ",
 
       path: "/master/local/consultant-doctors",
     },
-    {
-      icon: CorporateFareIcon,
-      primaryText: "Roles",
-      path: "/master/local/roles",
-    },
+    // {
+    //   icon: CorporateFareIcon,
+    //   primaryText: "Roles",
+    //   path: "/master/local/roles",
+    // },
     // {
     //   icon: CorporateFareIcon,
     //   primaryText: "Discounts",
 
     //   path: "",
     // },
-    {
-      icon: CorporateFareIcon,
-      primaryText: "Reports",
+    // {
+    //   icon: CorporateFareIcon,
+    //   primaryText: "Reports",
 
-      path: "/master/local/reports",
-    },
+    //   path: "/master/local/reports",
+    // },
 
     {
       icon: CorporateFareIcon,
@@ -110,7 +110,12 @@ const Local = () => {
     <Box display={"flex"} flex={1} overflow={"auto"}>
       <MasterSidebar menuItems={menuItems} heading={"Local"} />
 
-      <Box display={"flex"} flex={"1 1 auto"} flexDirection={"column"} overflow={"auto"}>
+      <Box
+        display={"flex"}
+        flex={"1 1 auto"}
+        flexDirection={"column"}
+        overflow={"auto"}
+      >
         <Outlet />
       </Box>
     </Box>

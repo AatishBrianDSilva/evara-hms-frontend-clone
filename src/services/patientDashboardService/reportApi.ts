@@ -10,7 +10,7 @@ export const patientReportsApi = createApi({
   endpoints: (builder) => ({
     getReports: builder.query<ApiResponse<any>, IQueryOptions>({
       query: (options: IQueryOptions) => {
-        console.log("api test", options);
+        // console.log("api test", options);
         const queryParams = generateQueryParams(options);
         return { url: `reports?${queryParams}`, method: "GET" };
       },

@@ -37,6 +37,7 @@ interface IItem {
   tax: number | null;
   totalAmount: number | null; // Will map to mrp
   freeQuantity: number | null;
+  discount: number | null; // Added discount field for each row
 }
 
 interface FormValues {
@@ -45,7 +46,6 @@ interface FormValues {
   items: IItem[];
   subTotal: number | null;
   tax: number | null;
-  discount: number | null;
   otherCharges: number | null;
   netAmount: number | null;
   isDifferentAddress: boolean;
@@ -80,11 +80,12 @@ const AddDraft: React.FC<AddPurchaseOrderDraftProps> = ({
         tax: null,
         totalAmount: null,
         freeQuantity: null,
+        discount: null,
       },
     ],
     subTotal: null,
     tax: null,
-    discount: null,
+
     otherCharges: null,
     netAmount: null,
     isDifferentAddress: false,
@@ -101,21 +102,23 @@ const AddDraft: React.FC<AddPurchaseOrderDraftProps> = ({
       vendor: values.vendor?._id,
       request: {
         items: values.items.map((item) => {
+          const discountAmount = ((item.discount ?? 0) / 100) * (item.totalAmount ?? 0);
+          const finalAmount = (item.totalAmount ?? 0) - discountAmount;
           return {
             item: item.item?._id,
             packSize: item.quantityPerPack, // Map quantityPerPack to packSize
-            mrp: item.totalAmount, // Map totalAmount to mrp
+            mrp: finalAmount, // Apply discount to final MRP
             mrpPerPack: item.mrp, // Map mrp to mrpPerPack
             buyPrice: item.cost, // Map cost to buyPrice
             tax: parseFloat((item.tax ?? 0).toFixed(2)),
             quantity: item.quantity,
             freeQuantity: item.freeQuantity,
             noOfPacks: item.noOfPacks,
+            discount: item.discount,
           };
         }),
         subTotal: parseFloat((values.subTotal ?? 0).toFixed(2)),
         tax: parseFloat((values.tax ?? 0).toFixed(2)),
-        discount: parseFloat((values.discount ?? 0).toFixed(2)),
         otherCharges: parseFloat((values.otherCharges ?? 0).toFixed(2)),
         netAmount: parseFloat((values.netAmount ?? 0).toFixed(2)),
       },
@@ -169,6 +172,7 @@ const AddDraft: React.FC<AddPurchaseOrderDraftProps> = ({
         tax: null,
         totalAmount: null,
         freeQuantity: null,
+        discount: null,
       },
     ];
     formik.setFieldValue("items", newItems);
@@ -181,34 +185,43 @@ const AddDraft: React.FC<AddPurchaseOrderDraftProps> = ({
     updateCalculations(newFields);
   };
 
+  // Function to handle any changes in item fields and recalculate totals
   const handleValueChange = (index: number, field: keyof IItem, rawValue: any) => {
     let newItems: IItem[] = [...formik.values.items];
     let currentItem: IItem = newItems[index];
 
-    const numericValue =
-      field === "quantity" ||
-      field === "quantityPerPack" ||
-      field === "noOfPacks" ||
-      field === "cost" ||
-      field === "mrp" ||
-      field === "tax"
-        ? parseFloat(rawValue.replace(/[^\d.-]/g, "")) || null
-        : rawValue;
+    const numericValue = [
+      "quantity",
+      "quantityPerPack",
+      "noOfPacks",
+      "cost",
+      "mrp",
+      "tax",
+      "discount",
+    ].includes(field)
+      ? parseFloat(rawValue.replace(/[^\d.-]/g, "")) || null
+      : rawValue;
 
     currentItem = { ...currentItem, [field]: numericValue };
 
+    // Recalculate totalAmount based on discount, packs, cost, and tax
     if (
       field === "quantityPerPack" ||
       field === "noOfPacks" ||
       field === "cost" ||
-      field === "tax"
+      field === "tax" ||
+      field === "discount"
     ) {
       const quantityPerPack = currentItem.quantityPerPack ?? 0;
       const noOfPacks = currentItem.noOfPacks ?? 0;
       const cost = currentItem.cost ?? 0;
       const taxPercentage = currentItem.tax ?? 0;
       const taxAmount = noOfPacks * cost * (taxPercentage / 100);
-      const totalAmount = noOfPacks * cost + taxAmount;
+
+      const totalBeforeDiscount = noOfPacks * cost + taxAmount;
+      const discountAmount = ((currentItem.discount ?? 0) / 100) * totalBeforeDiscount;
+      const totalAmount = totalBeforeDiscount - discountAmount;
+
       currentItem.totalAmount = totalAmount;
       currentItem.quantity = quantityPerPack * noOfPacks;
     }
@@ -224,7 +237,9 @@ const AddDraft: React.FC<AddPurchaseOrderDraftProps> = ({
       const taxPercentage = currentItem.item?.taxRate?.taxRate || 0;
       const taxAmount = noOfPacks * (currentItem.cost || 0) * (taxPercentage / 100);
       currentItem.tax = taxPercentage;
-      currentItem.totalAmount = noOfPacks * (currentItem.cost || 0) + taxAmount;
+      const totalBeforeDiscount = noOfPacks * (currentItem.cost || 0) + taxAmount;
+      const discountAmount = ((currentItem.discount ?? 0) / 100) * totalBeforeDiscount;
+      currentItem.totalAmount = totalBeforeDiscount - discountAmount;
       currentItem.freeQuantity = currentItem.item?.freeQuantity || 0;
     }
 
@@ -237,12 +252,7 @@ const AddDraft: React.FC<AddPurchaseOrderDraftProps> = ({
     (items = formik.values.items) => {
       const subTotal = calculateSubTotal(items);
       const tax = calculateTax(items);
-
       let netAmount = subTotal + tax;
-
-      const discountPercentage: number = formik.values.discount || 0;
-      const discount: number = netAmount * (discountPercentage / 100);
-      netAmount -= discount;
 
       const otherChargesRaw = formik.values.otherCharges ? +formik.values.otherCharges : 0;
       const otherCharges: number = !isNaN(otherChargesRaw)
@@ -255,7 +265,7 @@ const AddDraft: React.FC<AddPurchaseOrderDraftProps> = ({
       formik.setFieldValue("tax", tax);
       formik.setFieldValue("netAmount", netAmount);
     },
-    [formik.values.discount, formik.values.otherCharges, formik.setFieldValue]
+    [formik.values.otherCharges, formik.setFieldValue]
   );
 
   useEffect(() => {
@@ -275,6 +285,7 @@ const AddDraft: React.FC<AddPurchaseOrderDraftProps> = ({
         | "tax"
         | "totalAmount"
         | "freeQuantity"
+        | "discount"
     ) => {
       // Ensure that we're working with the correct structure
       const touched = formik?.touched?.items as FormikTouched<IItem>[];
@@ -298,9 +309,7 @@ const AddDraft: React.FC<AddPurchaseOrderDraftProps> = ({
 
   const calculateSubTotal = (items: IItem[]) => {
     return items.reduce((acc, item) => {
-      const noOfPacks = item.noOfPacks ?? 0;
-      const cost = item.cost ?? 0;
-      return acc + noOfPacks * cost;
+      return acc + (item.totalAmount ?? 0);
     }, 0);
   };
 
@@ -475,6 +484,8 @@ const AddDraft: React.FC<AddPurchaseOrderDraftProps> = ({
                 getFieldErrorAndTouched(index, "totalAmount");
               const { isError: isFreeQuantityError, errorMessage: freeQuantityErrorMessage } =
                 getFieldErrorAndTouched(index, "freeQuantity");
+              const { isError: isDiscountError, errorMessage: discountErrorMessage } =
+                getFieldErrorAndTouched(index, "discount");
 
               const isLastItem = index === formik.values.items.length - 1;
               const onlyOneItem = formik.values.items.length === 1;
@@ -568,6 +579,17 @@ const AddDraft: React.FC<AddPurchaseOrderDraftProps> = ({
                       helperText={isTaxError ? taxErrorMessage : ""}
                     />
                   </Grid>
+                  <Grid item flex={1}>
+                    <TextField
+                      fullWidth
+                      name={`items[${index}].discount`}
+                      label="Discount (%)"
+                      value={formik.values.items[index].discount || ""}
+                      onChange={(e) => handleValueChange(index, "discount", e.target.value)}
+                      error={isDiscountError}
+                      helperText={isDiscountError ? discountErrorMessage : ""}
+                    />
+                  </Grid>
 
                   <Grid item flex={1}>
                     <TextField
@@ -638,18 +660,7 @@ const AddDraft: React.FC<AddPurchaseOrderDraftProps> = ({
                   value={formik.values.tax?.toLocaleString() || ""}
                 />
               </Grid>
-              <Grid item lg={2}>
-                <TextField
-                  fullWidth
-                  label="Discount %"
-                  value={formik.values.discount || ""}
-                  onChange={(e) => {
-                    formik.handleChange(e);
-                    updateCalculations();
-                  }}
-                  name="discount"
-                />
-              </Grid>
+
               <Grid item lg={2}>
                 <TextField
                   fullWidth

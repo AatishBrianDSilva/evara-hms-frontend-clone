@@ -14,12 +14,13 @@ interface PurchaseOrderRequest {
     tax: number | null;
     freeQuantity: number | null;
     noOfPacks: number | null;
+    discount?: number | null;
   }[];
   subTotal: number | null;
   tax: number | null;
-  discount: number | null;
   otherCharges: number | null;
   netAmount: number | null;
+  discount?: number | null;
 }
 
 interface AddPurchaseOrderPayload {
@@ -62,6 +63,16 @@ export const purchaseOrderApi = createApi({
       }),
       invalidatesTags: ["PurchaseOrder", "Stocks"],
     }),
+    editDraftPurchaseOrder: builder.mutation<ApiResponse<IPurchaseOrder>, EditPurchaseOrderPayload>(
+      {
+        query: (purchaseOrderData) => ({
+          url: `pharmacy-dashboard/purchase-order/draft/${purchaseOrderData.id}`,
+          method: "PUT",
+          body: purchaseOrderData,
+        }),
+        invalidatesTags: ["PurchaseOrder", "Stocks"],
+      }
+    ),
     editPurchaseOrderStatus: builder.mutation<
       ApiResponse<IPurchaseOrder>,
       EditPurchaseOrderStatusPayload
@@ -144,6 +155,7 @@ export const purchaseOrderApi = createApi({
 export const {
   useAddPurchaseOrderMutation,
   useEditPurchaseOrderMutation,
+  useEditDraftPurchaseOrderMutation,
   useDeletePurchaseOrderMutation,
   useGetPurchaseOrdersQuery,
   useGetProcessedPurchaseOrdersQuery,

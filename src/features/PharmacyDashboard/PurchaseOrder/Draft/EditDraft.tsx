@@ -9,13 +9,10 @@ import {
   Typography,
 } from "@mui/material";
 import React, { useCallback } from "react";
-import {
-  IDrugItem,
-  IDrugVendor,
-} from "../../../../types/pharmacyDashboard/master";
+import { IDrugItem, IDrugVendor } from "../../../../types/pharmacyDashboard/master";
 import { useToast } from "../../../../context/ToastContext";
 import {
-  useEditPurchaseOrderMutation,
+  useEditDraftPurchaseOrderMutation,
   useGetPurchaseOrderByIdQuery,
 } from "../../../../services/pharmacyDashboardService/purchaseOrderApi";
 import { FormikErrors, FormikTouched, useFormik } from "formik";
@@ -43,6 +40,7 @@ interface IItem {
   tax: number | null;
   totalAmount: number | null; // Will map to mrp
   freeQuantity: number | null;
+  discount: number | null;
 }
 
 interface FormValues {
@@ -51,7 +49,6 @@ interface FormValues {
   items: IItem[];
   subTotal: number | null;
   tax: number | null;
-  discount: number | null;
   otherCharges: number | null;
   netAmount: number | null;
 }
@@ -126,13 +123,7 @@ const renderSkeleton = () => (
         <Skeleton variant="rectangular" height={56} />
       </Grid>
     </Grid>
-    <Box
-      display={"flex"}
-      justifyContent={"flex-end"}
-      alignItems={"center"}
-      gap={2}
-      mt={2}
-    >
+    <Box display={"flex"} justifyContent={"flex-end"} alignItems={"center"} gap={2} mt={2}>
       <Skeleton variant="rectangular" width={90} height={40} />
       <Skeleton variant="rectangular" width={90} height={40} />
     </Box>
@@ -154,10 +145,9 @@ const EditDraft: React.FC<EditPurchaseOrderDraftProps> = ({
     isFetching: isPurchaseorderFetching,
   } = useGetPurchaseOrderByIdQuery(id);
   const purchaseOrder = purchaseOrderData?.data;
-  const purchaseOrderLoading =
-    isPurchaseOrderLoading || isPurchaseorderFetching;
+  const purchaseOrderLoading = isPurchaseOrderLoading || isPurchaseorderFetching;
 
-  const [editPurchaseOrder, { isLoading }] = useEditPurchaseOrderMutation();
+  const [editPurchaseOrder, { isLoading }] = useEditDraftPurchaseOrderMutation();
 
   // const initialValues: FormValues = {
   //   order_date: purchaseOrder?.date || null,
@@ -184,10 +174,10 @@ const EditDraft: React.FC<EditPurchaseOrderDraftProps> = ({
         tax: item.tax || null,
         totalAmount: item.mrp || null,
         freeQuantity: item.freeQuantity || null,
+        discount: item.discount,
       })) || [],
     subTotal: purchaseOrder?.request.subTotal || null,
     tax: purchaseOrder?.request.tax || null,
-    discount: purchaseOrder?.request.discount || null,
     otherCharges: purchaseOrder?.request.otherCharges || null,
     netAmount: purchaseOrder?.request.netAmount || null,
   };
@@ -249,10 +239,10 @@ const EditDraft: React.FC<EditPurchaseOrderDraftProps> = ({
           quantity: parseFloat((item.quantity ?? 0).toFixed(2)),
           freeQuantity: parseFloat((item.freeQuantity ?? 0).toFixed(2)),
           noOfPacks: item.noOfPacks ?? 0,
+          discount: item.discount ?? 0,
         })),
         subTotal: parseFloat((values.subTotal ?? 0).toFixed(2)),
         tax: parseFloat((values.tax ?? 0).toFixed(2)),
-        discount: parseFloat((values.discount ?? 0).toFixed(2)),
         otherCharges: parseFloat((values.otherCharges ?? 0).toFixed(2)),
         netAmount: parseFloat((values.netAmount ?? 0).toFixed(2)),
       },
@@ -296,6 +286,7 @@ const EditDraft: React.FC<EditPurchaseOrderDraftProps> = ({
         tax: null,
         totalAmount: null,
         freeQuantity: null,
+        discount: null,
       },
     ]);
   };
@@ -305,11 +296,7 @@ const EditDraft: React.FC<EditPurchaseOrderDraftProps> = ({
     formik.setFieldValue("items", newFields);
   };
 
-  const handleValueChange = (
-    index: number,
-    field: keyof IItem,
-    rawValue: any
-  ) => {
+  const handleValueChange = (index: number, field: keyof IItem, rawValue: any) => {
     let newItems: IItem[] = [...formik.values.items];
     let currentItem: IItem = newItems[index];
 
@@ -319,7 +306,8 @@ const EditDraft: React.FC<EditPurchaseOrderDraftProps> = ({
       field === "noOfPacks" ||
       field === "cost" ||
       field === "mrp" ||
-      field === "tax"
+      field === "tax" ||
+      field === "discount"
         ? parseFloat(rawValue.replace(/[^\d.-]/g, "")) || null
         : rawValue;
 
@@ -329,14 +317,19 @@ const EditDraft: React.FC<EditPurchaseOrderDraftProps> = ({
       field === "quantityPerPack" ||
       field === "noOfPacks" ||
       field === "cost" ||
-      field === "tax"
+      field === "tax" ||
+      field === "discount"
     ) {
       const quantityPerPack = currentItem.quantityPerPack ?? 0;
       const noOfPacks = currentItem.noOfPacks ?? 0;
       const cost = currentItem.cost ?? 0;
       const taxPercentage = currentItem.tax ?? 0;
       const taxAmount = noOfPacks * cost * (taxPercentage / 100);
-      const totalAmount = noOfPacks * cost + taxAmount;
+
+      const totalBeforeDiscount = noOfPacks * cost + taxAmount;
+      const discountAmount = ((currentItem.discount ?? 0) / 100) * totalBeforeDiscount;
+      const totalAmount = totalBeforeDiscount - discountAmount;
+
       currentItem.totalAmount = totalAmount;
       currentItem.quantity = quantityPerPack * noOfPacks;
     }
@@ -350,10 +343,11 @@ const EditDraft: React.FC<EditPurchaseOrderDraftProps> = ({
       currentItem.cost = currentItem.item?.rate || 0;
       currentItem.mrp = currentItem.item?.mrp || 0;
       const taxPercentage = currentItem.item?.taxRate?.taxRate || 0;
-      const taxAmount =
-        noOfPacks * (currentItem.cost || 0) * (taxPercentage / 100);
+      const taxAmount = noOfPacks * (currentItem.cost || 0) * (taxPercentage / 100);
       currentItem.tax = taxPercentage;
-      currentItem.totalAmount = noOfPacks * (currentItem.cost || 0) + taxAmount;
+      const totalBeforeDiscount = noOfPacks * (currentItem.cost || 0) + taxAmount;
+      const discountAmount = ((currentItem.discount ?? 0) / 100) * totalBeforeDiscount;
+      currentItem.totalAmount = totalBeforeDiscount - discountAmount;
       currentItem.freeQuantity = currentItem.item?.freeQuantity || 0;
     }
 
@@ -369,13 +363,7 @@ const EditDraft: React.FC<EditPurchaseOrderDraftProps> = ({
 
       let netAmount = subTotal + tax;
 
-      const discountPercentage: number = formik.values.discount || 0;
-      const discount: number = netAmount * (discountPercentage / 100);
-      netAmount -= discount;
-
-      const otherChargesRaw = formik.values.otherCharges
-        ? +formik.values.otherCharges
-        : 0;
+      const otherChargesRaw = formik.values.otherCharges ? +formik.values.otherCharges : 0;
       const otherCharges: number = !isNaN(otherChargesRaw)
         ? parseFloat(otherChargesRaw.toFixed(2))
         : 0;
@@ -386,7 +374,7 @@ const EditDraft: React.FC<EditPurchaseOrderDraftProps> = ({
       formik.setFieldValue("tax", tax);
       formik.setFieldValue("netAmount", netAmount);
     },
-    [formik.values.discount, formik.values.otherCharges, formik.setFieldValue]
+    [formik.values.otherCharges, formik.setFieldValue]
   );
 
   const getFieldErrorAndTouched = useCallback(
@@ -402,6 +390,7 @@ const EditDraft: React.FC<EditPurchaseOrderDraftProps> = ({
         | "tax"
         | "totalAmount"
         | "freeQuantity"
+        | "discount"
     ) => {
       // Ensure that we're working with the correct structure
       const touched = formik?.touched?.items as FormikTouched<IItem>[];
@@ -424,19 +413,13 @@ const EditDraft: React.FC<EditPurchaseOrderDraftProps> = ({
   };
 
   const calculateSubTotal = (items: IItem[]) => {
-    return items.reduce((acc, item) => {
-      const noOfPacks = item.noOfPacks ?? 0;
-      const cost = item.cost ?? 0;
-      return acc + noOfPacks * cost;
-    }, 0);
+    return items.reduce((acc, item) => acc + (item.totalAmount ?? 0), 0);
   };
 
   const calculateTax = (items: IItem[]) => {
     return items.reduce((acc, item) => {
       const noOfPacks = item.noOfPacks ?? 0;
-      const cost = item.cost ?? 0;
-      const taxRate = item.tax ?? 0;
-      const itemTax = noOfPacks * cost * (taxRate / 100);
+      const itemTax = noOfPacks * (item.cost || 0) * ((item.tax || 0) / 100);
       return acc + itemTax;
     }, 0);
   };
@@ -493,16 +476,9 @@ const EditDraft: React.FC<EditPurchaseOrderDraftProps> = ({
                   <CustomDatePicker
                     label="Date"
                     value={formik.values.order_date}
-                    onChange={(value) =>
-                      formik.setFieldValue("order_date", value)
-                    }
-                    error={
-                      formik.touched.order_date &&
-                      Boolean(formik.errors.order_date)
-                    }
-                    helperText={
-                      formik.touched.order_date && formik.errors.order_date
-                    }
+                    onChange={(value) => formik.setFieldValue("order_date", value)}
+                    error={formik.touched.order_date && Boolean(formik.errors.order_date)}
+                    helperText={formik.touched.order_date && formik.errors.order_date}
                   />
                 </Grid>
                 <Grid item lg={2}>
@@ -511,17 +487,13 @@ const EditDraft: React.FC<EditPurchaseOrderDraftProps> = ({
                     getOptionLabel={(option) => {
                       return option?.name;
                     }}
-                    isOptionEqualToValue={(option, value) =>
-                      option._id === value._id
-                    }
+                    isOptionEqualToValue={(option, value) => option._id === value._id}
                     value={formik.values.vendor}
                     onChange={(newValue) => {
                       formik.setFieldValue("vendor", newValue);
                     }}
                     label="Vendor"
-                    error={
-                      formik.touched.vendor && Boolean(formik.errors.vendor)
-                    }
+                    error={formik.touched.vendor && Boolean(formik.errors.vendor)}
                     helperText={formik.touched.vendor && formik.errors.vendor}
                   />
                 </Grid>
@@ -553,34 +525,27 @@ const EditDraft: React.FC<EditPurchaseOrderDraftProps> = ({
                   isError: isQuantityPerPackError,
                   errorMessage: quantityPerPackErrorMessage,
                 } = getFieldErrorAndTouched(index, "quantityPerPack");
-                const {
-                  isError: isNoOfPacksError,
-                  errorMessage: noOfPacksErrorMessage,
-                } = getFieldErrorAndTouched(index, "noOfPacks");
-                const {
-                  isError: isQuantityError,
-                  errorMessage: quantityErrorMessage,
-                } = getFieldErrorAndTouched(index, "quantity");
+                const { isError: isNoOfPacksError, errorMessage: noOfPacksErrorMessage } =
+                  getFieldErrorAndTouched(index, "noOfPacks");
+                const { isError: isQuantityError, errorMessage: quantityErrorMessage } =
+                  getFieldErrorAndTouched(index, "quantity");
                 const { isError: isCostError, errorMessage: costErrorMessage } =
                   getFieldErrorAndTouched(index, "cost");
                 const { isError: isMrpError, errorMessage: mrpErrorMessage } =
                   getFieldErrorAndTouched(index, "mrp");
                 const { isError: isTaxError, errorMessage: taxErrorMessage } =
                   getFieldErrorAndTouched(index, "tax");
-                const {
-                  isError: isTotalAmountError,
-                  errorMessage: totalAmountErrorMessage,
-                } = getFieldErrorAndTouched(index, "totalAmount");
-                const {
-                  isError: isFreeQuantityError,
-                  errorMessage: freeQuantityErrorMessage,
-                } = getFieldErrorAndTouched(index, "freeQuantity");
+                const { isError: isTotalAmountError, errorMessage: totalAmountErrorMessage } =
+                  getFieldErrorAndTouched(index, "totalAmount");
+                const { isError: isFreeQuantityError, errorMessage: freeQuantityErrorMessage } =
+                  getFieldErrorAndTouched(index, "freeQuantity");
+                const { isError: isDiscountError, errorMessage: discountErrorMessage } =
+                  getFieldErrorAndTouched(index, "discount");
 
                 const isLastItem = index === formik.values.items.length - 1;
                 const onlyOneItem = formik.values.items.length === 1;
 
-                const itemSelected =
-                  formik.values.items[index].item?.name || "";
+                const itemSelected = formik.values.items[index].item?.name || "";
 
                 return (
                   <Grid container gap={1} key={index} mt={2}>
@@ -591,9 +556,7 @@ const EditDraft: React.FC<EditPurchaseOrderDraftProps> = ({
                         getOptionLabel={(option) => {
                           return option?.name;
                         }}
-                        isOptionEqualToValue={(option, value) =>
-                          option._id === value._id
-                        }
+                        isOptionEqualToValue={(option, value) => option._id === value._id}
                         value={formik.values.items[index].item}
                         onChange={(newValue) => {
                           handleValueChange(index, "item", newValue);
@@ -611,18 +574,10 @@ const EditDraft: React.FC<EditPurchaseOrderDraftProps> = ({
                         disabled={!itemSelected}
                         value={formik.values.items[index].quantityPerPack || ""}
                         onChange={(e) =>
-                          handleValueChange(
-                            index,
-                            "quantityPerPack",
-                            e.target.value
-                          )
+                          handleValueChange(index, "quantityPerPack", e.target.value)
                         }
                         error={isQuantityPerPackError}
-                        helperText={
-                          isQuantityPerPackError
-                            ? quantityPerPackErrorMessage
-                            : ""
-                        }
+                        helperText={isQuantityPerPackError ? quantityPerPackErrorMessage : ""}
                       />
                     </Grid>
                     <Grid item flex={1}>
@@ -632,13 +587,9 @@ const EditDraft: React.FC<EditPurchaseOrderDraftProps> = ({
                         label="No. Of Packs"
                         disabled={!itemSelected}
                         value={formik.values.items[index].noOfPacks || ""}
-                        onChange={(e) =>
-                          handleValueChange(index, "noOfPacks", e.target.value)
-                        }
+                        onChange={(e) => handleValueChange(index, "noOfPacks", e.target.value)}
                         error={isNoOfPacksError}
-                        helperText={
-                          isNoOfPacksError ? noOfPacksErrorMessage : ""
-                        }
+                        helperText={isNoOfPacksError ? noOfPacksErrorMessage : ""}
                       />
                     </Grid>
                     <Grid item flex={1}>
@@ -647,9 +598,7 @@ const EditDraft: React.FC<EditPurchaseOrderDraftProps> = ({
                         disabled
                         label="Quantity"
                         value={formik.values.items[index].quantity || ""}
-                        onChange={(e) =>
-                          handleValueChange(index, "quantity", e.target.value)
-                        }
+                        onChange={(e) => handleValueChange(index, "quantity", e.target.value)}
                         error={isQuantityError}
                         helperText={isQuantityError ? quantityErrorMessage : ""}
                       />
@@ -659,13 +608,8 @@ const EditDraft: React.FC<EditPurchaseOrderDraftProps> = ({
                         fullWidth
                         disabled={!itemSelected}
                         label="Cost"
-                        value={
-                          formik.values.items[index].cost?.toLocaleString() ||
-                          ""
-                        }
-                        onChange={(e) =>
-                          handleValueChange(index, "cost", e.target.value)
-                        }
+                        value={formik.values.items[index].cost?.toLocaleString() || ""}
+                        onChange={(e) => handleValueChange(index, "cost", e.target.value)}
                         error={isCostError}
                         helperText={isCostError ? costErrorMessage : ""}
                       />
@@ -675,12 +619,8 @@ const EditDraft: React.FC<EditPurchaseOrderDraftProps> = ({
                         fullWidth
                         label="MRP"
                         disabled={!itemSelected}
-                        value={
-                          formik.values.items[index].mrp?.toLocaleString() || ""
-                        }
-                        onChange={(e) =>
-                          handleValueChange(index, "mrp", e.target.value)
-                        }
+                        value={formik.values.items[index].mrp?.toLocaleString() || ""}
+                        onChange={(e) => handleValueChange(index, "mrp", e.target.value)}
                         error={isMrpError}
                         helperText={isMrpError ? mrpErrorMessage : ""}
                       />
@@ -690,31 +630,31 @@ const EditDraft: React.FC<EditPurchaseOrderDraftProps> = ({
                         fullWidth
                         disabled
                         label="Tax"
-                        value={
-                          formik.values.items[index].tax?.toLocaleString() || ""
-                        }
-                        onChange={(e) =>
-                          handleValueChange(index, "tax", e.target.value)
-                        }
+                        value={formik.values.items[index].tax?.toLocaleString() || ""}
+                        onChange={(e) => handleValueChange(index, "tax", e.target.value)}
                         error={isTaxError}
                         helperText={isTaxError ? taxErrorMessage : ""}
                       />
                     </Grid>
-
+                    <Grid item flex={1}>
+                      <TextField
+                        fullWidth
+                        name={`items[${index}].discount`}
+                        label="Discount (%)"
+                        value={formik.values.items[index].discount || ""}
+                        onChange={(e) => handleValueChange(index, "discount", e.target.value)}
+                        error={isDiscountError}
+                        helperText={isDiscountError ? discountErrorMessage : ""}
+                      />
+                    </Grid>
                     <Grid item flex={1}>
                       <TextField
                         fullWidth
                         label="Total Amount"
                         disabled
-                        value={
-                          formik.values.items[
-                            index
-                          ].totalAmount?.toLocaleString() || ""
-                        }
+                        value={formik.values.items[index].totalAmount?.toLocaleString() || ""}
                         error={isTotalAmountError}
-                        helperText={
-                          isTotalAmountError ? totalAmountErrorMessage : ""
-                        }
+                        helperText={isTotalAmountError ? totalAmountErrorMessage : ""}
                       />
                     </Grid>
                     <Grid item flex={1}>
@@ -722,22 +662,10 @@ const EditDraft: React.FC<EditPurchaseOrderDraftProps> = ({
                         fullWidth
                         label="Free Quantity"
                         disabled={!itemSelected}
-                        value={
-                          formik.values.items[
-                            index
-                          ].freeQuantity?.toLocaleString() || ""
-                        }
-                        onChange={(e) =>
-                          handleValueChange(
-                            index,
-                            "freeQuantity",
-                            e.target.value
-                          )
-                        }
+                        value={formik.values.items[index].freeQuantity?.toLocaleString() || ""}
+                        onChange={(e) => handleValueChange(index, "freeQuantity", e.target.value)}
                         error={isFreeQuantityError}
-                        helperText={
-                          isFreeQuantityError ? freeQuantityErrorMessage : ""
-                        }
+                        helperText={isFreeQuantityError ? freeQuantityErrorMessage : ""}
                       />
                     </Grid>
                     <Grid
@@ -748,10 +676,7 @@ const EditDraft: React.FC<EditPurchaseOrderDraftProps> = ({
                       alignItems={"flex-start"}
                     >
                       {!onlyOneItem && (
-                        <IconButton
-                          size="small"
-                          onClick={() => handleDeleteField(index)}
-                        >
+                        <IconButton size="small" onClick={() => handleDeleteField(index)}>
                           <Delete fontSize={"small"} />
                         </IconButton>
                       )}
@@ -761,10 +686,7 @@ const EditDraft: React.FC<EditPurchaseOrderDraftProps> = ({
                           color="primary"
                           onClick={handleAddFields}
                           disabled={formik.values.items.some(
-                            (item) =>
-                              !item.item ||
-                              !item.quantity ||
-                              !item.quantityPerPack
+                            (item) => !item.item || !item.quantity || !item.quantityPerPack
                           )}
                         >
                           <Add fontSize={"small"} />
@@ -774,12 +696,7 @@ const EditDraft: React.FC<EditPurchaseOrderDraftProps> = ({
                   </Grid>
                 );
               })}
-              <Typography
-                variant="subtitle1"
-                color={"primary"}
-                mt={2}
-                gutterBottom
-              >
+              <Typography variant="subtitle1" color={"primary"} mt={2} gutterBottom>
                 Summary
               </Typography>
               <Grid container spacing={2} mt={1}>
@@ -799,18 +716,7 @@ const EditDraft: React.FC<EditPurchaseOrderDraftProps> = ({
                     value={formik.values.tax?.toLocaleString() || ""}
                   />
                 </Grid>
-                <Grid item lg={2}>
-                  <TextField
-                    fullWidth
-                    label="Discount %"
-                    value={formik.values.discount || ""}
-                    onChange={(e) => {
-                      formik.handleChange(e);
-                      updateCalculations();
-                    }}
-                    name="discount"
-                  />
-                </Grid>
+
                 <Grid item lg={2}>
                   <TextField
                     fullWidth
@@ -844,9 +750,7 @@ const EditDraft: React.FC<EditPurchaseOrderDraftProps> = ({
                   variant="contained"
                   color="primary"
                   type="submit"
-                  disabled={
-                    isLoading || _.isEqual(initialValues, formik.values)
-                  }
+                  disabled={isLoading || _.isEqual(initialValues, formik.values)}
                   sx={{ width: "fit-content" }}
                 >
                   Save

@@ -118,11 +118,14 @@ const FileUploadButton: React.FC<FileUploadButtonProps> = ({
             reportId,
           }).unwrap();
 
-          if (signedUrlResponse?.status === "success" && signedUrlResponse.data) {
+          if (
+            signedUrlResponse?.status === "success" &&
+            signedUrlResponse.data
+          ) {
             const { url, key, bucketName, region } = signedUrlResponse.data;
 
             // Update the toast to show the current file number being uploaded
-            console.log(`Uploading file ${i + 1} out of ${selectedFiles.length}`);
+            // console.log(`Uploading file ${i + 1} out of ${selectedFiles.length}`);
 
             showProgressToast(
               `Uploading file ${i + 1} out of ${selectedFiles.length}...`,
@@ -142,7 +145,9 @@ const FileUploadButton: React.FC<FileUploadButtonProps> = ({
               onUploadProgress: (progressEvent) => {
                 if (progressEvent.progress) {
                   // Calculate the overall progress across all files
-                  const currentFileProgress = Math.round(progressEvent.progress * 100);
+                  const currentFileProgress = Math.round(
+                    progressEvent.progress * 100
+                  );
                   const overallProgress = Math.round(
                     ((i + progressEvent.progress) / selectedFiles.length) * 100
                   );
@@ -261,7 +266,9 @@ const FileUploadButton: React.FC<FileUploadButtonProps> = ({
         variant="contained"
         color="secondary"
         onClick={handleUploadClick}
-        startIcon={loading ? <CircularProgress color="info" size={20} /> : <SendIcon />}
+        startIcon={
+          loading ? <CircularProgress color="info" size={20} /> : <SendIcon />
+        }
         style={{ marginLeft: 8 }}
         disabled={selectedFiles.length <= 0 || loading}
       >
@@ -273,7 +280,10 @@ const FileUploadButton: React.FC<FileUploadButtonProps> = ({
           <Typography variant="subtitle1">Selected Files:</Typography>
           <ul>
             {selectedFiles.map((file, index) => (
-              <li key={index} style={{ color: uploadSuccess ? "green" : "inherit" }}>
+              <li
+                key={index}
+                style={{ color: uploadSuccess ? "green" : "inherit" }}
+              >
                 {file.name} ({(file.size / 1024 / 1024).toFixed(2)} MB)
               </li>
             ))}

@@ -8,7 +8,10 @@ import {
 } from "../../types/patientDashboard/treatmentCycle";
 import { Box, IconButton, Typography, useTheme } from "@mui/material";
 import Delete from "@mui/icons-material/Delete";
-import { ETreatmentCycleMetric, ETreatmentCycleReport } from "../../types/master";
+import {
+  ETreatmentCycleMetric,
+  ETreatmentCycleReport,
+} from "../../types/master";
 import {
   Assessment,
   Assignment,
@@ -37,11 +40,14 @@ interface ITreatmentCycleCardProps {
   treatmentCycle: IPatientTreatmentCycle;
 }
 
-const TreatmentCycleCard: React.FC<ITreatmentCycleCardProps> = ({ treatmentCycle }) => {
+const TreatmentCycleCard: React.FC<ITreatmentCycleCardProps> = ({
+  treatmentCycle,
+}) => {
   const theme = useTheme();
   const { showPromiseToast } = useToast();
 
-  const [isDeleteDialogOpen, setIsDeleteDialogOpen] = React.useState<boolean>(false);
+  const [isDeleteDialogOpen, setIsDeleteDialogOpen] =
+    React.useState<boolean>(false);
 
   const [deleteTreatmentCycle, { isLoading: deletingTreatmentCycle }] =
     useDeleteTreatmentCycleMutation();
@@ -90,7 +96,13 @@ const TreatmentCycleCard: React.FC<ITreatmentCycleCardProps> = ({ treatmentCycle
               content = <Typography>Unknown Protocol</Typography>;
           }
 
-          return <TreatmentCycleList key={index} content={content} contentProps={contentProps} />;
+          return (
+            <TreatmentCycleList
+              key={index}
+              content={content}
+              contentProps={contentProps}
+            />
+          );
         })}
       </Box>
     );
@@ -101,7 +113,10 @@ const TreatmentCycleCard: React.FC<ITreatmentCycleCardProps> = ({ treatmentCycle
       <Box display="flex" flex={3} flexDirection="column" gap={2}>
         {checklists.map((checklist, index) => {
           let content: React.ReactNode;
-          let contentProps = { checklist, treatmentCycleId: treatmentCycle._id };
+          let contentProps = {
+            checklist,
+            treatmentCycleId: treatmentCycle._id,
+          };
           switch (checklist.name) {
             case "IVF Checklist":
               content = <IVFChecklist {...contentProps} />;
@@ -113,7 +128,13 @@ const TreatmentCycleCard: React.FC<ITreatmentCycleCardProps> = ({ treatmentCycle
               content = <Typography>Unknown Checklist</Typography>;
           }
 
-          return <TreatmentCycleList key={index} content={content} contentProps={contentProps} />;
+          return (
+            <TreatmentCycleList
+              key={index}
+              content={content}
+              contentProps={contentProps}
+            />
+          );
         })}
       </Box>
     );
@@ -125,7 +146,7 @@ const TreatmentCycleCard: React.FC<ITreatmentCycleCardProps> = ({ treatmentCycle
         {reports.map((report, index) => {
           let content: React.ReactNode;
           let contentProps = { report, treatmentCycleId: treatmentCycle._id };
-          console.log("report", report.reportType);
+          // console.log("report", report.reportType);
           switch (report.reportType) {
             case ETreatmentCycleReport.IUIDReport:
               content = <IUIDReport {...contentProps} />;
@@ -155,7 +176,13 @@ const TreatmentCycleCard: React.FC<ITreatmentCycleCardProps> = ({ treatmentCycle
               content = <Typography>Unknown Report</Typography>;
           }
 
-          return <TreatmentCycleList key={index} content={content} contentProps={contentProps} />;
+          return (
+            <TreatmentCycleList
+              key={index}
+              content={content}
+              contentProps={contentProps}
+            />
+          );
         })}
       </Box>
     );
@@ -178,7 +205,13 @@ const TreatmentCycleCard: React.FC<ITreatmentCycleCardProps> = ({ treatmentCycle
               content = <Typography>Unknown Metric</Typography>;
           }
 
-          return <TreatmentCycleList key={index} content={content} contentProps={contentProps} />;
+          return (
+            <TreatmentCycleList
+              key={index}
+              content={content}
+              contentProps={contentProps}
+            />
+          );
         })}
       </Box>
     );
@@ -201,9 +234,19 @@ const TreatmentCycleCard: React.FC<ITreatmentCycleCardProps> = ({ treatmentCycle
           borderBottom={2}
           borderColor={theme.palette.secondary.main}
         >
-          <Box display={"flex"} flex={1} justifyItems={"flex-start"} alignItems={"center"} gap={2}>
+          <Box
+            display={"flex"}
+            flex={1}
+            justifyItems={"flex-start"}
+            alignItems={"center"}
+            gap={2}
+          >
             <Typography variant="button" color={"primary"}>
-              <Typography component={"span"} variant="button" color={"secondary"}>
+              <Typography
+                component={"span"}
+                variant="button"
+                color={"secondary"}
+              >
                 Cycle:{" "}
               </Typography>
               #{treatmentCycle.cycleNo}
@@ -212,17 +255,32 @@ const TreatmentCycleCard: React.FC<ITreatmentCycleCardProps> = ({ treatmentCycle
               {new Date(treatmentCycle.date).toLocaleDateString()}
             </Typography>
           </Box>
-          <Typography flex={3} textAlign={"center"} variant="button" color={"primary"}>
+          <Typography
+            flex={3}
+            textAlign={"center"}
+            variant="button"
+            color={"primary"}
+          >
             {treatmentCycle.cycle?.name}
           </Typography>
-          <Box display={"flex"} flex={1} justifyContent={"flex-end"} alignItems={"center"} gap={1}>
+          <Box
+            display={"flex"}
+            flex={1}
+            justifyContent={"flex-end"}
+            alignItems={"center"}
+            gap={1}
+          >
             {treatmentCycle.status === "Completed" ? (
               <CheckCircle fontSize="small" color="success" />
             ) : (
               <Circle fontSize="small" color="warning" />
             )}
             <Box>
-              <IconButton color="primary" size="small" onClick={openDeleteDialog}>
+              <IconButton
+                color="primary"
+                size="small"
+                onClick={openDeleteDialog}
+              >
                 <Delete fontSize="small" />
               </IconButton>
             </Box>
@@ -250,8 +308,16 @@ const TreatmentCycleCard: React.FC<ITreatmentCycleCardProps> = ({ treatmentCycle
             </Typography>
           </Box>
           {renderProtocol(treatmentCycle.protocols)}
-          <Box display={"flex"} flex={1} justifyContent={"flex-end"} alignItems={"center"} gap={1}>
-            {treatmentCycle.protocols.every((cat) => cat.status === "Completed") ? (
+          <Box
+            display={"flex"}
+            flex={1}
+            justifyContent={"flex-end"}
+            alignItems={"center"}
+            gap={1}
+          >
+            {treatmentCycle.protocols.every(
+              (cat) => cat.status === "Completed"
+            ) ? (
               <CheckCircle fontSize="small" color="success" />
             ) : (
               <Circle fontSize="small" color="warning" />
@@ -280,8 +346,16 @@ const TreatmentCycleCard: React.FC<ITreatmentCycleCardProps> = ({ treatmentCycle
             </Typography>
           </Box>
           {renderChecklist(treatmentCycle.checklists)}
-          <Box display={"flex"} flex={1} justifyContent={"flex-end"} alignItems={"center"} gap={1}>
-            {treatmentCycle.checklists.every((cat) => cat.status === "Completed") ? (
+          <Box
+            display={"flex"}
+            flex={1}
+            justifyContent={"flex-end"}
+            alignItems={"center"}
+            gap={1}
+          >
+            {treatmentCycle.checklists.every(
+              (cat) => cat.status === "Completed"
+            ) ? (
               <CheckCircle fontSize="small" color="success" />
             ) : (
               <Circle fontSize="small" color="warning" />
@@ -310,8 +384,16 @@ const TreatmentCycleCard: React.FC<ITreatmentCycleCardProps> = ({ treatmentCycle
             </Typography>
           </Box>
           {renderReport(treatmentCycle.reports)}
-          <Box display={"flex"} flex={1} justifyContent={"flex-end"} alignItems={"center"} gap={1}>
-            {treatmentCycle.reports.every((cat) => cat.status === "Completed") ? (
+          <Box
+            display={"flex"}
+            flex={1}
+            justifyContent={"flex-end"}
+            alignItems={"center"}
+            gap={1}
+          >
+            {treatmentCycle.reports.every(
+              (cat) => cat.status === "Completed"
+            ) ? (
               <CheckCircle fontSize="small" color="success" />
             ) : (
               <Circle fontSize="small" color="warning" />
@@ -339,8 +421,16 @@ const TreatmentCycleCard: React.FC<ITreatmentCycleCardProps> = ({ treatmentCycle
             </Typography>
           </Box>
           {renderMetric(treatmentCycle.metrics)}
-          <Box display={"flex"} flex={1} justifyContent={"flex-end"} alignItems={"center"} gap={1}>
-            {treatmentCycle.metrics.every((cat) => cat.status === "Completed") ? (
+          <Box
+            display={"flex"}
+            flex={1}
+            justifyContent={"flex-end"}
+            alignItems={"center"}
+            gap={1}
+          >
+            {treatmentCycle.metrics.every(
+              (cat) => cat.status === "Completed"
+            ) ? (
               <CheckCircle fontSize="small" color="success" />
             ) : (
               <Circle fontSize="small" color="warning" />

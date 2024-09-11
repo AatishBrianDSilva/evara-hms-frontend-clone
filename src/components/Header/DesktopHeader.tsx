@@ -31,6 +31,7 @@ import PatientCard from "../PatientCard/PatientCard";
 import { CircularProgress, Popover } from "@mui/material";
 import { calculateAge } from "../../utils/calculateAge";
 import * as Sentry from "@sentry/react";
+import { ENVIRONMENT } from "../../utils/apiConfig";
 
 const Search = styled("div")(({ theme }) => ({
   position: "relative",
@@ -382,7 +383,11 @@ const DesktopHeader: React.FC = () => {
               onClick={() => handleAppsMenuNavigation("/")}
             />
 
-            {/* <Box component={"img"} alt="Evara Logo" src="/evara_white_logo.png" sx={{ width: 120, objectFit: 'contain' }} /> */}
+            {ENVIRONMENT !== "prod" && (
+              <Typography variant="body1" color="white">
+                Development Environment
+              </Typography>
+            )}
           </Box>
 
           {!hideSearchMenu && (

@@ -1,4 +1,4 @@
-import { Add, Edit, Visibility } from "@mui/icons-material";
+import { Add, Edit, Print } from "@mui/icons-material";
 import {
   Box,
   Button,
@@ -28,11 +28,13 @@ import {
   EPurchaseOrderStatus,
   IPurchaseOrder,
 } from "../../../../types/pharmacyDashboard/purchaseOrder";
-import ViewPurchaseOrder from "../ViewPurchaseOrder";
 import _ from "lodash";
+import { usePrint } from "../../../../context/PrintPDFContext";
 
 const Draft: React.FC = () => {
   const { showPromiseToast } = useToast();
+
+  const { fetchAndPrintPdf } = usePrint();
 
   // Drug Items
   const {
@@ -126,7 +128,7 @@ const Draft: React.FC = () => {
   const [isApproveModalOpen, setIsApproveModalOpen] = useState<boolean>(false);
   const [isRejectModalOpen, setIsRejectModalOpen] = useState<boolean>(false);
   const [isEditModalOpen, setIsEditModalOpen] = useState<boolean>(false);
-  const [isViewModalOpen, setIsViewModalOpen] = useState<boolean>(false);
+  // const [isViewModalOpen, setIsViewModalOpen] = useState<boolean>(false);
   const [isAddModalOpen, setIsAddModalOpen] = useState<boolean>(false);
 
   // Approve Modal
@@ -160,14 +162,14 @@ const Draft: React.FC = () => {
   };
 
   // View Modal
-  const openViewModal = (order: IPurchaseOrder) => {
-    setSelectedRow(order);
-    setIsViewModalOpen(true);
-  };
-  const closeViewModal = () => {
-    setSelectedRow(undefined);
-    setIsViewModalOpen(false);
-  };
+  // const openViewModal = (order: IPurchaseOrder) => {
+  //   setSelectedRow(order);
+  //   setIsViewModalOpen(true);
+  // };
+  // const closeViewModal = () => {
+  //   setSelectedRow(undefined);
+  //   setIsViewModalOpen(false);
+  // };
 
   // Add Modal
   const openAddModal = () => {
@@ -178,7 +180,7 @@ const Draft: React.FC = () => {
   };
 
   const columnsConfig: GridColDef[] = [
-    { field: "poNumber", headerName: "PO Number", flex: 1 },
+    { field: "poNumber", headerName: "PO Number", flex: 1.5 },
     {
       field: "date",
       type: "date",
@@ -266,7 +268,7 @@ const Draft: React.FC = () => {
       type: "actions",
       getActions: (params: GridRowParams) => {
         const row = params.row;
-        return [
+        const actions = [
           <Tooltip title="Approve">
             <GridActionsCellItem
               icon={<CheckCircle />}
@@ -284,14 +286,22 @@ const Draft: React.FC = () => {
           <Tooltip title="Edit">
             <GridActionsCellItem icon={<Edit />} label="Edit" onClick={() => openEditModal(row)} />
           </Tooltip>,
-          <Tooltip title="View">
-            <GridActionsCellItem
-              icon={<Visibility />}
-              label="View"
-              onClick={() => openViewModal(row)}
-            />
-          </Tooltip>,
         ];
+
+        // Add Print action only if report field exists
+        if (row.report) {
+          actions.push(
+            <Tooltip title="Print">
+              <GridActionsCellItem
+                icon={<Print />}
+                label="Print"
+                onClick={() => fetchAndPrintPdf(row._id, "POInvoice", "pharmacy")}
+              />
+            </Tooltip>
+          );
+        }
+
+        return actions;
       },
     },
   ];
@@ -450,13 +460,13 @@ const Draft: React.FC = () => {
       )}
 
       {/* View Modal */}
-      {isViewModalOpen && (
+      {/* {isViewModalOpen && (
         <ViewPurchaseOrder
           openModal={isViewModalOpen}
           onClose={closeViewModal}
           id={selectedRow?._id || ""}
         />
-      )}
+      )} */}
 
       {/* Add Modal */}
       {isAddModalOpen && (
