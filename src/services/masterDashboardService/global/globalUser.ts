@@ -28,7 +28,7 @@ export const globalUserApi = createApi({
     editGlobalUserPassword: builder.mutation<ApiResponse<any>, any>({
       query: (userData) => ({
         url: "master/users/change-password",
-        method: "PUT",
+        method: "PATCH",
         body: userData,
       }),
       invalidatesTags: ["Global User"],
