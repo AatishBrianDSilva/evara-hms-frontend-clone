@@ -12,6 +12,7 @@ export enum EPurchaseOrderStatus {
 export interface IPurchaseOrderRequest {
   _id: string;
   items: {
+    discount: number | null;
     status: string;
     expiryDate: null;
     batchNo: null;

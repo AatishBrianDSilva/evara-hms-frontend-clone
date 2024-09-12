@@ -103,6 +103,7 @@ const Draft: React.FC = () => {
   const [updatePurchaseOrderStatus, { isLoading }] = useEditPurchaseOrderStatusMutation();
   const handleUpdatePurchaseOrderStatus = async (status: string) => {
     const id = selectedRow?._id;
+    console.log("Selected Row:", selectedRow);
 
     if (id) {
       const promise = updatePurchaseOrderStatus({ id, status }).unwrap();

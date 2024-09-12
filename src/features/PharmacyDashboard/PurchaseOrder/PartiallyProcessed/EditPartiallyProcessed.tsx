@@ -47,6 +47,7 @@ interface IItem {
   totalCost: number | null;
   freeQuantity: number | null;
   quantity: number | null;
+  discount: number | null;
 }
 
 interface FormValues {
@@ -55,7 +56,7 @@ interface FormValues {
   items: IItem[];
   subTotal: number | null;
   tax: number | null;
-  discount: number | null;
+
   otherCharges: number | null;
   netAmount: number | null;
   partiallyProcessed?: boolean;
@@ -198,11 +199,11 @@ const EditPartiallyProcessed: React.FC<EditPartiallyProcessedProps> = ({
           batchNo: item.batchNo || null,
           expiryDate: item.expiryDate || null,
           quantity: noOfPacks * packSize, // Include quantity calculation
+          discount: item.discount,
         };
       }) || [],
     subTotal: purchaseOrder?.request.subTotal || null,
     tax: purchaseOrder?.request.tax || null,
-    discount: purchaseOrder?.request.discount || null,
     otherCharges: purchaseOrder?.request.otherCharges || null,
     netAmount: purchaseOrder?.request.netAmount || null,
     partiallyProcessed: false,
@@ -227,6 +228,7 @@ const EditPartiallyProcessed: React.FC<EditPartiallyProcessedProps> = ({
         freeQuantity: item.freeQuantity,
         noOfPacks: item.noOfPacks,
         packsRequired: item.packsRequired,
+        discount: item.discount,
       })),
     ];
 
@@ -247,10 +249,10 @@ const EditPartiallyProcessed: React.FC<EditPartiallyProcessedProps> = ({
           freeQuantity: item.freeQuantity,
           noOfPacks: item.noOfPacks,
           packsRequired: item.packsRequired,
+          discount: item.discount,
         })),
         subTotal: values.subTotal,
         tax: values.tax,
-        discount: values.discount,
         otherCharges: values.otherCharges,
         netAmount: values.netAmount,
       },
@@ -258,7 +260,6 @@ const EditPartiallyProcessed: React.FC<EditPartiallyProcessedProps> = ({
         items: combinedResponseItems as any,
         subTotal: values.subTotal,
         tax: values.tax,
-        discount: values.discount,
         otherCharges: values.otherCharges,
         netAmount: values.netAmount,
         invoice: fileUploadedUrl,
@@ -320,6 +321,7 @@ const EditPartiallyProcessed: React.FC<EditPartiallyProcessedProps> = ({
         packsRequired: packsRequired - noOfPacks,
         noOfPacks: null,
         freeQuantity: null, // Set freeQuantity to null for cloned item
+        discount: null,
       },
     ]);
     updateCalculations();
@@ -340,40 +342,37 @@ const EditPartiallyProcessed: React.FC<EditPartiallyProcessedProps> = ({
       field === "packSize" ||
       field === "buyPrice" ||
       field === "mrpPerPack" ||
+      field === "discount" || // Ensure discount is treated as a number
       field === "freeQuantity"
         ? Number(rawValue.replace(/[^\d.-]/g, "")) || null
         : rawValue;
 
     currentItem = { ...currentItem, [field]: numericValue };
 
-    if (field === "noOfPacks" || field === "packSize") {
+    if (
+      field === "noOfPacks" ||
+      field === "packSize" ||
+      field === "buyPrice" ||
+      field === "discount"
+    ) {
       const noOfPacks = currentItem.noOfPacks ?? 0;
       const packSize = currentItem.packSize ?? 0;
+      const buyPrice = currentItem.buyPrice ?? 0;
+      const tax = currentItem.tax ?? 0;
+      const discount = currentItem.discount ?? 0; // Item-specific discount
       const quantity = noOfPacks * packSize;
+
       currentItem.quantity = quantity;
       currentItem.mrp = noOfPacks * (currentItem.mrpPerPack || 0);
-      const buyPrice = currentItem.buyPrice ?? 0;
-      const tax = currentItem.tax ?? 0;
-      currentItem.totalCost = noOfPacks * buyPrice + (noOfPacks * buyPrice * tax) / 100;
-    }
 
-    if (field === "item") {
-      const noOfPacks = currentItem.noOfPacks || 1;
-      const mrpPerPack = currentItem.item?.mrp || 0;
-      currentItem.packSize = currentItem.item?.packSize || 0;
-      currentItem.noOfPacks = noOfPacks;
-      currentItem.mrpPerPack = currentItem.item?.mrp || 0;
-      currentItem.mrp = currentItem.item ? noOfPacks * mrpPerPack : 0;
-      currentItem.buyPrice = currentItem.item?.rate || 0;
-      currentItem.packsRequired = currentItem.noOfPacks;
-      const buyPrice = currentItem.buyPrice ?? 0;
-      const tax = currentItem.tax ?? 0;
-      currentItem.totalCost = noOfPacks * buyPrice + (noOfPacks * buyPrice * tax) / 100;
+      const itemCost = noOfPacks * buyPrice;
+      const discountAmount = (itemCost * discount) / 100; // Calculate item-wise discount
+      currentItem.totalCost = itemCost + (itemCost * tax) / 100 - discountAmount; // Update totalCost considering item-wise discount
     }
 
     newItems[index] = currentItem;
     formik.setFieldValue("items", newItems);
-    updateCalculations();
+    updateCalculations(); // Call the update calculations after changing item values
   };
 
   const updateCalculations = useCallback(() => {
@@ -382,20 +381,13 @@ const EditPartiallyProcessed: React.FC<EditPartiallyProcessedProps> = ({
       return acc + itemTotalCost;
     }, 0);
 
-    const discountPercentage = Number(formik.values.discount ?? 0);
-    const discountAmount = (totalCost * discountPercentage) / 100;
     const otherCharges = Number(formik.values.otherCharges ?? 0);
+    const taxAmount = Number(formik.values.tax ?? 0); // Use the tax field directly
+    const netAmount = totalCost + taxAmount + otherCharges; // Calculate netAmount as subtotal + tax + other charges
 
-    const netAmount = totalCost - discountAmount + otherCharges;
-
-    formik.setFieldValue("subTotal", totalCost);
-    formik.setFieldValue("netAmount", netAmount);
-  }, [
-    formik.values.items,
-    formik.values.discount,
-    formik.values.otherCharges,
-    formik.setFieldValue,
-  ]);
+    formik.setFieldValue("subTotal", totalCost); // Set subtotal
+    formik.setFieldValue("netAmount", netAmount); // Set net amount
+  }, [formik.values.items, formik.values.tax, formik.values.otherCharges, formik.setFieldValue]);
 
   useEffect(() => {
     updateCalculations();
@@ -413,6 +405,7 @@ const EditPartiallyProcessed: React.FC<EditPartiallyProcessedProps> = ({
         | "batchNo"
         | "expiryDate"
         | "freeQuantity"
+        | "discount"
     ) => {
       const touched = formik?.touched?.items as FormikTouched<IItem>[];
       const error = formik?.errors?.items as FormikErrors<IItem>[];
@@ -562,6 +555,8 @@ const EditPartiallyProcessed: React.FC<EditPartiallyProcessedProps> = ({
                   getFieldErrorAndTouched(index, "expiryDate");
                 const { isError: freeQuantityError, errorMessage: freeQuantityErrorMessage } =
                   getFieldErrorAndTouched(index, "freeQuantity");
+                const { isError: discountError, errorMessage: discountErrorMessage } =
+                  getFieldErrorAndTouched(index, "discount");
 
                 const onlyOneItem = formik.values.items.length === 1;
 
@@ -674,6 +669,18 @@ const EditPartiallyProcessed: React.FC<EditPartiallyProcessedProps> = ({
                         helperText={freeQuantityError ? freeQuantityErrorMessage : ""}
                       />
                     </Grid>
+                    <Grid item flex={1}>
+                      <TextField
+                        fullWidth
+                        disabled={!itemSelected}
+                        label="Discount %"
+                        name={`items[${index}].discount`}
+                        value={formik.values.items[index].discount || ""}
+                        onChange={(e) => handleValueChange(index, "discount", e.target.value)}
+                        error={discountError}
+                        helperText={discountError ? discountErrorMessage : ""}
+                      />
+                    </Grid>
                     <Grid item flex={2}>
                       <TextField
                         fullWidth
@@ -728,15 +735,7 @@ const EditPartiallyProcessed: React.FC<EditPartiallyProcessedProps> = ({
                     value={formik.values.tax?.toLocaleString() || ""}
                   />
                 </Grid>
-                <Grid item lg={2}>
-                  <TextField
-                    fullWidth
-                    label="Discount %"
-                    value={formik.values.discount || ""}
-                    onChange={formik.handleChange}
-                    name="discount"
-                  />
-                </Grid>
+
                 <Grid item lg={2}>
                   <TextField
                     fullWidth
