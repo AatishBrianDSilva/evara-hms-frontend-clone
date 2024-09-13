@@ -1,4 +1,4 @@
-import { AddCircle, Visibility } from "@mui/icons-material";
+import { AddCircle, Print, Visibility } from "@mui/icons-material";
 import {
   Box,
   Button,
@@ -26,9 +26,12 @@ import {
 } from "../../../../types/pharmacyDashboard/purchaseOrder";
 import ViewAndPrintPurchaseOrder from "./ViewAndPrintPurchaseOrder";
 import { useToast } from "../../../../context/ToastContext";
+import { usePrint } from "../../../../context/PrintPDFContext";
 
 const Approved: React.FC = () => {
   const { showPromiseToast } = useToast();
+
+  const { fetchAndPrintPdf } = usePrint();
 
   // // Drug Items
   // const { data: drugItemsData, isLoading: drugItemsLoading, isFetching: drugItemsFetching } = useGetDrugItemsQuery({
@@ -186,7 +189,7 @@ const Approved: React.FC = () => {
       type: "actions",
       getActions: (params: GridRowParams) => {
         const row = params.row;
-        return [
+        const actions = [
           <Tooltip title="Create Order">
             <GridActionsCellItem
               icon={<AddCircle />}
@@ -194,20 +197,6 @@ const Approved: React.FC = () => {
               onClick={() => openOrderModal(row)}
             />
           </Tooltip>,
-          // <Tooltip title="Reject">
-          //   <GridActionsCellItem
-          //     icon={<Cancel />}
-          //     label="Reject"
-          //     onClick={() => openRejectModal(row)}
-          //   />
-          // </Tooltip>,
-          // <Tooltip title="Edit">
-          //   <GridActionsCellItem
-          //     icon={<Edit />}
-          //     label="Edit"
-          //     onClick={() => openEditModal(row)}
-          //   />
-          // </Tooltip>,
           <Tooltip title="View">
             <GridActionsCellItem
               icon={<Visibility />}
@@ -216,6 +205,21 @@ const Approved: React.FC = () => {
             />
           </Tooltip>,
         ];
+
+        // Add Print action if report field exists
+        if (row.report) {
+          actions.push(
+            <Tooltip title="Print">
+              <GridActionsCellItem
+                icon={<Print />}
+                label="Print"
+                onClick={() => fetchAndPrintPdf(row._id, "POInvoice", "pharmacy")}
+              />
+            </Tooltip>
+          );
+        }
+
+        return actions;
       },
     },
   ];

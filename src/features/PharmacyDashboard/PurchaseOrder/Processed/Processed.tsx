@@ -1,4 +1,4 @@
-import { Visibility } from "@mui/icons-material";
+import { Print, Visibility } from "@mui/icons-material";
 import { Box, Tooltip } from "@mui/material";
 import React, { useState } from "react";
 import CustomDataGrid from "../../../../components/CustomDataGrid/CustomDataGrid";
@@ -9,6 +9,7 @@ import {
   IPurchaseOrder,
 } from "../../../../types/pharmacyDashboard/purchaseOrder";
 import ViewProcessedPurchaseOrder from "./ViewProcessedPurchaseOrder";
+import { usePrint } from "../../../../context/PrintPDFContext";
 
 const Processed: React.FC = () => {
   const [page, setPage] = useState<number>(1);
@@ -19,6 +20,8 @@ const Processed: React.FC = () => {
   const handlePageSizeChange = (newPageSize: number) => {
     setPageSize(newPageSize);
   };
+
+  const { fetchAndPrintPdf } = usePrint();
 
   const {
     data: purchaseOrdersData,
@@ -91,8 +94,8 @@ const Processed: React.FC = () => {
       type: "actions",
       getActions: (params: GridRowParams) => {
         const row = params.row;
-        return [
-          <Tooltip title="View">
+        const actions = [
+          <Tooltip title="View" key="view">
             <GridActionsCellItem
               icon={<Visibility />}
               label="View"
@@ -100,6 +103,21 @@ const Processed: React.FC = () => {
             />
           </Tooltip>,
         ];
+
+        // Add Print action if report exists
+        if (row.response?.report) {
+          actions.push(
+            <Tooltip title="Print" key="print">
+              <GridActionsCellItem
+                icon={<Print />}
+                label="Print"
+                onClick={() => fetchAndPrintPdf(row._id, "POInvoice", "pharmacy")}
+              />
+            </Tooltip>
+          );
+        }
+
+        return actions;
       },
     },
   ];

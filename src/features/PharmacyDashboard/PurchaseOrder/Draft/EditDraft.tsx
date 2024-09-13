@@ -237,7 +237,7 @@ const EditDraft: React.FC<EditPurchaseOrderDraftProps> = ({
           buyPrice: parseFloat((item.cost ?? 0).toFixed(2)),
           tax: parseFloat((item.tax ?? 0).toFixed(2)),
           quantity: parseFloat((item.quantity ?? 0).toFixed(2)),
-          freeQuantity: parseFloat((item.freeQuantity ?? 0).toFixed(2)),
+          freeQuantity: item.freeQuantity,
           noOfPacks: item.noOfPacks ?? 0,
           discount: item.discount ?? 0,
         })),

@@ -1,4 +1,4 @@
-import { Visibility, Edit } from "@mui/icons-material";
+import { Visibility, Edit, Print } from "@mui/icons-material";
 import { Box, Tooltip } from "@mui/material";
 import React, { useState } from "react";
 import CustomDataGrid from "../../../../components/CustomDataGrid/CustomDataGrid";
@@ -9,9 +9,12 @@ import ViewPartiallyProcessedPurchaseOrder from "./ViewPartiallyProcessedPurchas
 import EditPartiallyProcessed from "./EditPartiallyProcessed";
 import { useGetDrugVendorsQuery } from "../../../../services/pharmacyDashboardService/master/drugVendorApi";
 import { useGetDrugItemsQuery } from "../../../../services/pharmacyDashboardService/master/drugItemApi";
+import { usePrint } from "../../../../context/PrintPDFContext";
 
 const PartiallyProcessed: React.FC = () => {
   const [page, setPage] = useState<number>(1);
+  const { fetchAndPrintPdf } = usePrint();
+
   const [pageSize, setPageSize] = useState<number>(25);
   const handlePageChange = (newPage: number) => setPage(newPage);
   const handlePageSizeChange = (newPageSize: number) => setPageSize(newPageSize);
@@ -96,22 +99,39 @@ const PartiallyProcessed: React.FC = () => {
       headerName: "Actions",
       flex: 1,
       type: "actions",
-      getActions: (params: GridRowParams) => [
-        <Tooltip title="View" key="view">
-          <GridActionsCellItem
-            icon={<Visibility />}
-            label="View"
-            onClick={() => openViewModal(params.row)}
-          />
-        </Tooltip>,
-        <Tooltip title="Edit" key="edit">
-          <GridActionsCellItem
-            icon={<Edit />}
-            label="Edit"
-            onClick={() => openEditModal(params.row)}
-          />
-        </Tooltip>,
-      ],
+      getActions: (params: GridRowParams) => {
+        const actions = [
+          <Tooltip title="View" key="view">
+            <GridActionsCellItem
+              icon={<Visibility />}
+              label="View"
+              onClick={() => openViewModal(params.row)}
+            />
+          </Tooltip>,
+          <Tooltip title="Edit" key="edit">
+            <GridActionsCellItem
+              icon={<Edit />}
+              label="Edit"
+              onClick={() => openEditModal(params.row)}
+            />
+          </Tooltip>,
+        ];
+
+        // Add Print action if report field exists
+        if (params.row.report) {
+          actions.push(
+            <Tooltip title="Print" key="print">
+              <GridActionsCellItem
+                icon={<Print />}
+                label="Print"
+                onClick={() => fetchAndPrintPdf(params.row._id, "POInvoice", "pharmacy")}
+              />
+            </Tooltip>
+          );
+        }
+
+        return actions;
+      },
     },
   ];
 

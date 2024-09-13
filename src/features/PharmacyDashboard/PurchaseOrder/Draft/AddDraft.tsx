@@ -361,7 +361,6 @@ const AddDraft: React.FC<AddPurchaseOrderDraftProps> = ({
               <Grid item lg={2}>
                 <CustomDatePicker
                   label="Date"
-                  minDate={new Date()}
                   maxDate={new Date()}
                   value={formik.values.order_date}
                   onChange={(value) => formik.setFieldValue("order_date", value)}
