@@ -31,6 +31,7 @@ interface EditPurchaseOrderDraftProps {
 }
 
 interface IItem {
+  taxAmount: number;
   item: IDrugItem | null;
   quantityPerPack: number | null; // Will map to packSize
   noOfPacks: number | null;
@@ -159,69 +160,101 @@ const EditDraft: React.FC<EditPurchaseOrderDraftProps> = ({
   //   otherCharges: purchaseOrder?.request.otherCharges || null,
   //   netAmount: purchaseOrder?.request.netAmount || null,
   // };
-
   const initialValues: FormValues = {
     order_date: purchaseOrder?.date || null,
     vendor: purchaseOrder?.vendor || null,
     items:
-      purchaseOrder?.request.items.map((item: any) => ({
-        item: item.item || null,
-        quantityPerPack: item.packSize || null,
-        noOfPacks: item.noOfPacks || null,
-        quantity: item.quantity || null,
-        cost: item.buyPrice || null,
-        mrp: item.mrpPerPack || null,
-        tax: item.tax || null,
-        totalAmount: item.mrp || null,
-        freeQuantity: item.freeQuantity || null,
-        discount: item.discount,
-      })) || [],
-    subTotal: purchaseOrder?.request.subTotal || null,
-    tax: purchaseOrder?.request.tax || null,
-    otherCharges: purchaseOrder?.request.otherCharges || null,
-    netAmount: purchaseOrder?.request.netAmount || null,
-  };
+      purchaseOrder?.request.items.map((item: any) => {
+        const noOfPacks = item.noOfPacks ?? 0;
+        const buyPrice = item.buyPrice ?? 0;
+        const discount = item.discount ?? 0;
 
-  // const formSubmit = async (values: FormValues) => {
-  //   const payload = {
-  //     id: id,
-  //     date: values.order_date,
-  //     vendor: values.vendor?._id,
-  //     request: {
-  //       items: values.items.map((item) => {
-  //         return {
-  //           item: item.item?._id,
-  //           packSize: parseFloat(
-  //             (item.packSize ? +item.packSize : 0).toFixed(2)
-  //           ),
-  //           quantity: parseFloat(
-  //             item.quantity ? item.quantity.toFixed(2) : "0"
-  //           ),
-  //           mrp: parseFloat(item.mrp ? item.mrp.toFixed(2) : "0"),
-  //           mrpPerPack: parseFloat(
-  //             item.mrpPerPack ? item.mrpPerPack.toFixed(2) : "0"
-  //           ),
-  //           buyPrice: parseFloat(
-  //             item.buyPrice ? item.buyPrice.toFixed(2) : "0"
-  //           ),
-  //           tax: parseFloat(item.tax ? item.tax.toFixed(2) : "0"),
-  //         };
-  //       }),
-  //       subTotal: parseFloat(
-  //         values.subTotal ? values.subTotal.toFixed(2) : "0"
-  //       ),
-  //       tax: parseFloat(values.tax ? values.tax.toFixed(2) : "0"),
-  //       discount: parseFloat(
-  //         (values.discount ? +values.discount : 0).toFixed(2)
-  //       ),
-  //       otherCharges: parseFloat(
-  //         (values.otherCharges ? +values.otherCharges : 0).toFixed(2)
-  //       ),
-  //       netAmount: parseFloat(
-  //         (values.netAmount ? +values.netAmount : 0).toFixed(2)
-  //       ),
-  //     },
-  //   };
+        // Calculate total after discount (but before tax)
+        const totalAfterDiscount = noOfPacks * buyPrice - (noOfPacks * buyPrice * discount) / 100;
+
+        // Tax should be calculated on the discounted amount
+        const taxAmount = (totalAfterDiscount * item.tax) / 100;
+
+        return {
+          item: item.item || null,
+          quantityPerPack: item.packSize || null,
+          noOfPacks: item.noOfPacks || null,
+          quantity: item.quantity || null,
+          cost: item.buyPrice || null,
+          mrp: item.mrpPerPack || null,
+          tax: item.tax || null, // This is the tax percentage (e.g., 18 for 18%)
+          taxAmount, // Calculated tax amount on discounted total
+          totalAmount: totalAfterDiscount, // Total amount excluding tax
+          freeQuantity: item.freeQuantity || null,
+          discount: item.discount || null,
+        };
+      }) || [],
+
+    // SubTotal: sum of all totalAmount (before tax)
+    subTotal: purchaseOrder?.request?.items
+      ? purchaseOrder.request.items.reduce((acc, item) => {
+          const noOfPacks = item.noOfPacks ?? 0;
+          const buyPrice = item.buyPrice ?? 0;
+          const discount = item.discount ?? 0;
+
+          // Calculate total after discount
+          const totalAfterDiscount = noOfPacks * buyPrice - (noOfPacks * buyPrice * discount) / 100;
+
+          return acc + totalAfterDiscount;
+        }, 0)
+      : null,
+
+    // Tax: total tax for all items (after discount)
+    tax: purchaseOrder?.request?.items
+      ? purchaseOrder.request.items.reduce((acc, item) => {
+          const noOfPacks = item.noOfPacks ?? 0;
+          const buyPrice = item.buyPrice ?? 0;
+          const discount = item.discount ?? 0;
+
+          // Calculate total after discount
+          const totalAfterDiscount = noOfPacks * buyPrice - (noOfPacks * buyPrice * discount) / 100;
+
+          // Calculate tax on the discounted total
+          const taxAmount = (totalAfterDiscount * (item.tax ?? 0)) / 100;
+
+          return acc + taxAmount;
+        }, 0)
+      : null,
+
+    // Other charges from purchase order
+    otherCharges: purchaseOrder?.request.otherCharges || 0,
+
+    // Net Amount: subTotal + tax + otherCharges
+    netAmount: (function () {
+      const subTotal = purchaseOrder?.request.items.reduce((acc, item) => {
+        const noOfPacks = item.noOfPacks ?? 0;
+        const buyPrice = item.buyPrice ?? 0;
+        const discount = item.discount ?? 0;
+
+        // Calculate total after discount
+        const totalAfterDiscount = noOfPacks * buyPrice - (noOfPacks * buyPrice * discount) / 100;
+
+        return acc + totalAfterDiscount;
+      }, 0);
+
+      const tax = purchaseOrder?.request.items.reduce((acc, item) => {
+        const noOfPacks = item.noOfPacks ?? 0;
+        const buyPrice = item.buyPrice ?? 0;
+        const discount = item.discount ?? 0;
+
+        // Calculate total after discount
+        const totalAfterDiscount = noOfPacks * buyPrice - (noOfPacks * buyPrice * discount) / 100;
+
+        // Calculate tax on the discounted total
+        const taxAmount = (totalAfterDiscount * item.tax) / 100;
+
+        return acc + taxAmount;
+      }, 0);
+
+      // Net amount = subtotal + tax + other charges
+      return (subTotal ?? 0) + (tax ?? 0) + (purchaseOrder?.request.otherCharges ?? 0);
+    })(),
+  };
 
   const formSubmit = async (values: FormValues) => {
     const payload = {
@@ -232,18 +265,19 @@ const EditDraft: React.FC<EditPurchaseOrderDraftProps> = ({
         items: values.items.map((item) => ({
           item: item.item?._id,
           packSize: parseFloat((item.quantityPerPack ?? 0).toFixed(2)),
-          mrp: parseFloat((item.totalAmount ?? 0).toFixed(2)),
-          mrpPerPack: parseFloat((item.mrp ?? 0).toFixed(2)),
-          buyPrice: parseFloat((item.cost ?? 0).toFixed(2)),
-          tax: parseFloat((item.tax ?? 0).toFixed(2)),
+          mrp: parseFloat(parseFloat(item.totalAmount as any).toFixed(2)),
+          mrpPerPack: parseFloat(parseFloat(item.mrp as any).toFixed(2)),
+          // buyPrice: parseFloat((item.cost ?? 0).toFixed(2)),
+          buyPrice: parseFloat(parseFloat(item.cost as any).toFixed(2)),
+          tax: parseFloat(parseFloat(item.tax as any).toFixed(2)),
           quantity: parseFloat((item.quantity ?? 0).toFixed(2)),
-          freeQuantity: parseFloat((item.freeQuantity ?? 0).toFixed(2)),
+          freeQuantity: item.freeQuantity,
           noOfPacks: item.noOfPacks ?? 0,
           discount: item.discount ?? 0,
         })),
         subTotal: parseFloat((values.subTotal ?? 0).toFixed(2)),
         tax: parseFloat((values.tax ?? 0).toFixed(2)),
-        otherCharges: parseFloat((values.otherCharges ?? 0).toFixed(2)),
+        otherCharges: values.otherCharges ?? 0,
         netAmount: parseFloat((values.netAmount ?? 0).toFixed(2)),
       },
     };
@@ -300,55 +334,36 @@ const EditDraft: React.FC<EditPurchaseOrderDraftProps> = ({
     let newItems: IItem[] = [...formik.values.items];
     let currentItem: IItem = newItems[index];
 
-    const numericValue =
-      field === "quantity" ||
-      field === "quantityPerPack" ||
-      field === "noOfPacks" ||
-      field === "cost" ||
-      field === "mrp" ||
-      field === "tax" ||
-      field === "discount"
-        ? parseFloat(rawValue.replace(/[^\d.-]/g, "")) || null
-        : rawValue;
+    // Parse numeric value from the input
+    const numericValue = ["quantityPerPack", "noOfPacks"].includes(field)
+      ? parseFloat(rawValue.replace(/[^\d.-]/g, "")) || null
+      : rawValue;
 
     currentItem = { ...currentItem, [field]: numericValue };
 
+    // Recalculate total cost and tax amount if related fields are changed
     if (
       field === "quantityPerPack" ||
       field === "noOfPacks" ||
       field === "cost" ||
-      field === "tax" ||
       field === "discount"
     ) {
-      const quantityPerPack = currentItem.quantityPerPack ?? 0;
       const noOfPacks = currentItem.noOfPacks ?? 0;
-      const cost = currentItem.cost ?? 0;
-      const taxPercentage = currentItem.tax ?? 0;
-      const taxAmount = noOfPacks * cost * (taxPercentage / 100);
+      const buyPrice = currentItem.cost ?? 0;
+      const discount = currentItem.discount ?? 0;
+      const taxPercentage = currentItem.tax ?? 0; // Tax percentage
 
-      const totalBeforeDiscount = noOfPacks * cost + taxAmount;
-      const discountAmount = ((currentItem.discount ?? 0) / 100) * totalBeforeDiscount;
-      const totalAmount = totalBeforeDiscount - discountAmount;
+      // Calculate the total cost before tax and discount
+      const totalBeforeDiscount = noOfPacks * buyPrice;
 
-      currentItem.totalAmount = totalAmount;
-      currentItem.quantity = quantityPerPack * noOfPacks;
-    }
+      // Apply discount
+      const discountAmount = (totalBeforeDiscount * discount) / 100;
 
-    if (field === "item") {
-      const quantityPerPack = currentItem.item?.packSize || 1;
-      const noOfPacks = currentItem.noOfPacks || 1;
-      currentItem.quantityPerPack = quantityPerPack;
-      currentItem.noOfPacks = noOfPacks;
-      currentItem.quantity = quantityPerPack * noOfPacks;
-      currentItem.cost = currentItem.item?.rate || 0;
-      currentItem.mrp = currentItem.item?.mrp || 0;
-      const taxPercentage = currentItem.item?.taxRate?.taxRate || 0;
-      const taxAmount = noOfPacks * (currentItem.cost || 0) * (taxPercentage / 100);
-      currentItem.tax = taxPercentage;
-      const totalBeforeDiscount = noOfPacks * (currentItem.cost || 0) + taxAmount;
-      const discountAmount = ((currentItem.discount ?? 0) / 100) * totalBeforeDiscount;
+      // Set the total amount before tax
       currentItem.totalAmount = totalBeforeDiscount - discountAmount;
-      currentItem.freeQuantity = currentItem.item?.freeQuantity || 0;
+
+      // Calculate the tax amount
+      currentItem.taxAmount = ((totalBeforeDiscount - discountAmount) * taxPercentage) / 100;
     }
 
     newItems[index] = currentItem;
@@ -358,25 +373,25 @@ const EditDraft: React.FC<EditPurchaseOrderDraftProps> = ({
 
   const updateCalculations = useCallback(
     (items = formik.values.items) => {
-      const subTotal = calculateSubTotal(items);
-      const tax = calculateTax(items);
+      // Calculate subTotal (totalAmount excluding tax)
+      const subTotal = items.reduce((acc, item) => acc + (item.totalAmount ?? 0), 0);
 
-      let netAmount = subTotal + tax;
+      // Calculate total tax from all items
+      const totalTax = items.reduce((acc, item) => acc + (item.taxAmount ?? 0), 0);
 
-      const otherChargesRaw = formik.values.otherCharges ? +formik.values.otherCharges : 0;
-      const otherCharges: number = !isNaN(otherChargesRaw)
-        ? parseFloat(otherChargesRaw.toFixed(2))
-        : 0;
+      // Add otherCharges (if any)
+      const otherCharges = formik.values.otherCharges ?? 0;
 
-      netAmount += otherCharges;
+      // Calculate netAmount (subTotal + tax + otherCharges)
+      const netAmount = subTotal + totalTax + otherCharges;
 
+      // Set the updated values in the form
       formik.setFieldValue("subTotal", subTotal);
-      formik.setFieldValue("tax", tax);
+      formik.setFieldValue("tax", totalTax);
       formik.setFieldValue("netAmount", netAmount);
     },
     [formik.values.otherCharges, formik.setFieldValue]
   );
-
   const getFieldErrorAndTouched = useCallback(
     (
       index: number,
@@ -412,17 +427,17 @@ const EditDraft: React.FC<EditPurchaseOrderDraftProps> = ({
     onClose();
   };
 
-  const calculateSubTotal = (items: IItem[]) => {
-    return items.reduce((acc, item) => acc + (item.totalAmount ?? 0), 0);
-  };
+  // const calculateSubTotal = (items: IItem[]) => {
+  //   return items.reduce((acc, item) => acc + (item.totalAmount ?? 0), 0);
+  // };
 
-  const calculateTax = (items: IItem[]) => {
-    return items.reduce((acc, item) => {
-      const noOfPacks = item.noOfPacks ?? 0;
-      const itemTax = noOfPacks * (item.cost || 0) * ((item.tax || 0) / 100);
-      return acc + itemTax;
-    }, 0);
-  };
+  // const calculateTax = (items: IItem[]) => {
+  //   return items.reduce((acc, item) => {
+  //     const noOfPacks = item.noOfPacks ?? 0;
+  //     const itemTax = noOfPacks * (item.cost || 0) * ((item.tax || 0) / 100);
+  //     return acc + itemTax;
+  //   }, 0);
+  // };
 
   return (
     <Modal open={openModal} onClose={onClose}>

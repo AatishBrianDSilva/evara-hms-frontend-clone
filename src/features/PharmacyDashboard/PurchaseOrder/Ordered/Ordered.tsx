@@ -1,4 +1,4 @@
-import { Edit, Visibility } from "@mui/icons-material";
+import { Edit, Print, Visibility } from "@mui/icons-material";
 import { Box, Tooltip } from "@mui/material";
 import React, { useState } from "react";
 import CustomDataGrid from "../../../../components/CustomDataGrid/CustomDataGrid";
@@ -12,9 +12,12 @@ import {
   IPurchaseOrder,
 } from "../../../../types/pharmacyDashboard/purchaseOrder";
 import ViewPurchaseOrder from "../ViewPurchaseOrder";
+import { usePrint } from "../../../../context/PrintPDFContext";
 
 const Ordered: React.FC = () => {
   // const { showPromiseToast } = useToast()
+
+  const { fetchAndPrintPdf } = usePrint();
 
   // Drug Items
   const { data: drugItemsData } = useGetDrugItemsQuery({
@@ -195,7 +198,6 @@ const Ordered: React.FC = () => {
   //     },
   //   },
   // ];
-
   const columnsConfig: GridColDef[] = [
     { field: "poNumber", headerName: "PO Number", flex: 1 },
     {
@@ -215,57 +217,15 @@ const Ordered: React.FC = () => {
       field: "vendor",
       headerName: "Vendor Name",
       flex: 1,
-      valueGetter: (params) => params.value.name,
+      valueGetter: (params) => params.value?.name,
     },
     {
       field: "items",
       headerName: "Item",
       flex: 1,
       valueGetter: (params) =>
-        params.row.request.items.map((item: any) => item.item.name).join(", "),
+        params.row.request.items.map((item: any) => item.item?.name).join(", "),
     },
-    // {
-    //   field: "packSize",
-    //   headerName: "Pack Size",
-    //   flex: 1,
-    //   valueGetter: (params) =>
-    //     params.row.request.items.map((item: any) => item.packSize).join(", "),
-    // },
-    // {
-    //   field: "noOfPacks",
-    //   headerName: "No. Of Packs",
-    //   flex: 1,
-    //   valueGetter: (params) =>
-    //     params.row.request.items.map((item: any) => item.noOfPacks).join(", "),
-    // },
-    // {
-    //   field: "freeQuantity",
-    //   headerName: "Free Qty",
-    //   flex: 1,
-    //   valueGetter: (params) =>
-    //     params.row.request.items.map((item: any) => item.freeQuantity).join(", "),
-    // },
-    // {
-    //   field: "cost",
-    //   headerName: "Cost",
-    //   flex: 1,
-    //   valueGetter: (params) =>
-    //     params.row.request.items.map((item: any) => item.buyPrice).join(", "),
-    // },
-    // {
-    //   field: "mrp",
-    //   headerName: "MRP",
-    //   flex: 1,
-    //   valueGetter: (params) =>
-    //     params.row.request.items.map((item: any) => item.mrpPerPack).join(", "),
-    // },
-
-    // {
-    //   field: "tax",
-    //   headerName: "Tax",
-    //   flex: 1,
-    //   valueGetter: (params) => params.row.request.items.map((item: any) => item.tax).join(", "),
-    // },
     {
       field: "netAmount",
       headerName: "Net Amount",
@@ -279,7 +239,7 @@ const Ordered: React.FC = () => {
       type: "actions",
       getActions: (params: GridRowParams) => {
         const row = params.row;
-        return [
+        const actions = [
           <Tooltip title="Edit">
             <GridActionsCellItem icon={<Edit />} label="Edit" onClick={() => openEditModal(row)} />
           </Tooltip>,
@@ -291,6 +251,21 @@ const Ordered: React.FC = () => {
             />
           </Tooltip>,
         ];
+
+        // Add Print action if report field exists
+        if (row.report) {
+          actions.push(
+            <Tooltip title="Print">
+              <GridActionsCellItem
+                icon={<Print />}
+                label="Print"
+                onClick={() => fetchAndPrintPdf(row._id, "POInvoice", "pharmacy")}
+              />
+            </Tooltip>
+          );
+        }
+
+        return actions;
       },
     },
   ];

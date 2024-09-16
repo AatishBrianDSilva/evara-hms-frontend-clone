@@ -34,6 +34,7 @@ interface EditPurchaseOrderDraftProps {
 }
 
 interface IItem {
+  taxAmount: number;
   item: IDrugItem | null;
   packsRequired: number | null;
   packSize: number | null;
@@ -177,8 +178,15 @@ const EditPurchaseOrderDraft: React.FC<EditPurchaseOrderDraftProps> = ({
       purchaseOrder?.request.items.map((item): IItem => {
         const noOfPacks = item.noOfPacks ?? 0;
         const buyPrice = item.buyPrice ?? 0;
-        const packSize = item.packSize ?? 0;
-        const tax = item.tax ?? 1;
+        const discount = item.discount ?? 0;
+
+        // Total cost without tax, applying discount
+        const itemCost = noOfPacks * buyPrice;
+        const discountAmount = (itemCost * discount) / 100;
+        const totalCostWithoutTax = itemCost - discountAmount;
+
+        // Calculate tax amount separately using tax percentage, but don't modify `tax` field
+        const taxAmount = (totalCostWithoutTax * (item.tax ?? 0)) / 100; // tax is % like 18%
 
         return {
           item: item.item || null,
@@ -188,19 +196,71 @@ const EditPurchaseOrderDraft: React.FC<EditPurchaseOrderDraftProps> = ({
           mrp: item.mrp || null,
           mrpPerPack: item.mrpPerPack || null,
           buyPrice: buyPrice,
-          tax: tax,
-          totalCost: noOfPacks * buyPrice + (noOfPacks * buyPrice * tax) / 100,
+          tax: item.tax, // Keep tax as the percentage (e.g., 18 for 18%)
+          taxAmount: taxAmount, // Calculate and store the tax amount separately
+          totalCost: totalCostWithoutTax, // Total cost without tax
           freeQuantity: item.freeQuantity || null,
           batchNo: item.batchNo || null,
           expiryDate: item.expiryDate || null,
-          quantity: noOfPacks * packSize, // Include quantity calculation
-          discount: item.discount,
+          quantity: noOfPacks * (item.packSize ?? 0), // Calculate quantity
+          discount: discount,
         };
       }) || [],
-    subTotal: purchaseOrder?.request.subTotal || null,
-    tax: purchaseOrder?.request.tax || null,
-    otherCharges: purchaseOrder?.request.otherCharges || null,
-    netAmount: purchaseOrder?.request.netAmount || null,
+
+    // Calculate subTotal (sum of totalCost without tax)
+    subTotal:
+      purchaseOrder?.request.items?.reduce((acc, item) => {
+        const noOfPacks = item.noOfPacks ?? 0;
+        const buyPrice = item.buyPrice ?? 0;
+        const discount = item.discount ?? 0;
+        const itemCost = noOfPacks * buyPrice;
+        const discountAmount = (itemCost * discount) / 100;
+        const totalCostWithoutTax = itemCost - discountAmount;
+        return acc + totalCostWithoutTax;
+      }, 0) ?? 0, // Ensuring subTotal is never undefined, returning 0 by default
+
+    // Calculate total tax for all items based on tax amount
+    tax:
+      purchaseOrder?.request.items?.reduce((acc, item) => {
+        const noOfPacks = item.noOfPacks ?? 0;
+        const buyPrice = item.buyPrice ?? 0;
+        const discount = item.discount ?? 0;
+        const itemCost = noOfPacks * buyPrice;
+        const discountAmount = (itemCost * discount) / 100;
+        const totalCostWithoutTax = itemCost - discountAmount;
+        const taxAmount = (totalCostWithoutTax * (item.tax ?? 0)) / 100; // tax is % like 18%
+        return acc + taxAmount;
+      }, 0) ?? 0, // Ensuring tax is never undefined, returning 0 by default
+
+    // Keep other charges from purchase order
+    otherCharges: purchaseOrder?.request.otherCharges || 0,
+
+    // Calculate the net amount as subTotal + tax + otherCharges
+    netAmount: (function () {
+      const subTotal = purchaseOrder?.request.items.reduce((acc, item) => {
+        const noOfPacks = item.noOfPacks ?? 0;
+        const buyPrice = item.buyPrice ?? 0;
+        const discount = item.discount ?? 0;
+        const itemCost = noOfPacks * buyPrice;
+        const discountAmount = (itemCost * discount) / 100;
+        const totalCostWithoutTax = itemCost - discountAmount;
+        return acc + totalCostWithoutTax;
+      }, 0);
+
+      const tax = purchaseOrder?.request.items.reduce((acc, item) => {
+        const noOfPacks = item.noOfPacks ?? 0;
+        const buyPrice = item.buyPrice ?? 0;
+        const discount = item.discount ?? 0;
+        const itemCost = noOfPacks * buyPrice;
+        const discountAmount = (itemCost * discount) / 100;
+        const totalCostWithoutTax = itemCost - discountAmount;
+        const taxAmount = (totalCostWithoutTax * (item.tax ?? 0)) / 100; // tax is % like 18%
+        return acc + taxAmount;
+      }, 0);
+
+      return (subTotal ?? 0) + (tax ?? 0) + (purchaseOrder?.request.otherCharges ?? 0);
+    })(),
+
     partialyProcessed: false,
     invoiceNumber: purchaseOrder?.invoiceNumber || "",
     files: [],
@@ -215,7 +275,6 @@ const EditPurchaseOrderDraft: React.FC<EditPurchaseOrderDraftProps> = ({
       request: {
         items: values.items.map((item) => ({
           item: item.item?._id,
-
           packSize: item.packSize,
           quantity: (item.packSize ?? 0) * (item.noOfPacks ?? 0), // Handle null values
           mrp: item.mrp,
@@ -348,59 +407,66 @@ const EditPurchaseOrderDraft: React.FC<EditPurchaseOrderDraftProps> = ({
     let newItems: IItem[] = [...formik.values.items];
     let currentItem: IItem = newItems[index];
 
+    // Parse the numeric value for specific fields
     const numericValue =
       field === "noOfPacks" ||
       field === "packSize" ||
-      field === "buyPrice" ||
-      field === "mrpPerPack" ||
-      field === "discount" || // Ensure discount is treated as a number
+      // field === "buyPrice" ||
+      // field === "mrpPerPack" ||
+      // field === "discount" ||
       field === "freeQuantity"
         ? Number(rawValue.replace(/[^\d.-]/g, "")) || null
         : rawValue;
 
     currentItem = { ...currentItem, [field]: numericValue };
 
-    if (
-      field === "noOfPacks" ||
-      field === "packSize" ||
-      field === "buyPrice" ||
-      field === "discount"
-    ) {
+    // Recalculate total cost and tax amount, but do not modify the `tax` field (it remains as %)
+    if (field === "noOfPacks" || field === "buyPrice" || field === "discount") {
       const noOfPacks = currentItem.noOfPacks ?? 0;
-      const packSize = currentItem.packSize ?? 0;
       const buyPrice = currentItem.buyPrice ?? 0;
-      const tax = currentItem.tax ?? 0;
       const discount = currentItem.discount ?? 0;
-      const quantity = noOfPacks * packSize;
+      const taxPercentage = currentItem.tax ?? 0; // This is the tax percentage (e.g., 18 for 18%)
 
-      currentItem.quantity = quantity;
-      currentItem.mrp = noOfPacks * (currentItem.mrpPerPack || 0);
-
+      // Total cost without tax
       const itemCost = noOfPacks * buyPrice;
-      const discountAmount = (itemCost * discount) / 100; // Calculate discount amount
-      currentItem.totalCost = itemCost + (itemCost * tax) / 100 - discountAmount; // Calculate totalCost
+      const discountAmount = (itemCost * discount) / 100;
+      currentItem.totalCost = itemCost - discountAmount; // Total cost without tax
+
+      // Calculate tax amount based on the total cost and tax percentage
+      const taxAmount = (currentItem.totalCost * taxPercentage) / 100;
+
+      // Store the calculated tax amount separately (not modifying the `tax` field)
+      currentItem.taxAmount = taxAmount; // New field to store calculated tax
     }
 
     newItems[index] = currentItem;
     formik.setFieldValue("items", newItems);
-    updateCalculations(); // Call the update calculations after changing item values
+    updateCalculations(); // Trigger recalculations
   };
 
   const updateCalculations = useCallback(() => {
-    const totalCost = formik.values.items.reduce((acc, item) => {
-      const itemTotalCost = Number(item.totalCost ?? 0);
+    // Recalculate subTotal (sum of total costs without tax)
+    const subTotal = formik.values.items.reduce((acc, item) => {
+      const itemTotalCost = Number(item.totalCost ?? 0); // Only total cost without tax
       return acc + itemTotalCost;
     }, 0);
 
-    const taxAmount = Number(formik.values.tax ?? 0); // Use the tax field directly
-    const netAmount = totalCost + taxAmount; // Net amount is subtotal + tax
+    // Recalculate total tax (sum of calculated tax amounts)
+    const totalTax = formik.values.items.reduce((acc, item) => {
+      return acc + (item.taxAmount ?? 0); // Sum up individual calculated tax amounts
+    }, 0);
 
-    formik.setFieldValue("subTotal", totalCost); // Set subtotal
-    formik.setFieldValue("netAmount", netAmount); // Set net amount
-  }, [formik.values.items, formik.values.tax, formik.setFieldValue]);
+    // Recalculate netAmount (subTotal + totalTax + otherCharges)
+    const netAmount = subTotal + totalTax + (formik.values.otherCharges ?? 0);
+
+    // Update formik values
+    formik.setFieldValue("subTotal", subTotal);
+    formik.setFieldValue("tax", totalTax); // Set total tax amount (not percentage)
+    formik.setFieldValue("netAmount", netAmount);
+  }, [formik.values.items, formik.values.otherCharges, formik.setFieldValue]);
 
   useEffect(() => {
-    updateCalculations();
+    updateCalculations(); // Ensure calculations are updated when items change
   }, [updateCalculations]);
 
   const getFieldErrorAndTouched = useCallback(
@@ -576,7 +642,9 @@ const EditPurchaseOrderDraft: React.FC<EditPurchaseOrderDraftProps> = ({
                   <Box
                     key={index}
                     mt={2}
-                    sx={{ mt: formik.values.items[index].batchNo === "" ? 3 : 0 }}
+                    sx={{
+                      mt: formik.values.items[index].batchNo === "" ? 3 : 0,
+                    }}
                   >
                     <Typography variant="h6" sx={{ mb: 1 }}>
                       {`Item ${index + 1}`}

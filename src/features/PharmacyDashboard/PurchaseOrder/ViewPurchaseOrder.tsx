@@ -43,16 +43,10 @@ const isAddress = (address: any): address is Address => {
   return address && typeof address === "object" && "street" in address;
 };
 
-const PurchaseOrderSkeleton = () => {
-  return <Box padding={2}>{/* Skeleton content */}</Box>;
-};
-
 const ViewPurchaseOrder: React.FC<ViewPurchaseOrderProps> = ({ openModal, onClose, id }) => {
   const { data: purchaseOrderData, isLoading, isFetching } = useGetPurchaseOrderByIdQuery(id);
   const purchaseOrder = purchaseOrderData?.data;
   const isLoadingOrder = isLoading || isFetching;
-
-  console.log("Current PO", purchaseOrderData);
 
   const columns = [
     { field: "id", headerName: "#", flex: 0.5 },
@@ -95,109 +89,137 @@ const ViewPurchaseOrder: React.FC<ViewPurchaseOrderProps> = ({ openModal, onClos
       : branch?.address;
 
     return (
-      <Box>
-        <Typography variant="h4" gutterBottom>
+      <Box sx={{ padding: 3 }}>
+        {/* Vendor Details */}
+        <Typography variant="h5" sx={{ fontWeight: "bold" }} gutterBottom>
           Vendor
         </Typography>
-        <Typography variant="h6">
+        <Typography variant="body1">
           {purchaseOrder.vendor.name} ({purchaseOrder.vendor.code})
         </Typography>
-        <Typography variant="h6">
+        <Typography variant="body1">
           {purchaseOrder.vendor.contact.person} - {purchaseOrder.vendor.contact.phone}
         </Typography>
-        <Typography variant="h6">
+        <Typography variant="body1" gutterBottom>
           {purchaseOrder.vendor.address.addressLine1}, {purchaseOrder.vendor.address.city}
         </Typography>
+
         <Divider sx={{ my: 2 }} />
 
+        {/* Bill To and Ship To Details */}
         <Grid container spacing={2}>
           <Grid item xs={6}>
-            <Typography variant="h4" gutterBottom>
+            <Typography variant="h5" sx={{ fontWeight: "bold" }} gutterBottom>
               Bill To
             </Typography>
             {branch ? (
               <>
-                <Typography variant="h6">
+                <Typography variant="body1">
                   {branch.branchName} ({branch.code})
                 </Typography>
-                <Typography variant="h6">
+                <Typography variant="body1">
                   {branch.manager} - {branch.phone}
                 </Typography>
-                <Typography variant="h6">
+                <Typography variant="body1">
                   {branch.address.street}, {branch.address.city}
                 </Typography>
-                <Typography variant="h6">
+                <Typography variant="body1" gutterBottom>
                   {branch.address.state} - {branch.address.zip}
                 </Typography>
               </>
             ) : (
-              <Typography variant="h6">Invalid Billing Data</Typography>
+              <Typography variant="body1">Invalid Billing Data</Typography>
             )}
           </Grid>
           <Grid item xs={6}>
-            <Typography variant="h4" gutterBottom>
+            <Typography variant="h5" sx={{ fontWeight: "bold" }} gutterBottom>
               Ship To
             </Typography>
             {isAddress(shipToAddress) ? (
               <>
-                {/* <Typography variant="h6">{purchaseOrder.newAddress?.branchName}</Typography> */}
-                <Typography variant="h6">{shipToAddress.street}</Typography>
-                <Typography variant="h6">{shipToAddress.city}</Typography>
-                <Typography variant="h6">
+                <Typography variant="body1">{shipToAddress.street}</Typography>
+                <Typography variant="body1">{shipToAddress.city}</Typography>
+                <Typography variant="body1" gutterBottom>
                   {shipToAddress.state} - {shipToAddress.zip}
                 </Typography>
               </>
             ) : (
-              <Typography variant="h6">Invalid Shipping Data</Typography>
+              <Typography variant="body1">Invalid Shipping Data</Typography>
             )}
           </Grid>
         </Grid>
+
         <Divider sx={{ my: 2 }} />
 
+        {/* Purchase Order Information */}
         <Grid container spacing={2}>
           <Grid item xs={12} md={4}>
-            <Typography variant="h6">PO Number</Typography>
-            <Typography>{purchaseOrder?.poNumber}</Typography>
+            <Typography variant="body1" sx={{ fontWeight: "bold" }}>
+              PO Number
+            </Typography>
+            <Typography variant="body1">{purchaseOrder?.poNumber}</Typography>
           </Grid>
           <Grid item xs={12} md={4}>
-            <Typography variant="h6">Date</Typography>
-            <Typography>{new Date(purchaseOrder?.date).toLocaleDateString()}</Typography>
+            <Typography variant="body1" sx={{ fontWeight: "bold" }}>
+              Date
+            </Typography>
+            <Typography variant="body1">
+              {new Date(purchaseOrder?.date).toLocaleDateString()}
+            </Typography>
           </Grid>
           <Grid item xs={12} md={4}>
-            <Typography variant="h6">Total Amount</Typography>
-            <Typography>₹{totalAmount}</Typography>
+            <Typography variant="body1" sx={{ fontWeight: "bold" }}>
+              Total Amount
+            </Typography>
+            <Typography variant="body1">₹{totalAmount}</Typography>
           </Grid>
           <Grid item xs={12} md={4}>
-            <Typography variant="h6">GST No</Typography>
-            <Typography>{purchaseOrder?.vendor.gst}</Typography>
+            <Typography variant="body1" sx={{ fontWeight: "bold" }}>
+              GST No
+            </Typography>
+            <Typography variant="body1">{purchaseOrder?.vendor.gst}</Typography>
           </Grid>
           <Grid item xs={12} md={4}>
-            <Typography variant="h6">TIN</Typography>
-            <Typography>{purchaseOrder?.vendor.gst}</Typography>
+            <Typography variant="body1" sx={{ fontWeight: "bold" }}>
+              TIN
+            </Typography>
+            <Typography variant="body1">{purchaseOrder?.vendor.gst}</Typography>
           </Grid>
         </Grid>
+
         <Divider sx={{ my: 2 }} />
-        <Typography variant="h6" gutterBottom>
+
+        {/* Purchase Order Details Table */}
+        <Typography variant="h5" sx={{ fontWeight: "bold" }} gutterBottom>
           Purchase Order Details
         </Typography>
         <div style={{ width: "100%" }}>
           <DataGrid rows={rows} columns={columns} disableColumnMenu hideFooter autoHeight />
         </div>
-        <Box sx={{ display: "flex", justifyContent: "flex-end", mt: 2, pl: 10 }}>
-          <Typography sx={{ fontWeight: "bold" }}>Total: ₹{totalAmount}</Typography>
+
+        {/* Total */}
+        <Box sx={{ display: "flex", justifyContent: "flex-end", mt: 2 }}>
+          <Typography variant="h6" sx={{ fontWeight: "bold" }}>
+            Total: ₹{totalAmount}
+          </Typography>
         </Box>
+
         <Divider sx={{ my: 2 }} />
-        <Typography variant="h6">Company TIN: {purchaseOrder.vendor.gst}</Typography>
+
+        {/* Company Information */}
+        <Typography variant="body1" sx={{ fontWeight: "bold" }}>
+          Company TIN: {purchaseOrder.vendor.gst}
+        </Typography>
       </Box>
     );
   };
 
   return (
     <Dialog open={openModal} onClose={onClose} maxWidth="lg" fullWidth>
-      <DialogTitle color={"primary"}>Purchase Order</DialogTitle>
+      <DialogTitle color="primary">Purchase Order</DialogTitle>
       <DialogContent>
         {isLoadingOrder ? (
-          <PurchaseOrderSkeleton />
+          <Typography>Loading...</Typography>
         ) : purchaseOrder ? (
           <PurchaseOrderDetails purchaseOrder={purchaseOrder} />
         ) : (

@@ -9,7 +9,10 @@ import {
   Typography,
 } from "@mui/material";
 import React, { useCallback, useEffect } from "react";
-import { IDrugItem, IDrugVendor } from "../../../../types/pharmacyDashboard/master";
+import {
+  IDrugItem,
+  IDrugVendor,
+} from "../../../../types/pharmacyDashboard/master";
 import { useToast } from "../../../../context/ToastContext";
 import {
   useUpdatePartialPurchaseOrderMutation,
@@ -134,7 +137,13 @@ const renderSkeleton = () => (
         <Skeleton variant="rectangular" height={56} />
       </Grid>
     </Grid>
-    <Box display={"flex"} justifyContent={"flex-end"} alignItems={"center"} gap={2} mt={2}>
+    <Box
+      display={"flex"}
+      justifyContent={"flex-end"}
+      alignItems={"center"}
+      gap={2}
+      mt={2}
+    >
       <Skeleton variant="rectangular" width={90} height={40} />
       <Skeleton variant="rectangular" width={90} height={40} />
     </Box>
@@ -156,7 +165,8 @@ const EditPartiallyProcessed: React.FC<EditPartiallyProcessedProps> = ({
     isFetching: isPurchaseOrderFetching,
   } = useGetPurchaseOrderByIdQuery(id);
   const purchaseOrder = purchaseOrderData?.data;
-  const purchaseOrderLoading = isPurchaseOrderLoading || isPurchaseOrderFetching;
+  const purchaseOrderLoading =
+    isPurchaseOrderLoading || isPurchaseOrderFetching;
 
   // Store older response items
   const oldResponseItems =
@@ -170,7 +180,9 @@ const EditPartiallyProcessed: React.FC<EditPartiallyProcessedProps> = ({
   const [fileUploadedUrl, setFileUploadedUrl] = React.useState<string[]>(() => {
     let initialUrl: string[] = [];
     if ((purchaseOrder as any)?.responses?.length > 0) {
-      initialUrl = (purchaseOrder as any).responses.flatMap((res: any) => res.invoice);
+      initialUrl = (purchaseOrder as any).responses.flatMap(
+        (res: any) => res.invoice
+      );
     }
     return initialUrl;
   });
@@ -333,17 +345,20 @@ const EditPartiallyProcessed: React.FC<EditPartiallyProcessedProps> = ({
     updateCalculations();
   };
 
-  const handleValueChange = (index: number, field: keyof IItem, rawValue: any) => {
+  const handleValueChange = (
+    index: number,
+    field: keyof IItem,
+    rawValue: any
+  ) => {
     let newItems: IItem[] = [...formik.values.items];
     let currentItem: IItem = newItems[index];
 
+    // field === "buyPrice" ||
+    // field === "mrpPerPack" ||
+    // field === "discount" || // Ensure discount is treated as a number
+
     const numericValue =
-      field === "noOfPacks" ||
-      field === "packSize" ||
-      field === "buyPrice" ||
-      field === "mrpPerPack" ||
-      field === "discount" || // Ensure discount is treated as a number
-      field === "freeQuantity"
+      field === "noOfPacks" || field === "packSize" || field === "freeQuantity"
         ? Number(rawValue.replace(/[^\d.-]/g, "")) || null
         : rawValue;
 
@@ -367,7 +382,8 @@ const EditPartiallyProcessed: React.FC<EditPartiallyProcessedProps> = ({
 
       const itemCost = noOfPacks * buyPrice;
       const discountAmount = (itemCost * discount) / 100; // Calculate item-wise discount
-      currentItem.totalCost = itemCost + (itemCost * tax) / 100 - discountAmount; // Update totalCost considering item-wise discount
+      currentItem.totalCost =
+        itemCost + (itemCost * tax) / 100 - discountAmount; // Update totalCost considering item-wise discount
     }
 
     newItems[index] = currentItem;
@@ -387,7 +403,12 @@ const EditPartiallyProcessed: React.FC<EditPartiallyProcessedProps> = ({
 
     formik.setFieldValue("subTotal", totalCost); // Set subtotal
     formik.setFieldValue("netAmount", netAmount); // Set net amount
-  }, [formik.values.items, formik.values.tax, formik.values.otherCharges, formik.setFieldValue]);
+  }, [
+    formik.values.items,
+    formik.values.tax,
+    formik.values.otherCharges,
+    formik.setFieldValue,
+  ]);
 
   useEffect(() => {
     updateCalculations();
@@ -486,9 +507,16 @@ const EditPartiallyProcessed: React.FC<EditPartiallyProcessedProps> = ({
                   <CustomDatePicker
                     label="Date"
                     value={formik.values.order_date}
-                    onChange={(value) => formik.setFieldValue("order_date", value)}
-                    error={formik.touched.order_date && Boolean(formik.errors.order_date)}
-                    helperText={formik.touched.order_date && formik.errors.order_date}
+                    onChange={(value) =>
+                      formik.setFieldValue("order_date", value)
+                    }
+                    error={
+                      formik.touched.order_date &&
+                      Boolean(formik.errors.order_date)
+                    }
+                    helperText={
+                      formik.touched.order_date && formik.errors.order_date
+                    }
                   />
                 </Grid>
                 <Grid item lg={2}>
@@ -497,13 +525,17 @@ const EditPartiallyProcessed: React.FC<EditPartiallyProcessedProps> = ({
                     getOptionLabel={(option) => {
                       return option?.name;
                     }}
-                    isOptionEqualToValue={(option, value) => option._id === value._id}
+                    isOptionEqualToValue={(option, value) =>
+                      option._id === value._id
+                    }
                     value={formik.values.vendor}
                     onChange={(newValue) => {
                       formik.setFieldValue("vendor", newValue);
                     }}
                     label="Vendor"
-                    error={formik.touched.vendor && Boolean(formik.errors.vendor)}
+                    error={
+                      formik.touched.vendor && Boolean(formik.errors.vendor)
+                    }
                     helperText={formik.touched.vendor && formik.errors.vendor}
                     disabled
                   />
@@ -541,26 +573,43 @@ const EditPartiallyProcessed: React.FC<EditPartiallyProcessedProps> = ({
               {formik.values.items.map((_field: any, index: number) => {
                 const { isError: isItemError, errorMessage: itemErrorMessage } =
                   getFieldErrorAndTouched(index, "item");
-                const { isError: isNoOfPacksError, errorMessage: noOfPacksErrorMessage } =
-                  getFieldErrorAndTouched(index, "noOfPacks");
-                const { isError: isPackSizeError, errorMessage: packSizeErrorMessage } =
-                  getFieldErrorAndTouched(index, "packSize");
-                const { isError: isMrpPerPackError, errorMessage: mrpPerPackErrorMessage } =
-                  getFieldErrorAndTouched(index, "mrpPerPack");
-                const { isError: buyPriceError, errorMessage: buyPriceErrorMessage } =
-                  getFieldErrorAndTouched(index, "buyPrice");
-                const { isError: batchNoError, errorMessage: batchNoErrorMessage } =
-                  getFieldErrorAndTouched(index, "batchNo");
-                const { isError: expiryDateError, errorMessage: expiryDateErrorMessage } =
-                  getFieldErrorAndTouched(index, "expiryDate");
-                const { isError: freeQuantityError, errorMessage: freeQuantityErrorMessage } =
-                  getFieldErrorAndTouched(index, "freeQuantity");
-                const { isError: discountError, errorMessage: discountErrorMessage } =
-                  getFieldErrorAndTouched(index, "discount");
+                const {
+                  isError: isNoOfPacksError,
+                  errorMessage: noOfPacksErrorMessage,
+                } = getFieldErrorAndTouched(index, "noOfPacks");
+                const {
+                  isError: isPackSizeError,
+                  errorMessage: packSizeErrorMessage,
+                } = getFieldErrorAndTouched(index, "packSize");
+                const {
+                  isError: isMrpPerPackError,
+                  errorMessage: mrpPerPackErrorMessage,
+                } = getFieldErrorAndTouched(index, "mrpPerPack");
+                const {
+                  isError: buyPriceError,
+                  errorMessage: buyPriceErrorMessage,
+                } = getFieldErrorAndTouched(index, "buyPrice");
+                const {
+                  isError: batchNoError,
+                  errorMessage: batchNoErrorMessage,
+                } = getFieldErrorAndTouched(index, "batchNo");
+                const {
+                  isError: expiryDateError,
+                  errorMessage: expiryDateErrorMessage,
+                } = getFieldErrorAndTouched(index, "expiryDate");
+                const {
+                  isError: freeQuantityError,
+                  errorMessage: freeQuantityErrorMessage,
+                } = getFieldErrorAndTouched(index, "freeQuantity");
+                const {
+                  isError: discountError,
+                  errorMessage: discountErrorMessage,
+                } = getFieldErrorAndTouched(index, "discount");
 
                 const onlyOneItem = formik.values.items.length === 1;
 
-                const itemSelected = formik.values.items[index].item?.name || "";
+                const itemSelected =
+                  formik.values.items[index].item?.name || "";
 
                 return (
                   <Grid container gap={1} key={index} mt={2}>
@@ -568,9 +617,13 @@ const EditPartiallyProcessed: React.FC<EditPartiallyProcessedProps> = ({
                       <FieldAutocomplete
                         options={drugItems}
                         getOptionLabel={(option) => option?.name}
-                        isOptionEqualToValue={(option, value) => option._id === value._id}
+                        isOptionEqualToValue={(option, value) =>
+                          option._id === value._id
+                        }
                         value={formik.values.items[index].item}
-                        onChange={(newValue) => handleValueChange(index, "item", newValue)}
+                        onChange={(newValue) =>
+                          handleValueChange(index, "item", newValue)
+                        }
                         label="Item"
                         error={isItemError}
                         helperText={isItemError ? itemErrorMessage : ""}
@@ -584,9 +637,13 @@ const EditPartiallyProcessed: React.FC<EditPartiallyProcessedProps> = ({
                         disabled={!itemSelected}
                         name={`items[${index}].noOfPacks`}
                         value={formik.values.items[index].noOfPacks || ""}
-                        onChange={(e) => handleValueChange(index, "noOfPacks", e.target.value)}
+                        onChange={(e) =>
+                          handleValueChange(index, "noOfPacks", e.target.value)
+                        }
                         error={isNoOfPacksError}
-                        helperText={isNoOfPacksError ? noOfPacksErrorMessage : ""}
+                        helperText={
+                          isNoOfPacksError ? noOfPacksErrorMessage : ""
+                        }
                       />
                     </Grid>
                     <Grid item flex={1}>
@@ -596,7 +653,9 @@ const EditPartiallyProcessed: React.FC<EditPartiallyProcessedProps> = ({
                         label="Pack Size"
                         name={`items[${index}].packSize`}
                         value={formik.values.items[index].packSize || ""}
-                        onChange={(e) => handleValueChange(index, "packSize", e.target.value)}
+                        onChange={(e) =>
+                          handleValueChange(index, "packSize", e.target.value)
+                        }
                         error={isPackSizeError}
                         helperText={isPackSizeError ? packSizeErrorMessage : ""}
                       />
@@ -608,9 +667,13 @@ const EditPartiallyProcessed: React.FC<EditPartiallyProcessedProps> = ({
                         label="MRP"
                         name={`items[${index}].mrpPerPack`}
                         value={formik.values.items[index].mrpPerPack || ""}
-                        onChange={(e) => handleValueChange(index, "mrpPerPack", e.target.value)}
+                        onChange={(e) =>
+                          handleValueChange(index, "mrpPerPack", e.target.value)
+                        }
                         error={isMrpPerPackError}
-                        helperText={isMrpPerPackError ? mrpPerPackErrorMessage : ""}
+                        helperText={
+                          isMrpPerPackError ? mrpPerPackErrorMessage : ""
+                        }
                       />
                     </Grid>
                     <Grid item flex={1}>
@@ -619,8 +682,14 @@ const EditPartiallyProcessed: React.FC<EditPartiallyProcessedProps> = ({
                         disabled={!itemSelected}
                         label="Cost"
                         name={`items[${index}].buyPrice`}
-                        value={formik.values.items[index].buyPrice?.toLocaleString() || ""}
-                        onChange={(e) => handleValueChange(index, "buyPrice", e.target.value)}
+                        value={
+                          formik.values.items[
+                            index
+                          ].buyPrice?.toLocaleString() || ""
+                        }
+                        onChange={(e) =>
+                          handleValueChange(index, "buyPrice", e.target.value)
+                        }
                         error={buyPriceError}
                         helperText={buyPriceError ? buyPriceErrorMessage : ""}
                       />
@@ -631,7 +700,9 @@ const EditPartiallyProcessed: React.FC<EditPartiallyProcessedProps> = ({
                         label="Tax"
                         disabled
                         name={`items[${index}].tax`}
-                        value={formik.values.items[index].tax?.toLocaleString() || ""}
+                        value={
+                          formik.values.items[index].tax?.toLocaleString() || ""
+                        }
                       />
                     </Grid>
                     <Grid item flex={1.5}>
@@ -651,9 +722,14 @@ const EditPartiallyProcessed: React.FC<EditPartiallyProcessedProps> = ({
                         label="Expiry Date"
                         value={formik.values.items[index].expiryDate || null}
                         error={expiryDateError}
-                        helperText={expiryDateError ? expiryDateErrorMessage : ""}
+                        helperText={
+                          expiryDateError ? expiryDateErrorMessage : ""
+                        }
                         onChange={(value) =>
-                          formik.setFieldValue(`items[${index}].expiryDate`, value)
+                          formik.setFieldValue(
+                            `items[${index}].expiryDate`,
+                            value
+                          )
                         }
                       />
                     </Grid>
@@ -664,9 +740,17 @@ const EditPartiallyProcessed: React.FC<EditPartiallyProcessedProps> = ({
                         label="Free Quantity"
                         name={`items[${index}].freeQuantity`}
                         value={formik.values.items[index].freeQuantity || ""}
-                        onChange={(e) => handleValueChange(index, "freeQuantity", e.target.value)}
+                        onChange={(e) =>
+                          handleValueChange(
+                            index,
+                            "freeQuantity",
+                            e.target.value
+                          )
+                        }
                         error={freeQuantityError}
-                        helperText={freeQuantityError ? freeQuantityErrorMessage : ""}
+                        helperText={
+                          freeQuantityError ? freeQuantityErrorMessage : ""
+                        }
                       />
                     </Grid>
                     <Grid item flex={1}>
@@ -676,7 +760,9 @@ const EditPartiallyProcessed: React.FC<EditPartiallyProcessedProps> = ({
                         label="Discount %"
                         name={`items[${index}].discount`}
                         value={formik.values.items[index].discount || ""}
-                        onChange={(e) => handleValueChange(index, "discount", e.target.value)}
+                        onChange={(e) =>
+                          handleValueChange(index, "discount", e.target.value)
+                        }
                         error={discountError}
                         helperText={discountError ? discountErrorMessage : ""}
                       />
@@ -686,7 +772,11 @@ const EditPartiallyProcessed: React.FC<EditPartiallyProcessedProps> = ({
                         fullWidth
                         label="Total Cost"
                         disabled
-                        value={formik.values.items[index].totalCost?.toLocaleString() || ""}
+                        value={
+                          formik.values.items[
+                            index
+                          ].totalCost?.toLocaleString() || ""
+                        }
                       />
                     </Grid>
                     <Grid
@@ -697,7 +787,10 @@ const EditPartiallyProcessed: React.FC<EditPartiallyProcessedProps> = ({
                       alignItems={"flex-start"}
                     >
                       {!onlyOneItem && (
-                        <IconButton size="small" onClick={() => handleDeleteField(index)}>
+                        <IconButton
+                          size="small"
+                          onClick={() => handleDeleteField(index)}
+                        >
                           <Delete fontSize={"small"} />
                         </IconButton>
                       )}
@@ -715,7 +808,12 @@ const EditPartiallyProcessed: React.FC<EditPartiallyProcessedProps> = ({
                   </Grid>
                 );
               })}
-              <Typography variant="subtitle1" color={"primary"} mt={2} gutterBottom>
+              <Typography
+                variant="subtitle1"
+                color={"primary"}
+                mt={2}
+                gutterBottom
+              >
                 Summary
               </Typography>
               <Grid container spacing={2} mt={1}>
@@ -754,7 +852,11 @@ const EditPartiallyProcessed: React.FC<EditPartiallyProcessedProps> = ({
                   />
                 </Grid>
               </Grid>
-              <Typography variant="subtitle1" color={"primary"} sx={{ mt: 2, mb: 2 }}>
+              <Typography
+                variant="subtitle1"
+                color={"primary"}
+                sx={{ mt: 2, mb: 2 }}
+              >
                 Invoice Upload
               </Typography>
               <Grid container spacing={2} marginBottom={2}>

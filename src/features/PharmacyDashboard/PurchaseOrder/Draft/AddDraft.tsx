@@ -108,9 +108,10 @@ const AddDraft: React.FC<AddPurchaseOrderDraftProps> = ({
             item: item.item?._id,
             packSize: item.quantityPerPack, // Map quantityPerPack to packSize
             mrp: finalAmount, // Apply discount to final MRP
-            mrpPerPack: item.mrp, // Map mrp to mrpPerPack
-            buyPrice: item.cost, // Map cost to buyPrice
-            tax: parseFloat((item.tax ?? 0).toFixed(2)),
+            mrpPerPack: parseFloat(parseFloat(item.mrp as any).toFixed(2)),
+            // buyPrice: parseFloat((item.cost ?? 0).toFixed(2)),
+            buyPrice: parseFloat(parseFloat(item.cost as any).toFixed(2)),
+            tax: parseFloat(parseFloat(item.tax as any).toFixed(2)),
             quantity: item.quantity,
             freeQuantity: item.freeQuantity,
             noOfPacks: item.noOfPacks,
@@ -119,7 +120,7 @@ const AddDraft: React.FC<AddPurchaseOrderDraftProps> = ({
         }),
         subTotal: parseFloat((values.subTotal ?? 0).toFixed(2)),
         tax: parseFloat((values.tax ?? 0).toFixed(2)),
-        otherCharges: parseFloat((values.otherCharges ?? 0).toFixed(2)),
+        otherCharges: values.otherCharges ?? 0,
         netAmount: parseFloat((values.netAmount ?? 0).toFixed(2)),
       },
       isDifferentAddress: values.isDifferentAddress,
@@ -190,56 +191,70 @@ const AddDraft: React.FC<AddPurchaseOrderDraftProps> = ({
     let newItems: IItem[] = [...formik.values.items];
     let currentItem: IItem = newItems[index];
 
-    const numericValue = [
-      "quantity",
-      "quantityPerPack",
-      "noOfPacks",
-      "cost",
-      "mrp",
-      "tax",
-      "discount",
-    ].includes(field)
+    const numericValue = ["quantity", "quantityPerPack", "noOfPacks", "freeQuantity"].includes(
+      field
+    )
       ? parseFloat(rawValue.replace(/[^\d.-]/g, "")) || null
       : rawValue;
 
     currentItem = { ...currentItem, [field]: numericValue };
 
-    // Recalculate totalAmount based on discount, packs, cost, and tax
     if (
+      field === "item" ||
       field === "quantityPerPack" ||
       field === "noOfPacks" ||
       field === "cost" ||
-      field === "tax" ||
       field === "discount"
     ) {
-      const quantityPerPack = currentItem.quantityPerPack ?? 0;
-      const noOfPacks = currentItem.noOfPacks ?? 0;
+      const quantityPerPack = currentItem.quantityPerPack ?? 1;
+      const noOfPacks = currentItem.noOfPacks ?? 1;
       const cost = currentItem.cost ?? 0;
-      const taxPercentage = currentItem.tax ?? 0;
-      const taxAmount = noOfPacks * cost * (taxPercentage / 100);
 
-      const totalBeforeDiscount = noOfPacks * cost + taxAmount;
-      const discountAmount = ((currentItem.discount ?? 0) / 100) * totalBeforeDiscount;
-      const totalAmount = totalBeforeDiscount - discountAmount;
+      // Calculate the subtotal (before discount and tax)
+      const subtotal = noOfPacks * cost;
 
-      currentItem.totalAmount = totalAmount;
+      // Apply discount (if any)
+      const discountPercentage = currentItem.discount ?? 0;
+      const discountAmount = (discountPercentage / 100) * subtotal;
+
+      // Subtotal after applying discount
+      const subtotalAfterDiscount = subtotal - discountAmount;
+
+      // Update quantity
       currentItem.quantity = quantityPerPack * noOfPacks;
+
+      // Calculate the tax based on subtotal after discount
+      const taxPercentage = currentItem.tax ?? 0;
+      const taxAmount = subtotalAfterDiscount * (taxPercentage / 100);
+      console.log("Current item tax", taxAmount);
+
+      // Set total amount for the item (subtotal after discount - tax)
+      currentItem.totalAmount = subtotalAfterDiscount; // Exclude tax from total amount
     }
 
     if (field === "item") {
       const quantityPerPack = currentItem.item?.packSize || 1;
       const noOfPacks = currentItem.noOfPacks || 1;
+
       currentItem.quantityPerPack = quantityPerPack;
       currentItem.noOfPacks = noOfPacks;
       currentItem.quantity = quantityPerPack * noOfPacks;
+
       currentItem.cost = currentItem.item?.rate || 0;
       currentItem.mrp = currentItem.item?.mrp || 0;
+
       const taxPercentage = currentItem.item?.taxRate?.taxRate || 0;
-      const taxAmount = noOfPacks * (currentItem.cost || 0) * (taxPercentage / 100);
       currentItem.tax = taxPercentage;
-      const totalBeforeDiscount = noOfPacks * (currentItem.cost || 0) + taxAmount;
-      const discountAmount = ((currentItem.discount ?? 0) / 100) * totalBeforeDiscount;
-      currentItem.totalAmount = totalBeforeDiscount - discountAmount;
+
+      const subtotal = noOfPacks * (currentItem.cost || 0);
+      const discountAmount = ((currentItem.discount ?? 0) / 100) * subtotal;
+      const subtotalAfterDiscount = subtotal - discountAmount;
+
+      // Calculate tax separately, but don't include it in totalAmount
+      // const taxAmount = subtotalAfterDiscount * (currentItem.tax / 100);
+
+      // Set total amount (excluding tax)
+      currentItem.totalAmount = subtotalAfterDiscount; // Exclude tax from total amount
       currentItem.freeQuantity = currentItem.item?.freeQuantity || 0;
     }
 
@@ -248,18 +263,26 @@ const AddDraft: React.FC<AddPurchaseOrderDraftProps> = ({
     updateCalculations(newItems);
   };
 
+  // Function to update subtotal, tax, and net amount in the summary
   const updateCalculations = useCallback(
     (items = formik.values.items) => {
-      const subTotal = calculateSubTotal(items);
-      const tax = calculateTax(items);
-      let netAmount = subTotal + tax;
+      const subTotal = items.reduce((acc, item) => acc + (item.totalAmount ?? 0), 0);
 
-      const otherChargesRaw = formik.values.otherCharges ? +formik.values.otherCharges : 0;
-      const otherCharges: number = !isNaN(otherChargesRaw)
-        ? parseFloat(otherChargesRaw.toFixed(2))
-        : 0;
+      const tax = items.reduce((acc, item) => {
+        const noOfPacks = item.noOfPacks ?? 0;
+        const cost = item.cost ?? 0;
+        const taxPercentage = item.tax ?? 0;
 
-      netAmount += otherCharges;
+        const itemSubtotal = noOfPacks * cost;
+        const discountAmount = ((item.discount ?? 0) / 100) * itemSubtotal;
+        const subtotalAfterDiscount = itemSubtotal - discountAmount;
+
+        const itemTax = subtotalAfterDiscount * (taxPercentage / 100);
+        return acc + itemTax;
+      }, 0);
+
+      const otherCharges = formik.values.otherCharges ?? 0;
+      const netAmount = subTotal + tax + otherCharges;
 
       formik.setFieldValue("subTotal", subTotal);
       formik.setFieldValue("tax", tax);
@@ -307,19 +330,23 @@ const AddDraft: React.FC<AddPurchaseOrderDraftProps> = ({
     onClose();
   };
 
-  const calculateSubTotal = (items: IItem[]) => {
-    return items.reduce((acc, item) => {
-      return acc + (item.totalAmount ?? 0);
-    }, 0);
-  };
+  // const calculateSubTotal = (items: IItem[]) => {
+  //   return items.reduce((acc, item) => {
+  //     return acc + (item.totalAmount ?? 0);
+  //   }, 0);
+  // };
 
-  const calculateTax = (items: IItem[]) => {
-    return items.reduce((acc, item) => {
-      const noOfPacks = item.noOfPacks ?? 0;
-      const itemTax = noOfPacks * (item.cost || 0) * ((item.tax || 0) / 100);
-      return acc + itemTax;
-    }, 0);
-  };
+  // const calculateTax = (items: IItem[]) => {
+  //   return items.reduce((acc, item) => {
+  //     const noOfPacks = item.noOfPacks ?? 0;
+  //     const cost = item.cost ?? 0;
+  //     const taxPercentage = item.tax ?? 0;
+
+  //     // Calculate tax for each item
+  //     const itemTax = noOfPacks * cost * (taxPercentage / 100);
+  //     return acc + itemTax; // Sum up tax for all items
+  //   }, 0);
+  // };
 
   return (
     <Modal open={openModal} onClose={closeModal}>
@@ -361,7 +388,6 @@ const AddDraft: React.FC<AddPurchaseOrderDraftProps> = ({
               <Grid item lg={2}>
                 <CustomDatePicker
                   label="Date"
-                  minDate={new Date()}
                   maxDate={new Date()}
                   value={formik.values.order_date}
                   onChange={(value) => formik.setFieldValue("order_date", value)}
@@ -497,13 +523,11 @@ const AddDraft: React.FC<AddPurchaseOrderDraftProps> = ({
                   <Grid item flex={3}>
                     <FieldAutocomplete
                       options={drugItems}
-                      getOptionLabel={(option) => {
-                        return option?.name;
-                      }}
+                      getOptionLabel={(option) => option?.name}
                       isOptionEqualToValue={(option, value) => option._id === value._id}
                       value={formik.values.items[index].item}
                       onChange={(newValue) => {
-                        handleValueChange(index, "item", newValue);
+                        handleValueChange(index, "item", newValue); // Ensure this is correctly triggering the item selection
                       }}
                       label="Item"
                       error={isItemError}
