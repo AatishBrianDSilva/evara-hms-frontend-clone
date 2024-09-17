@@ -51,23 +51,38 @@ const ViewProcessedPurchaseOrder: React.FC<ViewProcessedPurchaseOrderProps> = ({
   // Check if purchaseOrder and response items are defined
   const rows =
     response?.items?.map((item: any, index: number) => {
-      const mrp = item.mrp || 0;
-      const taxPercentage = item.tax || 0;
-      const taxAmount = (mrp * taxPercentage) / 100;
-      const totalValue = mrp + taxAmount;
+      const noOfPacks = item.noOfPacks ?? 0;
+      const buyPrice = item.buyPrice ?? 0;
+      const discount = item.discount ?? 0;
+      const taxPercentage = item.tax ?? 0;
+
+      // Calculate total amount before tax
+      const totalBeforeTax = noOfPacks * buyPrice;
+
+      // Apply discount
+      const discountAmount = (totalBeforeTax * discount) / 100;
+      const totalAfterDiscount = totalBeforeTax - discountAmount;
+
+      // Apply tax
+      const taxAmount = (totalAfterDiscount * taxPercentage) / 100;
+
+      // Final total with tax included
+      const totalWithTax = totalAfterDiscount + taxAmount;
 
       return {
         id: index + 1,
-        description: item.item?.name || "-", // Fetching item name
-        noOfPacks: item.noOfPacks || "-",
+        description: item.item?.name || "-",
+        noOfPacks: noOfPacks || "-",
         packSize: item.packSize || "-",
         totalQuantity: item.quantity || "-",
         free: item.freeQuantity || "-",
         rate: item.mrpPerPack || "-",
-        amount: item.buyPrice || "-",
+        amount: buyPrice || "-",
         tax: taxPercentage,
-        batchNo: item.batchNo || "_",
-        mrp: totalValue.toFixed(2),
+        batchNo: item.batchNo || "-",
+        discount: discount || "-",
+        totalAmount: totalBeforeTax.toFixed(2),
+        mrp: totalWithTax.toFixed(2), // Updated calculation with tax and discount applied
       };
     }) || [];
 
@@ -76,13 +91,14 @@ const ViewProcessedPurchaseOrder: React.FC<ViewProcessedPurchaseOrderProps> = ({
   const columns: GridColDef[] = [
     { field: "id", headerName: "#", flex: 0.5 },
     { field: "description", headerName: "Description", flex: 2 },
-    { field: "batchNo", headerName: "Batch No.", flex: 1 },
-    { field: "noOfPacks", headerName: "No of Packs", flex: 1 },
-    { field: "packSize", headerName: "Pack Size", flex: 1 },
-    // { field: "totalQuantity", headerName: "Total Quantity", flex: 1 },
+    { field: "noOfPacks", headerName: "Quantity", flex: 1 },
+
     { field: "free", headerName: "Free Qty", flex: 1 },
-    { field: "rate", headerName: "MRP/Pack", flex: 1 },
-    { field: "amount", headerName: "Cost/Pack", flex: 1 },
+
+    { field: "amount", headerName: "Rate", flex: 1 },
+
+    { field: "totalAmount", headerName: "Amount", flex: 1 },
+    { field: "discount", headerName: "Discount(%)", flex: 1 },
     { field: "tax", headerName: "Tax(%)", flex: 1 },
     { field: "mrp", headerName: "Total", flex: 1 },
   ];
@@ -148,8 +164,13 @@ const ViewProcessedPurchaseOrder: React.FC<ViewProcessedPurchaseOrderProps> = ({
             <Grid container spacing={2}>
               <Grid item xs={12} md={4}>
                 <Typography variant="h6">Date</Typography>
-                <Typography>
-                  {purchaseOrder?.date ? new Date(purchaseOrder.date).toLocaleDateString() : "-"}
+                <Typography variant="body1" sx={{ fontWeight: "bold" }}>
+                  Date
+                </Typography>
+                <Typography variant="body1">
+                  {purchaseOrder?.date
+                    ? new Date(purchaseOrder.date).toLocaleDateString("en-GB")
+                    : "-"}
                 </Typography>
               </Grid>
               <Grid item xs={12} md={4}>

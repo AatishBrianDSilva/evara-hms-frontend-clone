@@ -2,7 +2,11 @@ import { Edit, Print, Visibility } from "@mui/icons-material";
 import { Box, Tooltip } from "@mui/material";
 import React, { useState } from "react";
 import CustomDataGrid from "../../../../components/CustomDataGrid/CustomDataGrid";
-import { GridActionsCellItem, GridColDef, GridRowParams } from "@mui/x-data-grid";
+import {
+  GridActionsCellItem,
+  GridColDef,
+  GridRowParams,
+} from "@mui/x-data-grid";
 import EditPurchaseOrderDraft from "./EditOrdered";
 import { useGetDrugItemsQuery } from "../../../../services/pharmacyDashboardService/master/drugItemApi";
 import { useGetDrugVendorsQuery } from "../../../../services/pharmacyDashboardService/master/drugVendorApi";
@@ -11,7 +15,7 @@ import {
   EPurchaseOrderStatus,
   IPurchaseOrder,
 } from "../../../../types/pharmacyDashboard/purchaseOrder";
-import ViewPurchaseOrder from "../ViewPurchaseOrder";
+import ViewPurchaseOrder from "./ViewPurchaseOrder";
 import { usePrint } from "../../../../context/PrintPDFContext";
 
 const Ordered: React.FC = () => {
@@ -241,7 +245,11 @@ const Ordered: React.FC = () => {
         const row = params.row;
         const actions = [
           <Tooltip title="Edit">
-            <GridActionsCellItem icon={<Edit />} label="Edit" onClick={() => openEditModal(row)} />
+            <GridActionsCellItem
+              icon={<Edit />}
+              label="Edit"
+              onClick={() => openEditModal(row)}
+            />
           </Tooltip>,
           <Tooltip title="View">
             <GridActionsCellItem
@@ -259,7 +267,9 @@ const Ordered: React.FC = () => {
               <GridActionsCellItem
                 icon={<Print />}
                 label="Print"
-                onClick={() => fetchAndPrintPdf(row._id, "POInvoice", "pharmacy")}
+                onClick={() =>
+                  fetchAndPrintPdf(row._id, "POInvoice", "pharmacy")
+                }
               />
             </Tooltip>
           );

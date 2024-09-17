@@ -95,32 +95,57 @@ const ViewAndPrintPurchaseOrder: React.FC<ViewPurchaseOrderProps> = ({
   const purchaseOrder = purchaseOrderData?.data;
   const isLoadingOrder = isLoading || isFetching;
 
+  console.log("Current Po", purchaseOrder);
+
   const columns: GridColDef[] = [
     { field: "id", headerName: "#", flex: 0.5 },
     { field: "description", headerName: "Description", flex: 2 },
-    { field: "noOfPacks", headerName: "No of Packs", flex: 1 },
-    { field: "packSize", headerName: "Pack Size", flex: 1 },
-    // { field: "totalQuantity", headerName: "Total Quantity", flex: 1 },
+    { field: "noOfPacks", headerName: "Quantity", flex: 1 },
+
     { field: "free", headerName: "Free Qty", flex: 1 },
-    { field: "rate", headerName: "MRP/Pack", flex: 1 },
-    { field: "amount", headerName: "Cost/Pack", flex: 1 },
+
+    { field: "amount", headerName: "Rate", flex: 1 },
+
+    { field: "totalAmount", headerName: "Amount", flex: 1 },
+    { field: "discount", headerName: "Discount(%)", flex: 1 },
     { field: "tax", headerName: "Tax(%)", flex: 1 },
     { field: "mrp", headerName: "Total", flex: 1 },
   ];
-
   const rows =
-    purchaseOrder?.request.items.map((item, index) => ({
-      id: index + 1,
-      description: item.item?.name || "-",
-      noOfPacks: item.noOfPacks || "-",
-      packSize: item.packSize || "-",
-      totalQuantity: item.quantity || "-",
-      free: item.freeQuantity || "-",
-      rate: item.mrpPerPack || "-",
-      amount: item.buyPrice || "-",
-      tax: item.tax || "-",
-      mrp: item.mrp || "-",
-    })) || [];
+    purchaseOrder?.request.items.map((item, index) => {
+      const noOfPacks = item.noOfPacks ?? 0;
+      const buyPrice = item.buyPrice ?? 0;
+      const discount = item.discount ?? 0;
+      const taxPercentage = item.tax ?? 0;
+
+      // Calculate the total amount before tax
+      const totalBeforeTax = noOfPacks * buyPrice;
+
+      // Apply discount
+      const discountAmount = (totalBeforeTax * discount) / 100;
+      const totalAfterDiscount = totalBeforeTax - discountAmount;
+
+      // Apply tax
+      const taxAmount = (totalAfterDiscount * taxPercentage) / 100;
+
+      // Final total with tax included
+      const totalWithTax = totalAfterDiscount + taxAmount;
+
+      return {
+        id: index + 1,
+        description: item.item?.name || "-",
+        noOfPacks: noOfPacks || "-",
+        packSize: item.packSize || "-",
+        totalQuantity: item.quantity || "-",
+        free: item.freeQuantity || "-",
+        rate: item.mrpPerPack || "-",
+        amount: buyPrice || "-",
+        tax: taxPercentage || "-",
+        discount: discount || "-",
+        totalAmount: totalBeforeTax.toFixed(2) || "-",
+        mrp: totalWithTax.toFixed(2) || "-",
+      };
+    }) || [];
 
   const totalAmount = purchaseOrder?.request.netAmount || "-";
 
@@ -205,7 +230,12 @@ const ViewAndPrintPurchaseOrder: React.FC<ViewPurchaseOrderProps> = ({
           </Grid>
           <Grid item xs={12} md={4}>
             <Typography variant="h6">Date</Typography>
-            <Typography>{new Date(purchaseOrder?.date).toLocaleDateString()}</Typography>
+            <Typography variant="body1" sx={{ fontWeight: "bold" }}>
+              Date
+            </Typography>
+            <Typography variant="body1">
+              {purchaseOrder?.date ? new Date(purchaseOrder.date).toLocaleDateString("en-GB") : "-"}
+            </Typography>{" "}
           </Grid>
           <Grid item xs={12} md={4}>
             <Typography variant="h6">Total Amount</Typography>
@@ -217,7 +247,7 @@ const ViewAndPrintPurchaseOrder: React.FC<ViewPurchaseOrderProps> = ({
           </Grid>
           <Grid item xs={12} md={4}>
             <Typography variant="h6">TIN</Typography>
-            <Typography>{purchaseOrder?.vendor.gst}</Typography>
+            <Typography>RCHE00911B</Typography>
           </Grid>
         </Grid>
         <Divider sx={{ my: 2 }} />

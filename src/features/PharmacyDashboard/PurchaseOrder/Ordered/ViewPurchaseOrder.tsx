@@ -11,8 +11,8 @@ import {
 } from "@mui/material";
 import { DataGrid } from "@mui/x-data-grid";
 import React from "react";
-import { useGetPurchaseOrderByIdQuery } from "../../../services/pharmacyDashboardService/purchaseOrderApi";
-import { IPurchaseOrder } from "../../../types/pharmacyDashboard/purchaseOrder";
+import { useGetPurchaseOrderByIdQuery } from "../../../../services/pharmacyDashboardService/purchaseOrderApi";
+import { IPurchaseOrder } from "../../../../types/pharmacyDashboard/purchaseOrder";
 
 interface ViewPurchaseOrderProps {
   openModal: boolean;
@@ -56,9 +56,9 @@ const ViewPurchaseOrder: React.FC<ViewPurchaseOrderProps> = ({ openModal, onClos
     { field: "free", headerName: "Free Qty", flex: 1 },
 
     { field: "amount", headerName: "Rate", flex: 1 },
-    { field: "discount", headerName: "Discount(%)", flex: 1 },
-    { field: "totalAmount", headerName: "Amount", flex: 1 },
 
+    { field: "totalAmount", headerName: "Amount", flex: 1 },
+    { field: "discount", headerName: "Discount(%)", flex: 1 },
     { field: "tax", headerName: "Tax(%)", flex: 1 },
     { field: "mrp", headerName: "Total", flex: 1 },
   ];
@@ -183,7 +183,7 @@ const ViewPurchaseOrder: React.FC<ViewPurchaseOrderProps> = ({ openModal, onClos
               Date
             </Typography>
             <Typography variant="body1">
-              {new Date(purchaseOrder?.date).toLocaleDateString()}
+              {purchaseOrder?.date ? new Date(purchaseOrder.date).toLocaleDateString("en-GB") : "-"}
             </Typography>
           </Grid>
           <Grid item xs={12} md={4}>
@@ -202,7 +202,7 @@ const ViewPurchaseOrder: React.FC<ViewPurchaseOrderProps> = ({ openModal, onClos
             <Typography variant="body1" sx={{ fontWeight: "bold" }}>
               TIN
             </Typography>
-            <Typography variant="body1">{purchaseOrder?.vendor.gst}</Typography>
+            <Typography>RCHE00911B</Typography>{" "}
           </Grid>
         </Grid>
 
@@ -224,11 +224,6 @@ const ViewPurchaseOrder: React.FC<ViewPurchaseOrderProps> = ({ openModal, onClos
         </Box>
 
         <Divider sx={{ my: 2 }} />
-
-        {/* Company Information */}
-        <Typography variant="body1" sx={{ fontWeight: "bold" }}>
-          Company TIN: {purchaseOrder.vendor.gst}
-        </Typography>
       </Box>
     );
   };
