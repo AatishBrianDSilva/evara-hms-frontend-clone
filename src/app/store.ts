@@ -71,6 +71,12 @@ import { patientTimelineApi } from "../services/patientDashboardService/patientT
 import { internalConsumptionApi } from "../services/pharmacyDashboardService/internalConsumptionApi";
 import { treatmentAdviceApi } from "../services/patientDashboardService/treatmentAdviceApi";
 import { packageApi } from "../services/patientDashboardService/packageApi";
+import { salesByScheduleApi } from "../services/analyticsDashboardService/pharmacy/salesByScheduleApi";
+import { stockSummaryApi } from "../services/analyticsDashboardService/pharmacy/stockSummaryApi";
+import { expiryDetailsApi } from "../services/analyticsDashboardService/pharmacy/expiryDetailaApi";
+import { drugsAndVendorApi } from "../services/analyticsDashboardService/pharmacy/drugsAndVendorApi";
+import { internalConsumptionReportApi } from "../services/analyticsDashboardService/pharmacy/internalConsumptionReportApi";
+import { patientReturnApi } from "../services/analyticsDashboardService/pharmacy/patientReturnApi";
 
 import * as Sentry from "@sentry/react";
 
@@ -134,6 +140,12 @@ const persistConfig = {
     treatmentAdviceApi.reducerPath,
     masterPackagesApi.reducerPath,
     packageApi.reducerPath,
+    salesByScheduleApi.reducerPath,
+    stockSummaryApi.reducerPath,
+    expiryDetailsApi.reducerPath,
+    drugsAndVendorApi.reducerPath,
+    internalConsumptionReportApi.reducerPath,
+    patientReturnApi.reducerPath,
     "patients",
     "appointments",
     "investigation",
@@ -173,8 +185,7 @@ const rootReducer = combineReducers({
   [masterProceduresApi.reducerPath]: masterProceduresApi.reducer,
   [masterServicesApi.reducerPath]: masterServicesApi.reducer,
   [serviceCyclesStagesApi.reducerPath]: serviceCyclesStagesApi.reducer,
-  [serviceCyclesConsumablesApi.reducerPath]:
-    serviceCyclesConsumablesApi.reducer,
+  [serviceCyclesConsumablesApi.reducerPath]: serviceCyclesConsumablesApi.reducer,
   [globalUserApi.reducerPath]: globalUserApi.reducer,
   [globalBranchApi.reducerPath]: globalBranchApi.reducer,
   [appointmentSourcesApi.reducerPath]: appointmentSourcesApi.reducer,
@@ -191,13 +202,18 @@ const rootReducer = combineReducers({
   [homeApi.reducerPath]: homeApi.reducer,
   [patientReportsApi.reducerPath]: patientReportsApi.reducer,
   [invoiceApi.reducerPath]: invoiceApi.reducer,
-  [analyticsPatientBillingsApi.reducerPath]:
-    analyticsPatientBillingsApi.reducer,
+  [analyticsPatientBillingsApi.reducerPath]: analyticsPatientBillingsApi.reducer,
   [patientTimelineApi.reducerPath]: patientTimelineApi.reducer,
   [internalConsumptionApi.reducerPath]: internalConsumptionApi.reducer,
   [treatmentAdviceApi.reducerPath]: treatmentAdviceApi.reducer,
   [masterPackagesApi.reducerPath]: masterPackagesApi.reducer,
   [packageApi.reducerPath]: packageApi.reducer,
+  [salesByScheduleApi.reducerPath]: salesByScheduleApi.reducer,
+  [drugsAndVendorApi.reducerPath]: drugsAndVendorApi.reducer,
+  [expiryDetailsApi.reducerPath]: expiryDetailsApi.reducer,
+  [stockSummaryApi.reducerPath]: stockSummaryApi.reducer,
+  [internalConsumptionReportApi.reducerPath]: internalConsumptionReportApi.reducer,
+  [patientReturnApi.reducerPath]: patientReturnApi.reducer,
 
   patients: patientsReducer,
   appointments: appointmentReducer,
@@ -270,7 +286,13 @@ export const store = configureStore({
       .concat(internalConsumptionApi.middleware)
       .concat(treatmentAdviceApi.middleware)
       .concat(masterPackagesApi.middleware)
-      .concat(packageApi.middleware),
+      .concat(packageApi.middleware)
+      .concat(salesByScheduleApi.middleware)
+      .concat(drugsAndVendorApi.middleware)
+      .concat(expiryDetailsApi.middleware)
+      .concat(internalConsumptionReportApi.middleware)
+      .concat(stockSummaryApi.middleware)
+      .concat(patientReturnApi.middleware),
   enhancers(getDefaultEnhancers) {
     return getDefaultEnhancers().concat(sentryReduxEnhancer);
   },

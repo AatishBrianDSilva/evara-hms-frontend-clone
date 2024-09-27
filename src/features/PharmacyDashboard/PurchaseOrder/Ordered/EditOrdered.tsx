@@ -290,7 +290,7 @@ const EditPurchaseOrderDraft: React.FC<EditPurchaseOrderDraftProps> = ({
         tax: values.tax,
 
         otherCharges: values.otherCharges,
-        netAmount: values.netAmount,
+        netAmount: Math.round(values.netAmount ?? 0),
       },
       response: {
         items: values.items.map((item) => ({
@@ -457,7 +457,8 @@ const EditPurchaseOrderDraft: React.FC<EditPurchaseOrderDraftProps> = ({
     }, 0);
 
     // Recalculate netAmount (subTotal + totalTax + otherCharges)
-    const netAmount = subTotal + totalTax + (formik.values.otherCharges ?? 0);
+    // const netAmount = subTotal + totalTax + (formik.values.otherCharges ?? 0);
+    const netAmount = Math.round(subTotal + totalTax + (formik.values.otherCharges ?? 0)); // Round to nearest integer
 
     // Update formik values
     formik.setFieldValue("subTotal", subTotal);

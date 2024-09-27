@@ -10,7 +10,7 @@ import "react-toastify/dist/ReactToastify.css";
 interface PrintPDFContextProps {
   fetchAndPrintPdf: (
     id: string,
-    type?: "report" | "invoice" | "uploadedFiles" | "POInvoice",
+    type?: "report" | "invoice" | "uploadedFiles" | "POInvoice" | "POInvoiceProcessed",
     sourceType?: "patient" | "pharmacy"
   ) => void;
   fetchAndPrintUploadedPDF: (fileUrl: string) => void;
@@ -44,13 +44,16 @@ export const PrintProvider: React.FC<{ children: React.ReactNode }> = ({ childre
 
   const fetchAndPrintPdf = async (
     reportId: string,
-    type: "report" | "invoice" | "uploadedFiles" | "POInvoice" = "report",
+    type: "report" | "invoice" | "uploadedFiles" | "POInvoice" | "POInvoiceProcessed" = "report",
     sourceType: "patient" | "pharmacy" = "patient"
   ) => {
     let url = "";
     if (type === "POInvoice") {
       // If type is POInvoice, map to downloadPOInvoice endpoint
       url = `${API_BASE_URL}/pharmacy-dashboard/purchase-order/download/${reportId}`;
+    } else if (type === "POInvoiceProcessed") {
+      // If type is POInvoice, map to downloadPOInvoice endpoint
+      url = `${API_BASE_URL}/pharmacy-dashboard/purchase-order/processed/download/${reportId}`;
     } else if (reportId) {
       // Handle regular reportId-based fetching logic
       if (type === "report" && sourceType === "patient") {

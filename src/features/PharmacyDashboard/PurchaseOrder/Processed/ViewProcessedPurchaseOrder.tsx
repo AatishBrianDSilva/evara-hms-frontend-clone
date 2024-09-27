@@ -40,13 +40,13 @@ const ViewProcessedPurchaseOrder: React.FC<ViewProcessedPurchaseOrderProps> = ({
   const purchaseOrder = purchaseOrderData?.data;
   const isLoadingOrder = isLoading || isFetching;
 
-  console.log("Processed PO", purchaseOrder);
+  // console.log("Processed PO", purchaseOrder);
 
   // Find the specific response using response._id
   const response = (purchaseOrder as IPurchaseOrderWithResponses)?.responses?.find(
     (res: any) => res._id === id
   );
-  console.log("Response", response);
+  // console.log("Response", response);
 
   // Check if purchaseOrder and response items are defined
   const rows =
@@ -82,7 +82,7 @@ const ViewProcessedPurchaseOrder: React.FC<ViewProcessedPurchaseOrderProps> = ({
         batchNo: item.batchNo || "-",
         discount: discount || "-",
         totalAmount: totalBeforeTax.toFixed(2),
-        mrp: totalWithTax.toFixed(2), // Updated calculation with tax and discount applied
+        mrp: Math.round(totalWithTax), // Updated calculation with tax and discount applied
       };
     }) || [];
 
@@ -175,7 +175,7 @@ const ViewProcessedPurchaseOrder: React.FC<ViewProcessedPurchaseOrderProps> = ({
               </Grid>
               <Grid item xs={12} md={4}>
                 <Typography variant="h6">Total Amount</Typography>
-                <Typography>₹{totalAmount}</Typography>
+                <Typography>₹{Math.round(totalAmount)}</Typography>
               </Grid>
               <Grid item xs={12} md={4}>
                 <Typography variant="h6">Status</Typography>

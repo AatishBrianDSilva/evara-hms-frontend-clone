@@ -16,11 +16,12 @@ export const PatientRegistrationValidationSchema = Yup.object().shape({
   motherTounge: Yup.string(),
   occupation: Yup.string().required("Occupation is required"),
   religion: Yup.string().required("Religion is required"),
-  mobile: Yup.string()
-    .matches(/^(\+\d{1,3}\s?)?\d{1,13}$/, "Phone number can have maximum 13 digits")
-    .required("Phone is required"),
+  mobile: Yup.string().matches(
+    /^(\+\d{1,3}\s?)?\d{1,13}$/,
+    "Phone number can have maximum 13 digits"
+  ),
   alernativeMobile: Yup.string(),
-  email: Yup.string().email("Invalid email format").required("Email is required"),
+  email: Yup.string().email("Invalid email format"),
   dependentType: Yup.string(),
   dependentName: Yup.string(),
   dependentRelation: Yup.string(),
@@ -70,12 +71,9 @@ export const PartnerRegistrationValidationSchema = Yup.object().shape({
   countryBirth: Yup.string(),
   motherTounge: Yup.string(),
   occupation: Yup.string().required("Occupation is required"),
-  mobile: Yup.string()
-    .required("Mobile number is required")
-    .max(10, "Invalid mobile number")
-    .min(10, "Invalid mobile number"),
+  mobile: Yup.string().max(10, "Invalid mobile number").min(10, "Invalid mobile number"),
   alernativeMobile: Yup.string().max(10, "Invalid mobile number").min(10, "Invalid mobile number"),
-  email: Yup.string().email("Invalid email format").required("Email is required"),
+  email: Yup.string().email("Invalid email format"),
   dependentType: Yup.string(),
   dependentName: Yup.string(),
   dependentRelation: Yup.string(),
@@ -123,12 +121,9 @@ export const DonorRegistrationfrombankValidationSchema = Yup.object().shape({
   motherTounge: Yup.string(),
   occupation: Yup.string().required("Occupation is required"),
   religion: Yup.string().required("Religion is required"),
-  mobile: Yup.string()
-    .required("Mobile number is required")
-    .max(10, "Invalid mobile number")
-    .min(10, "Invalid mobile number"),
+  mobile: Yup.string().max(10, "Invalid mobile number").min(10, "Invalid mobile number"),
   alernativeMobile: Yup.string().max(10, "Invalid mobile number").min(10, "Invalid mobile number"),
-  email: Yup.string().email("Invalid email format").required("Email is required"),
+  email: Yup.string().email("Invalid email format"),
   dependentType: Yup.boolean(),
 
   addressLine1: Yup.string().required("Address line 1 is required"),
@@ -179,12 +174,9 @@ export const DonorRegistrationValidationSchemaFromHospital = Yup.object().shape(
   motherTounge: Yup.string(),
   occupation: Yup.string().required("Occupation is required"),
   religion: Yup.string(),
-  mobile: Yup.string()
-    .required("Mobile number is required")
-    .max(10, "Invalid mobile number")
-    .min(10, "Invalid mobile number"),
+  mobile: Yup.string().max(10, "Invalid mobile number").min(10, "Invalid mobile number"),
   alernativeMobile: Yup.string().max(10, "Invalid mobile number").min(10, "Invalid mobile number"),
-  email: Yup.string().email("Invalid email format").required("Email is required"),
+  email: Yup.string().email("Invalid email format"),
   dependentType: Yup.string(),
   dependentName: Yup.string(),
   dependentRelation: Yup.string(),

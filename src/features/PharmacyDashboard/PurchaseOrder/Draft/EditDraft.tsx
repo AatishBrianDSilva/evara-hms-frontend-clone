@@ -278,7 +278,7 @@ const EditDraft: React.FC<EditPurchaseOrderDraftProps> = ({
         subTotal: parseFloat((values.subTotal ?? 0).toFixed(2)),
         tax: parseFloat((values.tax ?? 0).toFixed(2)),
         otherCharges: values.otherCharges ?? 0,
-        netAmount: parseFloat((values.netAmount ?? 0).toFixed(2)),
+        netAmount: Math.round(values.netAmount ?? 0),
       },
     };
 
@@ -383,7 +383,7 @@ const EditDraft: React.FC<EditPurchaseOrderDraftProps> = ({
       const otherCharges = formik.values.otherCharges ?? 0;
 
       // Calculate netAmount (subTotal + tax + otherCharges)
-      const netAmount = subTotal + totalTax + otherCharges;
+      const netAmount = Math.round(subTotal + totalTax + otherCharges); // Round to nearest integer
 
       // Set the updated values in the form
       formik.setFieldValue("subTotal", subTotal);

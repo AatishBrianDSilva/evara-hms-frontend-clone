@@ -1,20 +1,13 @@
 import { createApi } from "@reduxjs/toolkit/query/react";
-import {
-  ApiResponse,
-  IQueryOptions,
-  PaginatedResponse,
-} from "../../types/global";
-import {
-  IPaginatedPharmacyStock,
-  IPharmacyStock,
-} from "../../types/pharmacyDashboard/stocks";
+import { ApiResponse, IQueryOptions, PaginatedResponse } from "../../types/global";
+import { IPaginatedPharmacyStock, IPharmacyStock } from "../../types/pharmacyDashboard/stocks";
 import generateQueryParams from "../../utils/generateQueryParams";
 import { baseQuery } from "../baseQuery";
 
 export const stocksApi = createApi({
   reducerPath: "stocksApi",
   baseQuery: baseQuery,
-  tagTypes: ["Stocks"],
+  tagTypes: ["Stocks", "InternalConsumption"],
   endpoints: (builder) => ({
     getPaginatedStocks: builder.query<
       ApiResponse<PaginatedResponse<IPaginatedPharmacyStock>>,
@@ -31,7 +24,7 @@ export const stocksApi = createApi({
     }),
     getStocks: builder.query<ApiResponse<IPharmacyStock[]>, void>({
       query: () => "pharmacy-dashboard/stocks",
-      providesTags: (_result, _error, _args) => ["Stocks"],
+      providesTags: (_result, _error, _args) => ["Stocks", "InternalConsumption"],
     }),
     getStockById: builder.query<ApiResponse<IPaginatedPharmacyStock>, string>({
       query: (id) => `pharmacy-dashboard/stocks/${id}`,
@@ -40,8 +33,4 @@ export const stocksApi = createApi({
   }),
 });
 
-export const {
-  useGetStocksQuery,
-  useGetPaginatedStocksQuery,
-  useGetStockByIdQuery,
-} = stocksApi;
+export const { useGetStocksQuery, useGetPaginatedStocksQuery, useGetStockByIdQuery } = stocksApi;

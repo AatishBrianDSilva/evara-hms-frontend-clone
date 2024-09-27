@@ -26,11 +26,7 @@ interface EditPendingProps {
   id: string;
 }
 
-const EditPending: React.FC<EditPendingProps> = ({
-  openModal,
-  onClose,
-  id,
-}) => {
+const EditPending: React.FC<EditPendingProps> = ({ openModal, onClose, id }) => {
   const { showPromiseToast } = useToast();
 
   const patient = useSelector((state: RootState) => state.patients.patient);
@@ -136,8 +132,9 @@ const EditPending: React.FC<EditPendingProps> = ({
                       type="number"
                       InputProps={{
                         inputProps: {
-                          min: 0,
-                          max: 100,
+                          min: 0, // Minimum value is 0
+                          max: 100, // Maximum value is 100
+                          step: "any", // Allow any decimal places
                         },
                       }}
                       value={formik.values.discount}
@@ -163,6 +160,7 @@ const EditPending: React.FC<EditPendingProps> = ({
                     InputProps={{
                       inputProps: {
                         min: 0,
+                        step: "any", // Allow any decimal places
                       },
                     }}
                     value={formik.values.discount}
@@ -193,17 +191,8 @@ const EditPending: React.FC<EditPendingProps> = ({
                   reportId={billing?._id || ""}
                 />
               </Grid>
-              <Grid
-                item
-                xs={12}
-                style={{ display: "flex", justifyContent: "flex-end" }}
-              >
-                <Button
-                  type="submit"
-                  variant="contained"
-                  color="primary"
-                  disabled={isEditing}
-                >
+              <Grid item xs={12} style={{ display: "flex", justifyContent: "flex-end" }}>
+                <Button type="submit" variant="contained" color="primary" disabled={isEditing}>
                   Save
                 </Button>
                 <Button

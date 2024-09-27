@@ -69,11 +69,11 @@ const AnalyticsSidebar: React.FC = () => {
       icon: CorporateFareIcon,
       primaryText: "Pharmacy",
       children: [
-        {
-          icon: FiberManualRecordIcon,
-          primaryText: "Expiring Pharmacy Stocks",
-          path: "/analytics/pharmacy/expiring-stocks",
-        },
+        // {
+        //   icon: FiberManualRecordIcon,
+        //   primaryText: "Expiring Pharmacy Stocks",
+        //   path: "/analytics/pharmacy/expiring-stocks",
+        // },
         {
           icon: FiberManualRecordIcon,
           primaryText: "Pharmacy Reports",
@@ -83,6 +83,36 @@ const AnalyticsSidebar: React.FC = () => {
           icon: FiberManualRecordIcon,
           primaryText: "Purchase Order Reports",
           path: "/analytics/pharmacy/purchase-order-reports",
+        },
+        {
+          icon: FiberManualRecordIcon,
+          primaryText: "Sale By Schedule",
+          path: "/analytics/pharmacy/sale-by-schedule-reports",
+        },
+        {
+          icon: FiberManualRecordIcon,
+          primaryText: "Internal Consumption",
+          path: "/analytics/pharmacy/internal-consumption-reports",
+        },
+        {
+          icon: FiberManualRecordIcon,
+          primaryText: "Drugs And Vendors",
+          path: "/analytics/pharmacy/drugs-and-vendors-reports",
+        },
+        {
+          icon: FiberManualRecordIcon,
+          primaryText: "Patient Return",
+          path: "/analytics/pharmacy/patient-return-reports",
+        },
+        {
+          icon: FiberManualRecordIcon,
+          primaryText: "Stock Summary",
+          path: "/analytics/pharmacy/stock-summary-reports",
+        },
+        {
+          icon: FiberManualRecordIcon,
+          primaryText: "Expiry Details",
+          path: "/analytics/pharmacy/expiry-details",
         },
       ],
     },

@@ -1,6 +1,11 @@
 /// <reference path="./.sst/platform/config.d.ts" />
 
 export default $config({
+  /**
+   * Configures the app settings.
+   * @param {import("./.sst/node/config").Input} input - The input object containing information about the current build.
+   * @returns {import("./.sst/node/config").AppConfig} - The app settings.
+   */
   app(input) {
     return {
       name: "hms-dashboard",

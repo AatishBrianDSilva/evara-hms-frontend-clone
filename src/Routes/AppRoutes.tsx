@@ -114,26 +114,25 @@ import Timeline from "../features/PatientDashboard/Journey/Timeline/Timeline";
 import InternalConsumption from "../features/PharmacyDashboard/InternalConsumption/InternalConsumption";
 import BillingsRefund from "../features/PatientDashboard/Billings/Refund/BillingsRefund";
 import { SentryRoutes } from "../main";
+import SaleBySchedule from "../features/AnalyticsDashboard/Pharmacy/SaleBySchedule";
+import InternalConsumptionReports from "../features/AnalyticsDashboard/Pharmacy/InternalConsumption";
+import DrugsAndVendorReports from "../features/AnalyticsDashboard/Pharmacy/DrugsAndVendor";
+import PatientReturnReports from "../features/AnalyticsDashboard/Pharmacy/PatientReturn";
+import StockSummaryReports from "../features/AnalyticsDashboard/Pharmacy/StockSummary";
+import ExpiryDetails from "../features/AnalyticsDashboard/Pharmacy/ExpiryDetails";
 
 interface ProtectedRouteProps {
   allowedRoles: string[];
   navigateTo: "/login" | "/not-authorized";
 }
 
-const ProtectedRoute: React.FC<ProtectedRouteProps> = ({
-  allowedRoles,
-  navigateTo,
-}) => {
+const ProtectedRoute: React.FC<ProtectedRouteProps> = ({ allowedRoles, navigateTo }) => {
   const user = useSelector((state: RootState) => {
     return state.auth.user;
   });
   const userRole = user?.role ?? "";
   // const userRole = EUserRole.Pharmacist;
-  return allowedRoles.includes(userRole) ? (
-    <Outlet />
-  ) : (
-    <Navigate to={navigateTo} />
-  );
+  return allowedRoles.includes(userRole) ? <Outlet /> : <Navigate to={navigateTo} />;
 };
 
 const AppRoutes: React.FC = () => (
@@ -143,12 +142,7 @@ const AppRoutes: React.FC = () => (
     <Route element={<Layout />}>
       <Route
         path="/"
-        element={
-          <ProtectedRoute
-            allowedRoles={Object.values(EUserRole)}
-            navigateTo="/login"
-          />
-        }
+        element={<ProtectedRoute allowedRoles={Object.values(EUserRole)} navigateTo="/login" />}
       >
         <Route index element={<Home />} />
 
@@ -167,14 +161,8 @@ const AppRoutes: React.FC = () => (
           }
         >
           <Route element={<IVFRegistrationTab />}>
-            <Route
-              index
-              element={<Navigate to={EIVFRegistrationTabPaths.Patient} />}
-            />
-            <Route
-              path={EIVFRegistrationTabPaths.Patient}
-              element={<PatientRegistration />}
-            />
+            <Route index element={<Navigate to={EIVFRegistrationTabPaths.Patient} />} />
+            <Route path={EIVFRegistrationTabPaths.Patient} element={<PatientRegistration />} />
             <Route
               path={EIVFRegistrationTabPaths.DonorBank}
               element={<DonorRegistrationFromBank />}
@@ -190,89 +178,47 @@ const AppRoutes: React.FC = () => (
 
         <Route path="patient/:id" element={<PatientDashboard />}>
           {/* Default path is journey for the patient/:id */}
-          <Route
-            index
-            element={<Navigate to={EPatientTabPaths.Journey} replace />}
-          />
+          <Route index element={<Navigate to={EPatientTabPaths.Journey} replace />} />
           {/* Routing for Patient Main Tabs */}
 
           {/* Routing for Journey Tabs */}
-          <Route
-            path={EPatientTabPaths.Journey}
-            element={<PatientJourneyTabs />}
-          >
+          <Route path={EPatientTabPaths.Journey} element={<PatientJourneyTabs />}>
             {/* Default path is investigation for journey tab*/}
-            <Route
-              index
-              element={<Navigate to={EJourneyTabPaths.Timeline} replace />}
-            />
+            <Route index element={<Navigate to={EJourneyTabPaths.Timeline} replace />} />
             <Route path={EJourneyTabPaths.Timeline} element={<Timeline />} />
             <Route
               path={`${EJourneyTabPaths.Investigations}/:itemId?`}
               element={<Investigations />}
             />
-            <Route
-              path={`${EJourneyTabPaths.Packages}/:itemId?`}
-              element={<Packages />}
-            />
+            <Route path={`${EJourneyTabPaths.Packages}/:itemId?`} element={<Packages />} />
             <Route
               path={`${EJourneyTabPaths.TreatmentAdvice}/:itemId?`}
               element={<TreatmentAdvice />}
             />
-            <Route
-              path={`${EJourneyTabPaths.Procedure}/:itemId?`}
-              element={<Procedures />}
-            />
+            <Route path={`${EJourneyTabPaths.Procedure}/:itemId?`} element={<Procedures />} />
             <Route
               path={`${EJourneyTabPaths.CryoPreservation}/:itemId?`}
               element={<CryoPreservations />}
             />
-            <Route
-              path={`${EJourneyTabPaths.Services}/:itemId?`}
-              element={<Services />}
-            />
-            <Route
-              path={`${EJourneyTabPaths.Cycle}/:itemId?`}
-              element={<TreatmentCycle />}
-            />
+            <Route path={`${EJourneyTabPaths.Services}/:itemId?`} element={<Services />} />
+            <Route path={`${EJourneyTabPaths.Cycle}/:itemId?`} element={<TreatmentCycle />} />
           </Route>
 
           {/* Routing for the rest of the tabs */}
           <Route path={EPatientTabPaths.Notes} element={<Notes />} />
           <Route path={EPatientTabPaths.History} element={<History />} />
-          <Route
-            path={EPatientTabPaths.Appointment}
-            element={<PatientAppointment />}
-          />
-          <Route
-            path={EPatientTabPaths.Pharmacy}
-            element={<PatientPharmacy />}
-          />
+          <Route path={EPatientTabPaths.Appointment} element={<PatientAppointment />} />
+          <Route path={EPatientTabPaths.Pharmacy} element={<PatientPharmacy />} />
 
-          <Route
-            index
-            element={<Navigate to={EJourneyTabPaths.Investigations} replace />}
-          />
+          <Route index element={<Navigate to={EJourneyTabPaths.Investigations} replace />} />
           <Route path={EPatientTabPaths.Report} element={<Report />} />
           <Route path={EPatientTabPaths.Billings} element={<BillingsTab />}>
-            <Route
-              index
-              element={<Navigate to={EBillingsTabPaths.Estimation} replace />}
-            />
-            <Route
-              path={EBillingsTabPaths.Estimation}
-              element={<BillingsEstimations />}
-            />
-            <Route
-              path={EBillingsTabPaths.Pending}
-              element={<BillingsPending />}
-            />
+            <Route index element={<Navigate to={EBillingsTabPaths.Estimation} replace />} />
+            <Route path={EBillingsTabPaths.Estimation} element={<BillingsEstimations />} />
+            <Route path={EBillingsTabPaths.Pending} element={<BillingsPending />} />
             {/* <Route path={EBillingsTabPaths.Advance} element={<BillingsAdvance />} /> */}
             <Route path={EBillingsTabPaths.Paid} element={<BillingsPaid />} />
-            <Route
-              path={EBillingsTabPaths.Refund}
-              element={<BillingsRefund />}
-            />
+            <Route path={EBillingsTabPaths.Refund} element={<BillingsRefund />} />
             {/* <Route path={EBillingsTabPaths.Archieved} element={<BillingsArchived />} /> */}
             {/* <Route path={EBillingsTabPaths.Transactions} element={<BillingsTransactions />} /> */}
           </Route>
@@ -296,58 +242,25 @@ const AppRoutes: React.FC = () => (
           </Route>
 
           <Route path="purchase-order" element={<PurchaseOrder />}>
-            <Route
-              index
-              element={<Navigate to={EPurchaseOrderTabPaths.Draft} replace />}
-            />
+            <Route index element={<Navigate to={EPurchaseOrderTabPaths.Draft} replace />} />
             <Route path={EPurchaseOrderTabPaths.Draft} element={<Draft />} />
-            <Route
-              path={EPurchaseOrderTabPaths.Approved}
-              element={<Approved />}
-            />
-            <Route
-              path={EPurchaseOrderTabPaths.Rejected}
-              element={<Rejected />}
-            />
-            <Route
-              path={EPurchaseOrderTabPaths.Ordered}
-              element={<Ordered />}
-            />
+            <Route path={EPurchaseOrderTabPaths.Approved} element={<Approved />} />
+            <Route path={EPurchaseOrderTabPaths.Rejected} element={<Rejected />} />
+            <Route path={EPurchaseOrderTabPaths.Ordered} element={<Ordered />} />
             <Route
               path={EPurchaseOrderTabPaths.PartiallyProcessed}
               element={<PartiallyProcessed />}
             />
-            <Route
-              path={EPurchaseOrderTabPaths.Processed}
-              element={<Processed />}
-            />
+            <Route path={EPurchaseOrderTabPaths.Processed} element={<Processed />} />
           </Route>
           <Route path="orders" element={<InternalOrders />}>
-            <Route
-              index
-              element={<Navigate to={EInternalOrdersTabPaths.Draft} replace />}
-            />
-            <Route
-              path={EInternalOrdersTabPaths.Draft}
-              element={<DraftInternalOrder />}
-            />
-            <Route
-              path={EInternalOrdersTabPaths.Approved}
-              element={<ApprovedInternalOrder />}
-            />
-            <Route
-              path={EInternalOrdersTabPaths.Rejected}
-              element={<RejectedInternalOrder />}
-            />
-            <Route
-              path={EInternalOrdersTabPaths.Processed}
-              element={<ProcessInternalOrder />}
-            />
+            <Route index element={<Navigate to={EInternalOrdersTabPaths.Draft} replace />} />
+            <Route path={EInternalOrdersTabPaths.Draft} element={<DraftInternalOrder />} />
+            <Route path={EInternalOrdersTabPaths.Approved} element={<ApprovedInternalOrder />} />
+            <Route path={EInternalOrdersTabPaths.Rejected} element={<RejectedInternalOrder />} />
+            <Route path={EInternalOrdersTabPaths.Processed} element={<ProcessInternalOrder />} />
           </Route>
-          <Route
-            path="internal-consumption"
-            element={<InternalConsumption />}
-          />
+          <Route path="internal-consumption" element={<InternalConsumption />} />
           <Route path="stocks" element={<Stocks />} />
           <Route path="invoices" element={<Invoices />} />
 
@@ -357,15 +270,9 @@ const AppRoutes: React.FC = () => (
         <Route path="master" element={<MasterDashboard />}>
           <Route index element={<Navigate to={"local"} />} />
           <Route path={EMasterDashboardTabPaths.Local} element={<Local />}>
-            <Route
-              index
-              element={<Navigate to={"patient/referral-doctor"} />}
-            />
+            <Route index element={<Navigate to={"patient/referral-doctor"} />} />
             <Route path="customer" element={<Customer />} />
-            <Route
-              path="patient/referral-doctor"
-              element={<ReferralDoctor />}
-            />
+            <Route path="patient/referral-doctor" element={<ReferralDoctor />} />
             <Route path="patient/id-type" element={<IDType />} />
             <Route path="patient/source" element={<Source />} />
 
@@ -373,17 +280,11 @@ const AppRoutes: React.FC = () => (
             <Route path="appointment/source" element={<AppointmentSource />} />
 
             <Route path="/master/local/notes/advice" element={<Advice />} />
-            <Route
-              path="/master/local/notes/observation"
-              element={<Observation />}
-            />
+            <Route path="/master/local/notes/observation" element={<Observation />} />
 
             <Route path="consents" element={<Consents />} />
             <Route path="cryo-parameters" element={<CryoParameters />} />
-            <Route
-              path="consultant-doctors"
-              element={<LocalConsultantDoctor />}
-            />
+            <Route path="consultant-doctors" element={<LocalConsultantDoctor />} />
             <Route path="roles" element={<Roles />} />
 
             <Route path="reports" element={<Reports />} />
@@ -400,10 +301,7 @@ const AppRoutes: React.FC = () => (
             <Route path="user" element={<User />} />
           </Route>
 
-          <Route
-            path={EMasterDashboardTabPaths.ServiceData}
-            element={<ServiceData />}
-          >
+          <Route path={EMasterDashboardTabPaths.ServiceData} element={<ServiceData />}>
             <Route index element={<Navigate to={"investigation"} />} />
             <Route path="investigation" element={<MasterInvestigations />} />
             <Route path="procedure" element={<MastersProcedures />} />
@@ -415,10 +313,7 @@ const AppRoutes: React.FC = () => (
               <Route path="stages" element={<MasterCycleStages />} />
               <Route path="consumables" element={<MasterCycleConsumables />} />
             </Route>
-            <Route
-              path="cryo-preservation"
-              element={<MasterCryoPreservation />}
-            />
+            <Route path="cryo-preservation" element={<MasterCryoPreservation />} />
             <Route path="packages" element={<MasterPackages />} />
           </Route>
         </Route>
@@ -429,16 +324,10 @@ const AppRoutes: React.FC = () => (
           <Route path="appointment">
             <Route index element={<Navigate to="previous-appointment" />} />
 
-            <Route
-              path="previous-appointment"
-              element={<PreviousAppointments />}
-            />
+            <Route path="previous-appointment" element={<PreviousAppointments />} />
 
             <Route index element={<Navigate to="upcoming-appointment" />} />
-            <Route
-              path="upcoming-appointment"
-              element={<UpcomingAppointments />}
-            />
+            <Route path="upcoming-appointment" element={<UpcomingAppointments />} />
           </Route>
 
           <Route path="patient">
@@ -460,24 +349,21 @@ const AppRoutes: React.FC = () => (
 
             <Route path="Patientbillings" element={<PatientBillings />} />
             <Route index element={<Navigate to="BillingsTransactions" />} />
-            <Route
-              path="BillingsTransactions"
-              element={<BillingsTransactions />}
-            />
+            <Route path="BillingsTransactions" element={<BillingsTransactions />} />
           </Route>
           <Route path="pharmacy">
             <Route index element={<Navigate to="PharmacyTransactions" />} />
-            <Route
-              path="Pharmacy-transactions"
-              element={<PharmacyTransactions />}
-            />
+            <Route path="Pharmacy-transactions" element={<PharmacyTransactions />} />
             <Route path="internal-transfers" element={<InternalTransfers />} />
             <Route path="expiring-stocks" element={<ExpiringStocks />} />
             <Route path="pharmacy-reports" element={<PharmacyReport />} />
-            <Route
-              path="purchase-order-reports"
-              element={<PurchaseOrderReports />}
-            />
+            <Route path="purchase-order-reports" element={<PurchaseOrderReports />} />
+            <Route path="sale-by-schedule-reports" element={<SaleBySchedule />} />
+            <Route path="internal-consumption-reports" element={<InternalConsumptionReports />} />
+            <Route path="drugs-and-vendors-reports" element={<DrugsAndVendorReports />} />
+            <Route path="patient-return-reports" element={<PatientReturnReports />} />
+            <Route path="stock-summary-reports" element={<StockSummaryReports />} />
+            <Route path="expiry-details" element={<ExpiryDetails />} />
           </Route>
         </Route>
       </Route>

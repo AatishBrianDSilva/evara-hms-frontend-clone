@@ -121,7 +121,7 @@ const AddDraft: React.FC<AddPurchaseOrderDraftProps> = ({
         subTotal: parseFloat((values.subTotal ?? 0).toFixed(2)),
         tax: parseFloat((values.tax ?? 0).toFixed(2)),
         otherCharges: values.otherCharges ?? 0,
-        netAmount: parseFloat((values.netAmount ?? 0).toFixed(2)),
+        netAmount: Math.round(values.netAmount ?? 0),
       },
       isDifferentAddress: values.isDifferentAddress,
       ...(values.isDifferentAddress && {
@@ -282,7 +282,7 @@ const AddDraft: React.FC<AddPurchaseOrderDraftProps> = ({
       }, 0);
 
       const otherCharges = formik.values.otherCharges ?? 0;
-      const netAmount = subTotal + tax + otherCharges;
+      const netAmount = Math.round(subTotal + tax + otherCharges); // Round to nearest integer
 
       formik.setFieldValue("subTotal", subTotal);
       formik.setFieldValue("tax", tax);

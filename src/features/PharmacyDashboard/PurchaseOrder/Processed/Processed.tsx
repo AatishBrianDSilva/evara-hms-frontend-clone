@@ -39,6 +39,8 @@ const Processed: React.FC = () => {
   const purchaseOrdersPagination = purchaseOrdersData?.data?.pagination;
   const purchaseOrderLoading = purchaseOrdersLoading || purchaseOrdersFetching;
 
+  console.log("Processed PO", purchaseOrders);
+
   const [selectedRow, setSelectedRow] = useState<IPurchaseOrder | null>(null);
   const [isViewModalOpen, setIsViewModalOpen] = useState<boolean>(false);
 
@@ -105,13 +107,33 @@ const Processed: React.FC = () => {
         ];
 
         // Add Print action if report exists
-        if (row.response?.report) {
+        if (row.report) {
           actions.push(
             <Tooltip title="Print" key="print">
               <GridActionsCellItem
                 icon={<Print />}
                 label="Print"
                 onClick={() => fetchAndPrintPdf(row._id, "POInvoice", "pharmacy")}
+              />
+            </Tooltip>
+          );
+        }
+
+        // Add Print action for the processed report if it exists
+        if (row.reportProcessed) {
+          actions.push(
+            <Tooltip title="Print Processed Report" key="print-report-processed">
+              <GridActionsCellItem
+                icon={<Print />}
+                label="Print Processed Report"
+                onClick={() =>
+                  fetchAndPrintPdf(
+                    row._id,
+                    "POInvoiceProcessed",
+                    "pharmacy"
+                    // row.reportProcessed.key
+                  )
+                }
               />
             </Tooltip>
           );
