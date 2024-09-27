@@ -20,7 +20,7 @@ export const stocksApi = createApi({
           method: "GET",
         };
       },
-      providesTags: (_result, _error, _args) => ["Stocks"],
+      providesTags: (_result, _error, _args) => ["Stocks", "InternalConsumption"],
     }),
     getStocks: builder.query<ApiResponse<IPharmacyStock[]>, void>({
       query: () => "pharmacy-dashboard/stocks",

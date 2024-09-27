@@ -54,6 +54,10 @@ const Stocks: React.FC = () => {
     searchQuery: `searchTerm:${searchQuery}`,
   });
 
+  useEffect(() => {
+    refetch();
+  }, [location, refetch]);
+
   const [editPurchaseOrder] = useEditPurchaseOrderMutation();
 
   // Debounce the search handling
