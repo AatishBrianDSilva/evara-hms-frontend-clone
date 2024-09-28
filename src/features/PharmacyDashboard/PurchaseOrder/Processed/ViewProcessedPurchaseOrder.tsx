@@ -86,7 +86,10 @@ const ViewProcessedPurchaseOrder: React.FC<ViewProcessedPurchaseOrderProps> = ({
       };
     }) || [];
 
-  const totalAmount = rows.reduce((acc: any, row: any) => acc + parseFloat(row.mrp), 0).toFixed(2);
+  const totalAmount = (
+    rows.reduce((acc: any, row: any) => acc + parseFloat(row.mrp), 0) +
+    (response?.otherCharges || 0)
+  ).toFixed(2);
 
   const columns: GridColDef[] = [
     { field: "id", headerName: "#", flex: 0.5 },

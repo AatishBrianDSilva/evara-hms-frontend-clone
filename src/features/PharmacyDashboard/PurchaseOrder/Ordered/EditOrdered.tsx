@@ -159,6 +159,8 @@ const EditPurchaseOrderDraft: React.FC<EditPurchaseOrderDraftProps> = ({
   const purchaseOrder = purchaseOrderData?.data;
   const purchaseOrderLoading = isPurchaseOrderLoading || isPurchaseorderFetching;
 
+  console.log("Ordered PO data", purchaseOrderData);
+
   const [editPurchaseOrder, { isLoading: isEditingLoading }] = useEditPurchaseOrderMutation();
   const [updateStock, { isLoading: isUpdatingStockLoading }] =
     useUpdateStockFromPurchaseOrderMutation();
@@ -267,6 +269,8 @@ const EditPurchaseOrderDraft: React.FC<EditPurchaseOrderDraftProps> = ({
   };
 
   const formSubmit = async (values: FormValues) => {
+    const originalPurchaseOrder = purchaseOrderData?.data;
+
     const payload = {
       id: id,
       date: purchaseOrder?.date,
@@ -344,11 +348,55 @@ const EditPurchaseOrderDraft: React.FC<EditPurchaseOrderDraftProps> = ({
       error: (msg) => msg || "Error Updating Stock",
     });
 
+    // try {
+    //   await promise;
+    // } catch (error) {
+    //   console.error("Error Updating Stock order", error);
+    // }
+
     try {
       await promise;
     } catch (error) {
       console.error("Error Updating Stock order", error);
+      // Rollback to original state
+      if (originalPurchaseOrder) {
+        const rollbackPayload = {
+          ...originalPurchaseOrder,
+          id: id,
+          vendor: originalPurchaseOrder.vendor.toString(),
+          branch: originalPurchaseOrder.branch.toString(),
+          request: {
+            ...originalPurchaseOrder.request,
+            items: originalPurchaseOrder.request.items.map((item) => ({
+              ...item,
+              item: item.item.toString(),
+              freeQuantity: Number(item.freeQuantity) || 0,
+              noOfPacks: Number(item.noOfPacks) || 0,
+            })),
+          },
+          response: {
+            ...originalPurchaseOrder.response,
+            items: originalPurchaseOrder.response.items.map((item) => ({
+              ...item,
+              item: item.item.toString(),
+              freeQuantity: Number(item.freeQuantity) || 0,
+              noOfPacks: Number(item.noOfPacks) || 0,
+            })),
+          },
+        };
+
+        try {
+          await editPurchaseOrder(rollbackPayload).unwrap();
+          console.log("Rolled back to original state successfully");
+        } catch (rollbackError) {
+          console.error("Error rolling back to original state", rollbackError);
+        }
+      }
+
+      closeModal();
+      return;
     }
+
     closeModal();
   };
 
