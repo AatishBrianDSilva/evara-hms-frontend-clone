@@ -14,7 +14,6 @@ import { useToast } from "../../../../context/ToastContext";
 import {
   useEditPurchaseOrderMutation,
   useGetPurchaseOrderByIdQuery,
-  useUpdateStockFromPurchaseOrderMutation,
 } from "../../../../services/pharmacyDashboardService/purchaseOrderApi";
 import { FormikErrors, FormikTouched, useFormik } from "formik";
 import Delete from "@mui/icons-material/Delete";
@@ -162,8 +161,6 @@ const EditPurchaseOrderDraft: React.FC<EditPurchaseOrderDraftProps> = ({
   console.log("Ordered PO data", purchaseOrderData);
 
   const [editPurchaseOrder, { isLoading: isEditingLoading }] = useEditPurchaseOrderMutation();
-  const [updateStock, { isLoading: isUpdatingStockLoading }] =
-    useUpdateStockFromPurchaseOrderMutation();
 
   const [fileUploadedUrl, setFileUploadedUrl] = React.useState<string[]>(() => {
     let initialUrl: string[] = [];
@@ -282,8 +279,8 @@ const EditPurchaseOrderDraft: React.FC<EditPurchaseOrderDraftProps> = ({
           packSize: item.packSize,
           quantity: (item.packSize ?? 0) * (item.noOfPacks ?? 0), // Handle null values
           mrp: item.mrp,
-          mrpPerPack: item.mrpPerPack,
-          buyPrice: item.buyPrice,
+          mrpPerPack: Number(item.mrpPerPack) || 0, // Convert to number
+          buyPrice: Number(item.buyPrice) || 0, // Convert to number
           tax: item.tax,
           freeQuantity: item.freeQuantity, // Ensure freeQuantity is included
           noOfPacks: item.noOfPacks, // Ensure noOfPacks is included
@@ -304,8 +301,8 @@ const EditPurchaseOrderDraft: React.FC<EditPurchaseOrderDraftProps> = ({
           packSize: item.packSize,
           quantity: (item.packSize ?? 0) * (item.noOfPacks ?? 0), // Handle null values
           mrp: item.mrp,
-          mrpPerPack: item.mrpPerPack,
-          buyPrice: item.buyPrice,
+          mrpPerPack: Number(item.mrpPerPack) || 0, // Convert to number
+          buyPrice: Number(item.buyPrice) || 0, // Convert to number
           tax: item.tax,
           freeQuantity: item.freeQuantity, // Ensure freeQuantity is included
           noOfPacks: item.noOfPacks, // Ensure noOfPacks is included
@@ -337,67 +334,6 @@ const EditPurchaseOrderDraft: React.FC<EditPurchaseOrderDraftProps> = ({
     }
 
     closeModal();
-
-    const promise = updateStock({
-      purchaseOrderId: id,
-    }).unwrap();
-
-    showPromiseToast(promise, {
-      loading: "Updating Stock",
-      success: (msg) => msg || "Stock Updated Successfully",
-      error: (msg) => msg || "Error Updating Stock",
-    });
-
-    // try {
-    //   await promise;
-    // } catch (error) {
-    //   console.error("Error Updating Stock order", error);
-    // }
-
-    try {
-      await promise;
-    } catch (error) {
-      console.error("Error Updating Stock order", error);
-      // Rollback to original state
-      if (originalPurchaseOrder) {
-        const rollbackPayload = {
-          ...originalPurchaseOrder,
-          id: id,
-          vendor: originalPurchaseOrder.vendor.toString(),
-          branch: originalPurchaseOrder.branch.toString(),
-          request: {
-            ...originalPurchaseOrder.request,
-            items: originalPurchaseOrder.request.items.map((item) => ({
-              ...item,
-              item: item.item.toString(),
-              freeQuantity: Number(item.freeQuantity) || 0,
-              noOfPacks: Number(item.noOfPacks) || 0,
-            })),
-          },
-          response: {
-            ...originalPurchaseOrder.response,
-            items: originalPurchaseOrder.response.items.map((item) => ({
-              ...item,
-              item: item.item.toString(),
-              freeQuantity: Number(item.freeQuantity) || 0,
-              noOfPacks: Number(item.noOfPacks) || 0,
-            })),
-          },
-        };
-
-        try {
-          await editPurchaseOrder(rollbackPayload).unwrap();
-          console.log("Rolled back to original state successfully");
-        } catch (rollbackError) {
-          console.error("Error rolling back to original state", rollbackError);
-        }
-      }
-
-      closeModal();
-      return;
-    }
-
-    closeModal();
   };
 
   const formik = useFormik({
@@ -406,24 +342,6 @@ const EditPurchaseOrderDraft: React.FC<EditPurchaseOrderDraftProps> = ({
     onSubmit: formSubmit,
     enableReinitialize: true,
   });
-
-  // const handleAddFields = () => {
-  //   formik.setFieldValue("items", [
-  //     ...formik.values.items,
-  //     {
-  //       item: null,
-  //       packsRequired: null,
-  //       packSize: null,
-  //       noOfPacks: null,
-  //       mrp: null,
-  //       mrpPerPack: null,
-  //       buyPrice: null,
-  //       tax: null,
-  //       totalCost: null,
-  //       freeQuantity: null,
-  //     },
-  //   ]);
-  // };
 
   const handleCloneField = (index: number) => {
     const currentItem = formik.values.items[index];
@@ -458,11 +376,11 @@ const EditPurchaseOrderDraft: React.FC<EditPurchaseOrderDraftProps> = ({
     // Parse the numeric value for specific fields
     const numericValue =
       field === "noOfPacks" ||
-      field === "packSize" ||
-      // field === "buyPrice" ||
-      // field === "mrpPerPack" ||
-      // field === "discount" ||
-      field === "freeQuantity"
+        field === "packSize" ||
+        // field === "buyPrice" ||
+        // field === "mrpPerPack" ||
+        // field === "discount" ||
+        field === "freeQuantity"
         ? Number(rawValue.replace(/[^\d.-]/g, "")) || null
         : rawValue;
 
@@ -842,14 +760,14 @@ const EditPurchaseOrderDraft: React.FC<EditPurchaseOrderDraftProps> = ({
                         )}
                         {(formik.values.items[index].packsRequired ?? 0) >
                           (formik.values.items[index].noOfPacks ?? 0) && (
-                          <IconButton
-                            size="small"
-                            color="secondary"
-                            onClick={() => handleCloneField(index)}
-                          >
-                            <ContentCopy fontSize={"small"} />
-                          </IconButton>
-                        )}
+                            <IconButton
+                              size="small"
+                              color="secondary"
+                              onClick={() => handleCloneField(index)}
+                            >
+                              <ContentCopy fontSize={"small"} />
+                            </IconButton>
+                          )}
                       </Grid>
                     </Grid>
                   </Box>
@@ -937,7 +855,6 @@ const EditPurchaseOrderDraft: React.FC<EditPurchaseOrderDraftProps> = ({
                   type="submit"
                   disabled={
                     isEditingLoading ||
-                    isUpdatingStockLoading ||
                     _.isEqual(initialValues, formik.values) ||
                     isAnyItemExceedsRequired ||
                     isAnyItemMissingBatchOrExpiry
