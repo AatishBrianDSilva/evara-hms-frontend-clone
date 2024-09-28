@@ -266,7 +266,6 @@ const EditPurchaseOrderDraft: React.FC<EditPurchaseOrderDraftProps> = ({
   };
 
   const formSubmit = async (values: FormValues) => {
-    const originalPurchaseOrder = purchaseOrderData?.data;
 
     const payload = {
       id: id,
