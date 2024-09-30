@@ -117,7 +117,7 @@ const Stocks: React.FC = () => {
     "Emergency Pharmacy",
     "Internal Stock",
     "Recovery Pharmacy",
-    "Other",
+    // "Other",
   ];
 
   const transformedStocks = stocks.flatMap((stock, stockIndex) =>
@@ -152,7 +152,7 @@ const Stocks: React.FC = () => {
     () => [
       { field: "itemName", headerName: "Item Name", flex: 1 },
       { field: "category", headerName: "Category", flex: 1 },
-      { field: "type", headerName: "Type", flex: 1 },
+      // { field: "type", headerName: "Type", flex: 1 },
       { field: "batchNo", headerName: "Batch No", flex: 1 },
       ...locations.map((location) => ({
         field: location,

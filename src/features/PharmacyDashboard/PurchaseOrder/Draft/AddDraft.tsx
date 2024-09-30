@@ -718,7 +718,10 @@ const AddDraft: React.FC<AddPurchaseOrderDraftProps> = ({
                 variant="contained"
                 color="primary"
                 type="submit"
-                disabled={isLoading || _.isEqual(initialValues, formik.values)}
+                // disabled={isLoading || _.isEqual(initialValues, formik.values)}
+                disabled={
+                  isLoading || _.isEqual(initialValues, formik.values) || !formik.values.vendor
+                }
                 sx={{ width: "fit-content" }}
               >
                 Save
