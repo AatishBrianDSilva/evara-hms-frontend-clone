@@ -26,9 +26,7 @@ const SkeletonLoader = () => {
   const numberOfPayments = 2; // Adjust based on typical or maximum number of payments per bill
   return (
     <Dialog open={true} maxWidth="lg" fullWidth>
-      <DialogTitle sx={{ textAlign: "center" }}>
-        Loading Payments...
-      </DialogTitle>
+      <DialogTitle sx={{ textAlign: "center" }}>Loading Payments...</DialogTitle>
       <DialogContent>
         {Array.from({ length: 3 }).map(
           (
@@ -89,11 +87,7 @@ interface FormValues {
   }[];
 }
 
-const ProcessPendingModal: React.FC<ProcessPendingProps> = ({
-  openModal,
-  onClose,
-  ids,
-}) => {
+const ProcessPendingModal: React.FC<ProcessPendingProps> = ({ openModal, onClose, ids }) => {
   const { showPromiseToast } = useToast();
 
   const patient = useSelector((state: RootState) => state.patients.patient);
@@ -107,10 +101,10 @@ const ProcessPendingModal: React.FC<ProcessPendingProps> = ({
   // Create an array of query results, one for each ID.
   const billingQueries = ids.map((id) => useGetBillingByIdQuery(id));
 
+  console.log("Processing Bill ", billingQueries);
+
   useEffect(() => {
-    const allQueriesLoaded = !billingQueries.some(
-      (query) => query.isLoading || query.isFetching
-    );
+    const allQueriesLoaded = !billingQueries.some((query) => query.isLoading || query.isFetching);
 
     if (allQueriesLoaded) {
       const loadedBillings = billingQueries
@@ -118,42 +112,28 @@ const ProcessPendingModal: React.FC<ProcessPendingProps> = ({
         .filter((item): item is IPatientBilling => item !== undefined);
       if (loadedBillings.length === ids.length) {
         setBillings(loadedBillings);
-        const amount = loadedBillings.reduce(
-          (acc, curr) => acc + curr.subTotal,
-          0
-        );
+        const amount = loadedBillings.reduce((acc, curr) => acc + curr.subTotal, 0);
         // setAmount(Math.round(amount));
         setAmount(amount);
         const alreadyPaid = loadedBillings.reduce(
-          (acc, curr) =>
-            acc +
-            curr.payments.reduce((acc, curr) => acc + (curr.amount || 0), 0),
+          (acc, curr) => acc + curr.payments.reduce((acc, curr) => acc + (curr.amount || 0), 0),
           0
         );
         setAlreadyPaid(alreadyPaid);
-        const discount = loadedBillings.reduce(
-          (acc, curr) => acc + curr.discount,
-          0
-        );
+        const discount = loadedBillings.reduce((acc, curr) => acc + curr.discount, 0);
         // setDiscount(Math.round(discount));
         setDiscount(discount);
         // setTotal(Math.round(amount - discount));
         setTotal(amount - discount - alreadyPaid);
       }
     }
-  }, [
-    billingQueries
-      .map((query) => query.isLoading || query.isFetching)
-      .toString(),
-    ids.length,
-  ]);
+  }, [billingQueries.map((query) => query.isLoading || query.isFetching).toString(), ids.length]);
 
   const loadingBillingsData =
     billingQueries.some((query) => query.isLoading) ||
     billingQueries.some((query) => query.isFetching);
 
-  const [processBilling, { isLoading: processingBilling }] =
-    useProcessBillingMutation();
+  const [processBilling, { isLoading: processingBilling }] = useProcessBillingMutation();
 
   const initialValues: FormValues = useMemo(
     () => ({
@@ -221,10 +201,7 @@ const ProcessPendingModal: React.FC<ProcessPendingProps> = ({
 
   const addPayment = (index: number) => {
     const newPayment = { amount: undefined, method: "", paymentDate: null };
-    const updatedPayments = [
-      ...formik.values.bills[index].payments,
-      newPayment,
-    ];
+    const updatedPayments = [...formik.values.bills[index].payments, newPayment];
     formik.setFieldValue(`bills.${index}.payments`, updatedPayments);
   };
 
@@ -243,7 +220,7 @@ const ProcessPendingModal: React.FC<ProcessPendingProps> = ({
   }, 0);
 
   // const due = Math.round(total - totalPaid);
-  const due = total - totalPaid;
+  const due = Math.round((total - totalPaid) * 100) / 100;
 
   if (loadingBillingsData) {
     return <SkeletonLoader />;
@@ -254,40 +231,23 @@ const ProcessPendingModal: React.FC<ProcessPendingProps> = ({
       <form onSubmit={formik.handleSubmit}>
         <DialogTitle textAlign={"center"}>Payments</DialogTitle>
         <DialogContent>
-          <Grid
-            container
-            mt={4}
-            mb={4}
-            display={"flex"}
-            justifyContent={"space-around"}
-          >
+          <Grid container mt={4} mb={4} display={"flex"} justifyContent={"space-around"}>
             <Grid item>
-              <Chip
-                label={"Amount: " + formatToIndianCurrencyFormat(amount)}
-                color="primary"
-              />
+              <Chip label={"Amount: " + formatToIndianCurrencyFormat(amount)} color="primary" />
             </Grid>
             <Grid item>
-              <Chip
-                label={"Discount: " + formatToIndianCurrencyFormat(discount)}
-                color="primary"
-              />
+              <Chip label={"Discount: " + formatToIndianCurrencyFormat(discount)} color="primary" />
             </Grid>
             {alreadyPaid > 0 && (
               <Grid item>
                 <Chip
-                  label={
-                    "Already Paid: " + formatToIndianCurrencyFormat(alreadyPaid)
-                  }
+                  label={"Already Paid: " + formatToIndianCurrencyFormat(alreadyPaid)}
                   color="primary"
                 />
               </Grid>
             )}
             <Grid item>
-              <Chip
-                label={"Total: " + formatToIndianCurrencyFormat(total)}
-                color="primary"
-              />
+              <Chip label={"Total: " + formatToIndianCurrencyFormat(total)} color="primary" />
             </Grid>
           </Grid>
           {formik.values.bills.map((bill, index) => (
@@ -326,9 +286,7 @@ const ProcessPendingModal: React.FC<ProcessPendingProps> = ({
                   formik.touched
                 );
 
-                const billing = billings.find(
-                  (b) => b.billingId === bill.id.billingId
-                );
+                const billing = billings.find((b) => b.billingId === bill.id.billingId);
                 // const grandTotal = Math.round(billing?.grandTotal || 0);
                 const grandTotal = billing?.grandTotal || 0;
 
@@ -339,9 +297,7 @@ const ProcessPendingModal: React.FC<ProcessPendingProps> = ({
                   return acc + (payment.amount || 0);
                 }, 0);
 
-                const amountLeft = formatToIndianCurrencyFormat(
-                  billingAmount - alreadyPaid
-                );
+                const amountLeft = formatToIndianCurrencyFormat(billingAmount - alreadyPaid);
 
                 return (
                   <Grid container spacing={2} key={pIndex} mb={2}>
@@ -410,19 +366,12 @@ const ProcessPendingModal: React.FC<ProcessPendingProps> = ({
                       alignItems={"flex-start"}
                     >
                       {!onlyOneItem && (
-                        <IconButton
-                          size="small"
-                          onClick={() => removePayment(index, pIndex)}
-                        >
+                        <IconButton size="small" onClick={() => removePayment(index, pIndex)}>
                           <Delete fontSize={"small"} />
                         </IconButton>
                       )}
                       {isLastItem && (
-                        <IconButton
-                          size="small"
-                          color="primary"
-                          onClick={() => addPayment(index)}
-                        >
+                        <IconButton size="small" color="primary" onClick={() => addPayment(index)}>
                           <Add fontSize={"small"} />
                         </IconButton>
                       )}
@@ -442,10 +391,7 @@ const ProcessPendingModal: React.FC<ProcessPendingProps> = ({
             alignItems={"flex-end"}
           >
             <Grid item mr={4}>
-              <Chip
-                label={"Due: " + formatToIndianCurrencyFormat(due)}
-                color="secondary"
-              />
+              <Chip label={"Due: " + formatToIndianCurrencyFormat(due)} color="secondary" />
             </Grid>
           </Grid>
         </DialogContent>
@@ -453,11 +399,7 @@ const ProcessPendingModal: React.FC<ProcessPendingProps> = ({
           <Button color="secondary" onClick={onClose}>
             Cancel
           </Button>
-          <Button
-            type="submit"
-            color="primary"
-            disabled={due < 0 || processingBilling}
-          >
+          <Button type="submit" color="primary" disabled={due < 0 || processingBilling}>
             Save
           </Button>
         </DialogActions>
