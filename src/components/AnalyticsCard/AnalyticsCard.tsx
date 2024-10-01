@@ -1,10 +1,10 @@
-import * as React from 'react';
-import { Box, Typography, Link, Chip, Button } from '@mui/material';
-import { ArrowForward } from '@mui/icons-material';
+import * as React from "react";
+import { Box, Typography, Link, Chip, Button, Grid } from "@mui/material";
+import { ArrowForward } from "@mui/icons-material";
 
 interface BadgeData {
   color: string;
-  count: number;
+  count: number | string;
   label: string;
 }
 
@@ -14,6 +14,7 @@ export interface AnalyticsCardProps {
   linkUrl?: string;
   linkText?: string;
   badgesData?: BadgeData[];
+  paymentBadgesData?: BadgeData[];
 }
 
 const AnalyticsCard: React.FC<AnalyticsCardProps> = ({
@@ -22,9 +23,8 @@ const AnalyticsCard: React.FC<AnalyticsCardProps> = ({
   linkUrl,
   linkText,
   badgesData = [],
+  paymentBadgesData = [],
 }) => {
-
-
   return (
     <Box
       display="flex"
@@ -35,15 +35,25 @@ const AnalyticsCard: React.FC<AnalyticsCardProps> = ({
       borderColor="primary.main"
       flex={1}
       width={250}
-      height={150}
+      height={200}
       p={2}
-      overflow={'hidden'}
+      overflow={"hidden"}
     >
       <Box display="flex" justifyContent="space-between" flex={1}>
         <Box display="flex" flexDirection="column" flex={2}>
-          <Typography variant="h6" color={"secondary"}>{title}</Typography>
-          <Box display={'flex'} justifyContent={"flex-start"} alignItems={"center"} flex={1} flexWrap={"wrap"}>
-            <Typography color={"primary"} variant="h4">{mainValue}</Typography>
+          <Typography variant="h6" color={"secondary"}>
+            {title}
+          </Typography>
+          <Box
+            display={"flex"}
+            justifyContent={"flex-start"}
+            alignItems={"center"}
+            flex={1}
+            flexWrap={"wrap"}
+          >
+            <Typography color={"primary"} variant="h4">
+              {mainValue}
+            </Typography>
           </Box>
         </Box>
         {badgesData.length > 0 && (
@@ -51,15 +61,15 @@ const AnalyticsCard: React.FC<AnalyticsCardProps> = ({
             {badgesData.map((badge, index) => (
               <Chip
                 key={index}
-                size='small'
-                variant='outlined'
+                size="small"
+                variant="outlined"
                 color={badge.color as any}
                 label={
                   <Box display="flex" alignItems="center" justifyContent={"space-between"}>
                     <Typography variant="body2" sx={{ mr: 1 }}>
                       {badge.label}
                     </Typography>
-                    <Typography variant="body2" sx={{ fontWeight: 'bold' }}>
+                    <Typography variant="body2" sx={{ fontWeight: "bold" }}>
                       {badge.count}
                     </Typography>
                   </Box>
@@ -69,6 +79,39 @@ const AnalyticsCard: React.FC<AnalyticsCardProps> = ({
           </Box>
         )}
       </Box>
+
+      {paymentBadgesData.length > 0 && (
+        <Box mt={2}>
+          <Grid container spacing={1}>
+            {paymentBadgesData.map((badge, index) => (
+              <Grid item xs={6} key={index}>
+                {" "}
+                <Chip
+                  size="small"
+                  variant="outlined"
+                  color={badge.color as any}
+                  label={
+                    <Box
+                      display="flex"
+                      alignItems="center"
+                      justifyContent="space-between"
+                      sx={{ width: 160 }} // Set fixed width
+                    >
+                      <Typography variant="body2" sx={{ mr: 1 }}>
+                        {badge.label}
+                      </Typography>
+                      <Typography variant="body2" sx={{ fontWeight: "bold" }}>
+                        {badge.count}
+                      </Typography>
+                    </Box>
+                  }
+                />
+              </Grid>
+            ))}
+          </Grid>
+        </Box>
+      )}
+
       {linkUrl && linkText && (
         <Box display="flex" justifyContent="flex-end">
           <Button

@@ -11,23 +11,22 @@ interface AnalyticsSectionProps {
   endDate: Date | null;
 }
 
-const AnalyticsSection: React.FC<AnalyticsSectionProps> = ({
-  startDate,
-  endDate,
-}) => {
-
+const AnalyticsSection: React.FC<AnalyticsSectionProps> = ({ startDate, endDate }) => {
   console.log(startDate, endDate);
 
-  const { data, isLoading, isFetching } = useGetSummaryQuery({
-    dateRange: {
-      startDate: startDate?.toISOString() || '',
-      endDate: endDate?.toISOString() || '',
+  const { data, isLoading, isFetching } = useGetSummaryQuery(
+    {
+      dateRange: {
+        startDate: startDate?.toISOString() || "",
+        endDate: endDate?.toISOString() || "",
+      },
+    },
+    {
+      skip: !startDate || !endDate,
     }
-  }, {
-    skip: !startDate || !endDate,
-  });
+  );
 
-  const summaryData = data?.data
+  const summaryData = data?.data;
   const loading = isLoading || isFetching;
   //   // Simulate loading data
   //   setTimeout(() => {
@@ -80,45 +79,68 @@ const AnalyticsSection: React.FC<AnalyticsSectionProps> = ({
   //   }, 2000);
   // }, []);
 
+  const defaultPaymentBadges = [
+    { label: "Cash", count: "0", color: "info" },
+    { label: "UPI", count: "0", color: "warning" },
+    { label: "Online", count: "0", color: "success" },
+    { label: "CreditCard", count: "0", color: "error" },
+    { label: "BankTransfer", count: "0", color: "info" },
+  ];
+
+  // Separate badges for Billings (status and payment method badges)
+  const billingBadges = summaryData?.billing.badges || [];
+  const statusBadges = billingBadges.filter(
+    (badge) => badge.label === "Paid" || badge.label === "Pending"
+  );
+
+  // Merge default payment methods with actual data, replacing defaults where necessary
+  const paymentBadges = defaultPaymentBadges.map((defaultBadge) => {
+    const actualBadge = billingBadges.find((badge) => badge.label === defaultBadge.label);
+    return actualBadge
+      ? { ...actualBadge, count: formatToIndianCurrencyFormat(actualBadge.count) } // Format actual values to Indian currency
+      : defaultBadge;
+  });
+
   return (
     <Box display="flex" flexDirection="column" gap={2}>
       <Box display="flex" justifyContent="space-between">
         <Box display="flex" justifyContent="flex-start" alignItems={"center"} flex={1}>
-          <Typography variant="button" color={"primary"}>Summary</Typography>
+          <Typography variant="button" color={"primary"}>
+            Summary
+          </Typography>
         </Box>
       </Box>
 
-      {/* Boxes for appointments, treatments, billings, and medicines sold */}
-      <Box display="flex" justifyContent="space-between" gap={2} >
-        {loading
-          ? [0, 1, 2, 3].map((index) => <SkeletonAnalyticsCard key={index} />)
-          : (
-            <>
-              <AnalyticsCard
-                title="Appointments"
-                mainValue={summaryData?.appointment.total || 0}
-                linkUrl="/appointments"
-                linkText="View All"
-                badgesData={summaryData?.appointment.badges || []}
-              />
-              <AnalyticsCard
-                title="Treatments"
-                mainValue={summaryData?.treatment.total || 0}
-                badgesData={summaryData?.treatment.badges || []}
-              />
-              <AnalyticsCard
-                title="Billings"
-                mainValue={formatToIndianCurrencyFormat(summaryData?.billing.totalBillings || 0)}
-                badgesData={summaryData?.billing.badges || []}
-              />
-              <AnalyticsCard
-                title="Pharmacy"
-                mainValue={formatToIndianCurrencyFormat(summaryData?.pharmacy.totalAmount || 0)}
-                badgesData={[]}
-              />
-            </>
-          )
-        }
+      <Box display="flex" justifyContent="space-between" gap={2}>
+        {loading ? (
+          [0, 1, 2, 3].map((index) => <SkeletonAnalyticsCard key={index} />)
+        ) : (
+          <>
+            <AnalyticsCard
+              title="Appointments"
+              mainValue={summaryData?.appointment.total || 0}
+              linkUrl="/appointments"
+              linkText="View All"
+              badgesData={summaryData?.appointment.badges || []}
+            />
+            <AnalyticsCard
+              title="Treatments"
+              mainValue={summaryData?.treatment.total || 0}
+              badgesData={summaryData?.treatment.badges || []}
+            />
+            <AnalyticsCard
+              title="Billings"
+              mainValue={formatToIndianCurrencyFormat(summaryData?.billing.totalBillings || 0)}
+              badgesData={statusBadges}
+              paymentBadgesData={paymentBadges}
+            />
+            <AnalyticsCard
+              title="Pharmacy"
+              mainValue={formatToIndianCurrencyFormat(summaryData?.pharmacy.totalAmount || 0)}
+              badgesData={[]}
+            />
+          </>
+        )}
       </Box>
     </Box>
   );
