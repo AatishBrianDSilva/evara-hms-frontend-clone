@@ -12,7 +12,6 @@ interface AnalyticsSectionProps {
 }
 
 const AnalyticsSection: React.FC<AnalyticsSectionProps> = ({ startDate, endDate }) => {
-  console.log(startDate, endDate);
 
   const { data, isLoading, isFetching } = useGetSummaryQuery(
     {
