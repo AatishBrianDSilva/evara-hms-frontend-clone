@@ -11,26 +11,31 @@ interface PharmacySectionProps {
   endDate: Date | null;
 }
 
-const PharmacySection: React.FC<PharmacySectionProps> = ({
-  startDate,
-  endDate,
-}) => {
-  const { data, isLoading, isFetching } = useGetPharmacySummaryQuery({
-    dateRange: {
-      startDate: startDate?.toISOString() || '',
-      endDate: endDate?.toISOString() || '',
+const PharmacySection: React.FC<PharmacySectionProps> = ({ startDate, endDate }) => {
+  const { data, isLoading, isFetching } = useGetPharmacySummaryQuery(
+    {
+      dateRange: {
+        startDate: startDate?.toISOString() || "",
+        endDate: endDate?.toISOString() || "",
+      },
+    },
+    {
+      skip: !startDate || !endDate,
     }
-  }, {
-    skip: !startDate || !endDate,
-  });
+  );
 
-  const pharmacySummary = data?.data
+  console.log("Start Date", startDate);
+  console.log("End Date", endDate);
+
+  const pharmacySummary = data?.data;
   const loading = isLoading || isFetching;
 
   return (
     <Box display="flex" flexDirection="column" gap={2}>
       <Box display="flex" justifyContent="space-between">
-        <Typography variant="button" color="primary">Pharmacy</Typography>
+        <Typography variant="button" color="primary">
+          Pharmacy
+        </Typography>
       </Box>
       <Box display="flex" gap={2}>
         {loading ? (
@@ -43,7 +48,10 @@ const PharmacySection: React.FC<PharmacySectionProps> = ({
             <PharmacyCard
               title="POs Created"
               mainValue={pharmacySummary?.purchaseOrders.count || 0}
-              amountValue={"Total Payout: " + formatToIndianCurrencyFormat(pharmacySummary?.purchaseOrders.totalPayout || 0)}
+              amountValue={
+                "Total Payout: " +
+                formatToIndianCurrencyFormat(pharmacySummary?.purchaseOrders.totalPayout || 0)
+              }
               linkUrl="/pharmacy/purchase-order/processed"
               linkText="View All PO"
             />

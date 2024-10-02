@@ -86,16 +86,23 @@ const AnalyticsCard: React.FC<AnalyticsCardProps> = ({
             {paymentBadgesData.map((badge, index) => (
               <Grid item xs={6} key={index}>
                 {" "}
+                {/* Automatically takes half width */}
                 <Chip
                   size="small"
                   variant="outlined"
                   color={badge.color as any}
+                  sx={{
+                    width: "100%", // Ensure the Chip takes full width
+                    paddingLeft: 2, // Add padding for left
+                    paddingRight: 2, // Add padding for right
+                    justifyContent: "center", // Center align the content
+                  }}
                   label={
                     <Box
                       display="flex"
                       alignItems="center"
                       justifyContent="space-between"
-                      sx={{ width: 160 }} // Set fixed width
+                      sx={{ width: "100%" }} // Ensure the Box inside the Chip also takes full width
                     >
                       <Typography variant="body2" sx={{ mr: 1 }}>
                         {badge.label}

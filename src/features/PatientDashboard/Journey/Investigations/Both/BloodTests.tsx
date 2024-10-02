@@ -148,16 +148,27 @@ const BloodTests: React.FC = () => {
     //   };
     // }
 
+    // const payload: IEditInvestigationpayload = {
+    //   status: values.status,
+    //   testType: ETestType.BloodTest,
+    //   result: {
+    //     files: fileUploadedUrl,
+    //     ...(filteredDetails.length === 0 && {
+    //       testName: investigationName!,
+    //       details: details,
+    //       notes: values.notes,
+    //     }),
+    //   },
+    // };
+
     const payload: IEditInvestigationpayload = {
       status: values.status,
       testType: ETestType.BloodTest,
       result: {
         files: fileUploadedUrl,
-        ...(filteredDetails.length === 0 && {
-          testName: investigationName!,
-          details: details,
-          notes: values.notes,
-        }),
+        testName: investigationName!, // Always include the testName
+        details: filteredDetails.length === 0 ? details : undefined, // Conditionally include details
+        notes: values.notes || undefined,
       },
     };
 
@@ -188,21 +199,6 @@ const BloodTests: React.FC = () => {
     group?: string;
     componentType?: string;
   }
-
-  // interface FormValues {
-  //   status: string;
-  // result: {
-  //   id: string;
-  //   name: string;
-  //   value: string;
-  //   unit: string;
-  //   referenceRange?: string;
-  //   componentType: string;
-  //   options: string[];
-  // }[];
-  //   notes: string;
-  //   files: string[]; // Assuming this is an array of string URLs or file identifiers
-  // }
 
   // Initial values setup
   const initialValues: IEditInvestigationForm<IBloodTestComponent[]> = {
@@ -468,12 +464,12 @@ const BloodTests: React.FC = () => {
                             bucket={EBuckets.UserReports}
                             documentType={EDocumentTypes.Investigation}
                             user={patient?._id}
+                            reportId={openEditDialog.id}
                           />
                         )}
                       </Grid>
                     </Grid>
                   </Box>
-                  {/* <FilePreviewList files={formik.values.files} onRemove={handleRemoveFile} /> */}
                 </Box>
               )}
             </Box>

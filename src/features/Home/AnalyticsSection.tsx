@@ -28,6 +28,9 @@ const AnalyticsSection: React.FC<AnalyticsSectionProps> = ({ startDate, endDate 
 
   const summaryData = data?.data;
   const loading = isLoading || isFetching;
+
+  console.log("Summary Data", summaryData);
+
   //   // Simulate loading data
   //   setTimeout(() => {
   //     setData([
@@ -80,18 +83,21 @@ const AnalyticsSection: React.FC<AnalyticsSectionProps> = ({ startDate, endDate 
   // }, []);
 
   const defaultPaymentBadges = [
-    { label: "Cash", count: "0", color: "info" },
-    { label: "UPI", count: "0", color: "warning" },
-    { label: "Online", count: "0", color: "success" },
-    { label: "CreditCard", count: "0", color: "error" },
-    { label: "BankTransfer", count: "0", color: "info" },
+    { label: "Cash", count: "₹ 0", color: "info" },
+    { label: "UPI", count: "₹ 0", color: "warning" },
+    { label: "Online", count: "₹ 0", color: "success" },
+    { label: "CreditCard", count: "₹ 0", color: "error" },
+    { label: "BankTransfer", count: "₹ 0", color: "info" },
   ];
 
   // Separate badges for Billings (status and payment method badges)
   const billingBadges = summaryData?.billing.badges || [];
-  const statusBadges = billingBadges.filter(
-    (badge) => badge.label === "Paid" || badge.label === "Pending"
-  );
+  const statusBadges = billingBadges
+    .filter((badge) => badge.label === "Paid" || badge.label === "Pending")
+    .map((badge) => ({
+      ...badge,
+      count: formatToIndianCurrencyFormat(badge.count), // Format the count to Indian currency
+    }));
 
   // Merge default payment methods with actual data, replacing defaults where necessary
   const paymentBadges = defaultPaymentBadges.map((defaultBadge) => {

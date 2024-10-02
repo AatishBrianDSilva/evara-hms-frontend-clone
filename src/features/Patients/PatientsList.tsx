@@ -19,22 +19,19 @@ import EditPatient from "./EditPatient";
 import _ from "lodash";
 import { TextField } from "@mui/material";
 
-
 const PatientsList: React.FC = () => {
   const navigation = useNavigate();
   const dispatch = useDispatch();
 
-
   const [isDeleteModalOpen, setIsDeleteModalOpen] = useState<boolean>(false);
   const [isEditModalOpen, setIsEditModalOpen] = useState<boolean>(false);
 
-  const [searchQuery, setSearchQuery] = useState('');
-  const [page, setPage] = useState<number>(1)
+  const [searchQuery, setSearchQuery] = useState("");
+  const [page, setPage] = useState<number>(1);
   const [pageSize, setPageSize] = React.useState(25);
 
-
   const handleSearchChange = useCallback((query: string) => {
-    setPage(1);  // Reset the page
+    setPage(1); // Reset the page
     setSearchQuery(query);
   }, []);
 
@@ -56,6 +53,8 @@ const PatientsList: React.FC = () => {
     searchQuery: searchQuery,
     paginate: true,
   });
+
+  console.log("Patients list", patients);
 
   const handlePageChange = (newPage: number) => {
     setPage(newPage);
@@ -87,6 +86,7 @@ const PatientsList: React.FC = () => {
   const columnsConfig: GridColDef[] = [
     { field: "patientId", headerName: "ID", flex: 1 }, // Adjust the flex values based on your needs
     { field: "firstName", headerName: "Name", flex: 1 },
+    { field: "lastName", headerName: "Last Name", flex: 1 },
     { field: "gender", headerName: "Gender", flex: 1 },
     {
       field: "dob",
@@ -166,7 +166,13 @@ const PatientsList: React.FC = () => {
   return (
     <>
       <Box display="flex" justifyContent="flex-end" gap={2}>
-        <TextField label="Search Patient" placeholder="ID/Name/Phone" size="small" variant="outlined" onChange={(e) => debouncedSearchChange(e.target.value)} />
+        <TextField
+          label="Search Patient"
+          placeholder="ID/Name/Phone"
+          size="small"
+          variant="outlined"
+          onChange={(e) => debouncedSearchChange(e.target.value)}
+        />
 
         <Button
           variant="contained"

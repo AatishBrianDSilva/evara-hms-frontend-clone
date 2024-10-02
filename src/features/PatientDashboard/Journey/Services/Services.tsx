@@ -111,7 +111,7 @@ const Services: React.FC = () => {
       headerName: "Service",
       flex: 1,
       valueGetter(params) {
-        return params.row.service?.service?.name;
+        return params.row.service?.name;
       },
     },
     {

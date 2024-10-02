@@ -143,7 +143,7 @@ const Procedures: React.FC = () => {
       headerName: "Procedure",
       flex: 1,
       valueGetter(params) {
-        return params.row.procedure?.procedure?.procedureName;
+        return params.row.procedure?.name;
       },
     },
     {

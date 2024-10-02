@@ -143,7 +143,7 @@ const CryoPreservations: React.FC = () => {
       headerName: "Cryo-Preservation",
       flex: 1,
       valueGetter(params) {
-        return params.row.cryo?.cryoPreservation?.cryoPreservationName;
+        return params.row.cryo?.name;
       },
     },
     {

@@ -15,14 +15,13 @@ interface PatientsSectionProps {
   endDate: Date | null;
 }
 
-
-const PatientsSection: React.FC<PatientsSectionProps> = ({
-  startDate,
-  endDate,
-}) => {
-
+const PatientsSection: React.FC<PatientsSectionProps> = ({ startDate, endDate }) => {
   // Fetch patients for the selected date range
-  const { data: patientsData, isLoading: isPatientLoading, isFetching: isPatientFetching } = useGetPatientSummaryQuery(
+  const {
+    data: patientsData,
+    isLoading: isPatientLoading,
+    isFetching: isPatientFetching,
+  } = useGetPatientSummaryQuery(
     {
       dateRange: {
         startDate: startDate?.toISOString() || "",
@@ -37,12 +36,12 @@ const PatientsSection: React.FC<PatientsSectionProps> = ({
   const patientSummary = patientsData?.data;
   const loading = isPatientLoading || isPatientFetching;
 
-
   return (
     <Box display="flex" flexDirection="column" gap={2} overflow={"hidden"}>
-
       <Box display="flex" justifyContent="space-between">
-        <Typography variant="button" color="primary">Patients</Typography>
+        <Typography variant="button" color="primary">
+          Patients
+        </Typography>
       </Box>
       <Box display="flex" gap={2}>
         {loading ? (
@@ -63,20 +62,14 @@ const PatientsSection: React.FC<PatientsSectionProps> = ({
           p={2}
           overflow={"hidden"}
         >
-          <Typography variant="button" color="primary">New Patients</Typography>
-          <Box
-            display="flex"
-            flex={1}
-            overflow="auto"
-            flexWrap="nowrap"
-            gap={2}
-          >
+          <Typography variant="button" color="primary">
+            New Patients
+          </Typography>
+          <Box display="flex" flex={1} overflow="auto" flexWrap="nowrap" gap={2}>
             {loading ? (
-              [1, 2, 3].map((_, index) => (
-                <SkeletonPatientCard key={index} />
-              ))
+              [1, 2, 3].map((_, index) => <SkeletonPatientCard key={index} />)
             ) : patientSummary?.patients && patientSummary?.patients.length > 0 ? (
-              patientSummary?.patients.map(patient => (
+              patientSummary?.patients.map((patient) => (
                 <PatientCard
                   key={patient._id}
                   patientId={patient.patientId}

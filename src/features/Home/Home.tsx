@@ -12,10 +12,19 @@ import { endOfWeek, startOfWeek } from "date-fns";
 import PatientsSection from "./PatientsSection";
 import PharmacySection from "./PharmacySection";
 
+const toUTC = (date: Date | null, isEndDate = false) => {
+  if (!date) return null;
+
+  if (isEndDate) {
+    return new Date(Date.UTC(date.getFullYear(), date.getMonth(), date.getDate(), 23, 59, 59));
+  } else {
+    return new Date(Date.UTC(date.getFullYear(), date.getMonth(), date.getDate(), 0, 0, 0));
+  }
+};
 const Home: React.FC = () => {
-
-
-  const [startDate, setStartDate] = useState<Date | null>(startOfWeek(new Date(), { weekStartsOn: 1 }));
+  const [startDate, setStartDate] = useState<Date | null>(
+    startOfWeek(new Date(), { weekStartsOn: 1 })
+  );
   const [endDate, setEndDate] = useState<Date | null>(endOfWeek(new Date(), { weekStartsOn: 1 }));
 
   const handleDateChange = (ranges: RangeKeyDict) => {
@@ -25,32 +34,32 @@ const Home: React.FC = () => {
     }
   };
 
-  console.log("Home -> startDate", startDate)
-  console.log("Home -> endDate", endDate)
+  const startDateUTC = toUTC(startDate);
+  const endDateUTC = toUTC(endDate, true);
+
+  console.log("Home -> startDate", startDateUTC);
+  console.log("Home -> endDate", endDateUTC);
 
   return (
     <ContentSection title="Home" icon={<HomeOutlined />}>
-      <Box display="flex" justifyContent="flex-end" >
-        <CustomeDateRangePicker
-          onChange={handleDateChange}
-        />
+      <Box display="flex" justifyContent="flex-end">
+        <CustomeDateRangePicker onChange={handleDateChange} />
       </Box>
 
-      <Box display="flex" flexDirection="column" gap={2} >
-
-        <AnalyticsSection startDate={startDate} endDate={endDate} />
-
-        <Divider />
-
-        <AppointmentsSection startDate={startDate} endDate={endDate} />
+      <Box display="flex" flexDirection="column" gap={2}>
+        <AnalyticsSection startDate={startDateUTC} endDate={endDateUTC} />
 
         <Divider />
 
-        <PatientsSection startDate={startDate} endDate={endDate} />
+        <AppointmentsSection startDate={startDateUTC} endDate={endDateUTC} />
 
         <Divider />
 
-        <PharmacySection startDate={startDate} endDate={endDate} />
+        <PatientsSection startDate={startDateUTC} endDate={endDateUTC} />
+
+        <Divider />
+
+        <PharmacySection startDate={startDateUTC} endDate={endDateUTC} />
       </Box>
     </ContentSection>
   );
