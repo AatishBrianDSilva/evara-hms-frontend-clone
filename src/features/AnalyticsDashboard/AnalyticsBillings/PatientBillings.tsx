@@ -1,5 +1,5 @@
 import Box from "@mui/material/Box";
-import React, { useState, useEffect } from "react";
+import React, { useState, useEffect, useCallback } from "react";
 import CustomDataGrid from "../../../components/CustomDataGrid/CustomDataGrid";
 import { GridColDef } from "@mui/x-data-grid";
 import {
@@ -14,6 +14,7 @@ import { formatToIndianCurrencyFormat } from "../../../utils/formatToIndianCurre
 import { EPatientBillingStatus } from "../../../types/patientDashboard/billings";
 import ContentSection from "../../../components/ContentSection/ContentSection";
 import { useGetAnalyticsPatientBillingsQuery } from "../../../services/analyticsDashboardService/billings/analyticsPatientBillingsApi";
+import { debounce } from "lodash";
 
 interface RowType {
   _id: string;
@@ -29,7 +30,15 @@ const PatientBillings: React.FC = () => {
   const [patientNameQuery, setPatientNameQuery] = useState<string>(""); // For searching by patient name
   const [searchQuery, setSearchQuery] = useState<string>(""); // Combined search query
 
-  // Combine search terms into a single searchQuery
+  // Debounce function using lodash
+  const debounceSetSearchQuery = useCallback(
+    debounce((query: string) => {
+      setSearchQuery(query);
+    }, 500),
+    []
+  );
+
+  // Combine search terms into a single searchQuery and reset page number
   useEffect(() => {
     const queryParts = [];
     if (patientIdQuery) {
@@ -38,11 +47,22 @@ const PatientBillings: React.FC = () => {
     if (patientNameQuery) {
       queryParts.push(`patientName:${patientNameQuery}`);
     }
-    setSearchQuery(queryParts.join(" "));
-  }, [patientIdQuery, patientNameQuery]);
+    const combinedQuery = queryParts.join(" ");
+
+    // Call the debounced function
+    debounceSetSearchQuery(combinedQuery);
+
+    // Reset page number when search terms change
+    setPage(1);
+
+    // Cleanup function to cancel debounce on unmount or when dependencies change
+    return () => {
+      debounceSetSearchQuery.cancel();
+    };
+  }, [patientIdQuery, patientNameQuery, debounceSetSearchQuery]);
 
   const handlePageChange = (newPage: number) => {
-    setPage(newPage + 1); // Adjust for 1-based page index
+    setPage(newPage); // Adjust for 1-based page index
   };
 
   const handlePageSizeChange = (newPageSize: number) => {
@@ -69,7 +89,7 @@ const PatientBillings: React.FC = () => {
       limit: pageSize,
       filters: {
         status: selectedStatus,
-        searchQuery: searchQuery, // Use the combined searchQuery
+        searchQuery: searchQuery, // Use the debounced searchQuery
       },
     },
     {
