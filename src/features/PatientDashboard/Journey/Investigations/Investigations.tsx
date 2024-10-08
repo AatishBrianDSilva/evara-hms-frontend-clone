@@ -106,6 +106,8 @@ const Investigations: React.FC = () => {
   const patientInvestigationsPagination = investgationsData?.data?.pagination;
   const patientInvestigationsLoading = investigationLoading || investigationFetching;
 
+  // console.log("Patient Investigations", patientInvestigations);
+
   // Delete investigation
   const [deleteInvestigation, { isLoading: deletingInvestigation }] =
     useDeleteInvestigationMutation();
@@ -142,7 +144,7 @@ const Investigations: React.FC = () => {
       headerName: "Investigation",
       flex: 1,
       valueGetter(params) {
-        return params.row?.investigation?.test?.testName;
+        return params.row?.investigation?.name;
       },
     },
     {
