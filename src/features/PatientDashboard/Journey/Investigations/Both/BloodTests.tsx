@@ -110,6 +110,7 @@ const BloodTests: React.FC = () => {
   const doctor = investigation?.doctor?.firstName + " " + investigation?.doctor?.lastName;
   const investigationName = investigation?.investigation?.test?.testName;
   const components = investigation?.investigation?.test?.components;
+  const actualProcedureName = investigation?.investigation?.name;
 
   const [showReport, setShowReport] = useState(false);
   const [addReport, setAddReport] = useState(false);
@@ -130,6 +131,7 @@ const BloodTests: React.FC = () => {
 
     //if value is empty remove all the details
     const filteredDetails = details.filter((detail) => detail.value == "");
+    const actualName = actualProcedureName || "Default Investigation"; // Use a fallback if procedureName is null/undefined
 
     // const payload: IEditInvestigationpayload = {
     //   status: values.status,
@@ -170,6 +172,7 @@ const BloodTests: React.FC = () => {
         details: filteredDetails.length === 0 ? details : undefined, // Conditionally include details
         notes: values.notes || undefined,
       },
+      actualName: actualName, // New field added to the payload
     };
 
     console.log("Payload", payload);

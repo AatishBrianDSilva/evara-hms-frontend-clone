@@ -35,12 +35,7 @@ import FileList from "../../../../../components/FileList/FileList";
 const renderSkeletonLoader = () => {
   return (
     <>
-      <Box
-        display={"flex"}
-        justifyContent={"space-between"}
-        borderBottom={1}
-        py={2}
-      >
+      <Box display={"flex"} justifyContent={"space-between"} borderBottom={1} py={2}>
         <Box>
           <Skeleton variant="text" width={100} height={20} />
           <Skeleton variant="text" width={100} height={20} />
@@ -79,8 +74,7 @@ const SemenAnalysis: React.FC = () => {
   const dispatch = useDispatch();
   const { showPromiseToast } = useToast();
 
-  const [editInvestigation, { isLoading: editingInvestigation }] =
-    useEditInvestigationMutation();
+  const [editInvestigation, { isLoading: editingInvestigation }] = useEditInvestigationMutation();
   const openEditDialog = useSelector(
     (state: RootState) => state.investigation.editInvestigationOpen
   );
@@ -98,12 +92,11 @@ const SemenAnalysis: React.FC = () => {
   const loading = investigationLoading || investigationFetching;
 
   const date = new Date(investigation?.date || new Date()).toLocaleDateString();
-  const doctor =
-    investigation?.doctor?.firstName + " " + investigation?.doctor?.lastName;
+  const doctor = investigation?.doctor?.firstName + " " + investigation?.doctor?.lastName;
   const investigationName = investigation?.investigation?.test?.testName;
+  const actualProcedureName = investigation?.investigation?.name;
 
-  const investigationDetails = investigation?.result
-    ?.details as ISemenAnalysisForm;
+  const investigationDetails = investigation?.result?.details as ISemenAnalysisForm;
   // console.log("Investigation details", investigation);
 
   const [fileUploadedUrl, setFileUploadedUrl] = React.useState<string[]>(() => {
@@ -118,9 +111,9 @@ const SemenAnalysis: React.FC = () => {
     return initialUrl;
   });
 
-  const handleSubmit = async (
-    values: IEditInvestigationForm<ISemenAnalysisForm>
-  ) => {
+  const handleSubmit = async (values: IEditInvestigationForm<ISemenAnalysisForm>) => {
+    const actualName = actualProcedureName || "Default Investigation"; // Use a fallback if procedureName is null/undefined
+
     const payload: IEditInvestigationpayload = {
       status: values.status,
       result: {
@@ -130,6 +123,7 @@ const SemenAnalysis: React.FC = () => {
         details: values.result,
       },
       testType: ETestType.SemenAnalysis,
+      actualName: actualName, // New field added to the payload
     };
 
     console.log("Payload", payload);
@@ -158,8 +152,7 @@ const SemenAnalysis: React.FC = () => {
     result: {
       date: investigationDetails?.date || null,
       spermDfi: investigationDetails?.spermDfi || "",
-      timeOfSampleReceivedAtHospital:
-        investigationDetails?.timeOfSampleReceivedAtHospital || null,
+      timeOfSampleReceivedAtHospital: investigationDetails?.timeOfSampleReceivedAtHospital || null,
       placeOfCollection: investigationDetails?.placeOfCollection || "",
       timeOfCollection: investigationDetails?.timeOfCollection || null,
       timeOfEvaluation: investigationDetails?.timeOfEvaluation || null,
@@ -171,37 +164,30 @@ const SemenAnalysis: React.FC = () => {
       viscosity: investigationDetails?.viscosity || "",
       ph: investigationDetails?.ph || "",
       color: investigationDetails?.color || "",
-      spermConcMillionsPerMl:
-        investigationDetails?.spermConcMillionsPerMl || "",
+      spermConcMillionsPerMl: investigationDetails?.spermConcMillionsPerMl || "",
       pusCells: investigationDetails?.pusCells || "",
       rbc: investigationDetails?.rbc || "",
       agglutination: investigationDetails?.agglutination || "",
-      totalEjaculateMillions:
-        investigationDetails?.totalEjaculateMillions || "",
+      totalEjaculateMillions: investigationDetails?.totalEjaculateMillions || "",
       fructose: investigationDetails?.fructose || "",
       epithelialCells: investigationDetails?.epithelialCells || "",
       live: investigationDetails?.live || "",
       dead: investigationDetails?.dead || "",
-      impressionPhysicalAssessment:
-        investigationDetails?.impressionPhysicalAssessment || "",
-      rapidProgressiveGradeA:
-        investigationDetails?.rapidProgressiveGradeA || "",
+      impressionPhysicalAssessment: investigationDetails?.impressionPhysicalAssessment || "",
+      rapidProgressiveGradeA: investigationDetails?.rapidProgressiveGradeA || "",
       slowProgressiveGradeB: investigationDetails?.slowProgressiveGradeB || "",
       nonProgressiveGradeC: investigationDetails?.nonProgressiveGradeC || "",
       immotileGradeD: investigationDetails?.immotileGradeD || "",
-      impressionSpermMotility:
-        investigationDetails?.impressionSpermMotility || "",
+      impressionSpermMotility: investigationDetails?.impressionSpermMotility || "",
       normalForms: investigationDetails?.normalForms || "",
       headDefects: investigationDetails?.headDefects || "",
       overAllDefects: investigationDetails?.overAllDefects || "",
-      midPieceAndNeckDefects:
-        investigationDetails?.midPieceAndNeckDefects || "",
+      midPieceAndNeckDefects: investigationDetails?.midPieceAndNeckDefects || "",
       cytoplasmicDroplets: investigationDetails?.cytoplasmicDroplets || "",
       tailDefects: investigationDetails?.tailDefects || "",
       defectsInHeadMidPieceNeckAndTail:
         investigationDetails?.defectsInHeadMidPieceNeckAndTail || "",
-      impressionMorphologyAssessment:
-        investigationDetails?.impressionMorphologyAssessment || "",
+      impressionMorphologyAssessment: investigationDetails?.impressionMorphologyAssessment || "",
       hos: investigationDetails?.hos || "",
       acrosomeIntactnessAI: investigationDetails?.acrosomeIntactnessAI || "",
       zonaBindingPotentialOfSpermAsPerAITesting:
@@ -227,11 +213,7 @@ const SemenAnalysis: React.FC = () => {
   return (
     <>
       <form onSubmit={formik.handleSubmit}>
-        <ReportModalHeader
-          reportName={investigationName}
-          doctor={doctor}
-          date={date}
-        />
+        <ReportModalHeader reportName={investigationName} doctor={doctor} date={date} />
 
         <Grid container spacing={2} marginBottom={2} mt={2} flex={1}>
           <Grid item xs={12} sm={6} md={3}>
@@ -239,13 +221,8 @@ const SemenAnalysis: React.FC = () => {
               label="Date"
               value={formik.values.result.date}
               onChange={(date) => formik.setFieldValue("result.date", date)}
-              error={
-                formik.touched.result?.date &&
-                Boolean(formik.errors.result?.date)
-              }
-              helperText={
-                formik.touched.result?.date && formik.errors.result?.date
-              }
+              error={formik.touched.result?.date && Boolean(formik.errors.result?.date)}
+              helperText={formik.touched.result?.date && formik.errors.result?.date}
             />
           </Grid>
           <Grid item xs={12} sm={6} md={3}>
@@ -254,14 +231,8 @@ const SemenAnalysis: React.FC = () => {
               fullWidth
               name="result.spermDfi"
               onChange={formik.handleChange}
-              error={
-                formik.touched.result?.spermDfi &&
-                Boolean(formik.errors.result?.spermDfi)
-              }
-              helperText={
-                formik.touched.result?.spermDfi &&
-                formik.errors.result?.spermDfi
-              }
+              error={formik.touched.result?.spermDfi && Boolean(formik.errors.result?.spermDfi)}
+              helperText={formik.touched.result?.spermDfi && formik.errors.result?.spermDfi}
             />
           </Grid>
           <Grid item xs={12} sm={6} md={3}>
@@ -269,10 +240,7 @@ const SemenAnalysis: React.FC = () => {
               label="Time of sample received at hospital"
               value={formik.values.result.timeOfSampleReceivedAtHospital}
               onChange={(date) =>
-                formik.setFieldValue(
-                  "result.timeOfSampleReceivedAtHospital",
-                  date
-                )
+                formik.setFieldValue("result.timeOfSampleReceivedAtHospital", date)
               }
             />
           </Grid>
@@ -289,8 +257,7 @@ const SemenAnalysis: React.FC = () => {
                 Boolean(formik.errors.result?.placeOfCollection)
               }
               helperText={
-                formik.touched.result?.placeOfCollection &&
-                formik.errors.result?.placeOfCollection
+                formik.touched.result?.placeOfCollection && formik.errors.result?.placeOfCollection
               }
             />
           </Grid>
@@ -299,16 +266,13 @@ const SemenAnalysis: React.FC = () => {
               label="Time Of Collection"
               value={formik.values.result.timeOfCollection}
               name="result.timeOfCollection"
-              onChange={(date) =>
-                formik.setFieldValue("result.timeOfCollection", date)
-              }
+              onChange={(date) => formik.setFieldValue("result.timeOfCollection", date)}
               error={
                 formik.touched.result?.timeOfCollection &&
                 Boolean(formik.errors.result?.timeOfCollection)
               }
               helperText={
-                formik.touched.result?.timeOfCollection &&
-                formik.errors.result?.timeOfCollection
+                formik.touched.result?.timeOfCollection && formik.errors.result?.timeOfCollection
               }
             />
           </Grid>
@@ -316,16 +280,13 @@ const SemenAnalysis: React.FC = () => {
             <CustomTimePicker
               label="Time Of Evaluation"
               value={formik.values.result.timeOfEvaluation}
-              onChange={(date) =>
-                formik.setFieldValue("result.timeOfEvaluation", date)
-              }
+              onChange={(date) => formik.setFieldValue("result.timeOfEvaluation", date)}
               error={
                 formik.touched.result?.timeOfEvaluation &&
                 Boolean(formik.errors.result?.timeOfEvaluation)
               }
               helperText={
-                formik.touched.result?.timeOfEvaluation &&
-                formik.errors.result?.timeOfEvaluation
+                formik.touched.result?.timeOfEvaluation && formik.errors.result?.timeOfEvaluation
               }
             />
           </Grid>
@@ -345,8 +306,7 @@ const SemenAnalysis: React.FC = () => {
                 Boolean(formik.errors.result?.daysOfAbstinence)
               }
               helperText={
-                formik.touched.result?.daysOfAbstinence &&
-                formik.errors.result?.daysOfAbstinence
+                formik.touched.result?.daysOfAbstinence && formik.errors.result?.daysOfAbstinence
               }
             />
           </Grid>
@@ -357,13 +317,8 @@ const SemenAnalysis: React.FC = () => {
               value={formik.values.result.volume}
               name="result.volume"
               onChange={formik.handleChange}
-              error={
-                formik.touched.result?.volume &&
-                Boolean(formik.errors.result?.volume)
-              }
-              helperText={
-                formik.touched.result?.volume && formik.errors.result?.volume
-              }
+              error={formik.touched.result?.volume && Boolean(formik.errors.result?.volume)}
+              helperText={formik.touched.result?.volume && formik.errors.result?.volume}
             />
           </Grid>
           <Grid item xs={12} sm={6} md={3}>
@@ -373,14 +328,8 @@ const SemenAnalysis: React.FC = () => {
               value={formik.values.result.spillage}
               name="result.spillage"
               onChange={formik.handleChange}
-              error={
-                formik.touched.result?.spillage &&
-                Boolean(formik.errors.result?.spillage)
-              }
-              helperText={
-                formik.touched.result?.spillage &&
-                formik.errors.result?.spillage
-              }
+              error={formik.touched.result?.spillage && Boolean(formik.errors.result?.spillage)}
+              helperText={formik.touched.result?.spillage && formik.errors.result?.spillage}
             />
           </Grid>
           <Grid item xs={12} sm={6} md={3}>
@@ -390,14 +339,8 @@ const SemenAnalysis: React.FC = () => {
               value={formik.values.result.appearance}
               name="result.appearance"
               onChange={formik.handleChange}
-              error={
-                formik.touched.result?.appearance &&
-                Boolean(formik.errors.result?.appearance)
-              }
-              helperText={
-                formik.touched.result?.appearance &&
-                formik.errors.result?.appearance
-              }
+              error={formik.touched.result?.appearance && Boolean(formik.errors.result?.appearance)}
+              helperText={formik.touched.result?.appearance && formik.errors.result?.appearance}
             />
           </Grid>
         </Grid>
@@ -410,13 +353,9 @@ const SemenAnalysis: React.FC = () => {
               name="result.liquefaction"
               onChange={formik.handleChange}
               error={
-                formik.touched.result?.liquefaction &&
-                Boolean(formik.errors.result?.liquefaction)
+                formik.touched.result?.liquefaction && Boolean(formik.errors.result?.liquefaction)
               }
-              helperText={
-                formik.touched.result?.liquefaction &&
-                formik.errors.result?.liquefaction
-              }
+              helperText={formik.touched.result?.liquefaction && formik.errors.result?.liquefaction}
             />
           </Grid>
           <Grid item xs={12} sm={6} md={3}>
@@ -426,14 +365,8 @@ const SemenAnalysis: React.FC = () => {
               name="result.viscosity"
               value={formik.values.result.viscosity}
               onChange={formik.handleChange}
-              error={
-                formik.touched.result?.viscosity &&
-                Boolean(formik.errors.result?.viscosity)
-              }
-              helperText={
-                formik.touched.result?.viscosity &&
-                formik.errors.result?.viscosity
-              }
+              error={formik.touched.result?.viscosity && Boolean(formik.errors.result?.viscosity)}
+              helperText={formik.touched.result?.viscosity && formik.errors.result?.viscosity}
             />
           </Grid>
           <Grid item xs={12} sm={6} md={3}>
@@ -443,9 +376,7 @@ const SemenAnalysis: React.FC = () => {
               name="result.ph"
               onChange={formik.handleChange}
               value={formik.values.result.ph}
-              error={
-                formik.touched.result?.ph && Boolean(formik.errors.result?.ph)
-              }
+              error={formik.touched.result?.ph && Boolean(formik.errors.result?.ph)}
               helperText={formik.touched.result?.ph && formik.errors.result?.ph}
             />
           </Grid>
@@ -457,13 +388,8 @@ const SemenAnalysis: React.FC = () => {
               name="result.color"
               value={formik.values.result.color}
               onChange={formik.handleChange}
-              error={
-                formik.touched.result?.color &&
-                Boolean(formik.errors.result?.color)
-              }
-              helperText={
-                formik.touched.result?.color && formik.errors.result?.color
-              }
+              error={formik.touched.result?.color && Boolean(formik.errors.result?.color)}
+              helperText={formik.touched.result?.color && formik.errors.result?.color}
             />
           </Grid>
         </Grid>
@@ -475,14 +401,8 @@ const SemenAnalysis: React.FC = () => {
               value={formik.values.result.pusCells}
               name="result.pusCells"
               onChange={(e) => formik.handleChange(e)}
-              error={
-                formik.touched.result?.pusCells &&
-                Boolean(formik.errors.result?.pusCells)
-              }
-              helperText={
-                formik.touched.result?.pusCells &&
-                formik.errors.result?.pusCells
-              }
+              error={formik.touched.result?.pusCells && Boolean(formik.errors.result?.pusCells)}
+              helperText={formik.touched.result?.pusCells && formik.errors.result?.pusCells}
             />
           </Grid>
           <Grid item xs={12} sm={6} md={3}>
@@ -492,12 +412,8 @@ const SemenAnalysis: React.FC = () => {
               value={formik.values.result.rbc}
               name="result.rbc"
               onChange={formik.handleChange}
-              error={
-                formik.touched.result?.rbc && Boolean(formik.errors.result?.rbc)
-              }
-              helperText={
-                formik.touched.result?.rbc && formik.errors.result?.rbc
-              }
+              error={formik.touched.result?.rbc && Boolean(formik.errors.result?.rbc)}
+              helperText={formik.touched.result?.rbc && formik.errors.result?.rbc}
             />
           </Grid>
           <Grid item xs={12} sm={6} md={3}>
@@ -508,12 +424,10 @@ const SemenAnalysis: React.FC = () => {
               onChange={formik.handleChange}
               value={formik.values.result.agglutination}
               error={
-                formik.touched.result?.agglutination &&
-                Boolean(formik.errors.result?.agglutination)
+                formik.touched.result?.agglutination && Boolean(formik.errors.result?.agglutination)
               }
               helperText={
-                formik.touched.result?.agglutination &&
-                formik.errors.result?.agglutination
+                formik.touched.result?.agglutination && formik.errors.result?.agglutination
               }
             />
           </Grid>
@@ -543,14 +457,8 @@ const SemenAnalysis: React.FC = () => {
               value={formik.values.result.fructose}
               name="result.fructose"
               onChange={formik.handleChange}
-              error={
-                formik.touched.result?.fructose &&
-                Boolean(formik.errors.result?.fructose)
-              }
-              helperText={
-                formik.touched.result?.fructose &&
-                formik.errors.result?.fructose
-              }
+              error={formik.touched.result?.fructose && Boolean(formik.errors.result?.fructose)}
+              helperText={formik.touched.result?.fructose && formik.errors.result?.fructose}
             />
           </Grid>
           <Grid item xs={12} sm={6} md={3}>
@@ -565,8 +473,7 @@ const SemenAnalysis: React.FC = () => {
                 Boolean(formik.errors.result?.epithelialCells)
               }
               helperText={
-                formik.touched.result?.epithelialCells &&
-                formik.errors.result?.epithelialCells
+                formik.touched.result?.epithelialCells && formik.errors.result?.epithelialCells
               }
             />
           </Grid>
@@ -577,13 +484,8 @@ const SemenAnalysis: React.FC = () => {
               value={formik.values.result.live}
               name="result.live"
               onChange={formik.handleChange}
-              error={
-                formik.touched.result?.live &&
-                Boolean(formik.errors.result?.live)
-              }
-              helperText={
-                formik.touched.result?.live && formik.errors.result?.live
-              }
+              error={formik.touched.result?.live && Boolean(formik.errors.result?.live)}
+              helperText={formik.touched.result?.live && formik.errors.result?.live}
             />
           </Grid>
           <Grid item xs={12} sm={6} md={3}>
@@ -593,13 +495,8 @@ const SemenAnalysis: React.FC = () => {
               value={formik.values.result.dead}
               name="result.dead"
               onChange={formik.handleChange}
-              error={
-                formik.touched.result?.dead &&
-                Boolean(formik.errors.result?.dead)
-              }
-              helperText={
-                formik.touched.result?.dead && formik.errors.result?.dead
-              }
+              error={formik.touched.result?.dead && Boolean(formik.errors.result?.dead)}
+              helperText={formik.touched.result?.dead && formik.errors.result?.dead}
             />
           </Grid>
         </Grid>
@@ -625,13 +522,9 @@ const SemenAnalysis: React.FC = () => {
               name="result.normalForms"
               onChange={formik.handleChange}
               error={
-                formik.touched.result?.normalForms &&
-                Boolean(formik.errors.result?.normalForms)
+                formik.touched.result?.normalForms && Boolean(formik.errors.result?.normalForms)
               }
-              helperText={
-                formik.touched.result?.normalForms &&
-                formik.errors.result?.normalForms
-              }
+              helperText={formik.touched.result?.normalForms && formik.errors.result?.normalForms}
             />
           </Grid>
           <Grid item xs={12} sm={6} md={3}>
@@ -642,8 +535,7 @@ const SemenAnalysis: React.FC = () => {
               name="result.headDefects"
               onChange={formik.handleChange}
               error={
-                formik.touched.result?.headDefects &&
-                Boolean(formik.errors.result?.headDefects)
+                formik.touched.result?.headDefects && Boolean(formik.errors.result?.headDefects)
               }
             />
           </Grid>
@@ -658,8 +550,7 @@ const SemenAnalysis: React.FC = () => {
                 Boolean(formik.errors.result?.overAllDefects)
               }
               helperText={
-                formik.touched.result?.overAllDefects &&
-                formik.errors.result?.overAllDefects
+                formik.touched.result?.overAllDefects && formik.errors.result?.overAllDefects
               }
             />
           </Grid>
@@ -706,13 +597,9 @@ const SemenAnalysis: React.FC = () => {
               name="result.tailDefects"
               onChange={formik.handleChange}
               error={
-                formik.touched.result?.tailDefects &&
-                Boolean(formik.errors.result?.tailDefects)
+                formik.touched.result?.tailDefects && Boolean(formik.errors.result?.tailDefects)
               }
-              helperText={
-                formik.touched.result?.tailDefects &&
-                formik.errors.result?.tailDefects
-              }
+              helperText={formik.touched.result?.tailDefects && formik.errors.result?.tailDefects}
             />
           </Grid>
           <Grid item xs={12} sm={6} md={3}>
@@ -765,12 +652,8 @@ const SemenAnalysis: React.FC = () => {
               value={formik.values.result.hos}
               name="result.hos"
               onChange={formik.handleChange}
-              error={
-                formik.touched.result?.hos && Boolean(formik.errors.result?.hos)
-              }
-              helperText={
-                formik.touched.result?.hos && formik.errors.result?.hos
-              }
+              error={formik.touched.result?.hos && Boolean(formik.errors.result?.hos)}
+              helperText={formik.touched.result?.hos && formik.errors.result?.hos}
             />
           </Grid>
           <Grid item xs={12} sm={6} md={3}>
@@ -794,22 +677,15 @@ const SemenAnalysis: React.FC = () => {
             <TextField
               label="Zona Binding Potential Of Sperm As Per AI Testing"
               fullWidth
-              value={
-                formik.values.result.zonaBindingPotentialOfSpermAsPerAITesting
-              }
+              value={formik.values.result.zonaBindingPotentialOfSpermAsPerAITesting}
               name="result.zonaBindingPotentialOfSpermAsPerAITesting"
               onChange={formik.handleChange}
               error={
-                formik.touched.result
-                  ?.zonaBindingPotentialOfSpermAsPerAITesting &&
-                Boolean(
-                  formik.errors.result
-                    ?.zonaBindingPotentialOfSpermAsPerAITesting
-                )
+                formik.touched.result?.zonaBindingPotentialOfSpermAsPerAITesting &&
+                Boolean(formik.errors.result?.zonaBindingPotentialOfSpermAsPerAITesting)
               }
               helperText={
-                formik.touched.result
-                  ?.zonaBindingPotentialOfSpermAsPerAITesting &&
+                formik.touched.result?.zonaBindingPotentialOfSpermAsPerAITesting &&
                 formik.errors.result?.zonaBindingPotentialOfSpermAsPerAITesting
               }
             />
@@ -829,14 +705,8 @@ const SemenAnalysis: React.FC = () => {
               value={formik.values.result.analysis}
               name="result.analysis"
               onChange={formik.handleChange}
-              error={
-                formik.touched.result?.analysis &&
-                Boolean(formik.errors.result?.analysis)
-              }
-              helperText={
-                formik.touched.result?.analysis &&
-                formik.errors.result?.analysis
-              }
+              error={formik.touched.result?.analysis && Boolean(formik.errors.result?.analysis)}
+              helperText={formik.touched.result?.analysis && formik.errors.result?.analysis}
             />
           </Grid>
         </Grid>
@@ -860,10 +730,7 @@ const SemenAnalysis: React.FC = () => {
             )}
           </Grid>
           <Grid item xs={12}>
-            <FileList
-              files={investigation?.result?.files || []}
-              title="Uploaded Files"
-            />
+            <FileList files={investigation?.result?.files || []} title="Uploaded Files" />
           </Grid>
           <Grid item xs={12} sm={12} md={12}>
             <TextField
@@ -875,13 +742,9 @@ const SemenAnalysis: React.FC = () => {
               name="result.description"
               onChange={formik.handleChange}
               error={
-                formik.touched.result?.description &&
-                Boolean(formik.errors.result?.description)
+                formik.touched.result?.description && Boolean(formik.errors.result?.description)
               }
-              helperText={
-                formik.touched.result?.description &&
-                formik.errors.result?.description
-              }
+              helperText={formik.touched.result?.description && formik.errors.result?.description}
             />
           </Grid>
         </Grid>
@@ -904,35 +767,20 @@ const SemenAnalysis: React.FC = () => {
               minRows={2}
               fullWidth
               onChange={formik.handleChange}
-              error={
-                formik.touched.result?.disclaimer &&
-                Boolean(formik.errors.result?.disclaimer)
-              }
-              helperText={
-                formik.touched.result?.disclaimer &&
-                formik.errors.result?.disclaimer
-              }
+              error={formik.touched.result?.disclaimer && Boolean(formik.errors.result?.disclaimer)}
+              helperText={formik.touched.result?.disclaimer && formik.errors.result?.disclaimer}
             />
           </Grid>
         </Grid>
 
-        <Box
-          display={"flex"}
-          justifyContent={"center"}
-          alignItems={"center"}
-          gap={2}
-          mb={2}
-        >
+        <Box display={"flex"} justifyContent={"center"} alignItems={"center"} gap={2} mb={2}>
           <Grid item xs={12}>
             <FormControlLabel
               control={
                 <Checkbox
                   checked={formik.values.status === "Completed"}
                   onChange={(e) =>
-                    formik.setFieldValue(
-                      "status",
-                      e.target.checked ? "Completed" : "Scheduled"
-                    )
+                    formik.setFieldValue("status", e.target.checked ? "Completed" : "Scheduled")
                   }
                   color="primary"
                 />
@@ -942,19 +790,12 @@ const SemenAnalysis: React.FC = () => {
           </Grid>
         </Box>
 
-        <Box
-          display={"flex"}
-          justifyContent={"center"}
-          alignItems={"center"}
-          gap={2}
-          mb={2}
-        >
+        <Box display={"flex"} justifyContent={"center"} alignItems={"center"} gap={2} mb={2}>
           <Button
             variant="contained"
             disabled={
               editingInvestigation ||
-              (_.isEqual(formik.values, formik.initialValues) &&
-                fileUploadedUrl.length === 0)
+              (_.isEqual(formik.values, formik.initialValues) && fileUploadedUrl.length === 0)
             }
             color="primary"
             type="submit"

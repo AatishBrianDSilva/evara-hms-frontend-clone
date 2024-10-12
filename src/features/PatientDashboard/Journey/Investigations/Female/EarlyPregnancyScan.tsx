@@ -105,6 +105,7 @@ const EarlyPregnancyScan: React.FC = () => {
   const date = new Date(investigation?.date || new Date()).toLocaleDateString();
   const doctor = investigation?.doctor?.firstName + " " + investigation?.doctor?.lastName;
   const investigationName = investigation?.investigation?.test?.testName;
+  const actualProcedureName = investigation?.investigation?.name;
 
   const investigationDetails = investigation?.result?.details as IEarlyPregnancyForm;
   console.log("Investigation details", investigation);
@@ -124,6 +125,7 @@ const EarlyPregnancyScan: React.FC = () => {
 
   const handleSubmit = async (values: IEditInvestigationForm<IEarlyPregnancyForm>) => {
     console.log("Formik values", values);
+    const actualName = actualProcedureName || "Default Investigation"; // Use a fallback if procedureName is null/undefined
 
     const payload: IEditInvestigationpayload = {
       status: values.status,
@@ -134,6 +136,7 @@ const EarlyPregnancyScan: React.FC = () => {
         details: values.result,
       },
       testType: ETestType.EarlyPregnancyScan,
+      actualName: actualName, // New field added to the payload
     };
 
     console.log("Payload", payload);

@@ -114,6 +114,7 @@ const EndometrialAssessment: React.FC = () => {
   const date = new Date(investigation?.date || new Date()).toLocaleDateString();
   const doctor = investigation?.doctor?.firstName + " " + investigation?.doctor?.lastName;
   const investigationName = investigation?.investigation?.test?.testName;
+  const actualProcedureName = investigation?.investigation?.name;
 
   const investigationDetails = investigation?.result?.details as IEndometrialAssessmentForm;
   console.log("Investigation details", investigationDetails);
@@ -132,6 +133,7 @@ const EndometrialAssessment: React.FC = () => {
 
   const handleSubmit = async (values: IEditInvestigationForm<IEndometrialAssessmentForm>) => {
     console.log("Formik values", values);
+    const actualName = actualProcedureName || "Default Investigation"; // Use a fallback if procedureName is null/undefined
 
     const payload: IEditInvestigationpayload = {
       status: values.status,
@@ -154,6 +156,7 @@ const EndometrialAssessment: React.FC = () => {
         },
       },
       testType: ETestType.EndometrialAssessment,
+      actualName: actualName, // New field added to the payload
     };
 
     console.log("Payload", payload);

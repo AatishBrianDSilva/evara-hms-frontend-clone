@@ -129,6 +129,7 @@ const PGT: React.FC<PGTProps> = () => {
   const date = new Date(procedure?.date || new Date()).toLocaleDateString();
   const doctor = procedure?.doctor?.firstName + " " + procedure?.doctor?.lastName;
   const procedureName = procedure?.procedure?.procedure?.procedureName;
+  const actualProcedureName = procedure?.procedure?.name;
 
   const [editProcedure, { isLoading: editingProcedure }] = useEditProcedureMutation();
 
@@ -171,6 +172,8 @@ const PGT: React.FC<PGTProps> = () => {
   const handleSubmit = async (values: IEditProcedureForm<IPGTDetailsForm>) => {
     console.log("Formik values", values);
 
+    const actualName = actualProcedureName || "Default Procedure Name"; // Use a fallback if procedureName is null/undefined
+
     const payload: IEditProcedurePayload = {
       status: values.status,
       result: {
@@ -180,6 +183,7 @@ const PGT: React.FC<PGTProps> = () => {
         details: values.result,
       },
       testType: EProcedureType.PGT,
+      actualName: actualName, // New field added to the payload
     };
 
     console.log("Payload", payload);

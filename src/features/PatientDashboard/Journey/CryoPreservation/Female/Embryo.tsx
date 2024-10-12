@@ -120,11 +120,15 @@ const Embryo: React.FC<EmbryoProps> = ({ doctors }) => {
   const date = new Date(Cryopreservation?.date || new Date()).toLocaleDateString();
   const doctor = Cryopreservation?.doctor?.firstName + " " + Cryopreservation?.doctor?.lastName;
   const cryopreservationName = Cryopreservation?.details?.cryoPreservationName;
+  const actualProcedureName = Cryopreservation?.cryo?.name;
+
   const onModalClose = () => {
     formik.resetForm();
     dispatch(closeEditCryoPreservation());
   };
   const handleSubmit = async (values: IEditCryoPreservationForm<ICryoPreservationEmbryoForm>) => {
+    const actualName = actualProcedureName || "Default CryoPreservation Name"; // Use a fallback if procedureName is null/undefined
+
     const payload: IEditCryoPreservationPayload = {
       details: {
         procedureName: cryopreservationName!,
@@ -134,6 +138,7 @@ const Embryo: React.FC<EmbryoProps> = ({ doctors }) => {
       },
       status: values.status,
       testType: ECryoPreservationType.Embryo,
+      actualName: actualName, // New field added to the payload
     };
 
     const promise = editCryopreservation({

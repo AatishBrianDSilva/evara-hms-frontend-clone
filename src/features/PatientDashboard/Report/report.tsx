@@ -63,11 +63,7 @@ const Report: React.FC = () => {
       headerName: "Category",
       flex: 1,
     },
-    {
-      field: "clinicId",
-      headerName: "Clinic",
-      flex: 1,
-    },
+
     {
       field: "updatedAt",
       headerName: "UpdatedAt",

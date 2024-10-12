@@ -105,6 +105,7 @@ const Hysteroscopy: React.FC<HysteroscopyProps> = () => {
   const date = new Date(procedure?.date || new Date()).toLocaleDateString();
   const doctor = procedure?.doctor?.firstName + " " + procedure?.doctor?.lastName;
   const procedureName = procedure?.procedure?.procedure?.procedureName;
+  const actualProcedureName = procedure?.procedure?.name;
 
   const [editProcedure, { isLoading: editingProcedure }] = useEditProcedureMutation();
 
@@ -143,6 +144,8 @@ const Hysteroscopy: React.FC<HysteroscopyProps> = () => {
   const handleSubmit = async (values: IEditProcedureForm<IHysteroscopyForm>) => {
     console.log("Formik values", values);
 
+    const actualName = actualProcedureName || "Default Procedure Name"; // Use a fallback if procedureName is null/undefined
+
     const payload: IEditProcedurePayload = {
       status: values.status,
       result: {
@@ -152,6 +155,7 @@ const Hysteroscopy: React.FC<HysteroscopyProps> = () => {
         details: values.result,
       },
       testType: EProcedureType.Hysteroscopy,
+      actualName: actualName, // New field added to the payload
     };
 
     console.log("Payload", payload);

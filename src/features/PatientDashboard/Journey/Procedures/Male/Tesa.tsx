@@ -98,6 +98,7 @@ const Tesa: React.FC<TesaProps> = ({ doctors }) => {
   const date = new Date(procedure?.date || new Date()).toLocaleDateString();
   const doctor = procedure?.doctor?.firstName + " " + procedure?.doctor?.lastName;
   const procedureName = procedure?.procedure?.procedure?.procedureName;
+  const actualProcedureName = procedure?.procedure?.name;
 
   console.log("Procedure at Tesa", procedure);
 
@@ -130,6 +131,7 @@ const Tesa: React.FC<TesaProps> = ({ doctors }) => {
 
   const handleSubmit = async (values: IEditProcedureForm<ITesaForm>) => {
     console.log("Formik values", values);
+    const actualName = actualProcedureName || "Default Procedure Name"; // Use a fallback if procedureName is null/undefined
 
     const payload: IEditProcedurePayload = {
       status: values.status,
@@ -140,6 +142,7 @@ const Tesa: React.FC<TesaProps> = ({ doctors }) => {
         details: values.result,
       },
       testType: EProcedureType.TESA,
+      actualName: actualName, // New field added to the payload
     };
 
     console.log("Payload", payload);

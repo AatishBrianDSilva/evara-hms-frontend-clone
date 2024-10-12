@@ -18,6 +18,7 @@ export interface IEditInvestigationpayload {
   };
   status: string;
   testType: ETestType;
+  actualName?: string;
 }
 
 export interface IPatientInvestigation {

@@ -104,6 +104,7 @@ const SpermDFI: React.FC = () => {
   const date = new Date(investigation?.date || new Date()).toLocaleDateString();
   const doctor = investigation?.doctor?.firstName + " " + investigation?.doctor?.lastName;
   const investigationName = investigation?.investigation?.test?.testName;
+  const actualProcedureName = investigation?.investigation?.name;
 
   const investigationDetails = investigation?.result?.details as ISpermDFIForm;
   console.log("Investigation details", investigationDetails);
@@ -120,6 +121,8 @@ const SpermDFI: React.FC = () => {
   });
 
   const handleSubmit = async (values: IEditInvestigationForm<ISpermDFIForm>) => {
+    const actualName = actualProcedureName || "Default Investigation"; // Use a fallback if procedureName is null/undefined
+
     const payload: IEditInvestigationpayload = {
       status: values.status,
       result: {
@@ -129,6 +132,7 @@ const SpermDFI: React.FC = () => {
         details: values.result,
       },
       testType: ETestType.SemenAnalysis,
+      actualName: actualName, // New field added to the payload
     };
 
     console.log("Payload", payload);

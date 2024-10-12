@@ -123,6 +123,7 @@ const Sperm: React.FC<TesaProps> = () => {
   const date = new Date(Cryopreservation?.date || new Date()).toLocaleDateString();
   const doctor = Cryopreservation?.doctor?.firstName + " " + Cryopreservation?.doctor?.lastName;
   const cryopreservationName = Cryopreservation?.details?.cryoPreservationName;
+  const actualProcedureName = Cryopreservation?.cryo?.name;
 
   const initialValues: IEditCryoPreservationForm<ICryoPreservationSpermForm> = {
     status: Cryopreservation?.status || "",
@@ -204,6 +205,8 @@ const Sperm: React.FC<TesaProps> = () => {
   };
 
   const handleSubmit = async (values: IEditCryoPreservationForm<ICryoPreservationSpermForm>) => {
+    const actualName = actualProcedureName || "Default CryoPreservation Name"; // Use a fallback if procedureName is null/undefined
+
     const payload: IEditCryoPreservationPayload = {
       details: {
         procedureName: cryopreservationName!,
@@ -213,6 +216,7 @@ const Sperm: React.FC<TesaProps> = () => {
       },
       status: values.status,
       testType: ECryoPreservationType.Sperm,
+      actualName: actualName, // New field added to the payload
     };
 
     const promise = editCryopreservation({
