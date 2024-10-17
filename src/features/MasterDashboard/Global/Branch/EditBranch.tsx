@@ -138,7 +138,7 @@ const EditBranch: React.FC<EditBranchProps> = ({ openModal, onClose, id }) => {
         const branchData = {
           _id: id,
           clinicId: data?.clinicId,
-          code: values.code,
+          // code: values.code,
           branchName: values.branchName,
           address: {
             street: values.street,
@@ -189,6 +189,7 @@ const EditBranch: React.FC<EditBranchProps> = ({ openModal, onClose, id }) => {
                   placeholder="Branch Code"
                   value={formik.values.code}
                   onChange={formik.handleChange}
+                  disabled
                 />
               </Grid>
               <Grid item xs={8} sm={4} lg={3}>
