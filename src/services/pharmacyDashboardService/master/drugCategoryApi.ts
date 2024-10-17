@@ -1,9 +1,5 @@
 import { createApi } from "@reduxjs/toolkit/query/react";
-import {
-  ApiResponse,
-  IQueryOptions,
-  PaginatedResponse,
-} from "../../../types/global";
+import { ApiResponse, IQueryOptions, PaginatedResponse } from "../../../types/global";
 import generateQueryParams from "../../../utils/generateQueryParams";
 import { IDrugCategory } from "../../../types/pharmacyDashboard/master";
 import { baseQuery } from "../../baseQuery";
@@ -24,10 +20,7 @@ export const drugCategoryApi = createApi({
   baseQuery: baseQuery,
   tagTypes: ["DrugCategory"],
   endpoints: (builder) => ({
-    addDrugCategory: builder.mutation<
-      ApiResponse<IDrugCategory>,
-      AddDrugCategoryPayload
-    >({
+    addDrugCategory: builder.mutation<ApiResponse<IDrugCategory>, AddDrugCategoryPayload>({
       query: (drugCategoryData) => ({
         url: "pharmacy-dashboard/master/drug-categories/add",
         method: "POST",
@@ -35,10 +28,7 @@ export const drugCategoryApi = createApi({
       }),
       invalidatesTags: ["DrugCategory"],
     }),
-    editDrugCategory: builder.mutation<
-      ApiResponse<IDrugCategory>,
-      EditDrugCategoryPayload
-    >({
+    editDrugCategory: builder.mutation<ApiResponse<IDrugCategory>, EditDrugCategoryPayload>({
       query: (drugCategoryData) => ({
         url: `pharmacy-dashboard/master/drug-categories/${drugCategoryData.id}`,
         method: "PUT",
@@ -49,14 +39,11 @@ export const drugCategoryApi = createApi({
     deleteDrugCategory: builder.mutation<ApiResponse<null>, string>({
       query: (id: string) => ({
         url: `pharmacy-dashboard/master/drug-categories/${id}`,
-        method: "DELETE",
+        method: "PATCH",
       }),
       invalidatesTags: ["DrugCategory"],
     }),
-    getDrugCategories: builder.query<
-      ApiResponse<PaginatedResponse<IDrugCategory>>,
-      IQueryOptions
-    >({
+    getDrugCategories: builder.query<ApiResponse<PaginatedResponse<IDrugCategory>>, IQueryOptions>({
       query: (options) => {
         const queryParams = generateQueryParams(options);
         return {

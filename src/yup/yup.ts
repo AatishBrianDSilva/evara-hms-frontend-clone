@@ -2,14 +2,14 @@ import * as Yup from "yup";
 
 export const AppointmentValidationSchema = Yup.object({
   fullName: Yup.string().required("Full name is required"),
+
   phone: Yup.string()
-  .matches(/^(\+\d{1,3}\s?)?\d{1,13}$/, 'Phone number can have maximum 13 digits')
-  .required('Phone is required'),
-  // .test("valid-phone", "Invalid phone number", (value) => {
-  //   const countryCode = value.substring(0, value.indexOf(" "));
-  //   const phoneNumber = value.substring(value.indexOf(" ") + 1).replace(/\s/g, ""); //replace the whitespaces in phone number
-  //   return /^\+[0-9]{1,3}$/.test(countryCode) && /^[0-9]{10}$/.test(phoneNumber);
-  // }),
+    .test("valid-phone", "Phone number must be exactly 10 digits", function (value) {
+      // Extract the phone number part (excluding the country code)
+      const phoneNumber = value ? value.replace(/^\+\d+\s/, "") : "";
+      return phoneNumber.length === 10 && /^\d{10}$/.test(phoneNumber);
+    })
+    .required("Phone is required"),
 
   city: Yup.string().required("City is required"),
   reason: Yup.string().required("Reason for visit is required"),

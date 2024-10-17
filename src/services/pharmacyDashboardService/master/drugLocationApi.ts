@@ -1,9 +1,5 @@
 import { createApi } from "@reduxjs/toolkit/query/react";
-import {
-  ApiResponse,
-  IQueryOptions,
-  PaginatedResponse,
-} from "../../../types/global";
+import { ApiResponse, IQueryOptions, PaginatedResponse } from "../../../types/global";
 import generateQueryParams from "../../../utils/generateQueryParams";
 import { IDrugLocation } from "../../../types/pharmacyDashboard/master";
 import { baseQuery } from "../../baseQuery";
@@ -26,10 +22,7 @@ export const drugLocationApi = createApi({
   baseQuery: baseQuery,
   tagTypes: ["DrugLocation"],
   endpoints: (builder) => ({
-    addDrugLocation: builder.mutation<
-      ApiResponse<IDrugLocation>,
-      AddDrugLocationPayload
-    >({
+    addDrugLocation: builder.mutation<ApiResponse<IDrugLocation>, AddDrugLocationPayload>({
       query: (drugLocationData) => ({
         url: "pharmacy-dashboard/master/drug-locations/add",
         method: "POST",
@@ -37,10 +30,7 @@ export const drugLocationApi = createApi({
       }),
       invalidatesTags: ["DrugLocation"],
     }),
-    editDrugLocation: builder.mutation<
-      ApiResponse<IDrugLocation>,
-      EditDrugLocationPayload
-    >({
+    editDrugLocation: builder.mutation<ApiResponse<IDrugLocation>, EditDrugLocationPayload>({
       query: (drugLocationData) => ({
         url: `pharmacy-dashboard/master/drug-locations/${drugLocationData.id}`,
         method: "PUT",
@@ -51,14 +41,11 @@ export const drugLocationApi = createApi({
     deleteDrugLocation: builder.mutation<ApiResponse<null>, string>({
       query: (id: string) => ({
         url: `pharmacy-dashboard/master/drug-locations/${id}`,
-        method: "DELETE",
+        method: "PATCH",
       }),
       invalidatesTags: ["DrugLocation"],
     }),
-    getDrugLocations: builder.query<
-      ApiResponse<PaginatedResponse<IDrugLocation>>,
-      IQueryOptions
-    >({
+    getDrugLocations: builder.query<ApiResponse<PaginatedResponse<IDrugLocation>>, IQueryOptions>({
       query: (options) => {
         const queryParams = generateQueryParams(options);
         return {

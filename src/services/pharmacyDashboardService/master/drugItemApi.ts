@@ -1,9 +1,5 @@
 import { createApi } from "@reduxjs/toolkit/query/react";
-import {
-  ApiResponse,
-  IQueryOptions,
-  PaginatedResponse,
-} from "../../../types/global";
+import { ApiResponse, IQueryOptions, PaginatedResponse } from "../../../types/global";
 import generateQueryParams from "../../../utils/generateQueryParams";
 import { IDrugItem } from "../../../types/pharmacyDashboard/master";
 import { baseQuery } from "../../baseQuery";
@@ -44,27 +40,22 @@ export const drugItemApi = createApi({
       }),
       invalidatesTags: ["DrugItem"],
     }),
-    editDrugItem: builder.mutation<ApiResponse<IDrugItem>, EditDrugItemPayload>(
-      {
-        query: (drugItemData) => ({
-          url: `pharmacy-dashboard/master/drug-items/${drugItemData.id}`,
-          method: "PUT",
-          body: drugItemData,
-        }),
-        invalidatesTags: ["DrugItem"],
-      }
-    ),
-    deleteDrugItem: builder.mutation<ApiResponse<null>, string>({
-      query: (id: string) => ({
-        url: `pharmacy-dashboard/master/drug-items/${id}`,
-        method: "DELETE",
+    editDrugItem: builder.mutation<ApiResponse<IDrugItem>, EditDrugItemPayload>({
+      query: (drugItemData) => ({
+        url: `pharmacy-dashboard/master/drug-items/${drugItemData.id}`,
+        method: "PUT",
+        body: drugItemData,
       }),
       invalidatesTags: ["DrugItem"],
     }),
-    getDrugItems: builder.query<
-      ApiResponse<PaginatedResponse<IDrugItem>>,
-      IQueryOptions
-    >({
+    deleteDrugItem: builder.mutation<ApiResponse<null>, string>({
+      query: (id: string) => ({
+        url: `pharmacy-dashboard/master/drug-items/${id}`,
+        method: "PATCH",
+      }),
+      invalidatesTags: ["DrugItem"],
+    }),
+    getDrugItems: builder.query<ApiResponse<PaginatedResponse<IDrugItem>>, IQueryOptions>({
       query: (options) => {
         const queryParams = generateQueryParams(options);
         return {

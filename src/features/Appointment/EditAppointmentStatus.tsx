@@ -1,8 +1,20 @@
 import React from "react";
-import { Box, Button, Grid, Modal, TextField, Typography, CircularProgress, MenuItem } from "@mui/material";
+import {
+  Box,
+  Button,
+  Grid,
+  Modal,
+  TextField,
+  Typography,
+  CircularProgress,
+  MenuItem,
+} from "@mui/material";
 
 import { useFormik } from "formik";
-import { useGetAppointmentByIdQuery, useUpdateAppointmentStatusMutation } from "../../services/appointmentApi";
+import {
+  useGetAppointmentByIdQuery,
+  useUpdateAppointmentStatusMutation,
+} from "../../services/appointmentApi";
 import { useToast } from "../../context/ToastContext";
 import { IAppointment } from "../../types/appointment";
 import CustomTimePicker from "../../components/CustomDatePicker/CustomTimePicker";
@@ -17,16 +29,24 @@ const EditAppointmentStatus: React.FC<EditAppointmentProps> = ({ openModal, onCl
   const { showPromiseToast } = useToast();
   const [updateAppointment, { isLoading: isUpdating }] = useUpdateAppointmentStatusMutation();
 
-  const { data: appointmentData, isLoading: isAppointmentLoading, isFetching: isAppointmentFetching } = useGetAppointmentByIdQuery(id);
+  const {
+    data: appointmentData,
+    isLoading: isAppointmentLoading,
+    isFetching: isAppointmentFetching,
+  } = useGetAppointmentByIdQuery(id);
+
   const appointment: IAppointment = appointmentData?.data;
 
-  const handleSubmit = async (values: any) => {
+  console.log("Appoinyment Status Data", appointment);
 
+  const isCancelled = appointment?.status === "Cancelled";
+
+  const handleSubmit = async (values: any) => {
     const payload = {
       id: appointment._id,
       status: values.status,
-      reportedTime: values.reportedTime,
-    }
+      reportedTime: values.reportedTime ? values.reportedTime.toISOString() : null,
+    };
 
     const promise = updateAppointment(payload).unwrap();
 
@@ -43,18 +63,18 @@ const EditAppointmentStatus: React.FC<EditAppointmentProps> = ({ openModal, onCl
     } catch (error) {
       console.error("Failed to update appointment", error);
     }
-  }
+  };
 
   const formik = useFormik({
     initialValues: {
       status: appointment?.status || "",
-      reportedTime: null,
+      reportedTime: appointment?.reportedTime ? new Date(appointment.reportedTime) : null,
     },
     enableReinitialize: true,
     onSubmit: handleSubmit,
   });
 
-  const loading = isAppointmentFetching || isAppointmentLoading
+  const loading = isAppointmentFetching || isAppointmentLoading;
 
   return (
     <Modal open={openModal} onClose={onClose}>
@@ -78,7 +98,7 @@ const EditAppointmentStatus: React.FC<EditAppointmentProps> = ({ openModal, onCl
         </Typography>
         <Box component={"form"} onSubmit={formik.handleSubmit} mt={4}>
           {loading ? (
-            <Box display={"flex"} justifyContent={"center"} alignItems={"center"} >
+            <Box display={"flex"} justifyContent={"center"} alignItems={"center"}>
               <CircularProgress />
             </Box>
           ) : (
@@ -105,7 +125,7 @@ const EditAppointmentStatus: React.FC<EditAppointmentProps> = ({ openModal, onCl
 
                 <Grid item xs={12} md={6}>
                   <CustomTimePicker
-                    disabled={formik.values.status !== "Reported"}
+                    disabled={formik.values.status !== "Reported"} // Enable only when status is "Reported"
                     label="Reported Time"
                     minTime={new Date()}
                     value={formik.values.reportedTime}
@@ -115,11 +135,15 @@ const EditAppointmentStatus: React.FC<EditAppointmentProps> = ({ openModal, onCl
                     }}
                   />
                 </Grid>
-
               </Grid>
-              {JSON.stringify(formik.errors)}
+              {/* {JSON.stringify(formik.errors)} */}
               <Box mt={2} display={"flex"} justifyContent={"flex-end"} alignItems={"center"}>
-                <Button type="submit" color="primary" variant="contained" disabled={isUpdating || loading}>
+                <Button
+                  type="submit"
+                  color="primary"
+                  variant="contained"
+                  disabled={isUpdating || loading || isCancelled}
+                >
                   Update Appointment
                 </Button>
                 <Button onClick={onClose} color="secondary" variant="outlined" sx={{ ml: 2 }}>
@@ -128,7 +152,6 @@ const EditAppointmentStatus: React.FC<EditAppointmentProps> = ({ openModal, onCl
               </Box>
             </>
           )}
-
         </Box>
       </Box>
     </Modal>

@@ -1,9 +1,5 @@
 import { createApi } from "@reduxjs/toolkit/query/react";
-import {
-  ApiResponse,
-  IQueryOptions,
-  PaginatedResponse,
-} from "../../../types/global";
+import { ApiResponse, IQueryOptions, PaginatedResponse } from "../../../types/global";
 import generateQueryParams from "../../../utils/generateQueryParams";
 import { ITaxRate } from "../../../types/pharmacyDashboard/master";
 import { baseQuery } from "../../baseQuery";
@@ -24,10 +20,7 @@ export const taxBracketApi = createApi({
   baseQuery: baseQuery,
   tagTypes: ["TaxBracket"],
   endpoints: (builder) => ({
-    addTaxBracket: builder.mutation<
-      ApiResponse<ITaxRate>,
-      AddTaxBracketPayload
-    >({
+    addTaxBracket: builder.mutation<ApiResponse<ITaxRate>, AddTaxBracketPayload>({
       query: (taxBracketData) => ({
         url: "pharmacy-dashboard/master/tax-rates/add",
         method: "POST",
@@ -35,10 +28,7 @@ export const taxBracketApi = createApi({
       }),
       invalidatesTags: ["TaxBracket"],
     }),
-    editTaxBracket: builder.mutation<
-      ApiResponse<ITaxRate>,
-      EditTaxBracketPayload
-    >({
+    editTaxBracket: builder.mutation<ApiResponse<ITaxRate>, EditTaxBracketPayload>({
       query: (taxBracketData) => ({
         url: `pharmacy-dashboard/master/tax-rates/${taxBracketData.id}`,
         method: "PUT",
@@ -49,14 +39,11 @@ export const taxBracketApi = createApi({
     deleteTaxBracket: builder.mutation<ApiResponse<null>, string>({
       query: (id: string) => ({
         url: `pharmacy-dashboard/master/tax-rates/${id}`,
-        method: "DELETE",
+        method: "PATCH",
       }),
       invalidatesTags: ["TaxBracket"],
     }),
-    getTaxBrackets: builder.query<
-      ApiResponse<PaginatedResponse<ITaxRate>>,
-      IQueryOptions
-    >({
+    getTaxBrackets: builder.query<ApiResponse<PaginatedResponse<ITaxRate>>, IQueryOptions>({
       query: (options) => {
         const queryParams = generateQueryParams(options);
         return {

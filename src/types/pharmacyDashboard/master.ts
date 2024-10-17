@@ -4,6 +4,7 @@ export interface IDrugCategory {
   notes: string;
   createdAt: Date;
   updatedAt: Date;
+  status: "Active" | "Inactive";
 }
 
 export interface IDrugType {
@@ -13,6 +14,7 @@ export interface IDrugType {
   notes?: string;
   createdAt: Date;
   updatedAt: Date;
+  status: "Active" | "Inactive";
 }
 
 export interface ITaxRate {
@@ -20,6 +22,7 @@ export interface ITaxRate {
   taxRate: number;
   notes: string;
   createdAt: Date;
+  status: "Active" | "Inactive";
 }
 
 export interface IDrugManufacturer {
@@ -72,6 +75,7 @@ export interface IDrugLocation {
   location: string;
   notes: string;
   main: boolean;
+  status: "Active" | "Inactive";
 }
 
 export interface IDrugVendor {

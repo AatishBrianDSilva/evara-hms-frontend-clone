@@ -15,12 +15,11 @@ interface RowType {
 }
 
 const MasterServices: React.FC = () => {
-
   const [selectedRow, setSelectedRow] = useState<any>(null);
   const [isAddModalOpen, setIsAddModalOpen] = useState<boolean>(false);
   const [isEditModalOpen, setIsEditModalOpen] = useState<boolean>(false);
 
-  const [searchQuery, setSearchQuery] = useState('');
+  const [searchQuery, setSearchQuery] = useState("");
   const handleSearchChange = useCallback((query: string) => {
     setSearchQuery(query);
   }, []);
@@ -31,8 +30,11 @@ const MasterServices: React.FC = () => {
     [handleSearchChange] // Ensure that handleSearchChange is stable
   );
 
-  const { data: servicesData, isLoading: servicesLoading, isFetching: servicesFetching } =
-    useGetMasterServicesQuery({ paginate: false, filters: { isAdmin: true }, searchQuery });
+  const {
+    data: servicesData,
+    isLoading: servicesLoading,
+    isFetching: servicesFetching,
+  } = useGetMasterServicesQuery({ paginate: false, filters: { isAdmin: true }, searchQuery });
 
   const services = servicesData?.data || [];
 
@@ -57,7 +59,20 @@ const MasterServices: React.FC = () => {
     },
     { field: "cost", headerName: "Price", flex: 1 },
 
-    { field: "validTill", headerName: "Valid Till", flex: 1, type: "date", valueFormatter: (params) => params.value ? new Date(params.value).toLocaleDateString() : null },
+    {
+      field: "validTill",
+      headerName: "Valid Till",
+      flex: 1,
+      type: "date",
+      valueFormatter: (params) =>
+        params.value
+          ? new Intl.DateTimeFormat("en-GB", {
+              day: "2-digit",
+              month: "2-digit",
+              year: "numeric",
+            }).format(new Date(params.value))
+          : null,
+    },
     {
       field: "active",
       headerName: "Active",
@@ -105,7 +120,13 @@ const MasterServices: React.FC = () => {
   return (
     <ContentSection title="Services">
       <Box display="flex" justifyContent="flex-end" gap={2}>
-        <TextField label="Search" placeholder="Name" size="small" variant="outlined" onChange={(e) => debouncedSearchChange(e.target.value)} />
+        <TextField
+          label="Search"
+          placeholder="Name"
+          size="small"
+          variant="outlined"
+          onChange={(e) => debouncedSearchChange(e.target.value)}
+        />
         <Button
           variant="contained"
           startIcon={<Add />}
@@ -128,19 +149,10 @@ const MasterServices: React.FC = () => {
         />
       </Box>
 
-      {isAddModalOpen && (
-        <AddMasterService
-          openModal={isAddModalOpen}
-          onClose={closeAddModal}
-        />
-      )}
+      {isAddModalOpen && <AddMasterService openModal={isAddModalOpen} onClose={closeAddModal} />}
 
       {isEditModalOpen && (
-        <EditMasterService
-          openModal={isEditModalOpen}
-          onClose={closeEditModal}
-          id={selectedRow}
-        />
+        <EditMasterService openModal={isEditModalOpen} onClose={closeEditModal} id={selectedRow} />
       )}
     </ContentSection>
   );

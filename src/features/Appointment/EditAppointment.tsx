@@ -44,6 +44,8 @@ const EditAppointment: React.FC<EditAppointmentProps> = ({ openModal, onClose, i
   } = useGetAppointmentByIdQuery(id);
   const appointment: IAppointment = appointmentData?.data;
 
+  console.log("Appointment Data", appointment);
+
   const initialTime = useMemo(() => {
     const initialType = appointment?.time?.includes("AM") ? "AM" : "PM";
     return {

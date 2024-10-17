@@ -1,9 +1,5 @@
 import { createApi } from "@reduxjs/toolkit/query/react";
-import {
-  ApiResponse,
-  IQueryOptions,
-  PaginatedResponse,
-} from "../../../types/global";
+import { ApiResponse, IQueryOptions, PaginatedResponse } from "../../../types/global";
 import generateQueryParams from "../../../utils/generateQueryParams";
 import { IDrugVendor } from "../../../types/pharmacyDashboard/master";
 import { baseQuery } from "../../baseQuery";
@@ -60,10 +56,7 @@ export const drugVendorApi = createApi({
   baseQuery: baseQuery,
   tagTypes: ["DrugVendor"],
   endpoints: (builder) => ({
-    addDrugVendor: builder.mutation<
-      ApiResponse<IDrugVendor>,
-      AddDrugVendorPayload
-    >({
+    addDrugVendor: builder.mutation<ApiResponse<IDrugVendor>, AddDrugVendorPayload>({
       query: (drugVendorData) => ({
         url: "pharmacy-dashboard/master/drug-vendors/add",
         method: "POST",
@@ -71,10 +64,7 @@ export const drugVendorApi = createApi({
       }),
       invalidatesTags: ["DrugVendor"],
     }),
-    editDrugVendor: builder.mutation<
-      ApiResponse<IDrugVendor>,
-      EditDrugVendorPayload
-    >({
+    editDrugVendor: builder.mutation<ApiResponse<IDrugVendor>, EditDrugVendorPayload>({
       query: (drugVendorData) => ({
         url: `pharmacy-dashboard/master/drug-vendors/${drugVendorData.id}`,
         method: "PUT",
@@ -85,14 +75,11 @@ export const drugVendorApi = createApi({
     deleteDrugVendor: builder.mutation<ApiResponse<null>, string>({
       query: (id: string) => ({
         url: `pharmacy-dashboard/master/drug-vendors/${id}`,
-        method: "DELETE",
+        method: "PATCH",
       }),
       invalidatesTags: ["DrugVendor"],
     }),
-    getDrugVendors: builder.query<
-      ApiResponse<PaginatedResponse<IDrugVendor>>,
-      IQueryOptions
-    >({
+    getDrugVendors: builder.query<ApiResponse<PaginatedResponse<IDrugVendor>>, IQueryOptions>({
       query: (options) => {
         const queryParams = generateQueryParams(options);
         return {

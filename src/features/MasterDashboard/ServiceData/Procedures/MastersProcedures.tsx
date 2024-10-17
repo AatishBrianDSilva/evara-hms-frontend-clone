@@ -9,18 +9,16 @@ import AddMasterProcedure from "./AddMastersProcedures";
 import EditMasterProcedure from "./EditMastersProcedures";
 import { useGetMasterProceduresQuery } from "../../../../services/masterDashboardService/serviceData/masterProceduresApi";
 
-
 interface RowType {
   _id: string;
 }
 
 const MasterProcedures: React.FC = () => {
-
   const [selectedRow, setSelectedRow] = useState<any>(null);
   const [isAddModalOpen, setIsAddModalOpen] = useState<boolean>(false);
   const [isEditModalOpen, setIsEditModalOpen] = useState<boolean>(false);
 
-  const [searchQuery, setSearchQuery] = useState('');
+  const [searchQuery, setSearchQuery] = useState("");
   const handleSearchChange = useCallback((query: string) => {
     setSearchQuery(query);
   }, []);
@@ -31,8 +29,11 @@ const MasterProcedures: React.FC = () => {
     [handleSearchChange] // Ensure that handleSearchChange is stable
   );
 
-  const { data: ProceduresData, isLoading: ProceduresLoading, isFetching: ProcedureFetching } =
-    useGetMasterProceduresQuery({ paginate: false, filters: { isAdmin: true }, searchQuery });
+  const {
+    data: ProceduresData,
+    isLoading: ProceduresLoading,
+    isFetching: ProcedureFetching,
+  } = useGetMasterProceduresQuery({ paginate: false, filters: { isAdmin: true }, searchQuery });
 
   const Procedures = ProceduresData?.data || [];
 
@@ -57,7 +58,20 @@ const MasterProcedures: React.FC = () => {
     },
     { field: "cost", headerName: "Price", flex: 1 },
 
-    { field: "validTill", headerName: "Valid Till", flex: 1, type: "date", valueFormatter: (params) => params.value ? new Date(params.value).toLocaleDateString() : null },
+    {
+      field: "validTill",
+      headerName: "Valid Till",
+      flex: 1,
+      type: "date",
+      valueFormatter: (params) =>
+        params.value
+          ? new Intl.DateTimeFormat("en-GB", {
+              day: "2-digit",
+              month: "2-digit",
+              year: "numeric",
+            }).format(new Date(params.value))
+          : null,
+    },
     {
       field: "active",
       headerName: "Active",
@@ -105,7 +119,13 @@ const MasterProcedures: React.FC = () => {
   return (
     <ContentSection title="Procedures">
       <Box display="flex" justifyContent="flex-end" gap={2}>
-        <TextField label="Search" placeholder="Name" size="small" variant="outlined" onChange={(e) => debouncedSearchChange(e.target.value)} />
+        <TextField
+          label="Search"
+          placeholder="Name"
+          size="small"
+          variant="outlined"
+          onChange={(e) => debouncedSearchChange(e.target.value)}
+        />
         <Button
           variant="contained"
           startIcon={<Add />}
@@ -128,12 +148,7 @@ const MasterProcedures: React.FC = () => {
         />
       </Box>
 
-      {isAddModalOpen && (
-        <AddMasterProcedure
-          openModal={isAddModalOpen}
-          onClose={closeAddModal}
-        />
-      )}
+      {isAddModalOpen && <AddMasterProcedure openModal={isAddModalOpen} onClose={closeAddModal} />}
 
       {isEditModalOpen && (
         <EditMasterProcedure

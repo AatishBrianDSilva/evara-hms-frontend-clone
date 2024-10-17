@@ -65,7 +65,13 @@ const MasterPackages: React.FC = () => {
       flex: 1,
       type: "date",
       valueFormatter: (params) =>
-        params.value ? new Date(params.value).toLocaleDateString() : null,
+        params.value
+          ? new Intl.DateTimeFormat("en-GB", {
+              day: "2-digit",
+              month: "2-digit",
+              year: "numeric",
+            }).format(new Date(params.value))
+          : null,
     },
     {
       field: "active",

@@ -1,9 +1,5 @@
 import { createApi } from "@reduxjs/toolkit/query/react";
-import {
-  ApiResponse,
-  IQueryOptions,
-  PaginatedResponse,
-} from "../../../types/global";
+import { ApiResponse, IQueryOptions, PaginatedResponse } from "../../../types/global";
 import generateQueryParams from "../../../utils/generateQueryParams";
 import { IDrugManufacturer } from "../../../types/pharmacyDashboard/master";
 import { baseQuery } from "../../baseQuery";
@@ -89,7 +85,7 @@ export const drugManufacturerApi = createApi({
     deleteDrugManufacturer: builder.mutation<ApiResponse<null>, string>({
       query: (id: string) => ({
         url: `pharmacy-dashboard/master/drug-manufacturers/${id}`,
-        method: "DELETE",
+        method: "PATCH",
       }),
       invalidatesTags: ["DrugManufacturer"],
     }),
@@ -106,10 +102,7 @@ export const drugManufacturerApi = createApi({
       },
       providesTags: (_result, _error, _args) => ["DrugManufacturer"],
     }),
-    getDrugManufacturerById: builder.query<
-      ApiResponse<IDrugManufacturer>,
-      string
-    >({
+    getDrugManufacturerById: builder.query<ApiResponse<IDrugManufacturer>, string>({
       query: (id) => `pharmacy-dashboard/master/drug-manufacturers/${id}`,
       providesTags: (_result, _error, id) => [{ type: "DrugManufacturer", id }],
     }),

@@ -3,11 +3,7 @@ import ContentSection from "../../../../components/ContentSection/ContentSection
 import { Box, Button, TextField } from "@mui/material";
 import { Add, Edit } from "@mui/icons-material";
 import CustomDataGrid from "../../../../components/CustomDataGrid/CustomDataGrid";
-import {
-  GridActionsCellItem,
-  GridColDef,
-  GridRowParams,
-} from "@mui/x-data-grid";
+import { GridActionsCellItem, GridColDef, GridRowParams } from "@mui/x-data-grid";
 import AddDrugItem from "./AddDrugItem";
 import Delete from "@mui/icons-material/Delete";
 import EditDrugItem from "./EditDrugItem";
@@ -62,6 +58,7 @@ const DrugItem: React.FC = () => {
   } = useGetDrugCategoriesQuery({
     paginate: false,
     sort: { name: 1 },
+    filters: { status: "Active" },
   });
   const drugCategories = drugCategoriesData?.data?.records || [];
 
@@ -72,6 +69,7 @@ const DrugItem: React.FC = () => {
   } = useGetDrugTypesQuery({
     paginate: false,
     sort: { name: 1 },
+    filters: { status: "Active" },
   });
   const drugTypes = drugTypesData?.data?.records || [];
 
@@ -82,6 +80,7 @@ const DrugItem: React.FC = () => {
   } = useGetDrugManufacturersQuery({
     paginate: false,
     sort: { name: 1 },
+    filters: { status: "Active" },
   });
   const drugManufacturers = drugManufacturersData?.data?.records || [];
 
@@ -92,6 +91,7 @@ const DrugItem: React.FC = () => {
   } = useGetTaxBracketsQuery({
     paginate: false,
     sort: { taxRate: 1 },
+    filters: { status: "Active" },
   });
   const taxRates = taxRatesData?.data?.records || [];
   const addDrugItemLoading =
@@ -165,15 +165,13 @@ const DrugItem: React.FC = () => {
       field: "mrp",
       headerName: "MRP",
       flex: 1,
-      valueFormatter: (params) =>
-        formatToIndianCurrencyFormat(params.value || 0),
+      valueFormatter: (params) => formatToIndianCurrencyFormat(params.value || 0),
     },
     {
       field: "rate",
       headerName: "Rate",
       flex: 1,
-      valueFormatter: (params) =>
-        formatToIndianCurrencyFormat(params.value || 0),
+      valueFormatter: (params) => formatToIndianCurrencyFormat(params.value || 0),
     },
     {
       field: "taxRate",

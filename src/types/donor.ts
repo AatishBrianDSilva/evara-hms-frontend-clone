@@ -39,7 +39,7 @@ export interface IDonor {
   reasonOfVisit: string;
   referredBy: string;
   marketingSource: string;
-  intepreter: boolean;
+  interpreter: boolean;
   isPatientSurrogate: boolean;
   isPatientDeceased: boolean;
   detailsOfDeath: string;

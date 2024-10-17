@@ -18,6 +18,7 @@ import FieldAutocomplete from "../../components/FieldAutoComplete/FieldAutoCompl
 import { useGetReferralDoctorsQuery } from "../../services/masterDashboardService/local/referralDoctorApi";
 import { useGetPatientIdTypesQuery } from "../../services/masterDashboardService/local/patientIdTypeApi";
 import { useGetPatientSourcesQuery } from "../../services/masterDashboardService/local/patientSourceApi";
+import { MuiTelInput } from "mui-tel-input";
 
 const columnSpacing = 2;
 const rowSpacing = 2;
@@ -227,12 +228,7 @@ const PatientRegistration: React.FC = () => {
     <form onSubmit={formik.handleSubmit}>
       {/* Personal Details */}
       <Typography variant="h6">Personal Information</Typography>
-      <Grid
-        container
-        rowSpacing={rowSpacing}
-        columnSpacing={columnSpacing}
-        mt={1}
-      >
+      <Grid container rowSpacing={rowSpacing} columnSpacing={columnSpacing} mt={1}>
         <Grid item xs={4} sm={6} md={2}>
           <TextField
             ref={inputRefs.title}
@@ -332,13 +328,8 @@ const PatientRegistration: React.FC = () => {
             label="Marital Status"
             value={formik.values.maritalStatus}
             onChange={formik.handleChange}
-            error={
-              formik.touched.maritalStatus &&
-              Boolean(formik.errors.maritalStatus)
-            }
-            helperText={
-              formik.touched.maritalStatus && formik.errors.maritalStatus
-            }
+            error={formik.touched.maritalStatus && Boolean(formik.errors.maritalStatus)}
+            helperText={formik.touched.maritalStatus && formik.errors.maritalStatus}
           >
             <MenuItem value="Married">Married</MenuItem>
             <MenuItem value="Unmarried">Unmarried</MenuItem>
@@ -354,9 +345,7 @@ const PatientRegistration: React.FC = () => {
             label="Blood Group"
             value={formik.values.bloodGroup}
             onChange={formik.handleChange}
-            error={
-              formik.touched.bloodGroup && Boolean(formik.errors.bloodGroup)
-            }
+            error={formik.touched.bloodGroup && Boolean(formik.errors.bloodGroup)}
             helperText={formik.touched.bloodGroup && formik.errors.bloodGroup}
           >
             <MenuItem value="A+">A+</MenuItem>
@@ -379,12 +368,8 @@ const PatientRegistration: React.FC = () => {
             placeholder="Country of Birth"
             value={formik.values.countryBirth}
             onChange={formik.handleChange}
-            error={
-              formik.touched.countryBirth && Boolean(formik.errors.countryBirth)
-            }
-            helperText={
-              formik.touched.countryBirth && formik.errors.countryBirth
-            }
+            error={formik.touched.countryBirth && Boolean(formik.errors.countryBirth)}
+            helperText={formik.touched.countryBirth && formik.errors.countryBirth}
           />
         </Grid>
         <Grid item xs={12} sm={6} md={2}>
@@ -397,9 +382,7 @@ const PatientRegistration: React.FC = () => {
             placeholder="Nationality"
             value={formik.values.nationality}
             onChange={formik.handleChange}
-            error={
-              formik.touched.nationality && Boolean(formik.errors.nationality)
-            }
+            error={formik.touched.nationality && Boolean(formik.errors.nationality)}
             helperText={formik.touched.nationality && formik.errors.nationality}
           />
         </Grid>
@@ -413,12 +396,8 @@ const PatientRegistration: React.FC = () => {
             placeholder="Mother Tounge"
             value={formik.values.motherTounge}
             onChange={formik.handleChange}
-            error={
-              formik.touched.motherTounge && Boolean(formik.errors.motherTounge)
-            }
-            helperText={
-              formik.touched.motherTounge && formik.errors.motherTounge
-            }
+            error={formik.touched.motherTounge && Boolean(formik.errors.motherTounge)}
+            helperText={formik.touched.motherTounge && formik.errors.motherTounge}
           />
         </Grid>
         <Grid item xs={12} sm={6} md={4}>
@@ -431,9 +410,7 @@ const PatientRegistration: React.FC = () => {
             placeholder="Occupation"
             value={formik.values.occupation}
             onChange={formik.handleChange}
-            error={
-              formik.touched.occupation && Boolean(formik.errors.occupation)
-            }
+            error={formik.touched.occupation && Boolean(formik.errors.occupation)}
             helperText={formik.touched.occupation && formik.errors.occupation}
           />
         </Grid>
@@ -455,15 +432,10 @@ const PatientRegistration: React.FC = () => {
       <Divider sx={{ marginY: 6 }} />
       {/* Contact Details */}
       <Typography variant="h6">Contact Information</Typography>
-      <Grid
-        container
-        rowSpacing={rowSpacing}
-        columnSpacing={columnSpacing}
-        mt={1}
-      >
+      <Grid container rowSpacing={rowSpacing} columnSpacing={columnSpacing} mt={1}>
         <Grid item xs={12} sm={6} md={4}>
-          <TextField
-            ref={inputRefs.mobile}
+          {/* <TextField
+               id="register-mobile-id"
             fullWidth
             id="register-mobile-id"
             name="mobile"
@@ -475,27 +447,38 @@ const PatientRegistration: React.FC = () => {
             error={formik.touched.mobile && Boolean(formik.errors.mobile)}
             helperText={formik.touched.mobile && formik.errors.mobile}
             inputProps={{ maxLength: 10 }}
+          /> */}
+          <MuiTelInput
+            id="register-mobile-id"
+            label="mobile"
+            name="Mobile"
+            value={formik.values.mobile}
+            onChange={(value) => {
+              const countryCode = value.substring(0, value.indexOf(" "));
+              const phoneNumber = value.substring(value.indexOf(" ") + 1).replace(/\s/g, "");
+              formik.setFieldValue("mobile", countryCode + " " + phoneNumber);
+            }}
+            defaultCountry={"IN"}
+            fullWidth
+            error={formik.touched.mobile && Boolean(formik.errors.mobile)}
+            helperText={formik.touched.mobile && formik.errors.mobile}
           />
         </Grid>
         <Grid item xs={12} sm={6} md={4}>
-          <TextField
-            ref={inputRefs.alernativeMobile}
-            fullWidth
+          <MuiTelInput
             id="register-alernativeMobile-id"
+            label="Alernative Mobile"
             name="alernativeMobile"
-            label="Alternative Mobile"
-            placeholder="Alternative Mobile"
-            inputMode="numeric"
             value={formik.values.alernativeMobile}
-            onChange={formik.handleChange}
-            error={
-              formik.touched.alernativeMobile &&
-              Boolean(formik.errors.alernativeMobile)
-            }
-            helperText={
-              formik.touched.alernativeMobile && formik.errors.alernativeMobile
-            }
-            inputProps={{ maxLength: 10 }}
+            onChange={(value) => {
+              const countryCode = value.substring(0, value.indexOf(" "));
+              const phoneNumber = value.substring(value.indexOf(" ") + 1).replace(/\s/g, "");
+              formik.setFieldValue("alernativeMobile", countryCode + " " + phoneNumber);
+            }}
+            defaultCountry={"IN"}
+            fullWidth
+            error={formik.touched.alernativeMobile && Boolean(formik.errors.alernativeMobile)}
+            helperText={formik.touched.alernativeMobile && formik.errors.alernativeMobile}
           />
         </Grid>
         <Grid item xs={12} sm={6} md={4}>
@@ -517,12 +500,7 @@ const PatientRegistration: React.FC = () => {
       <Divider sx={{ marginY: 6 }} />
       {/* Dependent Details */}
       <Typography variant="h6">Guardian Information</Typography>
-      <Grid
-        container
-        rowSpacing={rowSpacing}
-        columnSpacing={columnSpacing}
-        mt={1}
-      >
+      <Grid container rowSpacing={rowSpacing} columnSpacing={columnSpacing} mt={1}>
         <Grid item xs={12} sm={12} md={12}>
           <FormControlLabel
             label="Guardian"
@@ -548,13 +526,8 @@ const PatientRegistration: React.FC = () => {
                 placeholder="Dependent Name"
                 value={formik.values.dependentName}
                 onChange={formik.handleChange}
-                error={
-                  formik.touched.dependentName &&
-                  Boolean(formik.errors.dependentName)
-                }
-                helperText={
-                  formik.touched.dependentName && formik.errors.dependentName
-                }
+                error={formik.touched.dependentName && Boolean(formik.errors.dependentName)}
+                helperText={formik.touched.dependentName && formik.errors.dependentName}
               />
             </Grid>
             <Grid item xs={12} sm={6} md={3}>
@@ -567,34 +540,25 @@ const PatientRegistration: React.FC = () => {
                 placeholder="Dependent Relation"
                 value={formik.values.dependentRelation}
                 onChange={formik.handleChange}
-                error={
-                  formik.touched.dependentRelation &&
-                  Boolean(formik.errors.dependentRelation)
-                }
-                helperText={
-                  formik.touched.dependentRelation &&
-                  formik.errors.dependentRelation
-                }
+                error={formik.touched.dependentRelation && Boolean(formik.errors.dependentRelation)}
+                helperText={formik.touched.dependentRelation && formik.errors.dependentRelation}
               />
             </Grid>
             <Grid item xs={12} sm={6} md={3}>
-              <TextField
-                ref={inputRefs.dependentMobile}
-                fullWidth
+              <MuiTelInput
                 id="register-dependentMobile-id"
-                name="dependentMobile"
                 label="Dependent Mobile"
-                placeholder="Dependent Mobile"
+                name="dependentMobile"
                 value={formik.values.dependentMobile}
-                onChange={formik.handleChange}
-                error={
-                  formik.touched.dependentMobile &&
-                  Boolean(formik.errors.dependentMobile)
-                }
-                helperText={
-                  formik.touched.dependentMobile &&
-                  formik.errors.dependentMobile
-                }
+                onChange={(value) => {
+                  const countryCode = value.substring(0, value.indexOf(" "));
+                  const phoneNumber = value.substring(value.indexOf(" ") + 1).replace(/\s/g, "");
+                  formik.setFieldValue("alernativeMobile", countryCode + " " + phoneNumber);
+                }}
+                defaultCountry={"IN"}
+                fullWidth
+                error={formik.touched.dependentMobile && Boolean(formik.errors.dependentMobile)}
+                helperText={formik.touched.dependentMobile && formik.errors.dependentMobile}
               />
             </Grid>
             <Grid item xs={12} sm={6} md={3}>
@@ -607,13 +571,8 @@ const PatientRegistration: React.FC = () => {
                 placeholder="Dependent Email"
                 value={formik.values.dependentEmail}
                 onChange={formik.handleChange}
-                error={
-                  formik.touched.dependentEmail &&
-                  Boolean(formik.errors.dependentEmail)
-                }
-                helperText={
-                  formik.touched.dependentEmail && formik.errors.dependentEmail
-                }
+                error={formik.touched.dependentEmail && Boolean(formik.errors.dependentEmail)}
+                helperText={formik.touched.dependentEmail && formik.errors.dependentEmail}
               />
             </Grid>
           </>
@@ -622,12 +581,7 @@ const PatientRegistration: React.FC = () => {
       <Divider sx={{ marginY: 6 }} />
       {/* Address Details */}
       <Typography variant="h6">Address</Typography>
-      <Grid
-        container
-        rowSpacing={rowSpacing}
-        columnSpacing={columnSpacing}
-        mt={1}
-      >
+      <Grid container rowSpacing={rowSpacing} columnSpacing={columnSpacing} mt={1}>
         <Grid item xs={12} sm={6} md={6}>
           <TextField
             ref={inputRefs.addressLine1}
@@ -638,12 +592,8 @@ const PatientRegistration: React.FC = () => {
             placeholder="Address Line 1"
             value={formik.values.addressLine1}
             onChange={formik.handleChange}
-            error={
-              formik.touched.addressLine1 && Boolean(formik.errors.addressLine1)
-            }
-            helperText={
-              formik.touched.addressLine1 && formik.errors.addressLine1
-            }
+            error={formik.touched.addressLine1 && Boolean(formik.errors.addressLine1)}
+            helperText={formik.touched.addressLine1 && formik.errors.addressLine1}
           />
         </Grid>
         <Grid item xs={12} sm={6} md={6}>
@@ -656,12 +606,8 @@ const PatientRegistration: React.FC = () => {
             placeholder="Address Line 2"
             value={formik.values.addressLine2}
             onChange={formik.handleChange}
-            error={
-              formik.touched.addressLine2 && Boolean(formik.errors.addressLine2)
-            }
-            helperText={
-              formik.touched.addressLine2 && formik.errors.addressLine2
-            }
+            error={formik.touched.addressLine2 && Boolean(formik.errors.addressLine2)}
+            helperText={formik.touched.addressLine2 && formik.errors.addressLine2}
           />
         </Grid>
         <Grid item xs={12} sm={6} md={4}>
@@ -713,12 +659,7 @@ const PatientRegistration: React.FC = () => {
       <Divider sx={{ marginY: 6 }} />
       {/* ID Proof Details */}
       <Typography variant="h6">Identity Information</Typography>
-      <Grid
-        container
-        rowSpacing={rowSpacing}
-        columnSpacing={columnSpacing}
-        mt={1}
-      >
+      <Grid container rowSpacing={rowSpacing} columnSpacing={columnSpacing} mt={1}>
         <Grid item xs={12} sm={6} md={3}>
           <FieldAutocomplete
             label="ID Proof"
@@ -730,9 +671,7 @@ const PatientRegistration: React.FC = () => {
             onChange={(value) => {
               formik.setFieldValue("idProofType", value);
             }}
-            error={
-              formik.touched.idProofType && Boolean(formik.errors.idProofType)
-            }
+            error={formik.touched.idProofType && Boolean(formik.errors.idProofType)}
             helperText={formik.touched.idProofType && formik.errors.idProofType}
           />
         </Grid>
@@ -746,13 +685,8 @@ const PatientRegistration: React.FC = () => {
             placeholder="ID Proof Number"
             value={formik.values.idProofNumber}
             onChange={formik.handleChange}
-            error={
-              formik.touched.idProofNumber &&
-              Boolean(formik.errors.idProofNumber)
-            }
-            helperText={
-              formik.touched.idProofNumber && formik.errors.idProofNumber
-            }
+            error={formik.touched.idProofNumber && Boolean(formik.errors.idProofNumber)}
+            helperText={formik.touched.idProofNumber && formik.errors.idProofNumber}
           />
         </Grid>
         <Grid item xs={12} sm={6} md={3}>
@@ -766,13 +700,9 @@ const PatientRegistration: React.FC = () => {
             value={formik.values.idProofIssuedCountry}
             onChange={formik.handleChange}
             error={
-              formik.touched.idProofIssuedCountry &&
-              Boolean(formik.errors.idProofIssuedCountry)
+              formik.touched.idProofIssuedCountry && Boolean(formik.errors.idProofIssuedCountry)
             }
-            helperText={
-              formik.touched.idProofIssuedCountry &&
-              formik.errors.idProofIssuedCountry
-            }
+            helperText={formik.touched.idProofIssuedCountry && formik.errors.idProofIssuedCountry}
           >
             <MenuItem value="India">India</MenuItem>
             <MenuItem value="USA">USA</MenuItem>
@@ -788,9 +718,7 @@ const PatientRegistration: React.FC = () => {
             placeholder="ABHA Number"
             value={formik.values.ABHANumber}
             onChange={formik.handleChange}
-            error={
-              formik.touched.ABHANumber && Boolean(formik.errors.ABHANumber)
-            }
+            error={formik.touched.ABHANumber && Boolean(formik.errors.ABHANumber)}
             helperText={formik.touched.ABHANumber && formik.errors.ABHANumber}
           />
         </Grid>
@@ -811,12 +739,7 @@ const PatientRegistration: React.FC = () => {
       <Divider sx={{ marginY: 6 }} />
       {/* Additional Details */}
       <Typography variant="h6">Additional Information</Typography>
-      <Grid
-        container
-        rowSpacing={rowSpacing}
-        columnSpacing={columnSpacing}
-        mt={1}
-      >
+      <Grid container rowSpacing={rowSpacing} columnSpacing={columnSpacing} mt={1}>
         <Grid item xs={12} sm={6} md={3}>
           <TextField
             ref={inputRefs.reasonOfVisit}
@@ -827,13 +750,8 @@ const PatientRegistration: React.FC = () => {
             placeholder="Reason Of Visit"
             value={formik.values.reasonOfVisit}
             onChange={formik.handleChange}
-            error={
-              formik.touched.reasonOfVisit &&
-              Boolean(formik.errors.reasonOfVisit)
-            }
-            helperText={
-              formik.touched.reasonOfVisit && formik.errors.reasonOfVisit
-            }
+            error={formik.touched.reasonOfVisit && Boolean(formik.errors.reasonOfVisit)}
+            helperText={formik.touched.reasonOfVisit && formik.errors.reasonOfVisit}
           />
         </Grid>
         <Grid item xs={12} sm={6} md={3}>
@@ -859,12 +777,8 @@ const PatientRegistration: React.FC = () => {
             placeholder="Referred Name"
             value={formik.values.referrerName}
             onChange={formik.handleChange}
-            error={
-              formik.touched.referrerName && Boolean(formik.errors.referrerName)
-            }
-            helperText={
-              formik.touched.referrerName && formik.errors.referrerName
-            }
+            error={formik.touched.referrerName && Boolean(formik.errors.referrerName)}
+            helperText={formik.touched.referrerName && formik.errors.referrerName}
           />
         </Grid>
         <Grid item xs={12} sm={6} md={3}>
@@ -904,13 +818,8 @@ const PatientRegistration: React.FC = () => {
               placeholder="Inteprete Name"
               value={formik.values.intepreterName}
               onChange={formik.handleChange}
-              error={
-                formik.touched.intepreterName &&
-                Boolean(formik.errors.intepreterName)
-              }
-              helperText={
-                formik.touched.intepreterName && formik.errors.intepreterName
-              }
+              error={formik.touched.intepreterName && Boolean(formik.errors.intepreterName)}
+              helperText={formik.touched.intepreterName && formik.errors.intepreterName}
             />
           </Grid>
         )}
@@ -951,13 +860,8 @@ const PatientRegistration: React.FC = () => {
               placeholder="Details Of Death"
               value={formik.values.detailsOfDeath}
               onChange={formik.handleChange}
-              error={
-                formik.touched.detailsOfDeath &&
-                Boolean(formik.errors.detailsOfDeath)
-              }
-              helperText={
-                formik.touched.detailsOfDeath && formik.errors.detailsOfDeath
-              }
+              error={formik.touched.detailsOfDeath && Boolean(formik.errors.detailsOfDeath)}
+              helperText={formik.touched.detailsOfDeath && formik.errors.detailsOfDeath}
             />
           </Grid>
         )}
@@ -965,12 +869,7 @@ const PatientRegistration: React.FC = () => {
       <Divider sx={{ marginY: 6 }} />
       {/* Insurance Details */}
       <Typography variant="h6">Insurance Information</Typography>
-      <Grid
-        container
-        rowSpacing={rowSpacing}
-        columnSpacing={columnSpacing}
-        mt={1}
-      >
+      <Grid container rowSpacing={rowSpacing} columnSpacing={columnSpacing} mt={1}>
         <Grid item xs={12} sm={6} md={4}>
           <FormControlLabel
             label="Patient Insured"
@@ -1000,12 +899,10 @@ const PatientRegistration: React.FC = () => {
                 value={formik.values.insuranceSponsorName}
                 onChange={formik.handleChange}
                 error={
-                  formik.touched.insuranceSponsorName &&
-                  Boolean(formik.errors.insuranceSponsorName)
+                  formik.touched.insuranceSponsorName && Boolean(formik.errors.insuranceSponsorName)
                 }
                 helperText={
-                  formik.touched.insuranceSponsorName &&
-                  formik.errors.insuranceSponsorName
+                  formik.touched.insuranceSponsorName && formik.errors.insuranceSponsorName
                 }
               />
             </Grid>
@@ -1024,8 +921,7 @@ const PatientRegistration: React.FC = () => {
                   Boolean(formik.errors.insurancePolicyNumber)
                 }
                 helperText={
-                  formik.touched.insurancePolicyNumber &&
-                  formik.errors.insurancePolicyNumber
+                  formik.touched.insurancePolicyNumber && formik.errors.insurancePolicyNumber
                 }
               />
             </Grid>
@@ -1044,8 +940,7 @@ const PatientRegistration: React.FC = () => {
                   Boolean(formik.errors.insurancePolicyNumber)
                 }
                 helperText={
-                  formik.touched.insurancePolicyNumber &&
-                  formik.errors.insurancePolicyNumber
+                  formik.touched.insurancePolicyNumber && formik.errors.insurancePolicyNumber
                 }
               />
             </Grid>
@@ -1064,8 +959,7 @@ const PatientRegistration: React.FC = () => {
                   Boolean(formik.errors.insuranceAmountEligible)
                 }
                 helperText={
-                  formik.touched.insuranceAmountEligible &&
-                  formik.errors.insuranceAmountEligible
+                  formik.touched.insuranceAmountEligible && formik.errors.insuranceAmountEligible
                 }
               />
             </Grid>
@@ -1075,12 +969,7 @@ const PatientRegistration: React.FC = () => {
       <Divider sx={{ marginY: 6 }} />
       {/* Image */}
       <Typography variant="h6">Image</Typography>
-      <Grid
-        container
-        rowSpacing={rowSpacing}
-        columnSpacing={columnSpacing}
-        mt={1}
-      >
+      <Grid container rowSpacing={rowSpacing} columnSpacing={columnSpacing} mt={1}>
         <Grid item xs={12}>
           <FileUploadButton
             acceptTypes="image/*"
@@ -1111,19 +1000,8 @@ const PatientRegistration: React.FC = () => {
       <Divider sx={{ marginY: 6 }} />
       {/* Submit */}
       {/* {JSON.stringify(formik.errors)} */}
-      <Grid
-        container
-        rowSpacing={rowSpacing}
-        columnSpacing={columnSpacing}
-        mt={1}
-      >
-        <Grid
-          item
-          xs={12}
-          sm={12}
-          md={12}
-          sx={{ display: "flex", justifyContent: "flex-end" }}
-        >
+      <Grid container rowSpacing={rowSpacing} columnSpacing={columnSpacing} mt={1}>
+        <Grid item xs={12} sm={12} md={12} sx={{ display: "flex", justifyContent: "flex-end" }}>
           <Button type="submit" variant="outlined" disabled={isLoading}>
             {isLoading ? "Adding patient" : "Save"}
           </Button>

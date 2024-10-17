@@ -44,6 +44,7 @@ const Draft: React.FC = () => {
   } = useGetDrugItemsQuery({
     paginate: false,
     sort: { name: 1 },
+    filters: { status: "Active" }, // Send only "Active" status
   });
   const drugItems = drugItemsData?.data?.records || [];
 
@@ -55,8 +56,13 @@ const Draft: React.FC = () => {
   } = useGetDrugVendorsQuery({
     paginate: false,
     sort: { name: 1 },
+    filters: { status: "Active" }, // Send only "Active" status
   });
+
   const drugVendors = drugVendorsData?.data?.records || [];
+
+  console.log("Drug Items", drugItems);
+
   const addButtonLoading =
     drugItemsLoading || drugItemsFetching || drugVendorsFetching || drugVendorsLoading;
 

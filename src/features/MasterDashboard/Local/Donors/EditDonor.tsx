@@ -62,8 +62,6 @@ interface IFormValues {
   idProofIssuedCountry: string;
   ABHANumber: string;
   interpreter: boolean;
-  isPatientDeceased: boolean;
-  isDonor: boolean;
   hiv: string;
   height: string;
   Build: string;
@@ -122,6 +120,8 @@ const EditDonor: React.FC<EditDonorProps> = ({ openModal, onClose, id }) => {
   } = useGetDonorByIdQuery(id);
 
   console.log("Id prop", id);
+
+  console.log("Donor Data", DonorData);
 
   const indianStates = [
     "Andhra Pradesh",
@@ -199,9 +199,7 @@ const EditDonor: React.FC<EditDonorProps> = ({ openModal, onClose, id }) => {
     idProofNumber: data?.idProofNumber || "",
     idProofIssuedCountry: data?.idProofIssuedCountry || "",
     ABHANumber: data?.ABHANumber || "",
-    interpreter: data?.intepreter || false,
-    isPatientDeceased: data?.isPatientDeceased || false,
-    isDonor: (data?.isDonor ?? false) as boolean,
+    interpreter: data?.interpreter || false,
     hiv: data?.hiv || "",
     height: data?.height || "",
     Build: data?.Build || "",
@@ -814,49 +812,6 @@ const EditDonor: React.FC<EditDonorProps> = ({ openModal, onClose, id }) => {
                   }
                 />
               </Grid>
-              <Grid item xs={12} sm={6} md={4}>
-                <FormControlLabel
-                  label="Is Patient a Deceased"
-                  control={
-                    <Checkbox
-                      id="isDeceased"
-                      name="isPatientDeceased}"
-                      checked={formik.values.isPatientDeceased}
-                      onChange={formik.handleChange}
-                    />
-                  }
-                />
-              </Grid>
-              <Grid item xs={12} sm={6} md={4}>
-                <FormControlLabel
-                  label="Is Patient a Donor"
-                  control={
-                    <Checkbox
-                      id="isDonor-id"
-                      name="isDonor"
-                      checked={formik.values.isDonor}
-                      onChange={formik.handleChange}
-                    />
-                  }
-                />
-              </Grid>
-
-              <Grid item xs={12} sm={6} md={4}>
-                <TextField
-                  ref={inputRefs.pincode}
-                  fullWidth
-                  id="register-pincode-id"
-                  name="pincode"
-                  label="Pincode"
-                  placeholder="Pincode"
-                  type="number"
-                  value={formik.values.pincode}
-                  onChange={formik.handleChange}
-                  error={formik.touched.pincode && Boolean(formik.errors.pincode)}
-                  helperText={formik.touched.pincode && formik.errors.pincode}
-                  inputProps={{ maxLength: 6 }}
-                />
-              </Grid>
             </Grid>
             <Divider sx={{ marginY: 6 }} />
             {/* ID Proof Details */}
@@ -1093,8 +1048,8 @@ const EditDonor: React.FC<EditDonorProps> = ({ openModal, onClose, id }) => {
                   label="Interpreter"
                   control={
                     <Checkbox
-                      id="register-intepreter-id"
-                      name="intepreter"
+                      id="register-interpreter-id"
+                      name="interpreter"
                       value={formik.values.interpreter}
                       onChange={formik.handleChange}
                     />
@@ -1284,7 +1239,14 @@ const EditDonor: React.FC<EditDonorProps> = ({ openModal, onClose, id }) => {
                 />
               </Grid>
             </Grid>
-            <Box display={"flex"} justifyContent={"flex-end"} alignItems={"center"} gap={2} mb={2}>
+            <Box
+              display={"flex"}
+              justifyContent={"flex-end"}
+              alignItems={"center"}
+              gap={2}
+              mb={2}
+              pt={2}
+            >
               <Button
                 variant="contained"
                 color="primary"

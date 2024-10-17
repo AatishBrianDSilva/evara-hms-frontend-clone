@@ -14,12 +14,11 @@ interface RowType {
 }
 
 const MasterCryoPreservations: React.FC = () => {
-
   const [selectedRow, setSelectedRow] = useState<any>(null);
   const [isAddModalOpen, setIsAddModalOpen] = useState<boolean>(false);
   const [isEditModalOpen, setIsEditModalOpen] = useState<boolean>(false);
 
-  const [searchQuery, setSearchQuery] = useState('');
+  const [searchQuery, setSearchQuery] = useState("");
   const handleSearchChange = useCallback((query: string) => {
     setSearchQuery(query);
   }, []);
@@ -30,8 +29,15 @@ const MasterCryoPreservations: React.FC = () => {
     [handleSearchChange] // Ensure that handleSearchChange is stable
   );
 
-  const { data: CryoPreservationsData, isLoading: CryoPreservationsLoading, isFetching: CryoPreservationFetching } =
-    useGetMasterCryoPreservationsQuery({ paginate: false, searchQuery, filters: { isAdmin: true } });
+  const {
+    data: CryoPreservationsData,
+    isLoading: CryoPreservationsLoading,
+    isFetching: CryoPreservationFetching,
+  } = useGetMasterCryoPreservationsQuery({
+    paginate: false,
+    searchQuery,
+    filters: { isAdmin: true },
+  });
 
   const CryoPreservations = CryoPreservationsData?.data || [];
 
@@ -56,7 +62,20 @@ const MasterCryoPreservations: React.FC = () => {
     },
     { field: "cost", headerName: "Price", flex: 1 },
 
-    { field: "validTill", headerName: "Valid Till", flex: 1, type: "date", valueFormatter: (params) => params.value ? new Date(params.value).toLocaleDateString() : null },
+    {
+      field: "validTill",
+      headerName: "Valid Till",
+      flex: 1,
+      type: "date",
+      valueFormatter: (params) =>
+        params.value
+          ? new Intl.DateTimeFormat("en-GB", {
+              day: "2-digit",
+              month: "2-digit",
+              year: "numeric",
+            }).format(new Date(params.value))
+          : null,
+    },
     {
       field: "active",
       headerName: "Active",
@@ -104,7 +123,13 @@ const MasterCryoPreservations: React.FC = () => {
   return (
     <ContentSection title="Cryo Preservations">
       <Box display="flex" justifyContent="flex-end" gap={2}>
-        <TextField label="Search" placeholder="Name" size="small" variant="outlined" onChange={(e) => debouncedSearchChange(e.target.value)} />
+        <TextField
+          label="Search"
+          placeholder="Name"
+          size="small"
+          variant="outlined"
+          onChange={(e) => debouncedSearchChange(e.target.value)}
+        />
         <Button
           variant="contained"
           startIcon={<Add />}
@@ -128,10 +153,7 @@ const MasterCryoPreservations: React.FC = () => {
       </Box>
 
       {isAddModalOpen && (
-        <AddMasterCryoPreservation
-          openModal={isAddModalOpen}
-          onClose={closeAddModal}
-        />
+        <AddMasterCryoPreservation openModal={isAddModalOpen} onClose={closeAddModal} />
       )}
 
       {isEditModalOpen && (

@@ -1,28 +1,29 @@
-import React, { useCallback, useState } from 'react'
-import ContentSection from '../../../../components/ContentSection/ContentSection'
-import { Box, Button, TextField } from '@mui/material'
-import { Add, Edit } from '@mui/icons-material'
-import CustomDataGrid from '../../../../components/CustomDataGrid/CustomDataGrid'
-import { GridActionsCellItem, GridColDef, GridRowParams } from '@mui/x-data-grid'
-import AddDrugCategory from './AddDrugCategory'
-import Delete from '@mui/icons-material/Delete'
-import EditDrugCategory from './EditDrugCategory'
-import DeleteConfirmationModal from '../../../../components/DeleteConfirmationModal/DeleteConfirmationModal'
-import { useDeleteDrugCategoryMutation, useGetDrugCategoriesQuery } from '../../../../services/pharmacyDashboardService/master/drugCategoryApi'
-import { useToast } from '../../../../context/ToastContext'
-import _ from 'lodash'
+import React, { useCallback, useState } from "react";
+import ContentSection from "../../../../components/ContentSection/ContentSection";
+import { Box, Button, TextField } from "@mui/material";
+import { Add, Edit } from "@mui/icons-material";
+import CustomDataGrid from "../../../../components/CustomDataGrid/CustomDataGrid";
+import { GridActionsCellItem, GridColDef, GridRowParams } from "@mui/x-data-grid";
+import AddDrugCategory from "./AddDrugCategory";
+import Delete from "@mui/icons-material/Delete";
+import EditDrugCategory from "./EditDrugCategory";
+import DeleteConfirmationModal from "../../../../components/DeleteConfirmationModal/DeleteConfirmationModal";
+import {
+  useDeleteDrugCategoryMutation,
+  useGetDrugCategoriesQuery,
+} from "../../../../services/pharmacyDashboardService/master/drugCategoryApi";
+import { useToast } from "../../../../context/ToastContext";
+import _ from "lodash";
 
 const DrugCategory: React.FC = () => {
-
   const { showPromiseToast } = useToast();
 
-  const [searchQuery, setSearchQuery] = useState('');
-  const [page, setPage] = useState<number>(1)
+  const [searchQuery, setSearchQuery] = useState("");
+  const [page, setPage] = useState<number>(1);
   const [pageSize, setPageSize] = React.useState(25);
 
-
   const handleSearchChange = useCallback((query: string) => {
-    setPage(1);  // Reset the page
+    setPage(1); // Reset the page
     setSearchQuery(query);
   }, []);
 
@@ -32,63 +33,67 @@ const DrugCategory: React.FC = () => {
     [handleSearchChange] // Ensure that handleSearchChange is stable
   );
 
-  const [selectedRow, setSelectedRow] = useState<string>('')
-  const [isAddModalOpen, setIsAddModalOpen] = useState<boolean>(false)
-  const [isEditModalOpen, setIsEditModalOpen] = useState<boolean>(false)
-  const [isDeleteModalOpen, setIsDeleteModalOpen] = useState<boolean>(false)
+  const [selectedRow, setSelectedRow] = useState<string>("");
+  const [isAddModalOpen, setIsAddModalOpen] = useState<boolean>(false);
+  const [isEditModalOpen, setIsEditModalOpen] = useState<boolean>(false);
+  const [isDeleteModalOpen, setIsDeleteModalOpen] = useState<boolean>(false);
 
   const handlePageChange = (newPage: number) => {
-    setPage(newPage)
-  }
+    setPage(newPage);
+  };
 
   const handlePageSizeChange = (newPageSize: number) => {
-    setPageSize(newPageSize)
-  }
+    setPageSize(newPageSize);
+  };
 
-  const { data: drugCategoryData, isLoading: drugCategoryLoading, isFetching: drugCategoryFetching } = useGetDrugCategoriesQuery(
-    {
-      paginate: true,
-      page: page,
-      limit: pageSize,
-      searchQuery: searchQuery
-    }
-  );
+  const {
+    data: drugCategoryData,
+    isLoading: drugCategoryLoading,
+    isFetching: drugCategoryFetching,
+  } = useGetDrugCategoriesQuery({
+    paginate: true,
+    page: page,
+    limit: pageSize,
+    searchQuery: searchQuery,
+  });
   const drugCategorys = drugCategoryData?.data?.records || [];
   const drugCategorysPagination = drugCategoryData?.data?.pagination;
   const drugCategorysLoading = drugCategoryLoading || drugCategoryFetching;
 
-  const [deleteDrugCategory, { isLoading }] = useDeleteDrugCategoryMutation()
+  const [deleteDrugCategory, { isLoading }] = useDeleteDrugCategoryMutation();
   const handleDelete = async () => {
+    const promise = deleteDrugCategory(selectedRow).unwrap();
 
-    const promise = deleteDrugCategory(selectedRow).unwrap()
-
-    showPromiseToast(
-      promise,
-      {
-        loading: 'Deleting...',
-        success: (data) => data || 'Deleted Successfully',
-        error: (data) => data || 'Failed to Delete'
-      }
-    )
+    showPromiseToast(promise, {
+      loading: "Deleting...",
+      success: (data) => data || "Deleted Successfully",
+      error: (data) => data || "Failed to Delete",
+    });
 
     try {
-      await promise
+      await promise;
     } catch (error) {
-      console.log(error)
+      console.log(error);
     }
 
-    closeDeleteModal()
-  }
+    closeDeleteModal();
+  };
 
   const columnsConfig: GridColDef[] = [
-    { field: 'name', headerName: 'Drug Category', flex: 1, valueFormatter: (params) => _.upperFirst(params.value) },
-    { field: 'notes', headerName: 'Notes', flex: 1 },
+    {
+      field: "name",
+      headerName: "Drug Category",
+      flex: 1,
+      valueFormatter: (params) => _.upperFirst(params.value),
+    },
+    { field: "status", headerName: "Status", flex: 1 },
+    { field: "notes", headerName: "Notes", flex: 1 },
 
     {
-      field: 'actions',
-      headerName: 'Actions',
+      field: "actions",
+      headerName: "Actions",
       flex: 1,
-      type: 'actions',
+      type: "actions",
       getActions: (params: GridRowParams) => {
         const row = params.row;
         return [
@@ -101,62 +106,62 @@ const DrugCategory: React.FC = () => {
             icon={<Delete />}
             label="Delete"
             onClick={() => handleDeleteClick(row.id)}
-          />
-        ]
+          />,
+        ];
       },
     },
-  ]
+  ];
 
   // Add Modal
   const openAddModal = () => {
-    setIsAddModalOpen(true)
-  }
+    setIsAddModalOpen(true);
+  };
   const closeAddModal = () => {
-    setIsAddModalOpen(false)
-  }
+    setIsAddModalOpen(false);
+  };
 
   // Edit Modal
   const openEditModal = () => {
-    setIsEditModalOpen(true)
-  }
+    setIsEditModalOpen(true);
+  };
   const closeEditModal = () => {
-    setIsEditModalOpen(false)
-  }
+    setIsEditModalOpen(false);
+  };
 
   // Delete Modal
   const openDeleteModal = () => {
-    setIsDeleteModalOpen(true)
-  }
+    setIsDeleteModalOpen(true);
+  };
   const closeDeleteModal = () => {
-    setIsDeleteModalOpen(false)
-  }
+    setIsDeleteModalOpen(false);
+  };
 
   const handleEditClick = (id: string) => {
-    setSelectedRow(id)
-    openEditModal()
+    setSelectedRow(id);
+    openEditModal();
   };
 
   const handleDeleteClick = (id: string) => {
-    setSelectedRow(id)
-    openDeleteModal()
+    setSelectedRow(id);
+    openDeleteModal();
   };
-
 
   return (
     <ContentSection title="Drug Category">
       <Box display="flex" justifyContent="flex-end" gap={2}>
-        <TextField label="Search" placeholder="Category" size="small" variant="outlined" onChange={(e) => debouncedSearchChange(e.target.value)} />
-        <Button
-          variant="contained"
-          startIcon={<Add />}
-          color="primary"
-          onClick={openAddModal}
-        >
+        <TextField
+          label="Search"
+          placeholder="Category"
+          size="small"
+          variant="outlined"
+          onChange={(e) => debouncedSearchChange(e.target.value)}
+        />
+        <Button variant="contained" startIcon={<Add />} color="primary" onClick={openAddModal}>
           Add Item
         </Button>
       </Box>
 
-      <Box mt={2} flex={'1 1 auto'}>
+      <Box mt={2} flex={"1 1 auto"}>
         <CustomDataGrid
           autoHeight={false}
           columns={columnsConfig}
@@ -165,16 +170,14 @@ const DrugCategory: React.FC = () => {
           pageSize={pageSize}
           totalRows={drugCategorysPagination?.totalDocs || 0}
           loading={drugCategorysLoading}
-          sx={{ height: '100%' }}
+          sx={{ height: "100%" }}
           enablePagination={true}
           onPageChange={handlePageChange}
           onPageSizeChange={handlePageSizeChange}
         />
       </Box>
 
-      {isAddModalOpen && (
-        <AddDrugCategory openModal={isAddModalOpen} onClose={closeAddModal} />
-      )}
+      {isAddModalOpen && <AddDrugCategory openModal={isAddModalOpen} onClose={closeAddModal} />}
 
       {isEditModalOpen && (
         <EditDrugCategory openModal={isEditModalOpen} onClose={closeEditModal} id={selectedRow} />
@@ -182,16 +185,15 @@ const DrugCategory: React.FC = () => {
 
       {isDeleteModalOpen && (
         <DeleteConfirmationModal
-          text='this Drug Category'
+          text="this Drug Category"
           open={isDeleteModalOpen}
           onClose={closeDeleteModal}
           onConfirm={handleDelete}
           loading={isLoading}
         />
       )}
-
     </ContentSection>
-  )
-}
+  );
+};
 
-export default DrugCategory
+export default DrugCategory;
