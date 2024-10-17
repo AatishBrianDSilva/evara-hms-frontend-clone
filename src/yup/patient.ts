@@ -16,43 +16,22 @@ export const PatientRegistrationValidationSchema = Yup.object().shape({
   motherTounge: Yup.string(),
   occupation: Yup.string().required("Occupation is required"),
   religion: Yup.string().required("Religion is required"),
-  // mobile: Yup.string().matches(
-  //   /^(\+\d{1,3}\s?)?\d{1,13}$/,
-  //   "Phone number can have maximum 13 digits"
-  // ),
-  // alernativeMobile: Yup.string(),
-  mobile: Yup.string()
-    .test("valid-phone", "Phone number must be exactly 10 digits", function (value) {
-      // Extract the phone number part (excluding the country code)
-      const phoneNumber = value ? value.replace(/^\+\d+\s/, "") : "";
-      return phoneNumber.length === 10 && /^\d{10}$/.test(phoneNumber);
-    })
-    .required("Mobile Number is required"),
-  alernativeMobile: Yup.string().test(
-    "valid-phone",
-    "Phone number must be exactly 10 digits",
-    function (value) {
-      // Extract the phone number part (excluding the country code)
-      const phoneNumber = value ? value.replace(/^\+\d+\s/, "") : "";
-      return phoneNumber.length === 10 && /^\d{10}$/.test(phoneNumber);
-    }
+  mobile: Yup.string().matches(
+    /^(\+\d{1,3}\s?)?\d{10,13}$/,
+    "Enter Valid Phone Number"
   ),
-
+  alernativeMobile: Yup.string().matches(
+    /^(\+\d{1,3}\s?)?\d{10,13}$/,
+    "Enter Valid Phone Number"
+  ),
   email: Yup.string().email("Invalid email format"),
   dependentType: Yup.string(),
   dependentName: Yup.string(),
   dependentRelation: Yup.string(),
-  // dependentMobile: Yup.string(),
-  dependentMobile: Yup.string().test(
-    "valid-phone",
-    "Phone number must be exactly 10 digits",
-    function (value) {
-      // Extract the phone number part (excluding the country code)
-      const phoneNumber = value ? value.replace(/^\+\d+\s/, "") : "";
-      return phoneNumber.length === 10 && /^\d{10}$/.test(phoneNumber);
-    }
+  dependentMobile: Yup.string().matches(
+    /^(\+\d{1,3}\s?)?\d{10,13}$/,
+    "Enter Valid Phone Number"
   ),
-
   dependentEmail: Yup.string(),
   addressLine1: Yup.string().required("Address Line 1 is required"),
   addressLine2: Yup.string(),
@@ -98,13 +77,22 @@ export const PartnerRegistrationValidationSchema = Yup.object().shape({
   countryBirth: Yup.string(),
   motherTounge: Yup.string(),
   occupation: Yup.string().required("Occupation is required"),
-  mobile: Yup.string().max(10, "Invalid mobile number").min(10, "Invalid mobile number"),
-  alernativeMobile: Yup.string().max(10, "Invalid mobile number").min(10, "Invalid mobile number"),
+  mobile: Yup.string().matches(
+    /^(\+\d{1,3}\s?)?\d{10,13}$/,
+    "Enter Valid Phone Number"
+  ),
+  alernativeMobile: Yup.string().matches(
+    /^(\+\d{1,3}\s?)?\d{10,13}$/,
+    "Enter Valid Phone Number"
+  ),
   email: Yup.string().email("Invalid email format"),
   dependentType: Yup.string(),
   dependentName: Yup.string(),
   dependentRelation: Yup.string(),
-  dependentMobile: Yup.string(),
+  dependentMobile: Yup.string().matches(
+    /^(\+\d{1,3}\s?)?\d{10,13}$/,
+    "Enter Valid Phone Number"
+  ),
   dependentEmail: Yup.string().email("Invalid email format"),
   addressLine1: Yup.string().required("Address Line 1 is required"),
   addressLine2: Yup.string(),
@@ -148,8 +136,14 @@ export const DonorRegistrationfrombankValidationSchema = Yup.object().shape({
   motherTounge: Yup.string(),
   occupation: Yup.string().required("Occupation is required"),
   religion: Yup.string().required("Religion is required"),
-  mobile: Yup.string().max(10, "Invalid mobile number").min(10, "Invalid mobile number"),
-  alernativeMobile: Yup.string().max(10, "Invalid mobile number").min(10, "Invalid mobile number"),
+  mobile: Yup.string().matches(
+    /^(\+\d{1,3}\s?)?\d{10,13}$/,
+    "Enter Valid Phone Number"
+  ),
+  alernativeMobile: Yup.string().matches(
+    /^(\+\d{1,3}\s?)?\d{10,13}$/,
+    "Enter Valid Phone Number"
+  ),
   email: Yup.string().email("Invalid email format"),
   dependentType: Yup.boolean(),
 
@@ -187,54 +181,65 @@ export const DonorRegistrationfrombankValidationSchema = Yup.object().shape({
   remarks: Yup.string(),
 });
 
-export const DonorRegistrationValidationSchemaFromHospital = Yup.object().shape({
-  title: Yup.string(),
-  firstName: Yup.string().required("First name is required"),
-  lastName: Yup.string(),
-  gender: Yup.string().required("Gender  is required"),
-  dob: Yup.string().required("Date of birth is required"),
-  education: Yup.string(),
-  maritalStatus: Yup.string().required("Martial Status  is required"),
-  bloodGroup: Yup.string(),
-  countryBirth: Yup.string(),
-  nationality: Yup.string().required("Nationality is required"),
-  motherTounge: Yup.string(),
-  occupation: Yup.string().required("Occupation is required"),
-  religion: Yup.string(),
-  mobile: Yup.string().max(10, "Invalid mobile number").min(10, "Invalid mobile number"),
-  alernativeMobile: Yup.string().max(10, "Invalid mobile number").min(10, "Invalid mobile number"),
-  email: Yup.string().email("Invalid email format"),
-  dependentType: Yup.string(),
-  dependentName: Yup.string(),
-  dependentRelation: Yup.string(),
-  dependentMobile: Yup.string(),
-  dependentEmail: Yup.string(),
-  addressLine1: Yup.string().required("Address Line 1 is required"),
-  addressLine2: Yup.string(),
-  state: Yup.string().required("State is required"),
-  city: Yup.string().required("City is required"),
-  pincode: Yup.string().required("Pincode is required"),
-  // country: Yup.string().required("Country is required"),
-  idProofType: Yup.string().required("ID proof type is required"),
-  idProofNumber: Yup.string().required("ID proof number is required"),
-  idProofIssuedCountry: Yup.string(),
-  ABHANumber: Yup.string(),
-  reasonOfVisit: Yup.string(),
-  referredBy: Yup.string(),
-  referredByOther: Yup.string(),
-  referredByDoctor: Yup.string(),
-  marketingSource: Yup.string(),
-  intepreter: Yup.boolean(),
-  intepreteName: Yup.string(),
-  isPatientSurrogate: Yup.boolean(),
-  isPatientDeceased: Yup.boolean(),
-  detailsOfDeath: Yup.string(),
-  isPatientInsured: Yup.boolean(),
-  // insuranceCompany: Yup.string(),
-  insuranceSponsorName: Yup.string(),
-  insurancePolicyNumber: Yup.string(),
-  insurancePolicyHolderName: Yup.string(),
-  insuranceAmountEligible: Yup.string(),
-  image: Yup.mixed(),
-  remarks: Yup.string(),
-});
+export const DonorRegistrationValidationSchemaFromHospital = Yup.object().shape(
+  {
+    title: Yup.string(),
+    firstName: Yup.string().required("First name is required"),
+    lastName: Yup.string(),
+    gender: Yup.string().required("Gender  is required"),
+    dob: Yup.string().required("Date of birth is required"),
+    education: Yup.string(),
+    maritalStatus: Yup.string().required("Martial Status  is required"),
+    bloodGroup: Yup.string(),
+    countryBirth: Yup.string(),
+    nationality: Yup.string().required("Nationality is required"),
+    motherTounge: Yup.string(),
+    occupation: Yup.string().required("Occupation is required"),
+    religion: Yup.string(),
+    mobile: Yup.string().matches(
+      /^(\+\d{1,3}\s?)?\d{10,13}$/,
+      "Enter Valid Phone Number"
+    ),
+    alernativeMobile: Yup.string().matches(
+      /^(\+\d{1,3}\s?)?\d{10,13}$/,
+      "Enter Valid Phone Number"
+    ),
+    email: Yup.string().email("Invalid email format"),
+    dependentType: Yup.string(),
+    dependentName: Yup.string(),
+    dependentRelation: Yup.string(),
+    dependentMobile: Yup.string().matches(
+      /^(\+\d{1,3}\s?)?\d{10,13}$/,
+      "Enter Valid Phone Number"
+    ),
+    dependentEmail: Yup.string(),
+    addressLine1: Yup.string().required("Address Line 1 is required"),
+    addressLine2: Yup.string(),
+    state: Yup.string().required("State is required"),
+    city: Yup.string().required("City is required"),
+    pincode: Yup.string().required("Pincode is required"),
+    // country: Yup.string().required("Country is required"),
+    idProofType: Yup.string().required("ID proof type is required"),
+    idProofNumber: Yup.string().required("ID proof number is required"),
+    idProofIssuedCountry: Yup.string(),
+    ABHANumber: Yup.string(),
+    reasonOfVisit: Yup.string(),
+    referredBy: Yup.string(),
+    referredByOther: Yup.string(),
+    referredByDoctor: Yup.string(),
+    marketingSource: Yup.string(),
+    intepreter: Yup.boolean(),
+    intepreteName: Yup.string(),
+    isPatientSurrogate: Yup.boolean(),
+    isPatientDeceased: Yup.boolean(),
+    detailsOfDeath: Yup.string(),
+    isPatientInsured: Yup.boolean(),
+    // insuranceCompany: Yup.string(),
+    insuranceSponsorName: Yup.string(),
+    insurancePolicyNumber: Yup.string(),
+    insurancePolicyHolderName: Yup.string(),
+    insuranceAmountEligible: Yup.string(),
+    image: Yup.mixed(),
+    remarks: Yup.string(),
+  }
+);

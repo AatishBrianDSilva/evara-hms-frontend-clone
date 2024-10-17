@@ -18,7 +18,6 @@ import FieldAutocomplete from "../../components/FieldAutoComplete/FieldAutoCompl
 import { useGetReferralDoctorsQuery } from "../../services/masterDashboardService/local/referralDoctorApi";
 import { useGetPatientIdTypesQuery } from "../../services/masterDashboardService/local/patientIdTypeApi";
 import { useGetPatientSourcesQuery } from "../../services/masterDashboardService/local/patientSourceApi";
-import { MuiTelInput } from "mui-tel-input";
 
 const columnSpacing = 2;
 const rowSpacing = 2;
@@ -434,8 +433,7 @@ const PatientRegistration: React.FC = () => {
       <Typography variant="h6">Contact Information</Typography>
       <Grid container rowSpacing={rowSpacing} columnSpacing={columnSpacing} mt={1}>
         <Grid item xs={12} sm={6} md={4}>
-          {/* <TextField
-               id="register-mobile-id"
+          <TextField
             fullWidth
             id="register-mobile-id"
             name="mobile"
@@ -447,38 +445,19 @@ const PatientRegistration: React.FC = () => {
             error={formik.touched.mobile && Boolean(formik.errors.mobile)}
             helperText={formik.touched.mobile && formik.errors.mobile}
             inputProps={{ maxLength: 10 }}
-          /> */}
-          <MuiTelInput
-            id="register-mobile-id"
-            label="mobile"
-            name="Mobile"
-            value={formik.values.mobile}
-            onChange={(value) => {
-              const countryCode = value.substring(0, value.indexOf(" "));
-              const phoneNumber = value.substring(value.indexOf(" ") + 1).replace(/\s/g, "");
-              formik.setFieldValue("mobile", countryCode + " " + phoneNumber);
-            }}
-            defaultCountry={"IN"}
-            fullWidth
-            error={formik.touched.mobile && Boolean(formik.errors.mobile)}
-            helperText={formik.touched.mobile && formik.errors.mobile}
           />
         </Grid>
         <Grid item xs={12} sm={6} md={4}>
-          <MuiTelInput
+          <TextField
+            fullWidth
             id="register-alernativeMobile-id"
             label="Alernative Mobile"
             name="alernativeMobile"
             value={formik.values.alernativeMobile}
-            onChange={(value) => {
-              const countryCode = value.substring(0, value.indexOf(" "));
-              const phoneNumber = value.substring(value.indexOf(" ") + 1).replace(/\s/g, "");
-              formik.setFieldValue("alernativeMobile", countryCode + " " + phoneNumber);
-            }}
-            defaultCountry={"IN"}
-            fullWidth
+            onChange={formik.handleChange}
             error={formik.touched.alernativeMobile && Boolean(formik.errors.alernativeMobile)}
             helperText={formik.touched.alernativeMobile && formik.errors.alernativeMobile}
+            inputProps={{ maxLength: 10 }}
           />
         </Grid>
         <Grid item xs={12} sm={6} md={4}>
@@ -545,20 +524,17 @@ const PatientRegistration: React.FC = () => {
               />
             </Grid>
             <Grid item xs={12} sm={6} md={3}>
-              <MuiTelInput
+              <TextField
+                fullWidth
                 id="register-dependentMobile-id"
                 label="Dependent Mobile"
-                name="dependentMobile"
+                placeholder="Dependent Mobile"
+                inputMode="numeric"
                 value={formik.values.dependentMobile}
-                onChange={(value) => {
-                  const countryCode = value.substring(0, value.indexOf(" "));
-                  const phoneNumber = value.substring(value.indexOf(" ") + 1).replace(/\s/g, "");
-                  formik.setFieldValue("alernativeMobile", countryCode + " " + phoneNumber);
-                }}
-                defaultCountry={"IN"}
-                fullWidth
+                onChange={formik.handleChange}
                 error={formik.touched.dependentMobile && Boolean(formik.errors.dependentMobile)}
                 helperText={formik.touched.dependentMobile && formik.errors.dependentMobile}
+                inputProps={{ maxLength: 10 }}
               />
             </Grid>
             <Grid item xs={12} sm={6} md={3}>
