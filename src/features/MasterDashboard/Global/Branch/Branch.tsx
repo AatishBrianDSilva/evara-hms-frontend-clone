@@ -4,13 +4,13 @@ import { Box, Button, Grid, TextField } from "@mui/material";
 import { Add, CheckCircle, Circle, Edit } from "@mui/icons-material";
 import CustomDataGrid from "../../../../components/CustomDataGrid/CustomDataGrid";
 import { GridActionsCellItem, GridColDef, GridRowParams } from "@mui/x-data-grid";
-import Delete from "@mui/icons-material/Delete";
-import DeleteConfirmationModal from "../../../../components/DeleteConfirmationModal/DeleteConfirmationModal";
+// import Delete from "@mui/icons-material/Delete";
+// import DeleteConfirmationModal from "../../../../components/DeleteConfirmationModal/DeleteConfirmationModal";
 import {
   useGetGlobalBranchsQuery,
-  useDeleteGlobalBranchMutation,
+  // useDeleteGlobalBranchMutation,
 } from "../../../../services/masterDashboardService/global/globalBranch";
-import { useToast } from "../../../../context/ToastContext";
+// import { useToast } from "../../../../context/ToastContext";
 import _ from "lodash";
 import AddBranch from "./AddBranch";
 import EditBranch from "./EditBranch";
@@ -19,7 +19,7 @@ interface RowType {
 }
 
 const Branch: React.FC = () => {
-  const { showPromiseToast } = useToast();
+  // const { showPromiseToast } = useToast();
 
   const [searchQuery, setSearchQuery] = useState('');
   const handleSearchChange = useCallback((query: string) => {
@@ -35,7 +35,7 @@ const Branch: React.FC = () => {
   const [selectedRow, setSelectedRow] = useState<string>("");
   const [isAddModalOpen, setIsAddModalOpen] = useState<boolean>(false);
   const [isEditModalOpen, setIsEditModalOpen] = useState<boolean>(false);
-  const [isDeleteModalOpen, setIsDeleteModalOpen] = useState<boolean>(false);
+  // const [isDeleteModalOpen, setIsDeleteModalOpen] = useState<boolean>(false);
 
   const {
     data: BranchData,
@@ -87,35 +87,35 @@ const Branch: React.FC = () => {
             label="Edit"
             onClick={() => handleEditClick(row._id)}
           />,
-          <GridActionsCellItem
-            icon={<Delete />}
-            label="Delete"
-            onClick={() => handleDeleteClick(row._id)}
-          />,
+          // <GridActionsCellItem
+          //   icon={<Delete />}
+          //   label="Delete"
+          //   onClick={() => handleDeleteClick(row._id)}
+          // />,
         ];
       },
     },
   ];
 
-  const [deleteBranch, { isLoading: DeleteLoading }] = useDeleteGlobalBranchMutation();
+  // const [deleteBranch, { isLoading: DeleteLoading }] = useDeleteGlobalBranchMutation();
 
-  const handleDelete = async () => {
-    const promise = deleteBranch(selectedRow).unwrap();
+  // const handleDelete = async () => {
+  //   const promise = deleteBranch(selectedRow).unwrap();
 
-    showPromiseToast(promise, {
-      loading: "Deleting...",
-      success: (data) => data || "Deleted Successfully",
-      error: (data) => data || "Failed to Delete",
-    });
+  //   showPromiseToast(promise, {
+  //     loading: "Deleting...",
+  //     success: (data) => data || "Deleted Successfully",
+  //     error: (data) => data || "Failed to Delete",
+  //   });
 
-    try {
-      await promise;
-    } catch (error) {
-      console.log(error);
-    }
+  //   try {
+  //     await promise;
+  //   } catch (error) {
+  //     console.log(error);
+  //   }
 
-    closeDeleteModal();
-  };
+  //   closeDeleteModal();
+  // };
 
   // Add Modal
   const openAddModal = () => {
@@ -134,23 +134,23 @@ const Branch: React.FC = () => {
   };
 
   // Delete Modal
-  const openDeleteModal = () => {
-    setIsDeleteModalOpen(true);
-  };
+  // const openDeleteModal = () => {
+  //   setIsDeleteModalOpen(true);
+  // };
 
-  const closeDeleteModal = () => {
-    setIsDeleteModalOpen(false);
-  };
+  // const closeDeleteModal = () => {
+  //   setIsDeleteModalOpen(false);
+  // };
 
   const handleEditClick = (id: string) => {
     setSelectedRow(id);
     openEditModal();
   };
 
-  const handleDeleteClick = (id: string) => {
-    setSelectedRow(id);
-    openDeleteModal();
-  };
+  // const handleDeleteClick = (id: string) => {
+  //   setSelectedRow(id);
+  //   // openDeleteModal();
+  // };
 
   return (
     <ContentSection title="Branchs">
@@ -184,7 +184,7 @@ const Branch: React.FC = () => {
         <EditBranch openModal={isEditModalOpen} onClose={closeEditModal} id={selectedRow} />
       )}
 
-      {isDeleteModalOpen && (
+      {/* {isDeleteModalOpen && (
         <DeleteConfirmationModal
           text="this branch"
           open={isDeleteModalOpen}
@@ -192,7 +192,7 @@ const Branch: React.FC = () => {
           onConfirm={handleDelete}
           loading={DeleteLoading}
         />
-      )}
+      )} */}
     </ContentSection>
   );
 };
