@@ -14,6 +14,9 @@ import { useAddGlobalUserMutation } from "../../../../services/masterDashboardSe
 import _ from "lodash";
 import { useToast } from "../../../../context/ToastContext";
 import { EUserRole } from "../../../../types/masterDashboard/global";
+import { useGetActiveBranchesQuery } from "../../../../services/masterDashboardService/global/globalBranch";
+import { CLINICID } from "../../../Auth/Login";
+import FieldAutocomplete from "../../../../components/FieldAutoComplete/FieldAutoComplete";
 
 interface AddUserProps {
   openModal: boolean;
@@ -32,6 +35,11 @@ interface IFormValues {
 
 const AddUser: React.FC<AddUserProps> = ({ openModal, onClose }) => {
   const { showPromiseToast } = useToast();
+
+  const { data, isLoading, isFetching } = useGetActiveBranchesQuery(CLINICID);
+  const branches = data?.data || [];
+
+  const gettingBranches = isLoading || isFetching;
 
   const [addUser, { isLoading: UserLoading }] = useAddGlobalUserMutation();
 
@@ -98,13 +106,22 @@ const AddUser: React.FC<AddUserProps> = ({ openModal, onClose }) => {
               />
             </Grid> */}
             <Grid item xs={8} sm={4} lg={3}>
-              <TextField
+              <FieldAutocomplete
                 fullWidth
-                id="branchId"
-                name="branchId"
-                label="Branch ID"
-                value={formik.values.branchId}
-                onChange={formik.handleChange}
+                options={branches}
+                getOptionLabel={(option) => (option ? option.branchName : "")}
+                isOptionEqualToValue={(option, value) => option.branchId === value.branchId}
+                loading={gettingBranches}
+                label="Branch"
+                value={
+                  branches.find((branch) => branch.branchId === formik.values.branchId) || null
+                }
+                onChange={(value) => {
+                  formik.setFieldValue("branchId", value?.branchId ?? "", true);
+                }}
+                error={formik.touched.branchId && Boolean(formik.errors.branchId)}
+                helperText={formik.touched.branchId && formik.errors.branchId}
+
               />
             </Grid>
             <Grid item xs={8} sm={4} lg={3}>

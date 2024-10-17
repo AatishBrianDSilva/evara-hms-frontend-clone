@@ -7,7 +7,7 @@ import { IGlobalBranch } from "../../../types/serviceDashboard/branch";
 export const globalBranchApi = createApi({
   reducerPath: "globalBranchApi",
   baseQuery: baseQuery,
-  tagTypes: ["Global Branch"],
+  tagTypes: ["Global Branch", "Global Active Branch"],
   endpoints: (builder) => ({
     addGlobalBranch: builder.mutation<ApiResponse<any>, any>({
       query: (branchData) => ({
@@ -15,7 +15,7 @@ export const globalBranchApi = createApi({
         method: "POST",
         body: branchData,
       }),
-      invalidatesTags: ["Global Branch"],
+      invalidatesTags: ["Global Branch", "Global Active Branch"],
     }),
     editGlobalBranch: builder.mutation<
       ApiResponse<any>,
@@ -26,14 +26,14 @@ export const globalBranchApi = createApi({
         method: "PUT",
         body: branchData,
       }),
-      invalidatesTags: ["Global Branch"],
+      invalidatesTags: ["Global Branch", "Global Active Branch"],
     }),
     deleteGlobalBranch: builder.mutation<ApiResponse<null>, string>({
       query: (id: string) => ({
         url: `master/branch/${id}`,
         method: "DELETE",
       }),
-      invalidatesTags: ["Global Branch"],
+      invalidatesTags: ["Global Branch", "Global Active Branch"],
     }),
     getGlobalBranchs: builder.query<
       ApiResponse<IGlobalBranch[]>,
@@ -48,6 +48,18 @@ export const globalBranchApi = createApi({
       },
       providesTags: (_result, _error, _args) => ["Global Branch"],
     }),
+    getActiveBranches: builder.query<
+      ApiResponse<{ branchId: string; branchName: string }[]>,
+      string
+    >({
+      query: (clinicId) => {
+        return {
+          url: `master/branch/active?clinicId=${clinicId}`,
+          method: "GET",
+        };
+      },
+      providesTags: (_result, _error, _args) => ["Global Active Branch"],
+    }),
     getGlobalBranchById: builder.query<ApiResponse<IGlobalBranch>, string>({
       query: (id: string) => `master/branch/${id}`,
       providesTags: (_result, _error, id) => [{ type: "Global Branch", id }],
@@ -60,5 +72,6 @@ export const {
   useEditGlobalBranchMutation,
   useDeleteGlobalBranchMutation,
   useGetGlobalBranchsQuery,
+  useGetActiveBranchesQuery,
   useGetGlobalBranchByIdQuery,
 } = globalBranchApi;

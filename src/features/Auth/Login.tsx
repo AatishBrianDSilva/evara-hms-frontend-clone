@@ -6,7 +6,6 @@ import {
   TextField,
   Box,
   Typography,
-  MenuItem,
   useTheme,
 } from "@mui/material";
 import { grey } from "@mui/material/colors";
@@ -15,6 +14,8 @@ import { useToast } from "../../context/ToastContext";
 import { useNavigate } from "react-router-dom";
 import * as Sentry from "@sentry/react";
 import { jwtDecode } from "jwt-decode";
+import { useGetActiveBranchesQuery } from "../../services/masterDashboardService/global/globalBranch";
+import FieldAutocomplete from "../../components/FieldAutoComplete/FieldAutoComplete";
 
 interface LoginFormValues {
   email: string;
@@ -30,8 +31,10 @@ const validationSchema = Yup.object({
   branch: Yup.string().required("Branch is required"),
 });
 
+export const CLINICID = "EV";
+
+
 const Login: React.FC = () => {
-  const clinicId = "EV";
 
   const theme = useTheme();
 
@@ -39,14 +42,19 @@ const Login: React.FC = () => {
 
   const { showPromiseToast } = useToast();
 
-  const [loginUser] = useLoginUserMutation();
+  const { data, isLoading, isFetching } = useGetActiveBranchesQuery(CLINICID);
+  const branches = data?.data || [];
+
+  const gettingBranches = isLoading || isFetching;
+
+  const [loginUser, { isLoading: loginLoading }] = useLoginUserMutation();
 
   const handleSubmit = async (values: LoginFormValues) => {
     const payload = {
       email: values.email,
       password: values.password,
       branchId: values.branch,
-      clinicId: clinicId,
+      clinicId: CLINICID,
     };
 
     console.log(payload);
@@ -123,21 +131,24 @@ const Login: React.FC = () => {
         <Typography variant="h6" color="primary" gutterBottom>
           LOGIN
         </Typography>
-        <TextField
-          select
+        <FieldAutocomplete
           fullWidth
-          id="branch"
-          name="branch"
+          options={branches}
+          getOptionLabel={(option) => (option ? option.branchName : "")}
+          isOptionEqualToValue={(option, value) => option.branchId === value.branchId}
+          loading={gettingBranches}
           label="Branch"
-          value={formik.values.branch}
-          onChange={formik.handleChange}
+          value={
+            branches.find((branch) => branch.branchId === formik.values.branch) || null
+          }
+          onChange={(value) => {
+            formik.setFieldValue("branch", value?.branchId ?? "", true);
+          }}
           error={formik.touched.branch && Boolean(formik.errors.branch)}
           helperText={formik.touched.branch && formik.errors.branch}
-          variant="outlined"
-          color="primary"
-        >
-          <MenuItem value="KN">Kanpur</MenuItem>
-        </TextField>
+
+        />
+
         <TextField
           fullWidth
           id="email"
@@ -164,7 +175,7 @@ const Login: React.FC = () => {
           helperText={formik.touched.password && formik.errors.password}
           color="primary"
         />
-        <Button fullWidth type="submit" variant="contained" color="secondary">
+        <Button fullWidth type="submit" variant="contained" color="secondary" disabled={loginLoading || gettingBranches}>
           Sign In
         </Button>
       </Box>

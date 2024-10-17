@@ -3,6 +3,7 @@ import { memo, useMemo } from "react";
 
 // Extended component props to include error, helperText, and showNone
 const FieldAutocomplete = memo(({
+  fullWidth = false,
   options,
   getOptionLabel,
   getOptionDisabled,
@@ -37,7 +38,8 @@ const FieldAutocomplete = memo(({
   multiple?: boolean;
   disabled?: boolean;
   showNone?: boolean; // New prop to add "None" option
-  noneType?: any
+  noneType?: any;
+  fullWidth?: boolean;
 }) => {
 
   const sortedOptions = useMemo(() => {
@@ -62,6 +64,7 @@ const FieldAutocomplete = memo(({
     <Autocomplete
       disabled={disabled}
       multiple={multiple}
+      fullWidth={fullWidth}
       filterSelectedOptions
       filterOptions={filterOptions}
       getOptionKey={getOptionKey}

@@ -23,8 +23,8 @@ import {
 } from "@mui/icons-material";
 import { useLocation, useNavigate } from "react-router-dom";
 import { clearCredentials } from "../../features/Auth/authSlice";
-import { useDispatch } from "react-redux";
-import { handlePersistorPurge } from "../../app/store";
+import { useDispatch, useSelector } from "react-redux";
+import { handlePersistorPurge, RootState } from "../../app/store";
 import _, { debounce } from "lodash";
 import { useGetPatientsQuery } from "../../services/patientsApi";
 import PatientCard from "../PatientCard/PatientCard";
@@ -77,6 +77,8 @@ const DesktopHeader: React.FC = () => {
   const dispatch = useDispatch();
   const navigation = useNavigate();
   const location = useLocation();
+
+  const { user } = useSelector((state: RootState) => state.auth);
 
   const hideSearchMenu =
     location.pathname.startsWith("/master") ||
@@ -148,6 +150,17 @@ const DesktopHeader: React.FC = () => {
     setAppsAnchorEl(null);
   };
 
+  const renderBranchName = () => {
+    switch (user?.branchId.trim()) {
+      case "KN":
+        return "Kanpur"
+      case "LK":
+        return "Lucknow"
+      default:
+        break;
+    }
+  }
+
   const accountMenuId = "desktop-header-account-menu";
   const appsMenuId = "desktop-header-apps-menu";
   const searchMenuId = "desktop-header-search-menu";
@@ -173,6 +186,9 @@ const DesktopHeader: React.FC = () => {
           dispatch(clearCredentials());
           handlePersistorPurge();
           Sentry.setUser(null);
+          sessionStorage.clear();
+          localStorage.clear();
+          window.location.reload();
         }}
       >
         Logout
@@ -418,6 +434,7 @@ const DesktopHeader: React.FC = () => {
             justifyContent={"flex-end"}
             alignItems={"center"}
           >
+            <Box boxShadow={1} paddingX={1} bgcolor={"background.paper"} borderRadius={2} sx={{ mr: 2 }}><Typography color={"secondary.main"}>{renderBranchName()}</Typography></Box>
             <IconButton
               size="large"
               aria-label="open-apps-drawer"
