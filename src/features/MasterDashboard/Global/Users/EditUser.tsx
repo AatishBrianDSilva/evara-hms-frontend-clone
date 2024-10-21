@@ -17,6 +17,7 @@ import {
   useGetGlobalUserByIdQuery,
 } from "../../../../services/masterDashboardService/global/globalUser";
 import { useToast } from "../../../../context/ToastContext";
+import { EUserRole } from "../../../../types/masterDashboard/global";
 
 interface EditUserProps {
   openModal: boolean;
@@ -188,10 +189,11 @@ const EditUser: React.FC<EditUserProps> = ({ openModal, onClose, id }) => {
                   value={formik.values.role}
                   onChange={formik.handleChange}
                 >
-                  <MenuItem value="admin">Admin</MenuItem>
-                  <MenuItem value="doctor">Doctor</MenuItem>
-                  <MenuItem value="nurse">Nurse</MenuItem>
-                  <MenuItem value="receptionist">Receptionist</MenuItem>
+                  {Object.values(EUserRole).map((role) => (
+                    <MenuItem key={role} value={role}>
+                      {_.kebabCase(role)}
+                    </MenuItem>
+                  ))}
                 </TextField>
               </Grid>
             </Grid>

@@ -1,57 +1,60 @@
-import * as React from 'react';
-import { Box, Typography, Link, Button } from '@mui/material';
-import { ArrowForward } from '@mui/icons-material';
+import * as React from "react";
+import { Box, Typography, IconButton } from "@mui/material";
+import { ArrowForward } from "@mui/icons-material";
 
 interface PharmacyCardProps {
   title: string;
   mainValue: string | number;
   amountValue?: string | number;
-  additionalText?: string;
-  linkUrl: string;
-  linkText: string;
+  linkUrl?: string;
+  linkText?: string;
 }
 
-const PharmacyCard: React.FC<PharmacyCardProps> = ({
-  title,
-  mainValue,
-  amountValue,
-  additionalText,
-  linkUrl,
-  linkText,
-}) => {
+const PharmacyCard: React.FC<PharmacyCardProps> = ({ title, mainValue, amountValue, linkUrl }) => {
+  const handleArrowClick = () => {
+    if (linkUrl) {
+      window.location.href = linkUrl; // Redirect to the provided link URL
+    }
+  };
+
   return (
     <Box
       display="flex"
       flexDirection="column"
       justifyContent="space-between"
       borderRadius={4}
+      width={"100%"}
+      height={"358px"} // Ensure total height is 358px
+      overflow={"hidden"}
       border="1px solid"
-      borderColor="primary.main"
-      width={250}
-      height={150}
-      p={2}
-      overflow={'hidden'}
+      borderColor="#D8D8D8"
+      bgcolor="#FFFFFF"
     >
-      <Box display="flex" flexDirection="column" flex={1} justifyContent="space-between">
-        <Typography variant="h6" color={"secondary"}>{title}</Typography>
-        <Typography color={"primary"} variant="h4">{mainValue}</Typography>
-        {amountValue && (
-          <Typography variant="body1" color={"textSecondary"}>{amountValue}</Typography>
-        )}
-        {additionalText && (
-          <Typography variant="body1" color={"textSecondary"}>{additionalText}</Typography>
-        )}
+      {/* Header Section */}
+      <Box
+        display="flex"
+        justifyContent="space-between"
+        alignItems="center"
+        height="72px" // Fixed height for the header
+        bgcolor="#FFEDE2" // Background color for the header
+        px={2}
+      >
+        <Typography variant="h6">{title}</Typography>
+        <IconButton size="small" color="inherit" onClick={handleArrowClick}>
+          <ArrowForward fontSize="small" />
+        </IconButton>
       </Box>
-      <Box display="flex" justifyContent="flex-end">
-        <Button
-          variant="text"
-          color="primary"
-          endIcon={<ArrowForward />}
-          component={Link}
-          href={linkUrl}
-        >
-          {linkText}
-        </Button>
+
+      {/* Content Section */}
+      <Box display="flex" flexDirection="column" flex={1} justifyContent="center" p={2}>
+        <Typography color={"primary"} variant="h3" sx={{ fontWeight: "bold" }}>
+          {mainValue}
+        </Typography>
+        {amountValue && (
+          <Typography variant="body1" color={"textSecondary"}>
+            {amountValue}
+          </Typography>
+        )}
       </Box>
     </Box>
   );

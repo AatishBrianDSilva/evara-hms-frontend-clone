@@ -288,7 +288,7 @@ export interface ISpermDFIForm {
 export interface ICryoPreservationEmbryoForm {
   doctor: string | null;
   date: Date | null;
-  time: Date | null;
+  timeOfFreezing: Date | null;
   ivf: string;
   embryologistA: string;
   embryologistB: string;

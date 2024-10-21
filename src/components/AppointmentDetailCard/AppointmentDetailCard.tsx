@@ -1,8 +1,8 @@
-import * as React from 'react';
-import { Box, Typography, Avatar } from '@mui/material';
-import PersonIcon from '@mui/icons-material/Person';
-import PhoneIcon from '@mui/icons-material/Phone';
-import { stringAvatar } from '../../utils/avatar';
+import * as React from "react";
+import { Box, Typography, Avatar } from "@mui/material";
+import PersonIcon from "@mui/icons-material/Person";
+import PhoneIcon from "@mui/icons-material/Phone";
+import { stringAvatar } from "../../utils/avatar";
 
 interface AppointmentDetailCardProps {
   doctorName: string;
@@ -17,13 +17,12 @@ const AppointmentDetailCard: React.FC<AppointmentDetailCardProps> = ({
   patientName,
   patientPhoneNumber,
 }) => {
-
   const image_sx = {
     height: 56,
     width: 56,
-    border: '2px solid',
-    borderColor: 'secondary.main'
-  }
+    border: "2px solid",
+    borderColor: "secondary.main",
+  };
 
   return (
     <Box
@@ -42,11 +41,11 @@ const AppointmentDetailCard: React.FC<AppointmentDetailCardProps> = ({
           <Typography variant="subtitle1">{doctorName}</Typography>
         </Box>
         <Box display="flex" alignItems="center" mt={1}>
-          <PersonIcon fontSize="small" color='info' sx={{ mr: 1 }} />
+          <PersonIcon fontSize="small" color="info" sx={{ mr: 1 }} />
           <Typography variant="body2">{patientName}</Typography>
         </Box>
         <Box display="flex" alignItems="center" mt={1}>
-          <PhoneIcon fontSize="small" color='info' sx={{ mr: 1 }} />
+          <PhoneIcon fontSize="small" color="info" sx={{ mr: 1 }} />
           <Typography variant="body2">{patientPhoneNumber}</Typography>
         </Box>
       </Box>

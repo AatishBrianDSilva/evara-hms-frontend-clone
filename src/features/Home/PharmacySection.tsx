@@ -4,7 +4,6 @@ import { Typography } from "@mui/material";
 import PharmacyCard from "../../components/PharmacyCard/PharmacyCard";
 import SkeletonPharmacyCard from "../../components/PharmacyCard/Skeleton";
 import { useGetPharmacySummaryQuery } from "../../services/homeApi";
-import { formatToIndianCurrencyFormat } from "../../utils/formatToIndianCurrencyFormat";
 
 interface PharmacySectionProps {
   startDate: Date | null;
@@ -24,45 +23,61 @@ const PharmacySection: React.FC<PharmacySectionProps> = ({ startDate, endDate })
     }
   );
 
-  console.log("Start Date", startDate);
-  console.log("End Date", endDate);
-
   const pharmacySummary = data?.data;
   const loading = isLoading || isFetching;
 
   return (
-    <Box display="flex" flexDirection="column" gap={2}>
+    <Box display="flex" flexDirection="column" gap={2} overflow={"hidden"} width="100%">
       <Box display="flex" justifyContent="space-between">
-        <Typography variant="button" color="primary">
+        <Typography variant="h6" sx={{ fontWeight: "bold" }}>
           Pharmacy
         </Typography>
       </Box>
-      <Box display="flex" gap={2}>
-        {loading ? (
-          <>
+
+      <Box display="flex" width="100%" justifyContent={"start"} gap={2}>
+        {/* First part: POs Created Summary (30% width) */}
+        <Box width="31%" minWidth="200px" display="flex" flexDirection="column" borderRadius={4}>
+          {loading ? (
             <SkeletonPharmacyCard />
-            <SkeletonPharmacyCard />
-          </>
-        ) : (
-          <>
+          ) : (
             <PharmacyCard
               title="POs Created"
               mainValue={pharmacySummary?.purchaseOrders.count || 0}
-              amountValue={
-                "Total Payout: " +
-                formatToIndianCurrencyFormat(pharmacySummary?.purchaseOrders.totalPayout || 0)
-              }
-              linkUrl="/pharmacy/purchase-order/processed"
-              linkText="View All PO"
+              // amountValue={
+              //   "Total Payout: " +
+              //   formatToIndianCurrencyFormat(pharmacySummary?.purchaseOrders.totalPayout || 0)
+              // }
+              linkUrl="/pharmacy/purchase-order/draft"
             />
-            <PharmacyCard
-              title="Critical Stocks"
-              mainValue={pharmacySummary?.criticalStock.count || 0}
-              linkUrl="/pharmacy/stocks"
-              linkText="View All Stocks"
-            />
-          </>
-        )}
+          )}
+        </Box>
+
+        {/* Second part: Critical Stocks (65% width) */}
+        <Box width="31%" minWidth="200px" display="flex" flexDirection="column" borderRadius={4}>
+          {/* <Typography variant="button" color="primary">
+            Critical Stocks
+          </Typography> */}
+          <Box
+            display="flex"
+            flex={1}
+            flexDirection="row"
+            flexWrap="nowrap"
+            gap={2}
+            overflow="auto"
+            pb={2}
+          >
+            {loading ? (
+              [1, 2].map((_, index) => <SkeletonPharmacyCard key={index} />)
+            ) : (
+              <PharmacyCard
+                title="Critical Stocks"
+                mainValue={pharmacySummary?.criticalStock.count || 0}
+                linkUrl="/analytics/pharmacy/critical-stocks"
+                linkText="View All Stocks"
+              />
+            )}
+          </Box>
+        </Box>
       </Box>
     </Box>
   );

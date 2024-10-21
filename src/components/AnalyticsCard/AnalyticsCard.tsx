@@ -1,6 +1,6 @@
 import * as React from "react";
-import { Box, Typography, Link, Chip, Button, Grid } from "@mui/material";
-import { ArrowForward } from "@mui/icons-material";
+import { Box, Typography, Chip, Button, Grid, IconButton } from "@mui/material";
+import { ArrowForward, Assessment } from "@mui/icons-material"; // Importing icons
 
 interface BadgeData {
   color: string;
@@ -25,6 +25,12 @@ const AnalyticsCard: React.FC<AnalyticsCardProps> = ({
   badgesData = [],
   paymentBadgesData = [],
 }) => {
+  const handleArrowClick = () => {
+    if (linkUrl) {
+      window.location.href = linkUrl; // Redirect to the provided link URL
+    }
+  };
+
   return (
     <Box
       display="flex"
@@ -32,30 +38,44 @@ const AnalyticsCard: React.FC<AnalyticsCardProps> = ({
       justifyContent="space-between"
       borderRadius={4}
       border="1px solid"
-      borderColor="primary.main"
+      borderColor="#D8D8D8"
       flex={1}
-      width={250}
-      height={200}
-      p={2}
+      width={"95%"}
       overflow={"hidden"}
+      bgcolor="#FFFFFF"
+      height="358px" // Full height
     >
-      <Box display="flex" justifyContent="space-between" flex={1}>
-        <Box display="flex" flexDirection="column" flex={2}>
-          <Typography variant="h6" color={"secondary"}>
-            {title}
-          </Typography>
-          <Box
-            display={"flex"}
-            justifyContent={"flex-start"}
-            alignItems={"center"}
-            flex={1}
-            flexWrap={"wrap"}
-          >
-            <Typography color={"primary"} variant="h4">
-              {mainValue}
-            </Typography>
-          </Box>
+      {/* Header Section with Icon and Arrow */}
+      <Box
+        display="flex"
+        justifyContent="space-between"
+        alignItems="center"
+        height="72px"
+        bgcolor="#FFEDE2"
+        px={2}
+      >
+        {/* Title with Icon */}
+        <Box display="flex" alignItems="center" gap={1}>
+          <Assessment fontSize="small" /> {/* Small icon next to the title */}
+          <Typography variant="h6">{title}</Typography>
         </Box>
+
+        {/* Arrow Icon */}
+        <IconButton size="small" color="inherit" onClick={handleArrowClick}>
+          <ArrowForward fontSize="small" />
+        </IconButton>
+      </Box>
+
+      {/* Content Section */}
+      <Box display="flex" justifyContent="space-between" flex={1} p={2}>
+        {/* Main Value */}
+        <Box display="flex" flexDirection="column" flex={1}>
+          <Typography color="primary" variant="h5">
+            {mainValue}
+          </Typography>
+        </Box>
+
+        {/* Badges */}
         {badgesData.length > 0 && (
           <Box display="flex" flexDirection="column" justifyContent="flex-start" flex={1} gap={1}>
             {badgesData.map((badge, index) => (
@@ -80,21 +100,20 @@ const AnalyticsCard: React.FC<AnalyticsCardProps> = ({
         )}
       </Box>
 
+      {/* Payment Badges */}
       {paymentBadgesData.length > 0 && (
-        <Box mt={2}>
+        <Box mt={2} px={2} pb={3}>
           <Grid container spacing={1}>
             {paymentBadgesData.map((badge, index) => (
               <Grid item xs={6} key={index}>
-                {" "}
-                {/* Automatically takes half width */}
                 <Chip
                   size="small"
                   variant="outlined"
                   color={badge.color as any}
                   sx={{
                     width: "100%", // Ensure the Chip takes full width
-                    paddingLeft: 2, // Add padding for left
-                    paddingRight: 2, // Add padding for right
+                    paddingLeft: 2,
+                    paddingRight: 2,
                     justifyContent: "center", // Center align the content
                   }}
                   label={
@@ -119,15 +138,10 @@ const AnalyticsCard: React.FC<AnalyticsCardProps> = ({
         </Box>
       )}
 
+      {/* Link Button */}
       {linkUrl && linkText && (
-        <Box display="flex" justifyContent="flex-end">
-          <Button
-            variant="text"
-            color="primary"
-            endIcon={<ArrowForward />}
-            component={Link}
-            href={linkUrl}
-          >
+        <Box display="flex" justifyContent="flex-end" p={2}>
+          <Button variant="text" color="primary" endIcon={<ArrowForward />} href={linkUrl}>
             {linkText}
           </Button>
         </Box>

@@ -6,25 +6,56 @@ import { GridColDef } from "@mui/x-data-grid";
 import { exportToCSV } from "../../../utils/exportCSV";
 import { useGetSalesByScheduleQuery } from "../../../services/analyticsDashboardService/pharmacy/salesByScheduleApi";
 import _ from "lodash";
-import CustomDatePicker from "../../../components/CustomDatePicker/CustomDatePicker";
 import { format } from "date-fns";
+import CustomeDateRangePicker from "../../../components/CustomDateRangePicker/CustomDateRangePicker";
+
+// Utility function to convert date to UTC before sending it to the API
+const toUTCDateOnly = (date: Date | null, isEndDate = false) => {
+  if (!date) return null;
+
+  // Ensure the time is 00:00:00 for the start date or 23:59:59 for the end date
+  const utcDate = isEndDate
+    ? new Date(Date.UTC(date.getFullYear(), date.getMonth(), date.getDate(), 23, 59, 59))
+    : new Date(Date.UTC(date.getFullYear(), date.getMonth(), date.getDate(), 0, 0, 0));
+
+  // Convert to ISO string and return only the date part
+  return utcDate.toISOString().split("T")[0];
+};
 
 const SaleBySchedule: React.FC = () => {
   const [page, setPage] = useState<number>(1);
   const [pageSize, setPageSize] = useState<number>(25);
-  const [selectedDate, setSelectedDate] = useState<Date | null>(null);
+
+  const [startDate, setStartDate] = useState<Date | null>(null); // For start date
+  const [endDate, setEndDate] = useState<Date | null>(null); // For end date
+
+  // Handle the date range change
+  const handleDateChange = (ranges: any) => {
+    if (ranges.selection) {
+      if (ranges.selection.startDate) setStartDate(ranges.selection.startDate);
+      if (ranges.selection.endDate) setEndDate(ranges.selection.endDate);
+    }
+  };
+
+  // Convert start and end dates to UTC date-only format for the API
+  const startDateUTC = toUTCDateOnly(startDate);
+  const endDateUTC = toUTCDateOnly(endDate, true);
 
   // Adjust page to 1 if pageSize is set to "All" (value -1)
   if (pageSize === -1 && page !== 1) {
     setPage(1);
   }
 
+  // console.log("Start Date", startDateUTC);
+  // console.log("End Date", endDateUTC);
+
   // Fetch data from the API with dynamic query parameters
   const { data, isLoading } = useGetSalesByScheduleQuery({
     page: pageSize === -1 ? undefined : page, // If "All" is selected, remove page parameter
     limit: pageSize === -1 ? undefined : pageSize, // If "All" is selected, remove limit parameter
     filters: {
-      saleDate: selectedDate ? format(selectedDate, "yyyy-MM-dd") : undefined,
+      saleStartDate: startDateUTC || undefined,
+      saleEndDate: endDateUTC || undefined,
     },
     paginate: pageSize !== -1, // Set pagination to false if "All" is selected
   });
@@ -116,22 +147,19 @@ const SaleBySchedule: React.FC = () => {
 
   return (
     <ContentSection title="Sale By Schedule Report">
-      <Grid container spacing={2} justifyContent="flex-end" mb={2}>
-        <Grid item xs={12} md={2}>
-          <CustomDatePicker
-            label="Sale Date"
-            value={selectedDate}
-            onChange={(newValue) => {
-              if (newValue) {
-                setSelectedDate(newValue);
-              }
-            }}
-          />
-        </Grid>
+      <Grid container justifyContent="flex-end" alignItems="center" mb={2}>
         <Grid item>
-          <Button variant="contained" color="primary" onClick={handleDownloadCSV}>
-            Download CSV
-          </Button>
+          <Box display="flex" alignItems="center">
+            <CustomeDateRangePicker onChange={handleDateChange} />
+            <Button
+              variant="contained"
+              color="primary"
+              onClick={handleDownloadCSV}
+              style={{ marginLeft: "8px" }}
+            >
+              Download CSV
+            </Button>
+          </Box>
         </Grid>
       </Grid>
 

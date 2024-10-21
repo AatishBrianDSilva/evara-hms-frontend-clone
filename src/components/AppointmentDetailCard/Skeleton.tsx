@@ -1,5 +1,5 @@
-import * as React from 'react';
-import { Box, Skeleton, Avatar } from '@mui/material';
+import * as React from "react";
+import { Box, Skeleton, Avatar } from "@mui/material";
 
 const SkeletonAppointmentDetailCard: React.FC = () => {
   return (
@@ -10,24 +10,32 @@ const SkeletonAppointmentDetailCard: React.FC = () => {
       border="1px solid"
       borderColor="grey.300"
       p={2}
-      m={1}
       width={300}
       height={75}
     >
-      <Skeleton variant="circular">
+      {/* Avatar Skeleton */}
+      <Skeleton variant="circular" width={56} height={56}>
         <Avatar />
       </Skeleton>
-      <Box display="flex" flexDirection="column" ml={2} flex={1}>
+
+      {/* Text Skeletons */}
+      <Box display="flex" flexDirection="column" ml={2} width="100%">
+        {/* Doctor's Name Skeleton */}
         <Skeleton variant="text" width="80%" height={24} />
+
+        {/* Patient Name Skeleton */}
         <Box display="flex" alignItems="center" mt={1}>
+          <Skeleton variant="rectangular" width="20px" height="20px" sx={{ mr: 1 }} />
           <Skeleton variant="text" width="60%" height={20} />
         </Box>
+
+        {/* Patient Phone Number Skeleton */}
         <Box display="flex" alignItems="center" mt={1}>
+          <Skeleton variant="rectangular" width="20px" height="20px" sx={{ mr: 1 }} />
           <Skeleton variant="text" width="60%" height={20} />
         </Box>
       </Box>
     </Box>
   );
 };
-
-export default SkeletonAppointmentDetailCard
+export default SkeletonAppointmentDetailCard;

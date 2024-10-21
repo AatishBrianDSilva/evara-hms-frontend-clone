@@ -39,7 +39,7 @@ const Stocks: React.FC = () => {
   const [searchQuery, setSearchQuery] = useState("");
 
   const [page, setPage] = useState<number>(0);
-  const [pageSize, setPageSize] = useState<number>(25);
+  const [pageSize, setPageSize] = useState<number>(-1);
 
   const {
     data: stockData,

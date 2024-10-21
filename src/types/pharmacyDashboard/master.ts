@@ -67,6 +67,7 @@ export interface IDrugItem {
   freeQuantity: number;
   manufacturer: IDrugManufacturer;
   status: "Active" | "Inactive";
+  criticalCount?: number;
 }
 
 export interface IDrugLocation {

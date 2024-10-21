@@ -118,6 +118,8 @@ const DrugItem: React.FC = () => {
   const drugItemsPagination = drugItemData?.data?.pagination;
   const drugItemsLoading = drugItemLoading || drugItemFetching;
 
+  // console.log("Master Drug items", drugItems);
+
   const [deleteDrugItem, { isLoading }] = useDeleteDrugItemMutation();
   const handleDelete = async () => {
     const promise = deleteDrugItem(selectedRow).unwrap();
@@ -160,6 +162,7 @@ const DrugItem: React.FC = () => {
       valueGetter: (params) => params.row.type?.name,
       valueFormatter: (params) => _.upperFirst(params.value),
     },
+    { field: "criticalCount", headerName: "Critical Count", flex: 1 },
     { field: "packSize", headerName: "Pack Size", flex: 1 },
     {
       field: "mrp",

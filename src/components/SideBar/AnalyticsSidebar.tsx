@@ -114,6 +114,11 @@ const AnalyticsSidebar: React.FC = () => {
           primaryText: "Expiry Details",
           path: "/analytics/pharmacy/expiry-details",
         },
+        {
+          icon: FiberManualRecordIcon,
+          primaryText: "Critical Stocks",
+          path: "/analytics/pharmacy/critical-stocks",
+        },
       ],
     },
   ];

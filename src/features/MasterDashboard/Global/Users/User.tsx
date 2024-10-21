@@ -83,17 +83,7 @@ const User: React.FC = () => {
       headerName: "Role",
       flex: 1,
       valueGetter: (params) => {
-        if (params.row.role === "admin") {
-          return "Admin";
-        } else if (params.row.role === "doctor") {
-          return "Doctor";
-        } else if (params.row.role === "nurse") {
-          return "Nurse";
-        } else if (params.row.role === "receptionist") {
-          return "Recptionist";
-        } else {
-          return "Undefined Role";
-        }
+        return _.upperFirst(params.value)
       },
     },
     {

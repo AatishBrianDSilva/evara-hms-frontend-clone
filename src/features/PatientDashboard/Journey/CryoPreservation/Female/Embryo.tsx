@@ -167,7 +167,7 @@ const Embryo: React.FC<EmbryoProps> = ({ doctors }) => {
     details: {
       doctor: Cryopreservation?.details?.details?.doctor || "",
       date: Cryopreservation?.details?.details?.date || null,
-      time: Cryopreservation?.details?.details?.time || null,
+      timeOfFreezing: Cryopreservation?.details?.details?.timeOfFreezing || null,
       ivf: Cryopreservation?.details?.details?.ivf || "",
       embryologistA: Cryopreservation?.details?.details?.embryologistA || "",
       embryologistB: Cryopreservation?.details?.details?.embryologistB || "",
@@ -248,8 +248,8 @@ const Embryo: React.FC<EmbryoProps> = ({ doctors }) => {
           <Grid item xs={12} sm={6} md={3}>
             <CustomTimePicker
               label="Time Of Freezing"
-              value={formik.values.details?.time}
-              onChange={(date) => formik.setFieldValue("details.time", date)}
+              value={formik.values.details?.timeOfFreezing}
+              onChange={(date) => formik.setFieldValue("details.timeOfFreezing", date)}
             />
           </Grid>
         </Grid>

@@ -1,34 +1,62 @@
-import * as React from 'react';
-import { Box, Typography } from '@mui/material';
+import * as React from "react";
+import { Box, Typography, IconButton } from "@mui/material";
+import { ArrowForward } from "@mui/icons-material";
 
 interface PatientSummaryCardProps {
   newPatients: number;
   newDonors: number;
 }
 
-const PatientSummaryCard: React.FC<PatientSummaryCardProps> = ({
-  newPatients,
-  newDonors,
-}) => {
+const PatientSummaryCard: React.FC<PatientSummaryCardProps> = ({ newPatients, newDonors }) => {
+  const handleArrowClick = () => {
+    window.location.href = "/appointments"; // Redirect to the provided link URL
+  };
+
   return (
     <Box
       display="flex"
+      flexDirection="column"
       borderRadius={4}
-      border="1px solid"
-      borderColor="primary.main"
-      p={2}
-      width={250}
-      height={150}
+      width={"100%"}
+      height={"100%"}
+      overflow="hidden"
     >
-      <Box display="flex" flexDirection="column" flex={1}>
-        <Typography variant="h6" color="secondary">Summary</Typography>
-        <Box display="flex" flexDirection="column" flex={1} justifyContent={"center"}>
-          <Box display={"flex"} justifyContent={'space-between'} alignItems={'center'}>
-            <Typography color="secondary">New Patient:</Typography><Typography variant="h5" color={"primary"} align={'left'}>{newPatients}</Typography>
-          </Box>
-          <Box display={"flex"} justifyContent={'space-between'} alignItems={'center'}>
-            <Typography color="secondary">New Donor:</Typography><Typography variant="h5" color={"primary"} align={'left'}>{newDonors}</Typography>
-          </Box>
+      {/* Header Section with title and arrow */}
+      <Box
+        display="flex"
+        justifyContent="space-between"
+        alignItems="center"
+        height="72px"
+        bgcolor="#FFEDE2"
+        px={2}
+      >
+        <Typography variant="h6" color="secondary">
+          Summary
+        </Typography>
+
+        {/* Arrow Icon */}
+        <IconButton size="small" color="inherit" onClick={handleArrowClick}>
+          <ArrowForward fontSize="small" />
+        </IconButton>
+      </Box>
+
+      {/* Content Section */}
+      <Box display="flex" flexDirection="column" flex={1} justifyContent={"center"} p={2} gap={5}>
+        <Box display={"flex"} justifyContent={"space-between"} alignItems={"center"}>
+          <Typography color="primary" sx={{ fontWeight: "bold" }} variant="h5">
+            New Patients:
+          </Typography>
+          <Typography variant="h5" color={"primary"} align={"left"} sx={{ fontWeight: "bold" }}>
+            {newPatients}
+          </Typography>
+        </Box>
+        <Box display={"flex"} justifyContent={"space-between"} alignItems={"center"}>
+          <Typography color="primary" sx={{ fontWeight: "bold" }} variant="h5">
+            New Donors:
+          </Typography>
+          <Typography variant="h5" color={"primary"} align={"left"} sx={{ fontWeight: "bold" }}>
+            {newDonors}
+          </Typography>
         </Box>
       </Box>
     </Box>

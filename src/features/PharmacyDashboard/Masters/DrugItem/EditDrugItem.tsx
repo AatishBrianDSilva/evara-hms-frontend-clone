@@ -52,6 +52,7 @@ interface IFormValues {
   rate: string;
   manufacturer: IDrugManufacturer | null;
   status: boolean;
+  criticalCount: number;
 }
 
 const skeletonLoader = () => {
@@ -66,13 +67,7 @@ const skeletonLoader = () => {
             <Skeleton variant="rectangular" width="100%" height={56} />
           </Grid>
         </Grid>
-        <Box
-          display={"flex"}
-          justifyContent={"flex-end"}
-          alignItems={"center"}
-          gap={2}
-          mb={2}
-        >
+        <Box display={"flex"} justifyContent={"flex-end"} alignItems={"center"} gap={2} mb={2}>
           <Skeleton variant="rectangular" width={90} height={36} />
           <Skeleton variant="rectangular" width={90} height={36} />
         </Box>
@@ -99,8 +94,7 @@ const EditDrugItem: React.FC<EditDrugItemProps> = ({
   const [editDrugItem, { isLoading: editLoading }] = useEditDrugItemMutation();
   const handleFormSubmit = async (values: IFormValues) => {
     const type =
-      values.category?.name === "Medication" ||
-      values.category?.name === "Emergency Medication"
+      values.category?.name === "Medication" || values.category?.name === "Emergency Medication"
         ? values.type?._id
         : null;
 
@@ -118,6 +112,7 @@ const EditDrugItem: React.FC<EditDrugItemProps> = ({
       status: values.status ? "Active" : "Inactive",
       mrp: values.mrp || 0,
       rate: values.rate || 0,
+      criticalCount: values.criticalCount || 10,
     };
 
     const promise = editDrugItem(payload).unwrap();
@@ -150,6 +145,7 @@ const EditDrugItem: React.FC<EditDrugItemProps> = ({
     rate: item?.rate.toString() || "",
     manufacturer: item?.manufacturer || null,
     status: item?.status === "Active" ? true : false,
+    criticalCount: item?.criticalCount || 10,
   };
 
   const formik = useFormik({
@@ -188,13 +184,8 @@ const EditDrugItem: React.FC<EditDrugItemProps> = ({
                   label="Generic Name"
                   value={formik.values.genericName}
                   onChange={formik.handleChange}
-                  error={
-                    formik.touched.genericName &&
-                    Boolean(formik.errors.genericName)
-                  }
-                  helperText={
-                    formik.touched.genericName && formik.errors.genericName
-                  }
+                  error={formik.touched.genericName && Boolean(formik.errors.genericName)}
+                  helperText={formik.touched.genericName && formik.errors.genericName}
                 />
               </Grid>
               <Grid item lg={4}>
@@ -206,12 +197,8 @@ const EditDrugItem: React.FC<EditDrugItemProps> = ({
                   label="Drug Class"
                   value={formik.values.drugClass}
                   onChange={formik.handleChange}
-                  error={
-                    formik.touched.drugClass && Boolean(formik.errors.drugClass)
-                  }
-                  helperText={
-                    formik.touched.drugClass && formik.errors.drugClass
-                  }
+                  error={formik.touched.drugClass && Boolean(formik.errors.drugClass)}
+                  helperText={formik.touched.drugClass && formik.errors.drugClass}
                 >
                   {Object.values(EDrugClass).map((drugClass) => (
                     <MenuItem value={drugClass}>{drugClass}</MenuItem>
@@ -226,27 +213,19 @@ const EditDrugItem: React.FC<EditDrugItemProps> = ({
                   label="HSN Code"
                   value={formik.values.hsnCode}
                   onChange={formik.handleChange}
-                  error={
-                    formik.touched.hsnCode && Boolean(formik.errors.hsnCode)
-                  }
+                  error={formik.touched.hsnCode && Boolean(formik.errors.hsnCode)}
                   helperText={formik.touched.hsnCode && formik.errors.hsnCode}
                 />
               </Grid>
               <Grid item lg={4}>
                 <FieldAutocomplete
                   options={drugCategories}
-                  isOptionEqualToValue={(option, value) =>
-                    option._id === value._id
-                  }
+                  isOptionEqualToValue={(option, value) => option._id === value._id}
                   getOptionLabel={(option) => option.name}
                   label="Category"
                   value={formik.values.category}
-                  onChange={(newValue) =>
-                    formik.setFieldValue("category", newValue)
-                  }
-                  error={
-                    formik.touched.category && Boolean(formik.errors.category)
-                  }
+                  onChange={(newValue) => formik.setFieldValue("category", newValue)}
+                  error={formik.touched.category && Boolean(formik.errors.category)}
                   helperText={formik.touched.category && formik.errors.category}
                 />
               </Grid>
@@ -257,15 +236,11 @@ const EditDrugItem: React.FC<EditDrugItemProps> = ({
                     formik.values.category?.name !== "Emergency Medication"
                   }
                   options={drugTypes}
-                  isOptionEqualToValue={(option, value) =>
-                    option._id === value._id
-                  }
+                  isOptionEqualToValue={(option, value) => option._id === value._id}
                   getOptionLabel={(option) => _.upperFirst(option.name)}
                   label="Type"
                   value={formik.values.type}
-                  onChange={(newValue) =>
-                    formik.setFieldValue("type", newValue)
-                  }
+                  onChange={(newValue) => formik.setFieldValue("type", newValue)}
                   error={formik.touched.type && Boolean(formik.errors.type)}
                   helperText={formik.touched.type && formik.errors.type}
                 />
@@ -278,27 +253,19 @@ const EditDrugItem: React.FC<EditDrugItemProps> = ({
                   label="Pack Size"
                   value={formik.values.packSize || ""}
                   onChange={formik.handleChange}
-                  error={
-                    formik.touched.packSize && Boolean(formik.errors.packSize)
-                  }
+                  error={formik.touched.packSize && Boolean(formik.errors.packSize)}
                   helperText={formik.touched.packSize && formik.errors.packSize}
                 />
               </Grid>
               <Grid item lg={4}>
                 <FieldAutocomplete
                   options={taxRates}
-                  isOptionEqualToValue={(option, value) =>
-                    option._id === value._id
-                  }
+                  isOptionEqualToValue={(option, value) => option._id === value._id}
                   getOptionLabel={(option) => option.taxRate.toString()}
                   label="Tax Rate"
                   value={formik.values.taxRate}
-                  onChange={(newValue) =>
-                    formik.setFieldValue("taxRate", newValue)
-                  }
-                  error={
-                    formik.touched.taxRate && Boolean(formik.errors.taxRate)
-                  }
+                  onChange={(newValue) => formik.setFieldValue("taxRate", newValue)}
+                  error={formik.touched.taxRate && Boolean(formik.errors.taxRate)}
                   helperText={formik.touched.taxRate && formik.errors.taxRate}
                 />
               </Grid>
@@ -329,22 +296,25 @@ const EditDrugItem: React.FC<EditDrugItemProps> = ({
               <Grid item lg={4}>
                 <FieldAutocomplete
                   options={drugManufacturers}
-                  isOptionEqualToValue={(option, value) =>
-                    option._id === value._id
-                  }
+                  isOptionEqualToValue={(option, value) => option._id === value._id}
                   getOptionLabel={(option) => option.name}
                   label="Manufacturer"
                   value={formik.values.manufacturer}
-                  onChange={(newValue) =>
-                    formik.setFieldValue("manufacturer", newValue)
-                  }
-                  error={
-                    formik.touched.manufacturer &&
-                    Boolean(formik.errors.manufacturer)
-                  }
-                  helperText={
-                    formik.touched.manufacturer && formik.errors.manufacturer
-                  }
+                  onChange={(newValue) => formik.setFieldValue("manufacturer", newValue)}
+                  error={formik.touched.manufacturer && Boolean(formik.errors.manufacturer)}
+                  helperText={formik.touched.manufacturer && formik.errors.manufacturer}
+                />
+              </Grid>
+              <Grid item lg={4}>
+                <TextField
+                  fullWidth
+                  id="criticalCount"
+                  name="criticalCount"
+                  label="Critical Count"
+                  value={formik.values.criticalCount}
+                  onChange={formik.handleChange}
+                  error={formik.touched.criticalCount && Boolean(formik.errors.criticalCount)}
+                  helperText={formik.touched.criticalCount && formik.errors.criticalCount}
                 />
               </Grid>
               <Grid item lg={12} display={"flex"} justifyContent={"center"}>
@@ -361,20 +331,12 @@ const EditDrugItem: React.FC<EditDrugItemProps> = ({
                 />
               </Grid>
             </Grid>
-            <Box
-              display={"flex"}
-              justifyContent={"flex-end"}
-              alignItems={"center"}
-              gap={2}
-              mb={2}
-            >
+            <Box display={"flex"} justifyContent={"flex-end"} alignItems={"center"} gap={2} mb={2}>
               <Button
                 variant="contained"
                 color="primary"
                 type="submit"
-                disabled={
-                  editLoading || _.isEqual(initialValues, formik.values)
-                }
+                disabled={editLoading || _.isEqual(initialValues, formik.values)}
                 sx={{ width: "fit-content" }}
               >
                 Save

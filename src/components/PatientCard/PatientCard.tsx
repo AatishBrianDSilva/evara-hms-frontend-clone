@@ -1,6 +1,6 @@
-import * as React from 'react';
-import { Box, Typography, Avatar, Link } from '@mui/material';
-import { stringAvatar } from '../../utils/avatar';
+import * as React from "react";
+import { Box, Typography, Avatar, Link } from "@mui/material";
+import { stringAvatar } from "../../utils/avatar";
 
 interface PatientCardProps {
   patientId: string;
@@ -19,20 +19,25 @@ const PatientCard: React.FC<PatientCardProps> = ({
   gender,
   age,
 }) => {
-
   let name = `${firstName}`;
   if (lastName) {
     name += ` ${lastName}`;
   }
 
-  if (typeof profileUrl != 'string') {
+  if (typeof profileUrl != "string") {
     profileUrl = "";
   }
 
-  const image_sx = { height: 56, width: 56, border: '2px solid', borderColor: 'secondary.main' }
+  const image_sx = { height: 56, width: 56, border: "2px solid", borderColor: "secondary.main" };
 
   return (
-    <Link href={`/patient/${patientId}`} underline="none" display={"flex"} justifyContent={"center"} alignItems={"center"}>
+    <Link
+      href={`/patient/${patientId}`}
+      underline="none"
+      display={"flex"}
+      justifyContent={"center"}
+      alignItems={"center"}
+    >
       <Box
         display="flex"
         alignItems="center"
@@ -41,13 +46,13 @@ const PatientCard: React.FC<PatientCardProps> = ({
         borderColor="grey.300"
         p={2}
         width={300}
-        sx={{ '&:hover': { boxShadow: 3 } }}
+        sx={{ "&:hover": { boxShadow: 3 } }}
       >
-        <Box display={"flex"} flex={1} >
-          <Avatar  {...stringAvatar(name, image_sx)} src={profileUrl} />
+        <Box display={"flex"} flex={1}>
+          <Avatar {...stringAvatar(name, image_sx)} src={profileUrl} />
         </Box>
         <Box display="flex" flexDirection="column" flex={2}>
-          <Typography variant="h6" >{name}</Typography>
+          <Typography variant="h6">{name}</Typography>
           <Typography variant="body2">{`Gender: ${gender}`}</Typography>
           <Typography variant="body2">{`Age: ${age}`}</Typography>
         </Box>

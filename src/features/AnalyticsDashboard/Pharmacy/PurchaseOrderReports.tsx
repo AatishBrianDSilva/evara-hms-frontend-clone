@@ -14,11 +14,25 @@ import CustomDataGrid from "../../../components/CustomDataGrid/CustomDataGrid";
 import { GridActionsCellItem, GridColDef, GridRowParams } from "@mui/x-data-grid";
 import { Visibility } from "@mui/icons-material";
 import ViewPurchaseOrder from "./ViewPurchaseOrder";
-import { useGetPurchaseOrdersQuery } from "../../../services/pharmacyDashboardService/purchaseOrderApi";
 import {
   EPurchaseOrderStatus,
   IPurchaseOrder,
 } from "../../../types/pharmacyDashboard/purchaseOrder";
+import { useGetPurchaseOrderReportQuery } from "../../../services/analyticsDashboardService/pharmacy/purchaseOrderReportApi";
+import CustomeDateRangePicker from "../../../components/CustomDateRangePicker/CustomDateRangePicker";
+
+// Utility function to convert date to UTC before sending it to the API
+const toUTCDateOnly = (date: Date | null, isEndDate = false) => {
+  if (!date) return null;
+
+  // Ensure the time is 00:00:00 for the start date or 23:59:59 for the end date
+  const utcDate = isEndDate
+    ? new Date(Date.UTC(date.getFullYear(), date.getMonth(), date.getDate(), 23, 59, 59))
+    : new Date(Date.UTC(date.getFullYear(), date.getMonth(), date.getDate(), 0, 0, 0));
+
+  // Convert to ISO string and return only the date part
+  return utcDate.toISOString().split("T")[0];
+};
 
 const PurchaseOrderReport: React.FC = () => {
   const [page, setPage] = useState<number>(1);
@@ -30,19 +44,39 @@ const PurchaseOrderReport: React.FC = () => {
     EPurchaseOrderStatus.Processed
   );
 
+  const [startDate, setStartDate] = useState<Date | null>(null); // For start date
+  const [endDate, setEndDate] = useState<Date | null>(null); // For end date
+
+  // Handle the date range change
+  const handleDateChange = (ranges: any) => {
+    if (ranges.selection) {
+      if (ranges.selection.startDate) setStartDate(ranges.selection.startDate);
+      if (ranges.selection.endDate) setEndDate(ranges.selection.endDate);
+    }
+  };
+
+  // Convert start and end dates to UTC date-only format for the API
+  const startDateUTC = toUTCDateOnly(startDate);
+  const endDateUTC = toUTCDateOnly(endDate, true);
+
   // Fetch purchase orders with filtering
   const {
     data: purchaseOrdersData,
     isLoading: purchaseOrdersLoading,
     isFetching: purchaseOrdersFetching,
     refetch,
-  } = useGetPurchaseOrdersQuery({
+  } = useGetPurchaseOrderReportQuery({
     paginate: true,
     page,
     limit: pageSize,
     sort: { createdAt: -1 },
     // vendorName: vendorNameQuery, // Pass vendorNameQuery to the backend request
-    filters: { status: selectedStatus, vendorName: vendorNameQuery },
+    filters: {
+      status: selectedStatus,
+      vendorName: vendorNameQuery,
+      saleStartDate: startDateUTC || undefined,
+      saleEndDate: endDateUTC || undefined,
+    },
   });
 
   const purchaseOrders = purchaseOrdersData?.data?.records || [];
@@ -141,6 +175,8 @@ const PurchaseOrderReport: React.FC = () => {
         </FormControl>
       </Box>
       <Box display="flex" justifyContent="flex-end" gap={2} mb={2}>
+        <CustomeDateRangePicker onChange={handleDateChange} />
+
         <TextField
           label="Filter by Vendor Name"
           size="small"

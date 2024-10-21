@@ -77,6 +77,9 @@ import { expiryDetailsApi } from "../services/analyticsDashboardService/pharmacy
 import { drugsAndVendorApi } from "../services/analyticsDashboardService/pharmacy/drugsAndVendorApi";
 import { internalConsumptionReportApi } from "../services/analyticsDashboardService/pharmacy/internalConsumptionReportApi";
 import { patientReturnApi } from "../services/analyticsDashboardService/pharmacy/patientReturnApi";
+import { criticalStocksApi } from "../services/analyticsDashboardService/pharmacy/criticalStocksApi";
+import { pharmacyReportApi } from "../services/analyticsDashboardService/pharmacy/PharmacyReportApi";
+import { purchaseOrderReportApi } from "../services/analyticsDashboardService/pharmacy/purchaseOrderReportApi";
 
 import * as Sentry from "@sentry/react";
 
@@ -146,6 +149,9 @@ const persistConfig = {
     drugsAndVendorApi.reducerPath,
     internalConsumptionReportApi.reducerPath,
     patientReturnApi.reducerPath,
+    criticalStocksApi.reducerPath,
+    pharmacyReportApi.reducerPath,
+    purchaseOrderApi.reducerPath,
     "patients",
     "appointments",
     "investigation",
@@ -214,6 +220,9 @@ const rootReducer = combineReducers({
   [stockSummaryApi.reducerPath]: stockSummaryApi.reducer,
   [internalConsumptionReportApi.reducerPath]: internalConsumptionReportApi.reducer,
   [patientReturnApi.reducerPath]: patientReturnApi.reducer,
+  [criticalStocksApi.reducerPath]: criticalStocksApi.reducer,
+  [pharmacyReportApi.reducerPath]: pharmacyReportApi.reducer,
+  [purchaseOrderReportApi.reducerPath]: purchaseOrderReportApi.reducer,
 
   patients: patientsReducer,
   appointments: appointmentReducer,
@@ -292,7 +301,10 @@ export const store = configureStore({
       .concat(expiryDetailsApi.middleware)
       .concat(internalConsumptionReportApi.middleware)
       .concat(stockSummaryApi.middleware)
-      .concat(patientReturnApi.middleware),
+      .concat(patientReturnApi.middleware)
+      .concat(criticalStocksApi.middleware)
+      .concat(pharmacyReportApi.middleware)
+      .concat(purchaseOrderReportApi.middleware),
   enhancers(getDefaultEnhancers) {
     return getDefaultEnhancers().concat(sentryReduxEnhancer);
   },

@@ -5,14 +5,28 @@ import CustomDataGrid from "../../../components/CustomDataGrid/CustomDataGrid";
 import { GridColDef } from "@mui/x-data-grid";
 import _ from "lodash";
 import { formatToIndianCurrencyFormat } from "../../../utils/formatToIndianCurrencyFormat";
-import { useGetAllPharmacyQuery } from "../../../services/patientDashboardService/patientPharmacyApi";
 import { IPatientPharmacy } from "../../../types/patientDashboard/patientPharmacy";
+import CustomeDateRangePicker from "../../../components/CustomDateRangePicker/CustomDateRangePicker";
+import { useGetPharmacyReportQuery } from "../../../services/analyticsDashboardService/pharmacy/PharmacyReportApi";
 
 interface IAggregatedPatientPharmacy extends IPatientPharmacy {
   patientDetails?: {
     fullName?: string;
   };
 }
+
+// Utility function to convert date to UTC before sending it to the API
+const toUTCDateOnly = (date: Date | null, isEndDate = false) => {
+  if (!date) return null;
+
+  // Ensure the time is 00:00:00 for the start date or 23:59:59 for the end date
+  const utcDate = isEndDate
+    ? new Date(Date.UTC(date.getFullYear(), date.getMonth(), date.getDate(), 23, 59, 59))
+    : new Date(Date.UTC(date.getFullYear(), date.getMonth(), date.getDate(), 0, 0, 0));
+
+  // Convert to ISO string and return only the date part
+  return utcDate.toISOString().split("T")[0];
+};
 
 const PharmacyReport: React.FC = () => {
   const [page, setPage] = useState<number>(1);
@@ -21,8 +35,29 @@ const PharmacyReport: React.FC = () => {
   const [searchPatientID, setSearchPatientID] = useState<string>("");
   const [searchFullName, setSearchFullName] = useState<string>("");
 
+  const [startDate, setStartDate] = useState<Date | null>(null); // For start date
+  const [endDate, setEndDate] = useState<Date | null>(null); // For end date
+
+  // Handle the date range change
+  const handleDateChange = (ranges: any) => {
+    if (ranges.selection) {
+      if (ranges.selection.startDate) setStartDate(ranges.selection.startDate);
+      if (ranges.selection.endDate) setEndDate(ranges.selection.endDate);
+    }
+  };
+
+  // Convert start and end dates to UTC date-only format for the API
+  const startDateUTC = toUTCDateOnly(startDate);
+  const endDateUTC = toUTCDateOnly(endDate, true);
+
   // Fetch data from the backend
-  const { data: pharmacyData, isLoading: pharmacyLoading } = useGetAllPharmacyQuery();
+  const { data: pharmacyData, isLoading: pharmacyLoading } = useGetPharmacyReportQuery({
+    filters: {
+      saleStartDate: startDateUTC || undefined, // Use the converted UTC date
+      saleEndDate: endDateUTC || undefined, // Use the converted UTC date
+    },
+  });
+
   const allPharmacy = pharmacyData?.data?.records || [];
 
   console.log("All Pharmacy data", allPharmacy);
@@ -84,7 +119,15 @@ const PharmacyReport: React.FC = () => {
     {
       field: "date",
       headerName: "Date",
+      type: "date",
       flex: 1,
+      valueFormatter(params) {
+        return new Date(params.value).toLocaleDateString("en-GB", {
+          day: "2-digit",
+          month: "2-digit",
+          year: "numeric",
+        });
+      },
     },
     {
       field: "totalQuantity",
@@ -103,6 +146,8 @@ const PharmacyReport: React.FC = () => {
   return (
     <ContentSection title="Pharmacy Reports">
       <Box display="flex" justifyContent="flex-end" gap={2} mb={2}>
+        <CustomeDateRangePicker onChange={handleDateChange} />
+
         <TextField
           label="Filter by Drug Name"
           size="small"

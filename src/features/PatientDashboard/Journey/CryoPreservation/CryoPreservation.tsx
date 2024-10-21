@@ -161,7 +161,7 @@ const CryoPreservations: React.FC = () => {
       flex: 1,
       valueGetter: (params) => {
         const details = params.row.details?.details;
-        return details?.dateofexpiry || details?.mediaExpiryDate || "";
+        return details?.dateOfExpiry || details?.mediaExpiryDate || "";
       },
       valueFormatter: (params) => {
         if (!params.value) return ""; // Return empty string if no value
