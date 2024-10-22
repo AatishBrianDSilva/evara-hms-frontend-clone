@@ -58,6 +58,11 @@ const AnalyticsSidebar: React.FC = () => {
           primaryText: "Patient Billings",
           path: "/analytics/billings/Patientbillings",
         },
+        {
+          icon: FiberManualRecordIcon,
+          primaryText: "Refund Reports",
+          path: "/analytics/billings/RefundReports",
+        },
         // {
         //   icon: FiberManualRecordIcon,
         //   primaryText: "Billings Transactions",

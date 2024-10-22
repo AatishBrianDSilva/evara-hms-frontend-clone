@@ -8,6 +8,7 @@ import { exportToCSV } from "../../../utils/exportCSV";
 import _ from "lodash";
 import { format } from "date-fns";
 import CustomeDateRangePicker from "../../../components/CustomDateRangePicker/CustomDateRangePicker";
+import { formatToIndianCurrencyFormat } from "../../../utils/formatToIndianCurrencyFormat";
 
 // Utility function to convert date to UTC before sending it to the API
 const toUTCDateOnly = (date: Date | null, isEndDate = false) => {
@@ -103,10 +104,10 @@ const InternalConsumptionReports: React.FC = () => {
         category: record.category || "",
         categoryCode: record.categoryCode || "",
         quantity: record.quantity || "",
-        unitCost: record.unitCost || "",
-        totalCost: record.totalCost || "",
+        unitCost: formatToIndianCurrencyFormat(record.unitCost || ""),
+        totalCost: formatToIndianCurrencyFormat(record.totalCost || ""),
         tax: record.tax || "",
-        totalTax: record.totalTax || "",
+        totalTax: formatToIndianCurrencyFormat(record.totalTax || ""),
         allocDate: record.allocDate ? format(new Date(record.allocDate), "dd/MM/yyyy") : "",
         addedBy: record.addedBy || "",
         remarks: record.remarks || "",
@@ -131,10 +132,25 @@ const InternalConsumptionReports: React.FC = () => {
     { field: "category", headerName: "Category", flex: 1 },
     { field: "categoryCode", headerName: "Category Code", flex: 1 },
     { field: "quantity", headerName: "Qty", flex: 1 },
-    { field: "unitCost", headerName: "Unit Cost", flex: 1 },
-    { field: "totalCost", headerName: "Total Cost", flex: 1 },
+    {
+      field: "unitCost",
+      headerName: "Unit Cost",
+      flex: 1,
+      valueFormatter: (params) => formatToIndianCurrencyFormat(params.value),
+    },
+    {
+      field: "totalCost",
+      headerName: "Total Cost",
+      flex: 1,
+      valueFormatter: (params) => formatToIndianCurrencyFormat(params.value),
+    },
     { field: "tax", headerName: "Tax", flex: 1 },
-    { field: "totalTax", headerName: "Total Tax", flex: 1 },
+    {
+      field: "totalTax",
+      headerName: "Total Tax",
+      flex: 1,
+      valueFormatter: (params) => formatToIndianCurrencyFormat(params.value),
+    },
     {
       field: "allocDate",
       headerName: "Alloc Date",

@@ -7,6 +7,7 @@ import { useGetPatientReturnQuery } from "../../../services/analyticsDashboardSe
 import { exportToCSV } from "../../../utils/exportCSV";
 import { format } from "date-fns";
 import CustomeDateRangePicker from "../../../components/CustomDateRangePicker/CustomDateRangePicker";
+import { formatToIndianCurrencyFormat } from "../../../utils/formatToIndianCurrencyFormat";
 
 // Utility function to convert date to UTC before sending it to the API
 const toUTCDateOnly = (date: Date | null, isEndDate = false) => {
@@ -94,7 +95,7 @@ const PatientReturnReports: React.FC = () => {
         drugName: record.drugName || "N/A",
         drugCode: record.drugCode || "N/A",
         quantity: record.quantity || 0,
-        totalValue: record.totalValue || 0,
+        totalValue: formatToIndianCurrencyFormat(record.totalValue || 0),
       }));
 
       exportToCSV([headers, ...formattedData], "PatientReturn_Report");
@@ -113,7 +114,12 @@ const PatientReturnReports: React.FC = () => {
     { field: "drugName", headerName: "Drug Name", flex: 1 },
     { field: "drugCode", headerName: "Drug Code", flex: 1 },
     { field: "quantity", headerName: "Quantity", flex: 1 },
-    { field: "totalValue", headerName: "Total Value", flex: 1 },
+    {
+      field: "totalValue",
+      headerName: "Total Value",
+      flex: 1,
+      valueFormatter: (params) => formatToIndianCurrencyFormat(params.value),
+    },
   ];
 
   const rows =

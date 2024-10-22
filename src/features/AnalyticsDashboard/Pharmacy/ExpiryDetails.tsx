@@ -8,6 +8,7 @@ import { exportToCSV } from "../../../utils/exportCSV";
 import _ from "lodash";
 import { format } from "date-fns";
 import CustomeDateRangePicker from "../../../components/CustomDateRangePicker/CustomDateRangePicker";
+import { formatToIndianCurrencyFormat } from "../../../utils/formatToIndianCurrencyFormat";
 
 // Utility function to convert date to UTC before sending it to the API
 const toUTCDateOnly = (date: Date | null, isEndDate = false) => {
@@ -101,7 +102,7 @@ const ExpiryDetails: React.FC = () => {
           expiryDate: record.expiryDate || "",
           unitCost: record.unitCost || "",
           totalQty: record.totalQty || "",
-          sumTotalValue: record.sumTotalValue?.toFixed(2) || "0.00", // Ensure 2 decimal places
+          sumTotalValue: formatToIndianCurrencyFormat(record.sumTotalValue || ""), // Ensure 2 decimal places
         };
       });
 
@@ -134,7 +135,7 @@ const ExpiryDetails: React.FC = () => {
       field: "sumTotalValue",
       headerName: "Sum Total Value",
       flex: 1,
-      valueFormatter: (params) => Number(params.value).toFixed(2), // Ensure 2 decimal places
+      valueFormatter: (params) => formatToIndianCurrencyFormat(params.value),
     },
   ];
 

@@ -121,6 +121,7 @@ import PatientReturnReports from "../features/AnalyticsDashboard/Pharmacy/Patien
 import StockSummaryReports from "../features/AnalyticsDashboard/Pharmacy/StockSummary";
 import ExpiryDetails from "../features/AnalyticsDashboard/Pharmacy/ExpiryDetails";
 import CriticalStocksReport from "../features/AnalyticsDashboard/Pharmacy/criticalStocks";
+import RefundsReport from "../features/AnalyticsDashboard/AnalyticsBillings/RefundsReport";
 
 interface ProtectedRouteProps {
   allowedRoles: string[];
@@ -175,7 +176,17 @@ const AppRoutes: React.FC = () => (
           </Route>
         </Route>
 
-        <Route path="patients" element={<Patients />} />
+        <Route
+          path="patients"
+          element={
+            <ProtectedRoute
+              allowedRoles={Object.values(EUserRole)}
+              navigateTo={"/not-authorized"}
+            />
+          }
+        >
+          <Route index element={<Patients />} />
+        </Route>
 
         <Route path="patient/:id" element={<PatientDashboard />}>
           {/* Default path is journey for the patient/:id */}
@@ -229,152 +240,171 @@ const AppRoutes: React.FC = () => (
 
         <Route path="appointments" element={<Appointment />} />
 
-        <Route path="pharmacy" element={<PharmacyDashboard />}>
-          <Route index element={<Navigate to={"masters"} />} />
-          <Route path="masters" element={<PharmacyMasters />}>
-            <Route index element={<Navigate to={"drug-item"} />} />
-            <Route path="drug-item" element={<DrugItem />} />
-            <Route path="drug-types" element={<DrugTypes />} />
-            <Route path="drug-categories" element={<DrugCategories />} />
-            <Route path="drug-manufacturer" element={<DrugManufacturer />} />
-            <Route path="drug-vendors" element={<DrugVendors />} />
-            <Route path="drug-locations" element={<DrugLocation />} />
-            <Route path="tax-brackets" element={<TaxBracket />} />
-          </Route>
-
-          <Route path="purchase-order" element={<PurchaseOrder />}>
-            <Route index element={<Navigate to={EPurchaseOrderTabPaths.Draft} replace />} />
-            <Route path={EPurchaseOrderTabPaths.Draft} element={<Draft />} />
-            <Route path={EPurchaseOrderTabPaths.Approved} element={<Approved />} />
-            <Route path={EPurchaseOrderTabPaths.Rejected} element={<Rejected />} />
-            <Route path={EPurchaseOrderTabPaths.Ordered} element={<Ordered />} />
-            <Route
-              path={EPurchaseOrderTabPaths.PartiallyProcessed}
-              element={<PartiallyProcessed />}
+        <Route
+          path="pharmacy"
+          element={
+            <ProtectedRoute
+              allowedRoles={[
+                EUserRole.Admin,
+                EUserRole.Billing,
+                EUserRole.Pharmacist,
+                EUserRole.PharmacyManager,
+              ]}
+              navigateTo={"/not-authorized"}
             />
-            <Route path={EPurchaseOrderTabPaths.Processed} element={<Processed />} />
-          </Route>
-          <Route path="orders" element={<InternalOrders />}>
-            <Route index element={<Navigate to={EInternalOrdersTabPaths.Draft} replace />} />
-            <Route path={EInternalOrdersTabPaths.Draft} element={<DraftInternalOrder />} />
-            <Route path={EInternalOrdersTabPaths.Approved} element={<ApprovedInternalOrder />} />
-            <Route path={EInternalOrdersTabPaths.Rejected} element={<RejectedInternalOrder />} />
-            <Route path={EInternalOrdersTabPaths.Processed} element={<ProcessInternalOrder />} />
-          </Route>
-          <Route path="internal-consumption" element={<InternalConsumption />} />
-          <Route path="stocks" element={<Stocks />} />
-          <Route path="invoices" element={<Invoices />} />
-
-          <Route path="*" element={<Navigate to="pharmacy" />} />
-        </Route>
-
-        <Route path="master" element={<MasterDashboard />}>
-          <Route index element={<Navigate to={"local"} />} />
-          <Route path={EMasterDashboardTabPaths.Local} element={<Local />}>
-            <Route index element={<Navigate to={"patient/referral-doctor"} />} />
-            <Route path="customer" element={<Customer />} />
-            <Route path="patient/referral-doctor" element={<ReferralDoctor />} />
-            <Route path="patient/id-type" element={<IDType />} />
-            <Route path="patient/source" element={<Source />} />
-
-            <Route path="appointment/reason" element={<AppointmentReason />} />
-            <Route path="appointment/source" element={<AppointmentSource />} />
-
-            <Route path="/master/local/notes/advice" element={<Advice />} />
-            <Route path="/master/local/notes/observation" element={<Observation />} />
-
-            <Route path="consents" element={<Consents />} />
-            <Route path="cryo-parameters" element={<CryoParameters />} />
-            <Route path="consultant-doctors" element={<LocalConsultantDoctor />} />
-            <Route path="roles" element={<Roles />} />
-
-            <Route path="reports" element={<Reports />} />
-
-            <Route path="/master/local/donors" element={<LocalDonor />} />
-          </Route>
-
-          {/* <Route path={EMasterDashboardTabPaths.Global} element={<Global />} /> */}
-          <Route path={EMasterDashboardTabPaths.Global} element={<Global />}>
-            <Route index element={<Navigate to={"user"} />} />
-            <Route path="global" element={<Global />} />
-            <Route path="branch" element={<Branch />} />
-            <Route path="doctors" element={<GlobalConsultantDoctor />} />
-            <Route path="user" element={<User />} />
-          </Route>
-
-          <Route path={EMasterDashboardTabPaths.ServiceData} element={<ServiceData />}>
-            <Route index element={<Navigate to={"investigation"} />} />
-            <Route path="investigation" element={<MasterInvestigations />} />
-            <Route path="procedure" element={<MastersProcedures />} />
-            <Route path="service" element={<MasterService />} />
-            {/* <Route path="packages" element={<MasterPackages />} /> */}
-            <Route path="cycle">
-              <Route index element={<Navigate to={"items"} />} />
-              <Route path="items" element={<MasterCycleItems />} />
-              <Route path="stages" element={<MasterCycleStages />} />
-              <Route path="consumables" element={<MasterCycleConsumables />} />
+          }
+        >
+          <Route element={<PharmacyDashboard />}>
+            <Route index element={<Navigate to={"masters"} />} />
+            <Route path="masters" element={<PharmacyMasters />}>
+              <Route index element={<Navigate to={"drug-item"} />} />
+              <Route path="drug-item" element={<DrugItem />} />
+              <Route path="drug-types" element={<DrugTypes />} />
+              <Route path="drug-categories" element={<DrugCategories />} />
+              <Route path="drug-manufacturer" element={<DrugManufacturer />} />
+              <Route path="drug-vendors" element={<DrugVendors />} />
+              <Route path="drug-locations" element={<DrugLocation />} />
+              <Route path="tax-brackets" element={<TaxBracket />} />
             </Route>
-            <Route path="cryo-preservation" element={<MasterCryoPreservation />} />
-            <Route path="packages" element={<MasterPackages />} />
+
+            <Route path="purchase-order" element={<PurchaseOrder />}>
+              <Route index element={<Navigate to={EPurchaseOrderTabPaths.Draft} replace />} />
+              <Route path={EPurchaseOrderTabPaths.Draft} element={<Draft />} />
+              <Route path={EPurchaseOrderTabPaths.Approved} element={<Approved />} />
+              <Route path={EPurchaseOrderTabPaths.Rejected} element={<Rejected />} />
+              <Route path={EPurchaseOrderTabPaths.Ordered} element={<Ordered />} />
+              <Route
+                path={EPurchaseOrderTabPaths.PartiallyProcessed}
+                element={<PartiallyProcessed />}
+              />
+              <Route path={EPurchaseOrderTabPaths.Processed} element={<Processed />} />
+            </Route>
+            <Route path="orders" element={<InternalOrders />}>
+              <Route index element={<Navigate to={EInternalOrdersTabPaths.Draft} replace />} />
+              <Route path={EInternalOrdersTabPaths.Draft} element={<DraftInternalOrder />} />
+              <Route path={EInternalOrdersTabPaths.Approved} element={<ApprovedInternalOrder />} />
+              <Route path={EInternalOrdersTabPaths.Rejected} element={<RejectedInternalOrder />} />
+              <Route path={EInternalOrdersTabPaths.Processed} element={<ProcessInternalOrder />} />
+            </Route>
+            <Route path="internal-consumption" element={<InternalConsumption />} />
+            <Route path="stocks" element={<Stocks />} />
+            <Route path="invoices" element={<Invoices />} />
+
+            <Route path="*" element={<Navigate to="pharmacy" />} />
           </Route>
         </Route>
 
-        <Route path="analytics" element={<AnalyticsDashboard />}>
-          <Route index element={<Navigate to="appointment" />} />
+        <Route
+          path="master"
+          element={
+            <ProtectedRoute allowedRoles={[EUserRole.Admin]} navigateTo={"/not-authorized"} />
+          }
+        >
+          <Route element={<MasterDashboard />}>
+            <Route index element={<Navigate to={"local"} />} />
+            <Route path={EMasterDashboardTabPaths.Local} element={<Local />}>
+              <Route index element={<Navigate to={"patient/referral-doctor"} />} />
+              <Route path="customer" element={<Customer />} />
+              <Route path="patient/referral-doctor" element={<ReferralDoctor />} />
+              <Route path="patient/id-type" element={<IDType />} />
+              <Route path="patient/source" element={<Source />} />
 
-          <Route path="appointment">
-            <Route index element={<Navigate to="previous-appointment" />} />
+              <Route path="appointment/reason" element={<AppointmentReason />} />
+              <Route path="appointment/source" element={<AppointmentSource />} />
 
-            <Route path="previous-appointment" element={<PreviousAppointments />} />
+              <Route path="/master/local/notes/advice" element={<Advice />} />
+              <Route path="/master/local/notes/observation" element={<Observation />} />
 
-            <Route index element={<Navigate to="upcoming-appointment" />} />
-            <Route path="upcoming-appointment" element={<UpcomingAppointments />} />
-          </Route>
+              <Route path="consents" element={<Consents />} />
+              <Route path="cryo-parameters" element={<CryoParameters />} />
+              <Route path="consultant-doctors" element={<LocalConsultantDoctor />} />
+              <Route path="roles" element={<Roles />} />
 
-          <Route path="patient">
-            <Route index element={<Navigate to="patients" />} />
+              <Route path="reports" element={<Reports />} />
 
-            {/* <Route path="patients" element={<AnalyticsPatients />} /> */}
-            <Route index element={<Navigate to="Donors" />} />
-            <Route path="donors" element={<Donors />} />
-          </Route>
+              <Route path="/master/local/donors" element={<LocalDonor />} />
+            </Route>
 
-          <Route path="treatment">
-            <Route index element={<Navigate to="history" />} />
+            {/* <Route path={EMasterDashboardTabPaths.Global} element={<Global />} /> */}
+            <Route path={EMasterDashboardTabPaths.Global} element={<Global />}>
+              <Route index element={<Navigate to={"user"} />} />
+              <Route path="global" element={<Global />} />
+              <Route path="branch" element={<Branch />} />
+              <Route path="doctors" element={<GlobalConsultantDoctor />} />
+              <Route path="user" element={<User />} />
+            </Route>
 
-            {/* <Route path="history" element={<HistoryTreatment />} /> */}
-          </Route>
-
-          <Route path="billings">
-            <Route index element={<Navigate to="Patientbillings" />} />
-
-            <Route path="Patientbillings" element={<PatientBillings />} />
-            <Route index element={<Navigate to="BillingsTransactions" />} />
-            <Route path="BillingsTransactions" element={<BillingsTransactions />} />
-          </Route>
-          <Route path="pharmacy">
-            <Route index element={<Navigate to="PharmacyTransactions" />} />
-            <Route path="Pharmacy-transactions" element={<PharmacyTransactions />} />
-            <Route path="internal-transfers" element={<InternalTransfers />} />
-            <Route path="expiring-stocks" element={<ExpiringStocks />} />
-            <Route path="pharmacy-reports" element={<PharmacyReport />} />
-            <Route path="purchase-order-reports" element={<PurchaseOrderReports />} />
-            <Route path="sale-by-schedule-reports" element={<SaleBySchedule />} />
-            <Route path="internal-consumption-reports" element={<InternalConsumptionReports />} />
-            <Route path="drugs-and-vendors-reports" element={<DrugsAndVendorReports />} />
-            <Route path="patient-return-reports" element={<PatientReturnReports />} />
-            <Route path="stock-summary-reports" element={<StockSummaryReports />} />
-            <Route path="expiry-details" element={<ExpiryDetails />} />
-            <Route path="critical-stocks" element={<CriticalStocksReport />} />
+            <Route path={EMasterDashboardTabPaths.ServiceData} element={<ServiceData />}>
+              <Route index element={<Navigate to={"investigation"} />} />
+              <Route path="investigation" element={<MasterInvestigations />} />
+              <Route path="procedure" element={<MastersProcedures />} />
+              <Route path="service" element={<MasterService />} />
+              {/* <Route path="packages" element={<MasterPackages />} /> */}
+              <Route path="cycle">
+                <Route index element={<Navigate to={"items"} />} />
+                <Route path="items" element={<MasterCycleItems />} />
+                <Route path="stages" element={<MasterCycleStages />} />
+                <Route path="consumables" element={<MasterCycleConsumables />} />
+              </Route>
+              <Route path="cryo-preservation" element={<MasterCryoPreservation />} />
+              <Route path="packages" element={<MasterPackages />} />
+            </Route>
           </Route>
         </Route>
+
+        <Route
+          path="analytics"
+          element={
+            <ProtectedRoute allowedRoles={[EUserRole.Admin]} navigateTo={"/not-authorized"} />
+          }
+        >
+          <Route element={<AnalyticsDashboard />}>
+            <Route index element={<Navigate to="appointment" />} />
+
+            <Route path="appointment">
+              <Route index element={<Navigate to="previous-appointment" />} />
+
+              <Route path="previous-appointment" element={<PreviousAppointments />} />
+
+              <Route index element={<Navigate to="upcoming-appointment" />} />
+              <Route path="upcoming-appointment" element={<UpcomingAppointments />} />
+            </Route>
+
+            <Route path="patient">
+              <Route index element={<Navigate to="patients" />} />
+              <Route path="donors" element={<Donors />} />
+            </Route>
+
+            <Route path="billings">
+              <Route index element={<Navigate to="Patientbillings" />} />
+              <Route path="Patientbillings" element={<PatientBillings />} />
+              <Route path="BillingsTransactions" element={<BillingsTransactions />} />
+              <Route path="RefundReports" element={<RefundsReport />} />
+            </Route>
+
+            <Route path="pharmacy">
+              <Route index element={<Navigate to="PharmacyTransactions" />} />
+              <Route path="Pharmacy-transactions" element={<PharmacyTransactions />} />
+              <Route path="internal-transfers" element={<InternalTransfers />} />
+              <Route path="expiring-stocks" element={<ExpiringStocks />} />
+              <Route path="pharmacy-reports" element={<PharmacyReport />} />
+              <Route path="purchase-order-reports" element={<PurchaseOrderReports />} />
+              <Route path="sale-by-schedule-reports" element={<SaleBySchedule />} />
+              <Route path="internal-consumption-reports" element={<InternalConsumptionReports />} />
+              <Route path="drugs-and-vendors-reports" element={<DrugsAndVendorReports />} />
+              <Route path="patient-return-reports" element={<PatientReturnReports />} />
+              <Route path="stock-summary-reports" element={<StockSummaryReports />} />
+              <Route path="expiry-details" element={<ExpiryDetails />} />
+              <Route path="critical-stocks" element={<CriticalStocksReport />} />
+            </Route >
+          </Route >
+          <Route path="not-authorized" element={<NoPermission />} />
+
+          <Route path="*" element={<Navigate to="/" />} />
+        </Route >
       </Route>
-
-      <Route path="not-authorized" element={<NoPermission />} />
-
-      <Route path="*" element={<Navigate to="/" />} />
     </Route>
-  </SentryRoutes>
+  </SentryRoutes >
 );
 
 export default AppRoutes;

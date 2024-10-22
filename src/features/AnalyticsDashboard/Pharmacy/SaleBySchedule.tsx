@@ -8,6 +8,7 @@ import { useGetSalesByScheduleQuery } from "../../../services/analyticsDashboard
 import _ from "lodash";
 import { format } from "date-fns";
 import CustomeDateRangePicker from "../../../components/CustomDateRangePicker/CustomDateRangePicker";
+import { formatToIndianCurrencyFormat } from "../../../utils/formatToIndianCurrencyFormat";
 
 // Utility function to convert date to UTC before sending it to the API
 const toUTCDateOnly = (date: Date | null, isEndDate = false) => {
@@ -104,7 +105,7 @@ const SaleBySchedule: React.FC = () => {
           batchNum: record.batchNum || "",
           expiryDate: record.expiryDate ? format(new Date(record.expiryDate), "dd/MM/yyyy") : "",
           quantity: record.quantity || "",
-          billAmount: record.billAmount || "",
+          billAmount: formatToIndianCurrencyFormat(record.billAmount || ""),
         };
       });
 
@@ -138,7 +139,12 @@ const SaleBySchedule: React.FC = () => {
       valueFormatter: (params) => formatDate(params.value),
     },
     { field: "quantity", headerName: "Quantity", flex: 1 },
-    { field: "billAmount", headerName: "Bill Amount", flex: 1 },
+    {
+      field: "billAmount",
+      headerName: "Bill Amount",
+      flex: 1,
+      valueFormatter: (params) => formatToIndianCurrencyFormat(params.value),
+    },
   ];
 
   const rows = data?.data?.records || [];

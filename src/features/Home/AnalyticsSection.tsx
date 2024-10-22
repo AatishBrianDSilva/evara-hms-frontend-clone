@@ -40,7 +40,9 @@ const AnalyticsSection: React.FC<AnalyticsSectionProps> = ({ startDate, endDate 
 
   const billingBadges = summaryData?.billing.badges || [];
   const statusBadges = billingBadges
-    .filter((badge) => badge.label === "Paid" || badge.label === "Pending")
+    .filter(
+      (badge) => badge.label === "Paid" || badge.label === "Pending" || badge.label === "Refunded"
+    )
     .map((badge) => ({
       ...badge,
       count: formatToIndianCurrencyFormat(badge.count),

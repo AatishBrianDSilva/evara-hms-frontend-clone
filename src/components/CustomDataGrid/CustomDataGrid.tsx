@@ -36,6 +36,7 @@ interface CustomDataGridProps {
   onSelectionChange?: (selectedIds: (string | number)[]) => void; // New prop for handling selection changes
   extendedPageSizeOptions?: Array<number | { label: string; value: number }>; // Optional prop for extended page sizes
   paginationMode?: "server" | "client"; // Optional pagination mode prop
+  pageCount?: number; // New prop for total pages
 }
 
 interface CustomToolbarProps {
@@ -87,6 +88,7 @@ const CustomDataGrid: React.FC<CustomDataGridProps> = ({
   showGridToolBar = false, // Default to true
   onSelectionChange,
   getRowId,
+  pageCount,
   paginationMode = "server", // Default to client pagination
   ...rest
 }) => {
@@ -111,6 +113,7 @@ const CustomDataGrid: React.FC<CustomDataGridProps> = ({
         toolbar: { onAdd },
       }}
       rowCount={totalRows || 0} // Use 0 as a default value
+      // pageCount={pageCount || Math.ceil((totalRows || 0) / (pageSize || 25))}
       columns={responsiveColumns}
       rows={rows}
       getRowId={getRowId}
@@ -147,7 +150,7 @@ const CustomDataGrid: React.FC<CustomDataGridProps> = ({
           pageSize: pageSize || 25, // Default page size
         },
         onPaginationModelChange: (model) => {
-          if (onPageChange) onPageChange(model.page + 1);
+          if (onPageChange) onPageChange(model.page + 1); // Convert back to one-based index
           if (onPageSizeChange) onPageSizeChange(model.pageSize);
         },
       })}
