@@ -304,21 +304,6 @@ const PatientBillings: React.FC = () => {
           </Select>
         </FormControl>
         <FormControl variant="outlined" size="small">
-          <InputLabel>Payment Method</InputLabel>
-          <Select
-            label="Payment Method"
-            value={selectedMethod}
-            onChange={handleMethodChange}
-            style={{ minWidth: 150 }}
-          >
-            {Object.values(EPaymentMethod).map((method) => (
-              <MenuItem key={method} value={method}>
-                {method}
-              </MenuItem>
-            ))}
-          </Select>
-        </FormControl>
-        <FormControl variant="outlined" size="small">
           <InputLabel>Status</InputLabel>
           <Select
             label="Status"
