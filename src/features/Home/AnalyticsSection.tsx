@@ -86,7 +86,7 @@ const AnalyticsSection: React.FC<AnalyticsSectionProps> = ({ startDate, endDate 
               mainValue={formatToIndianCurrencyFormat(summaryData?.billing.totalBillings || 0)}
               badgesData={statusBadges}
               paymentBadgesData={paymentBadges}
-              linkUrl="/analytics/billings/Patientbillings"
+              linkUrl="/analytics/billings/patient-billings"
             />
             <AnalyticsPharmacyCard
               title="Pharmacy"

@@ -19,6 +19,7 @@ import {
   Analytics,
   Diversity1,
   LocalPharmacy,
+  Logout,
   Settings,
 } from "@mui/icons-material";
 import { useLocation, useNavigate } from "react-router-dom";
@@ -28,7 +29,7 @@ import { handlePersistorPurge, RootState } from "../../app/store";
 import _, { debounce } from "lodash";
 import { useGetPatientsQuery } from "../../services/patientsApi";
 import PatientCard from "../PatientCard/PatientCard";
-import { CircularProgress, Popover } from "@mui/material";
+import { CircularProgress, ListItemIcon, Popover } from "@mui/material";
 import { calculateAge } from "../../utils/calculateAge";
 import * as Sentry from "@sentry/react";
 import { ENVIRONMENT } from "../../utils/apiConfig";
@@ -181,6 +182,26 @@ const DesktopHeader: React.FC = () => {
       open={isMenuOpen}
       onClose={handleMenuClose}
     >
+      <Box sx={{ padding: "10px" }}>
+        <Typography
+          sx={{
+            padding: "10px",
+            fontSize: "16px",
+            color: "primary.main",
+          }}
+        >
+          Name: {_.upperFirst(user?.username)}
+        </Typography>
+        <Typography
+          sx={{
+            padding: "10px",
+            fontSize: "16px",
+            color: "secondary.main",
+          }}
+        >
+          Role: {_.upperFirst(user?.role)}
+        </Typography>
+      </Box>
       <MenuItem
         onClick={() => {
           dispatch(clearCredentials());
@@ -191,6 +212,10 @@ const DesktopHeader: React.FC = () => {
           window.location.reload();
         }}
       >
+
+        <ListItemIcon>
+          <Logout />
+        </ListItemIcon>
         Logout
       </MenuItem>
     </Menu>

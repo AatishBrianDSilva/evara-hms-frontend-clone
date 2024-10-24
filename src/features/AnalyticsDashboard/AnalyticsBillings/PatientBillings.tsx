@@ -167,6 +167,18 @@ const PatientBillings: React.FC = () => {
     0
   );
 
+  // Calculate the total discount
+  const processedBillingIds = new Set<string>();
+  const totalDiscount = patientBillingsData.reduce((sum, row) => {
+    const billingId = (row as any).billingId;
+    // Check if the discount for this billing ID has already been added
+    if (!processedBillingIds.has(billingId)) {
+      processedBillingIds.add(billingId); // Mark this billing ID as processed
+      return roundToTwo(sum + roundToTwo((row as any).discount));
+    }
+    return sum;
+  }, 0);
+
   // Handle CSV download
   const handleDownloadCSV = () => {
     if (patientBillingsData.length > 0) {
@@ -304,6 +316,21 @@ const PatientBillings: React.FC = () => {
           </Select>
         </FormControl>
         <FormControl variant="outlined" size="small">
+          <InputLabel>Payment Method</InputLabel>
+          <Select
+            label="Payment Method"
+            value={selectedMethod}
+            onChange={handleMethodChange}
+            style={{ minWidth: 150 }}
+          >
+            {Object.values(EPaymentMethod).map((method) => (
+              <MenuItem key={method} value={method}>
+                {method}
+              </MenuItem>
+            ))}
+          </Select>
+        </FormControl>
+        <FormControl variant="outlined" size="small">
           <InputLabel>Status</InputLabel>
           <Select
             label="Status"
@@ -376,6 +403,14 @@ const PatientBillings: React.FC = () => {
             </Typography>
             <Typography variant="body1" color="textSecondary">
               {formatToIndianCurrencyFormat(totalDues)}
+            </Typography>
+          </Box>
+          <Box display="flex" justifyContent="space-between" width="100%">
+            <Typography variant="h6" fontWeight="bold">
+              Total Discount
+            </Typography>
+            <Typography variant="body1" color="textSecondary">
+              {formatToIndianCurrencyFormat(totalDiscount)}
             </Typography>
           </Box>
         </Box>

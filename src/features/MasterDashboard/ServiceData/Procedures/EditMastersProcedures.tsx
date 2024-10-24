@@ -107,6 +107,16 @@ const EditMasterProcedure: React.FC<EditMasterProcedureProps> = ({
         ) : (
           <Box component={"form"} onSubmit={formik.handleSubmit} p={2}>
             <Grid container spacing={2} mb={2} mt={2}>
+              <Grid item lg={12}>
+                <TextField
+                  fullWidth
+                  // id="itemName"
+                  disabled
+                  name="masterService"
+                  label="Master Procedure"
+                  value={data?.procedure.procedureName}
+                />
+              </Grid>
               <Grid item lg={4}>
                 <TextField
                   fullWidth

@@ -43,9 +43,17 @@ const MasterProcedures: React.FC = () => {
     {
       field: "id",
       headerName: "ID",
-      flex: 1,
+      flex: 0.5,
       valueGetter(params) {
         return `${params.row?.procedure?.procedureId}`;
+      },
+    },
+    {
+      field: "masterProcedureName",
+      headerName: "Master Procedure",
+      flex: 1,
+      valueGetter(params) {
+        return `${params.row?.procedure?.procedureName}`;
       },
     },
     {
@@ -66,10 +74,10 @@ const MasterProcedures: React.FC = () => {
       valueFormatter: (params) =>
         params.value
           ? new Intl.DateTimeFormat("en-GB", {
-              day: "2-digit",
-              month: "2-digit",
-              year: "numeric",
-            }).format(new Date(params.value))
+            day: "2-digit",
+            month: "2-digit",
+            year: "numeric",
+          }).format(new Date(params.value))
           : null,
     },
     {

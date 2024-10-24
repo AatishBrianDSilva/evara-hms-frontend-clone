@@ -106,6 +106,15 @@ const BillingsEstimations: React.FC = () => {
   const [addBillingMutation, { isLoading: isAddBillingMutationLoading }] = useAddBillingMutation();
 
   const columnsConfig: GridColDef[] = [
+
+    {
+      field: "date",
+      headerName: "Date",
+      valueGetter(params) {
+        return params.row.createdAt ? new Date(params.row.createdAt).toLocaleDateString() : "";
+      },
+      flex: 1,
+    },
     {
       field: "serviceName",
       headerName: "Item",

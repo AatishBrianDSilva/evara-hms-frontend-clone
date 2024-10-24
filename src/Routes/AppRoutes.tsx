@@ -377,6 +377,57 @@ const AppRoutes: React.FC = () => (
 
             <Route path="billings">
               <Route index element={<Navigate to="Patientbillings" />} />
+              <Route path="patient-billings" element={<PatientBillings />} />
+              <Route path="billings-transactions" element={<BillingsTransactions />} />
+              <Route path="refund-reports" element={<RefundsReport />} />
+            </Route>
+
+            <Route path="pharmacy">
+              <Route index element={<Navigate to="PharmacyTransactions" />} />
+              <Route path="Pharmacy-transactions" element={<PharmacyTransactions />} />
+              <Route path="internal-transfers" element={<InternalTransfers />} />
+              <Route path="expiring-stocks" element={<ExpiringStocks />} />
+              <Route path="pharmacy-reports" element={<PharmacyReport />} />
+              <Route path="purchase-order-reports" element={<PurchaseOrderReports />} />
+              <Route path="sale-by-schedule-reports" element={<SaleBySchedule />} />
+              <Route path="internal-consumption-reports" element={<InternalConsumptionReports />} />
+              <Route path="drugs-and-vendors-reports" element={<DrugsAndVendorReports />} />
+              <Route path="patient-return-reports" element={<PatientReturnReports />} />
+              <Route path="stock-summary-reports" element={<StockSummaryReports />} />
+              <Route path="expiry-details" element={<ExpiryDetails />} />
+              <Route path="critical-stocks" element={<CriticalStocksReport />} />
+            </Route>
+          </Route>
+          <Route path="not-authorized" element={<NoPermission />} />
+
+          <Route path="*" element={<Navigate to="/" />} />
+        </Route>
+
+        <Route
+          path="analytics"
+          element={
+            <ProtectedRoute allowedRoles={[EUserRole.Admin]} navigateTo={"/not-authorized"} />
+          }
+        >
+          <Route element={<AnalyticsDashboard />}>
+            <Route index element={<Navigate to="appointment" />} />
+
+            <Route path="appointment">
+              <Route index element={<Navigate to="previous-appointment" />} />
+
+              <Route path="previous-appointment" element={<PreviousAppointments />} />
+
+              <Route index element={<Navigate to="upcoming-appointment" />} />
+              <Route path="upcoming-appointment" element={<UpcomingAppointments />} />
+            </Route>
+
+            <Route path="patient">
+              <Route index element={<Navigate to="patients" />} />
+              <Route path="donors" element={<Donors />} />
+            </Route>
+
+            <Route path="billings">
+              <Route index element={<Navigate to="Patientbillings" />} />
               <Route path="Patientbillings" element={<PatientBillings />} />
               <Route path="BillingsTransactions" element={<BillingsTransactions />} />
               <Route path="RefundReports" element={<RefundsReport />} />

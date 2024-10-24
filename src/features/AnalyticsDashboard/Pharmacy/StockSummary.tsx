@@ -51,7 +51,7 @@ const StockSummaryReports: React.FC = () => {
         "S No",
         "Centre",
         "Drug Category",
-        "Drug Cat Code",
+        // "Drug Cat Code",
         "Drug Name",
         "Drug Code",
         "Central",
@@ -61,8 +61,8 @@ const StockSummaryReports: React.FC = () => {
         "IVF",
         "Returns",
         "Internal",
-        "Staging",
-        "Other",
+        // "Staging",
+        // "Other",
         "Total Qty",
       ];
 
@@ -71,7 +71,7 @@ const StockSummaryReports: React.FC = () => {
         serialNumber: record.serialNumber || "N/A",
         centre: record.centre || "N/A",
         drugCategory: record.drugCategory || "N/A",
-        drugCatCode: record.drugCatCode || "N/A",
+        // drugCatCode: record.drugCatCode || "N/A",
         drugName: record.drugName || "N/A",
         drugCode: record.drugCode || "N/A",
         Central: record.Central || 0, // Use field names exactly as they appear in your data
@@ -81,8 +81,8 @@ const StockSummaryReports: React.FC = () => {
         IVF: record.IVF || 0,
         Returns: record.Returns || 0,
         Internal: record.Internal || 0,
-        Staging: record.Staging || 0,
-        Other: record.Other || 0,
+        // Staging: record.Staging || 0,
+        // Other: record.Other || 0,
         totalQty: record.totalQty || 0,
       }));
 
@@ -97,7 +97,7 @@ const StockSummaryReports: React.FC = () => {
     { field: "serialNumber", headerName: "S No", flex: 0.5 },
     { field: "centre", headerName: "Centre", flex: 1 },
     { field: "drugCategory", headerName: "Drug Category", flex: 1 },
-    { field: "drugCatCode", headerName: "Drug Cat Code", flex: 1 },
+    // { field: "drugCatCode", headerName: "Drug Cat Code", flex: 1 },
     { field: "drugName", headerName: "Drug Name", flex: 1 },
     { field: "drugCode", headerName: "Drug Code", flex: 1 },
     { field: "Central", headerName: "Central", flex: 1 }, // Updated to match your field names
@@ -107,8 +107,8 @@ const StockSummaryReports: React.FC = () => {
     { field: "IVF", headerName: "IVF", flex: 1 },
     { field: "Returns", headerName: "Returns", flex: 1 },
     { field: "Internal", headerName: "Internal", flex: 1 },
-    { field: "Staging", headerName: "Staging", flex: 1 },
-    { field: "Other", headerName: "Other", flex: 1 },
+    // { field: "Staging", headerName: "Staging", flex: 1 },
+    // { field: "Other", headerName: "Other", flex: 1 },
     { field: "totalQty", headerName: "Total Qty", flex: 1 },
   ];
 
