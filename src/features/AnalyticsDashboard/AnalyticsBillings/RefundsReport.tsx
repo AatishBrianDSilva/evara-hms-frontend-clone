@@ -162,6 +162,9 @@ const RefundsReport: React.FC = () => {
       field: "reason",
       headerName: "Reason for Refund",
       flex: 2,
+      valueFormatter(params) {
+        return params.value || "N/A";
+      },
     },
     {
       field: "method",

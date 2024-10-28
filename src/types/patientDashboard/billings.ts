@@ -30,9 +30,12 @@ export enum EPaymentMethod {
 }
 
 interface PaymentDetail {
-  amount: number;
+  _id: string;
+  details: string;
   method: EPaymentMethod;
-  paymentDate?: Date;
+  type: string;
+  amount: number;
+  paymentDate: Date;
 }
 
 interface Item {

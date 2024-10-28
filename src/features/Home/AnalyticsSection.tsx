@@ -51,7 +51,7 @@ const AnalyticsSection: React.FC<AnalyticsSectionProps> = ({ startDate, endDate 
   const paymentBadges = defaultPaymentBadges.map((defaultBadge) => {
     const actualBadge = billingBadges.find((badge) => badge.label === defaultBadge.label);
     return actualBadge
-      ? { ...actualBadge, count: formatToIndianCurrencyFormat(actualBadge.count) }
+      ? { ...actualBadge, count: actualBadge.count >= 0 ? formatToIndianCurrencyFormat(actualBadge.count) : formatToIndianCurrencyFormat(0) }
       : defaultBadge;
   });
 

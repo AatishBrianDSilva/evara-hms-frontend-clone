@@ -101,7 +101,7 @@ export const PrintProvider: React.FC<{ children: React.ReactNode }> = ({ childre
     if (fileUrl) {
       const url = `${API_BASE_URL}/files/user-files/download`;
 
-      toast.info("Sending file URL to backend for processing...", {
+      toast.info("Downloading file...", {
         autoClose: false,
         toastId: "send-toast",
       });

@@ -83,6 +83,7 @@ import { purchaseOrderReportApi } from "../services/analyticsDashboardService/ph
 import { refundReportsApi } from "../services/analyticsDashboardService/billings/refundReports";
 
 import * as Sentry from "@sentry/react";
+import { revenueBreakupApi } from "../services/analyticsDashboardService/billings/revenueBreakupApi";
 
 // ...
 
@@ -154,6 +155,7 @@ const persistConfig = {
     pharmacyReportApi.reducerPath,
     purchaseOrderApi.reducerPath,
     refundReportsApi.reducerPath,
+    revenueBreakupApi.reducerPath,
     "patients",
     "appointments",
     "investigation",
@@ -229,6 +231,7 @@ const rootReducer = combineReducers({
   [pharmacyReportApi.reducerPath]: pharmacyReportApi.reducer,
   [purchaseOrderReportApi.reducerPath]: purchaseOrderReportApi.reducer,
   [refundReportsApi.reducerPath]: refundReportsApi.reducer,
+  [revenueBreakupApi.reducerPath]: revenueBreakupApi.reducer,
 
   patients: patientsReducer,
   appointments: appointmentReducer,
@@ -311,7 +314,8 @@ export const store = configureStore({
       .concat(criticalStocksApi.middleware)
       .concat(pharmacyReportApi.middleware)
       .concat(purchaseOrderReportApi.middleware)
-      .concat(refundReportsApi.middleware),
+      .concat(refundReportsApi.middleware)
+      .concat(revenueBreakupApi.middleware),
   enhancers(getDefaultEnhancers) {
     return getDefaultEnhancers().concat(sentryReduxEnhancer);
   },

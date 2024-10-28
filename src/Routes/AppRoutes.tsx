@@ -122,6 +122,7 @@ import StockSummaryReports from "../features/AnalyticsDashboard/Pharmacy/StockSu
 import ExpiryDetails from "../features/AnalyticsDashboard/Pharmacy/ExpiryDetails";
 import CriticalStocksReport from "../features/AnalyticsDashboard/Pharmacy/criticalStocks";
 import RefundsReport from "../features/AnalyticsDashboard/AnalyticsBillings/RefundsReport";
+import RevenueBreakupReport from "../features/AnalyticsDashboard/AnalyticsBillings/RevenueBreakupReport";
 
 interface ProtectedRouteProps {
   allowedRoles: string[];
@@ -380,6 +381,7 @@ const AppRoutes: React.FC = () => (
               <Route path="patient-billings" element={<PatientBillings />} />
               <Route path="billings-transactions" element={<BillingsTransactions />} />
               <Route path="refund-reports" element={<RefundsReport />} />
+              <Route path="revenue-breakup-reports" element={<RevenueBreakupReport />} />
             </Route>
 
             <Route path="pharmacy">

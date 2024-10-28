@@ -1,20 +1,24 @@
 import { createApi } from "@reduxjs/toolkit/query/react";
 
 import generateQueryParams from "../../utils/generateQueryParams";
-import { ApiResponse, IQueryOptions, PaginatedResponse } from "../../types/global";
+import {
+  ApiResponse,
+  IQueryOptions,
+  PaginatedResponse,
+} from "../../types/global";
 import { IPatientPharmacy } from "../../types/patientDashboard/patientPharmacy";
 import { baseQuery } from "../baseQuery";
 
 interface AddPatientPharmacyPayload {
   doctor: string | null | undefined;
   date: Date | null | undefined;
+  location: string | null | undefined;
   items: {
     stock: string | null | undefined;
-    details: {
-      location: string | null | undefined;
-      quantity: number;
-      batchNumber: string | null | undefined;
-    }[];
+    quantity: number;
+    batchNumber: string | null | undefined;
+    // details: {
+    // }[];
   }[];
   patient: string;
 }
@@ -34,13 +38,19 @@ export const patientPharmacyApi = createApi({
       },
       providesTags: (_result, _error, _args) => ["PatientPharmacy"],
     }),
-    getPatientPharmacyById: builder.query<ApiResponse<IPatientPharmacy>, string>({
+    getPatientPharmacyById: builder.query<
+      ApiResponse<IPatientPharmacy>,
+      string
+    >({
       query: (id: string) => {
         return { url: `pharmacy/patient/${id}`, method: "GET" };
       },
       providesTags: (_result, _error, id) => [{ type: "PatientPharmacy", id }],
     }),
-    addPatientPharmacy: builder.mutation<ApiResponse<IPatientPharmacy>, AddPatientPharmacyPayload>({
+    addPatientPharmacy: builder.mutation<
+      ApiResponse<IPatientPharmacy>,
+      AddPatientPharmacyPayload
+    >({
       query: (patientPharmacyData) => ({
         url: "pharmacy/add",
         method: "POST",

@@ -61,7 +61,6 @@ const AddEstimations: React.FC<addEstimationProps> = ({ openModal, onClose }) =>
   const masterServices = masterServicesData?.data || [];
   const isMasterServicesLoading = masterServicesLoading || masterServicesFetching;
 
-  console.log("Master services", masterServices);
 
   const initialValues: FormValues = {
     serviceType: null,
@@ -116,7 +115,7 @@ const AddEstimations: React.FC<addEstimationProps> = ({ openModal, onClose }) =>
   const handleAddFields = () => {
     formik.setFieldValue("items", [
       ...formik.values.items,
-      { masterServiceId: null, doctor: null, date: isAdmin ? null : new Date() },
+      { masterServiceId: null, doctor: formik.values.items[formik.values.items.length - 1].doctor, date: formik.values.items[formik.values.items.length - 1].date },
     ]);
   };
 

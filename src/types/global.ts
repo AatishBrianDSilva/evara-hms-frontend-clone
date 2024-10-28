@@ -23,7 +23,7 @@ export interface IQueryOptions {
   conditions?: Record<string, any>; // Specific rules
   searchQuery?: string;
   locationQuery?: string;
-  dateRange?: { startDate: string; endDate: string };
+  dateRange?: { startDate: string | undefined; endDate: string | undefined };
 }
 
 export interface IPagination {

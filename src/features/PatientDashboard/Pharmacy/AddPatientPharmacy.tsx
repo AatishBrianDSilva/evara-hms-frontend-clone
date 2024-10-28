@@ -1,8 +1,7 @@
-import React, { useCallback } from "react";
+import React, { useCallback, useEffect } from "react";
 import {
   Box,
   Button,
-  Divider,
   Grid,
   IconButton,
   Modal,
@@ -29,6 +28,7 @@ import Delete from "@mui/icons-material/Delete";
 import Add from "@mui/icons-material/Add";
 import { IDrugLocation } from "../../../types/pharmacyDashboard/master";
 import { formatToIndianCurrencyFormat } from "../../../utils/formatToIndianCurrencyFormat";
+import { useGetDrugLocationsQuery } from "../../../services/pharmacyDashboardService/master/drugLocationApi";
 
 type SummaryEntry = {
   name: string;
@@ -48,14 +48,12 @@ interface AddPatientPharmacyProps {
 
 interface IFormValues {
   doctor: IDoctor | null;
+  location: IDrugLocation | null;
   date: Date | null;
   items: {
     stock: IPharmacyStock | null;
-    details: {
-      location: IDrugLocation | null;
-      batchNumber: string | null;
-      quantity: number;
-    }[];
+    batchNumber: string | null;
+    quantity: number;
   }[];
 }
 
@@ -70,23 +68,26 @@ const AddPatientPharmacy: React.FC<AddPatientPharmacyProps> = ({
 
   const [addPharmacy, { isLoading }] = useAddPatientPharmacyMutation();
 
+  const [stocksByLocation, setStocksByLocation] = React.useState<IPharmacyStock[]>([]);
+
+  const { data, isLoading: druglocationLoading, isFetching: druglocationFetching } = useGetDrugLocationsQuery({
+    paginate: false
+  })
+
+  const locations = data?.data?.records || [];
+
   const handleFormSubmit = async (values: IFormValues) => {
-    console.log("values", values);
 
     const payload = {
       patient: patientId,
       doctor: values.doctor?._id,
+      location: values.location?._id,
       date: values.date,
       items: values.items.map((item) => {
         return {
           stock: item.stock?._id,
-          details: item.details.map((detail) => {
-            return {
-              location: detail.location?._id,
-              batchNumber: detail.batchNumber,
-              quantity: detail.quantity,
-            };
-          }),
+          batchNumber: item.batchNumber,
+          quantity: item.quantity,
         };
       }),
     };
@@ -113,16 +114,12 @@ const AddPatientPharmacy: React.FC<AddPatientPharmacyProps> = ({
   const initialValues: IFormValues = {
     doctor: null,
     date: new Date(),
+    location: null,
     items: [
       {
         stock: null,
-        details: [
-          {
-            location: null,
-            quantity: 0,
-            batchNumber: null,
-          },
-        ],
+        quantity: 0,
+        batchNumber: null,
       },
     ],
   };
@@ -133,13 +130,35 @@ const AddPatientPharmacy: React.FC<AddPatientPharmacyProps> = ({
     validationSchema: addPatientPharmacyValidationSchema,
   });
 
+  useEffect(() => {
+    if (!formik.values.location) {
+      formik.setFieldValue("items", [
+        {
+          stock: null,
+          quantity: 0,
+          batchNumber: null,
+        }
+      ]
+      );
+    } else {
+      const stocksBasedOnLocation = pharmacyStocks.filter((stock) =>
+        stock.locations.some((location) =>
+          location.location._id === formik.values.location?._id && location.quantity > 0
+        )
+      );
+      setStocksByLocation(stocksBasedOnLocation);
+    }
+  }, [formik.values.location]);
+
+
+
   const closeModal = () => {
     formik.resetForm();
     onClose();
   };
 
   const getFieldErrorAndTouched = useCallback(
-    (index: number, fieldName: "stock" | "details") => {
+    (index: number, fieldName: "stock" | "quantity" | "batchNumber") => {
       // Ensure that we're working with the correct structure
       const initialValues = formik.initialValues.items[index];
 
@@ -161,14 +180,9 @@ const AddPatientPharmacy: React.FC<AddPatientPharmacyProps> = ({
     formik.setFieldValue("items", [
       ...formik.values.items,
       {
-        stock: null,
-        details: [
-          {
-            location: null,
-            batchNumber: null,
-            quantity: null,
-          },
-        ],
+        stock: formik.values.items[formik.values.items.length - 1].stock,
+        batchNumber: null,
+        quantity: null,
       },
     ]);
   };
@@ -179,38 +193,39 @@ const AddPatientPharmacy: React.FC<AddPatientPharmacyProps> = ({
     formik.setFieldValue("items", newFields);
   };
 
-  const handleAddStockDetails = (index: number) => {
-    const newFields = [...formik.values.items];
-    newFields[index].details.push({
-      location: null,
-      batchNumber: null,
-      quantity: 0,
-    });
-    formik.setFieldValue("items", newFields);
-  };
+  // const handleAddStockDetails = (index: number) => {
+  //   const newFields = [...formik.values.items];
+  //   newFields[index].details.push({
+  //     batchNumber: null,
+  //     quantity: 0,
+  //   });
+  //   formik.setFieldValue("items", newFields);
+  // };
 
-  const handleDeleteStockDetails = (index: number, detailIndex: number) => {
-    const newFields = [...formik.values.items];
-    newFields[index].details.splice(detailIndex, 1);
-    formik.setFieldValue("items", newFields);
-  };
+  // const handleDeleteStockDetails = (index: number, detailIndex: number) => {
+  //   const newFields = [...formik.values.items];
+  //   newFields[index].details.splice(detailIndex, 1);
+  //   formik.setFieldValue("items", newFields);
+  // };
 
   const calculateSummary = () => {
     const summary = formik.values.items.reduce<SummaryEntry[]>((acc, item) => {
-      if (!item.stock || item.details.length === 0) return acc;
+      if (!item.stock) return acc;
 
-      const totalQuantity = item.details.reduce((sum, detail) => sum + (detail.quantity || 0), 0);
+      const totalQuantity = item.quantity || 0;
+      const batchNumber = item.batchNumber ? `, ${item.batchNumber}` : "";
 
       if (item.stock && item.stock.item) {
         const existingItem = acc.find((i) => i.name === item?.stock?.item.name);
         if (existingItem) {
           existingItem.quantity += totalQuantity;
+          existingItem.batchNumber = existingItem.batchNumber + batchNumber;
         } else {
           const pricePerUnit = item.stock.sellPrice / item.stock.item.packSize;
           const data = {
             name: item.stock.item.name,
             quantity: totalQuantity,
-            batchNumber: item.details.map((detail) => detail.batchNumber).join(", "),
+            batchNumber: item.batchNumber || "",
             price: pricePerUnit || 0,
             total: pricePerUnit * totalQuantity,
           };
@@ -275,6 +290,7 @@ const AddPatientPharmacy: React.FC<AddPatientPharmacyProps> = ({
     );
   };
 
+
   return (
     <Modal open={openModal} onClose={closeModal}>
       <Box
@@ -335,6 +351,31 @@ const AddPatientPharmacy: React.FC<AddPatientPharmacyProps> = ({
                   helperText={formik.touched.doctor && formik.errors.doctor}
                 />
               </Grid>
+              <Grid item lg={3}>
+                <FieldAutocomplete
+                  options={locations}
+                  loading={druglocationLoading || druglocationFetching}
+                  getOptionLabel={(option) => {
+                    if (typeof option === "string") {
+                      return option;
+                    }
+                    return option?.location;
+                  }}
+                  isOptionEqualToValue={(option, value) => {
+                    return option?._id === value?._id;
+                  }}
+                  value={formik.values.location}
+                  onChange={(newValue) => {
+                    formik.setFieldValue(
+                      `location`,
+                      newValue
+                    );
+                  }}
+                  label="Location"
+                  error={formik.touched.location && Boolean(formik.errors.location)}
+                  helperText={formik.touched.location && formik.errors.location}
+                />
+              </Grid>
             </Grid>
 
             <Typography variant="subtitle1" color={"primary"} mt={2}>
@@ -343,6 +384,20 @@ const AddPatientPharmacy: React.FC<AddPatientPharmacyProps> = ({
             {formik.values.items.map((_field: any, index: number) => {
               const { isError: isStockError, errorMessage: stockErrorMessage } =
                 getFieldErrorAndTouched(index, "stock");
+              const { isError: isBatchError, errorMessage: batchErrorMessage } =
+                getFieldErrorAndTouched(index, "batchNumber");
+              const { isError: isQuantityError, errorMessage: quantityErrorMessage } =
+                getFieldErrorAndTouched(index, "quantity");
+
+              const drugBatches = formik.values.items[index].stock?.locations.filter(
+                (location) => location.location._id === formik.values.location?._id
+              )[0]?.batches || [];
+
+
+              const maxQuantity =
+                drugBatches.find((batch) => batch.batchNo === formik.values.items[index].batchNumber)
+                  ?.quantity || 0;
+              const quantityLabel = `Quantity (Max: ${maxQuantity})`;
 
               const isLastItem = index === formik.values.items.length - 1;
               const onlyOneItem = formik.values.items.length === 1;
@@ -353,25 +408,15 @@ const AddPatientPharmacy: React.FC<AddPatientPharmacyProps> = ({
                     {/* Abstracted Autocomplete for Items */}
                     <Grid item lg={4}>
                       <FieldAutocomplete
-                        options={pharmacyStocks}
+                        options={stocksByLocation}
                         getOptionLabel={(option) => option?.item?.name || ""}
-                        filterOptions={(options, params) => {
-                          const inputValue = params.inputValue.toLowerCase();
-                          return options.filter((option) => {
-                            const optionLabel = option?.item?.name.toLowerCase();
-                            return (
-                              optionLabel.includes(inputValue) &&
-                              !formik.values.items.some((item) => item.stock?._id === option._id)
-                            );
-                          });
-                        }}
                         isOptionEqualToValue={(option, value) => option._id === value._id}
                         value={formik.values.items[index].stock}
                         onChange={(newValue) => {
                           formik.setFieldValue(`items[${index}].stock`, newValue);
                           formik.setFieldValue(`items[${index}].details`, [
                             {
-                              location: newValue?.location || null,
+                              // location: newValue?.location || null,
                               quantity: 0,
                               batchNumber: null,
                             },
@@ -382,6 +427,72 @@ const AddPatientPharmacy: React.FC<AddPatientPharmacyProps> = ({
                         helperText={isStockError ? stockErrorMessage : ""}
                       />
                     </Grid>
+
+                    <Grid item lg={2}>
+                      <FieldAutocomplete
+                        disabled={!formik.values.location}
+                        options={drugBatches}
+                        getOptionLabel={(option) => {
+                          return option?.batchNo ? option?.batchNo : option;
+                        }}
+                        isOptionEqualToValue={(option, value) => {
+                          return option.batchNo == value;
+                        }}
+                        filterOptions={(options, params) => {
+                          const inputValue = params.inputValue.toLowerCase();
+                          const currentStockId = formik.values.items[index].stock?._id;
+
+                          return options.filter((option) => {
+                            const optionLabel = option?.batchNo.toLowerCase();
+
+                            // Check if the batch number is already selected for the same stock
+                            const isBatchSelectedForSameStock = formik.values.items.some(
+                              (item) =>
+                                item.stock?._id === currentStockId && item.batchNumber === option.batchNo
+                            );
+
+                            return (
+                              optionLabel.includes(inputValue) && !isBatchSelectedForSameStock
+                            );
+                          });
+                        }}
+                        value={formik.values.items[index].batchNumber}
+                        onChange={(newValue) => {
+                          formik.setFieldValue(
+                            `items[${index}].batchNumber`,
+                            newValue?.batchNo
+                          );
+                        }}
+                        label="Batch No"
+                        error={isBatchError}
+                        helperText={isBatchError ? batchErrorMessage : ""}
+                      />
+                    </Grid>
+                    <Grid item lg={2}>
+                      <TextField
+                        fullWidth
+                        disabled={maxQuantity === 0}
+                        label={quantityLabel}
+                        type="number"
+                        name={`items[${index}].quantity`}
+                        value={formik.values.items[index].quantity || ""}
+                        onChange={(e) => {
+                          const inputValue = Number(e.target.value);
+                          const limitedValue = Math.min(inputValue, maxQuantity); // Restrict to maxQuantity
+                          formik.setFieldValue(`items[${index}].quantity`, limitedValue);
+                        }}
+                        InputProps={{
+                          inputProps: {
+                            min: 1,
+                            max: maxQuantity,
+                          },
+                        }}
+                        error={isQuantityError}
+                        helperText={isQuantityError && quantityErrorMessage}
+                      />
+                    </Grid>
+
+
                     {/* Dynamic Add/Delete Buttons */}
                     <Grid
                       item
@@ -401,146 +512,14 @@ const AddPatientPharmacy: React.FC<AddPatientPharmacyProps> = ({
                           color="primary"
                           onClick={handleAddStock}
                           disabled={formik.values.items.some(
-                            (item) => !item.stock || !item.details
+                            (item) => !item.stock || !item.quantity || !item.batchNumber
                           )}
                         >
                           <Add fontSize={"small"} />
                         </IconButton>
                       )}
                     </Grid>
-
-                    {formik.values.items[index].stock &&
-                      formik.values.items[index].details.map((detail, detailIndex) => {
-                        const locations = formik.values.items[index].stock?.locations || [];
-                        const drugBatches =
-                          locations.find(
-                            (location) => location.location._id === detail.location?._id
-                          )?.batches || [];
-
-                        const maxQuantity =
-                          drugBatches.find((batch) => batch.batchNo === detail.batchNumber)
-                            ?.quantity || 0;
-                        const quantityLabel = `Quantity (Max: ${maxQuantity})`;
-
-                        const onlyOneDetail = formik.values.items[index].details.length === 1;
-                        const isLastDetail =
-                          detailIndex === formik.values.items[index].details.length - 1;
-
-                        return (
-                          <Grid
-                            container
-                            gap={1}
-                            key={detailIndex}
-                            mt={1}
-                            justifyContent={"center"}
-                          >
-                            <Grid item lg={3}>
-                              <FieldAutocomplete
-                                options={locations}
-                                getOptionLabel={(option) => {
-                                  if (option?.location?.location) {
-                                    return option?.location?.location;
-                                  } else {
-                                    return option?.location;
-                                  }
-                                }}
-                                isOptionEqualToValue={(option, value) => {
-                                  return option?.location?._id === value?._id;
-                                }}
-                                // filterOptions={(options, _params) => {
-                                //   return options.filter(option => {
-                                //     return !formik.values.items[index].details.some(detail => detail.location?._id === option.location?._id)
-                                //   })
-                                // }}
-                                value={formik.values.items[index].details[detailIndex].location}
-                                onChange={(newValue) => {
-                                  console.log("New Value", newValue?.location);
-                                  formik.setFieldValue(
-                                    `items[${index}].details[${detailIndex}].location`,
-                                    newValue?.location
-                                  );
-                                }}
-                                label="Location"
-                                error={isStockError}
-                                helperText={isStockError ? stockErrorMessage : ""}
-                              />
-                            </Grid>
-                            <Grid item lg={2}>
-                              <FieldAutocomplete
-                                disabled={!formik.values.items[index].details[detailIndex].location}
-                                options={drugBatches}
-                                getOptionLabel={(option) => {
-                                  return option?.batchNo ? option?.batchNo : option;
-                                }}
-                                isOptionEqualToValue={(option, value) => {
-                                  return option.batchNo == value;
-                                }}
-                                value={formik.values.items[index].details[detailIndex].batchNumber}
-                                onChange={(newValue) => {
-                                  formik.setFieldValue(
-                                    `items[${index}].details[${detailIndex}].batchNumber`,
-                                    newValue?.batchNo
-                                  );
-                                }}
-                                label="Batch No"
-                                error={isStockError}
-                                helperText={isStockError ? stockErrorMessage : ""}
-                              />
-                            </Grid>
-                            <Grid item lg={2}>
-                              <TextField
-                                fullWidth
-                                disabled={maxQuantity === 0}
-                                label={quantityLabel}
-                                type="number"
-                                name={`items[${index}].details[${detailIndex}].quantity`}
-                                value={
-                                  formik.values.items[index].details[detailIndex].quantity || ""
-                                }
-                                onChange={formik.handleChange}
-                                InputProps={{
-                                  inputProps: {
-                                    min: 1,
-                                    max: maxQuantity,
-                                  },
-                                }}
-                              />
-                            </Grid>
-                            {/* Dynamic Add/Delete Buttons */}
-                            <Grid
-                              item
-                              lg={1}
-                              display={"flex"}
-                              justifyContent={"flex-start"}
-                              alignItems={"flex-start"}
-                            >
-                              {!onlyOneDetail && (
-                                <IconButton
-                                  size="small"
-                                  onClick={() => handleDeleteStockDetails(index, detailIndex)}
-                                >
-                                  <Delete fontSize={"small"} />
-                                </IconButton>
-                              )}
-                              {isLastDetail && (
-                                <IconButton
-                                  size="small"
-                                  color="primary"
-                                  onClick={() => handleAddStockDetails(index)}
-                                  disabled={formik.values.items[index].details.some(
-                                    (detail) =>
-                                      !detail.location || !detail.batchNumber || !detail.quantity
-                                  )}
-                                >
-                                  <Add fontSize={"small"} />
-                                </IconButton>
-                              )}
-                            </Grid>
-                          </Grid>
-                        );
-                      })}
                   </Grid>
-                  <Divider />
                 </Box>
               );
             })}

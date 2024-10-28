@@ -5,7 +5,7 @@ import CustomDataGrid from "../../../../components/CustomDataGrid/CustomDataGrid
 import { GridActionsCellItem, GridColDef } from "@mui/x-data-grid";
 
 import { Chip, Skeleton, Tooltip } from "@mui/material";
-import { Payment, Print } from "@mui/icons-material";
+import { Edit, Payment, Print } from "@mui/icons-material";
 import { useGetBillingsQuery } from "../../../../services/patientDashboardService/billings/billingApi";
 import { useSelector } from "react-redux";
 import { RootState } from "../../../../app/store";
@@ -14,6 +14,7 @@ import { EPatientBillingStatus } from "../../../../types/patientDashboard/billin
 import { usePrint } from "../../../../context/PrintPDFContext";
 import { sortColumnWithStringPrefix } from "../../../../utils/column";
 import CreateRefund from "./createRefund";
+import EditBill from "./editBill";
 
 interface RowType {
   _id: string;
@@ -57,12 +58,11 @@ const BillingsPaid: React.FC = () => {
   const patientBillingsPagination = data?.data?.pagination;
   const patientBillingsLoading = isLoading || isFetching;
 
-  console.log("Paid Billings", patientBillingsPaid);
-
   const getRowId = (row: RowType) => row._id;
 
   const [selectedRow, setSelectedRow] = useState<any | undefined>();
   const [isEditModalOpen, setIsEditModalOpen] = useState<boolean>(false);
+  const [isRefundModalOpen, setIsRefundModalOpen] = useState<boolean>(false);
 
   // Edit Modal
   const openEditModal = (row: any) => {
@@ -72,6 +72,14 @@ const BillingsPaid: React.FC = () => {
   const closeEditModal = () => {
     setSelectedRow(undefined);
     setIsEditModalOpen(false);
+  };
+  const openRefundModal = (row: any) => {
+    setSelectedRow(row);
+    setIsRefundModalOpen(true);
+  };
+  const closeRefundModal = () => {
+    setSelectedRow(undefined);
+    setIsRefundModalOpen(false);
   };
 
   const columnsConfig: GridColDef[] = [
@@ -144,18 +152,25 @@ const BillingsPaid: React.FC = () => {
       getActions: (params) => {
         const row = params.row;
         return [
+          <Tooltip title="Edit Bill">
+            <GridActionsCellItem
+              icon={<Edit />}
+              label="Edit"
+              onClick={() => openEditModal(row)}
+            />
+          </Tooltip>,
           <Tooltip title="Apply Refund">
             <GridActionsCellItem
               icon={<Payment />}
-              label="Edit"
-              onClick={() => openEditModal(row)}
+              label="Refund"
+              onClick={() => openRefundModal(row)}
             />
           </Tooltip>,
           <GridActionsCellItem
             icon={<Print />}
             label="Print"
             onClick={() => fetchAndPrintPdf(row._id)}
-            // onClick={() => openPrintModal(row)}
+          // onClick={() => openPrintModal(row)}
           />,
         ];
       },
@@ -207,8 +222,11 @@ const BillingsPaid: React.FC = () => {
         enablePagination={true}
       />
 
+      {isRefundModalOpen && (
+        <CreateRefund openModal={isRefundModalOpen} onClose={closeRefundModal} id={selectedRow._id} />
+      )}
       {isEditModalOpen && (
-        <CreateRefund openModal={isEditModalOpen} onClose={closeEditModal} id={selectedRow._id} />
+        <EditBill openModal={isEditModalOpen} onClose={closeEditModal} id={selectedRow._id} />
       )}
     </Box>
   );

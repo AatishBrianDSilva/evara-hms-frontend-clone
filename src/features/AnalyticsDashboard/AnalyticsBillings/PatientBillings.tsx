@@ -56,8 +56,8 @@ const toUTCDateOnly = (date: Date | null, isEndDate = false) => {
 const PatientBillings: React.FC = () => {
   const [page, setPage] = useState<number>(1); // Ensure the page is set correctly
   const [pageSize, setPageSize] = useState<number>(25); // Default to 25 rows per page
-  const [selectedStatus, setSelectedStatus] = useState<EPatientBillingStatus>(
-    EPatientBillingStatus.Paid
+  const [selectedStatus, setSelectedStatus] = useState<EPatientBillingStatus | "">(
+    ""
   );
   const [patientIdQuery, setPatientIdQuery] = useState<string>("");
   const [patientNameQuery, setPatientNameQuery] = useState<string>("");
@@ -338,6 +338,7 @@ const PatientBillings: React.FC = () => {
             onChange={handleStatusChange}
             style={{ minWidth: 150 }}
           >
+            <MenuItem value="">All</MenuItem>
             {Object.values(EPatientBillingStatus).map((status) => (
               <MenuItem key={status} value={status}>
                 {status}
