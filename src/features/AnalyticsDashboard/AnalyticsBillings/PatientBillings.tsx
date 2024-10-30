@@ -42,17 +42,6 @@ enum EBillType {
   Package = "Package",
 }
 
-// Utility function to convert date to UTC before sending it to the API
-const toUTCDateOnly = (date: Date | null, isEndDate = false) => {
-  if (!date) return null;
-
-  const utcDate = isEndDate
-    ? new Date(Date.UTC(date.getFullYear(), date.getMonth(), date.getDate(), 23, 59, 59))
-    : new Date(Date.UTC(date.getFullYear(), date.getMonth(), date.getDate(), 0, 0, 0));
-
-  return utcDate.toISOString().split("T")[0];
-};
-
 const PatientBillings: React.FC = () => {
   const [page, setPage] = useState<number>(1); // Ensure the page is set correctly
   const [pageSize, setPageSize] = useState<number>(25); // Default to 25 rows per page
@@ -78,8 +67,8 @@ const PatientBillings: React.FC = () => {
   };
 
   // Convert start and end dates to UTC date-only format for the API
-  const startDateUTC = toUTCDateOnly(startDate);
-  const endDateUTC = toUTCDateOnly(endDate, true);
+  const startDateUTC = startDate;
+  const endDateUTC = endDate
 
   const debounceSetSearchQuery = useCallback(
     debounce((query: string) => {

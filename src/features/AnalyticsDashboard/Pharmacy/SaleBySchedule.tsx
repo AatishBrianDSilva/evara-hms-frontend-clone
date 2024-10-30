@@ -10,18 +10,6 @@ import { format } from "date-fns";
 import CustomeDateRangePicker from "../../../components/CustomDateRangePicker/CustomDateRangePicker";
 import { formatToIndianCurrencyFormat } from "../../../utils/formatToIndianCurrencyFormat";
 
-// Utility function to convert date to UTC before sending it to the API
-const toUTCDateOnly = (date: Date | null, isEndDate = false) => {
-  if (!date) return null;
-
-  // Ensure the time is 00:00:00 for the start date or 23:59:59 for the end date
-  const utcDate = isEndDate
-    ? new Date(Date.UTC(date.getFullYear(), date.getMonth(), date.getDate(), 23, 59, 59))
-    : new Date(Date.UTC(date.getFullYear(), date.getMonth(), date.getDate(), 0, 0, 0));
-
-  // Convert to ISO string and return only the date part
-  return utcDate.toISOString().split("T")[0];
-};
 
 const SaleBySchedule: React.FC = () => {
   const [page, setPage] = useState<number>(1);
@@ -39,8 +27,8 @@ const SaleBySchedule: React.FC = () => {
   };
 
   // Convert start and end dates to UTC date-only format for the API
-  const startDateUTC = toUTCDateOnly(startDate);
-  const endDateUTC = toUTCDateOnly(endDate, true);
+  const startDateUTC = startDate;
+  const endDateUTC = endDate
 
   // Adjust page to 1 if pageSize is set to "All" (value -1)
   if (pageSize === -1 && page !== 1) {
