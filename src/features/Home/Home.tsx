@@ -10,19 +10,13 @@ import { endOfWeek, startOfWeek } from "date-fns";
 import PatientsSection from "./PatientsSection";
 import PharmacySection from "./PharmacySection";
 
-const toUTC = (date: Date | null, isEndDate = false) => {
-  if (!date) return null;
-
-  return isEndDate
-    ? new Date(Date.UTC(date.getFullYear(), date.getMonth(), date.getDate(), 23, 59, 59))
-    : new Date(Date.UTC(date.getFullYear(), date.getMonth(), date.getDate(), 0, 0, 0));
-};
-
 const Home: React.FC = () => {
   const [startDate, setStartDate] = useState<Date | null>(
     startOfWeek(new Date(), { weekStartsOn: 1 })
   );
-  const [endDate, setEndDate] = useState<Date | null>(endOfWeek(new Date(), { weekStartsOn: 1 }));
+  const [endDate, setEndDate] = useState<Date | null>(endOfWeek(new Date(), {
+    weekStartsOn: 1
+  }));
 
   const handleDateChange = (ranges: RangeKeyDict) => {
     if (ranges.selection) {
@@ -31,8 +25,6 @@ const Home: React.FC = () => {
     }
   };
 
-  const startDateUTC = toUTC(startDate);
-  const endDateUTC = toUTC(endDate, true);
 
   return (
     <Box
@@ -69,7 +61,7 @@ const Home: React.FC = () => {
 
             {/* Analytics Section with evenly spaced cards */}
             <Box display="flex" justifyContent="space-between" gap={2}>
-              <AnalyticsSection startDate={startDateUTC} endDate={endDateUTC} />
+              <AnalyticsSection startDate={startDate} endDate={endDate} />
             </Box>
           </Box>
           {/* <Divider sx={{ my: 2 }} /> */}
@@ -78,14 +70,14 @@ const Home: React.FC = () => {
             {/* <Typography variant="h6" sx={{ fontWeight: "bold" }}>
               Upcoming Appointments
             </Typography> */}
-            <AppointmentsSection startDate={startDateUTC} endDate={endDateUTC} />
+            <AppointmentsSection startDate={startDate} endDate={endDate} />
           </Box>
           {/* <Divider sx={{ my: 2 }} /> */}
           {/* Other sections (Patients and Pharmacy) */}
           <Box display="flex" flexDirection="column" gap={2}>
-            <PatientsSection startDate={startDateUTC} endDate={endDateUTC} />
+            <PatientsSection startDate={startDate} endDate={endDate} />
             {/* <Divider /> */}
-            <PharmacySection startDate={startDateUTC} endDate={endDateUTC} />
+            <PharmacySection startDate={startDate} endDate={endDate} />
           </Box>
         </Box>
       </Paper>
