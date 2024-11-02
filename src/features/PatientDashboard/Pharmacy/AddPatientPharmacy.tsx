@@ -216,33 +216,86 @@ const AddPatientPharmacy: React.FC<AddPatientPharmacyProps> = ({
   //   formik.setFieldValue("items", newFields);
   // };
 
+  // const calculateSummary = () => {
+  //   const summary = formik.values.items.reduce<SummaryEntry[]>((acc, item) => {
+  //     if (!item.stock) return acc;
+
+  //     const pricePerUnit = item.stock.sellPrice / item.stock.item.packSize;
+
+  //     const totalQuantity = item.quantity || 0;
+  //     const batchNumber = item.batchNumber ? `, ${item.batchNumber}` : '';
+  //     const price = pricePerUnit || 0;
+  //     const total = price * totalQuantity;
+
+  //     if (item.stock && item.stock.item) {
+  //       const existingItem = acc.find(i => i.name === item?.stock?.item.name);
+  //       if (existingItem) {
+  //         existingItem.quantity += totalQuantity;
+  //         existingItem.batchNumber = existingItem.batchNumber + batchNumber;
+  //         existingItem.price = pricePerUnit || 0;
+  //         existingItem.total += total;
+  //       } else {
+  //         const data = {
+  //           name: item.stock.item.name,
+  //           quantity: totalQuantity,
+  //           batchNumber: item.batchNumber || '',
+  //           price: pricePerUnit || 0,
+  //           total: pricePerUnit * totalQuantity,
+  //         };
+  //         acc.push(data);
+  //       }
+  //     }
+  //     return acc;
+  //   }, []);
+  //   return summary;
+  // };
+
   const calculateSummary = () => {
-    const summary = formik.values.items.reduce<SummaryEntry[]>((acc, item) => {
-      if (!item.stock) return acc;
+    const summaryMap = new Map<string, SummaryEntry>();
 
-      const totalQuantity = item.quantity || 0;
-      const batchNumber = item.batchNumber ? `, ${item.batchNumber}` : '';
+    formik.values.items.forEach(item => {
+      if (!item.stock || !item.stock.item) return;
 
-      if (item.stock && item.stock.item) {
-        const existingItem = acc.find(i => i.name === item?.stock?.item.name);
-        if (existingItem) {
-          existingItem.quantity += totalQuantity;
-          existingItem.batchNumber = existingItem.batchNumber + batchNumber;
-        } else {
-          const pricePerUnit = item.stock.sellPrice / item.stock.item.packSize;
-          const data = {
-            name: item.stock.item.name,
-            quantity: totalQuantity,
-            batchNumber: item.batchNumber || '',
-            price: pricePerUnit || 0,
-            total: pricePerUnit * totalQuantity,
-          };
-          acc.push(data);
+      const packSize = item.stock.item.packSize;
+      const pricePerUnit = packSize !== 0 ? item.stock.sellPrice / packSize : 0;
+
+      const totalQuantity = item.quantity ?? 0;
+      const batchNumber = item.batchNumber ? item.batchNumber : '';
+
+      const total = pricePerUnit * totalQuantity;
+
+      const name = item.stock.item.name;
+
+      if (summaryMap.has(name)) {
+        const existingItem = summaryMap.get(name)!;
+        existingItem.quantity += totalQuantity;
+
+        if (batchNumber) {
+          existingItem.batchNumber = existingItem.batchNumber
+            ? `${existingItem.batchNumber}, ${batchNumber}`
+            : batchNumber;
         }
+
+        // Optionally, verify if pricePerUnit is consistent
+        if (existingItem.price !== pricePerUnit) {
+          console.warn(`Price per unit for ${name} is inconsistent.`);
+          // Handle accordingly, e.g., average, throw error, etc.
+        }
+
+        existingItem.total += total;
+      } else {
+        const data: SummaryEntry = {
+          name: name,
+          quantity: totalQuantity,
+          batchNumber: batchNumber,
+          price: pricePerUnit,
+          total: total,
+        };
+        summaryMap.set(name, data);
       }
-      return acc;
-    }, []);
-    return summary;
+    });
+
+    return Array.from(summaryMap.values());
   };
 
   const SummaryTable = () => {
