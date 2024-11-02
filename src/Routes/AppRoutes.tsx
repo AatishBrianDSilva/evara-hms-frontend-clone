@@ -400,10 +400,10 @@ const AppRoutes: React.FC = () => (
               <Route path="critical-stocks" element={<CriticalStocksReport />} />
             </Route>
           </Route>
-          <Route path="not-authorized" element={<NoPermission />} />
-
-          <Route path="*" element={<Navigate to="/" />} />
         </Route>
+
+        <Route path="not-authorized" element={<NoPermission />} />
+        <Route path="*" element={<Navigate to="/" />} />
 
       </Route>
     </Route>
