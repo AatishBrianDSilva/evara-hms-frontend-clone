@@ -8,11 +8,11 @@ module.exports = {
     'plugin:@typescript-eslint/stylistic-type-checked',
     'plugin:react/recommended',
     'plugin:react/jsx-runtime',
-    "plugin:prettier/recommended"
+    'plugin:prettier/recommended',
   ],
-  ignorePatterns: ['dist', '.eslintrc.cjs'],
+  ignorePatterns: ['dist', '.eslintrc.cjs', '.sst'],
   parser: '@typescript-eslint/parser',
-  plugins: ['react-refresh', "@typescript-eslint"],
+  plugins: ['react-refresh', '@typescript-eslint'],
   rules: {
     'react-refresh/only-export-components': [
       'warn',
@@ -27,7 +27,7 @@ module.exports = {
   },
   settings: {
     react: {
-      version: "detect" // Automatically detect the react version
-    }
-  }
-}
+      version: 'detect', // Automatically detect the react version
+    },
+  },
+};
