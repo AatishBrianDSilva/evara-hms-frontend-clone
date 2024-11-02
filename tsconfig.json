@@ -1,11 +1,7 @@
 {
   "compilerOptions": {
     "target": "ESNext",
-    "lib": [
-      "DOM",
-      "DOM.Iterable",
-      "ESNext"
-    ],
+    "lib": ["DOM", "DOM.Iterable", "ESNext"],
     "allowJs": true,
     "skipLibCheck": true,
     "esModuleInterop": true,
@@ -24,10 +20,8 @@
     "noFallthroughCasesInSwitch": true,
     "strictNullChecks": true
   },
-  "include": [
-    "src",
-    "sst.config.ts"
-  ],
+  "include": ["src"],
+  "exclude": ["node_modules", "build", ".sst"],
   "references": [
     {
       "path": "./tsconfig.node.json"
