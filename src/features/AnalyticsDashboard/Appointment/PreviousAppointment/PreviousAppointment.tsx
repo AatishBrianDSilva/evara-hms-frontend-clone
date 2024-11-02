@@ -146,8 +146,7 @@ const PreviousAppointments: React.FC = () => {
           loading={false}
           sx={{ height: '100%' }}
           enablePagination={true}
-          onPageChange={() => {}}
-          onPageSizeChange={() => {}}
+
         />
       </Box>
     </ContentSection>
