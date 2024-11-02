@@ -1,22 +1,22 @@
-import { Edit, Print, Visibility } from "@mui/icons-material";
-import { Box, Tooltip } from "@mui/material";
-import React, { useState } from "react";
-import CustomDataGrid from "../../../../components/CustomDataGrid/CustomDataGrid";
+import { Edit, Print, Visibility } from '@mui/icons-material';
+import { Box, Tooltip } from '@mui/material';
+import React, { useState } from 'react';
+import CustomDataGrid from '../../../../components/CustomDataGrid/CustomDataGrid';
 import {
   GridActionsCellItem,
   GridColDef,
   GridRowParams,
-} from "@mui/x-data-grid";
-import EditPurchaseOrderDraft from "./EditOrdered";
-import { useGetDrugItemsQuery } from "../../../../services/pharmacyDashboardService/master/drugItemApi";
-import { useGetDrugVendorsQuery } from "../../../../services/pharmacyDashboardService/master/drugVendorApi";
-import { useGetPurchaseOrdersQuery } from "../../../../services/pharmacyDashboardService/purchaseOrderApi";
+} from '@mui/x-data-grid';
+import EditPurchaseOrderDraft from './EditOrdered';
+import { useGetDrugItemsQuery } from '../../../../services/pharmacyDashboardService/master/drugItemApi';
+import { useGetDrugVendorsQuery } from '../../../../services/pharmacyDashboardService/master/drugVendorApi';
+import { useGetPurchaseOrdersQuery } from '../../../../services/pharmacyDashboardService/purchaseOrderApi';
 import {
   EPurchaseOrderStatus,
   IPurchaseOrder,
-} from "../../../../types/pharmacyDashboard/purchaseOrder";
-import ViewPurchaseOrder from "./ViewPurchaseOrder";
-import { usePrint } from "../../../../context/PrintPDFContext";
+} from '../../../../types/pharmacyDashboard/purchaseOrder';
+import ViewPurchaseOrder from './ViewPurchaseOrder';
+import { usePrint } from '../../../../context/PrintPDFContext';
 
 const Ordered: React.FC = () => {
   // const { showPromiseToast } = useToast()
@@ -203,44 +203,44 @@ const Ordered: React.FC = () => {
   //   },
   // ];
   const columnsConfig: GridColDef[] = [
-    { field: "poNumber", headerName: "PO Number", flex: 1 },
+    { field: 'poNumber', headerName: 'PO Number', flex: 1 },
     {
-      field: "date",
-      type: "date",
-      headerName: "PO Date",
+      field: 'date',
+      type: 'date',
+      headerName: 'PO Date',
       flex: 1,
       valueFormatter(params) {
         const date = new Date(params.value);
-        const day = String(date.getDate()).padStart(2, "0");
-        const month = String(date.getMonth() + 1).padStart(2, "0"); // Months are 0-based
+        const day = String(date.getDate()).padStart(2, '0');
+        const month = String(date.getMonth() + 1).padStart(2, '0'); // Months are 0-based
         const year = String(date.getFullYear()).slice(-2); // Get last two digits of the year
         return `${day}/${month}/${year}`;
       },
     },
     {
-      field: "vendor",
-      headerName: "Vendor Name",
+      field: 'vendor',
+      headerName: 'Vendor Name',
       flex: 1,
-      valueGetter: (params) => params.value?.name,
+      valueGetter: params => params.value?.name,
     },
     {
-      field: "items",
-      headerName: "Item",
+      field: 'items',
+      headerName: 'Item',
       flex: 1,
-      valueGetter: (params) =>
-        params.row.request.items.map((item: any) => item.item?.name).join(", "),
+      valueGetter: params =>
+        params.row.request.items.map((item: any) => item.item?.name).join(', '),
     },
     {
-      field: "netAmount",
-      headerName: "Net Amount",
+      field: 'netAmount',
+      headerName: 'Net Amount',
       flex: 1,
-      valueGetter: (params) => params.row.request.netAmount,
+      valueGetter: params => params.row.request.netAmount,
     },
     {
-      field: "actions",
-      headerName: "Actions",
+      field: 'actions',
+      headerName: 'Actions',
       flex: 1,
-      type: "actions",
+      type: 'actions',
       getActions: (params: GridRowParams) => {
         const row = params.row;
         const actions = [
@@ -268,10 +268,10 @@ const Ordered: React.FC = () => {
                 icon={<Print />}
                 label="Print"
                 onClick={() =>
-                  fetchAndPrintPdf(row._id, "POInvoice", "pharmacy")
+                  fetchAndPrintPdf(row._id, 'POInvoice', 'pharmacy')
                 }
               />
-            </Tooltip>
+            </Tooltip>,
           );
         }
 
@@ -281,10 +281,10 @@ const Ordered: React.FC = () => {
   ];
 
   return (
-    <Box height={"100%"} display={"flex"} flexDirection={"column"}>
+    <Box height={'100%'} display={'flex'} flexDirection={'column'}>
       {/* Render the CustomDataGrid only if there's no error */}
 
-      <Box mt={2} flex={"1 1 auto"}>
+      <Box mt={2} flex={'1 1 auto'}>
         <CustomDataGrid
           autoHeight={false}
           columns={columnsConfig}
@@ -293,7 +293,7 @@ const Ordered: React.FC = () => {
           pageSize={pageSize}
           totalRows={purchaseOrdersPagination?.totalDocs || 0}
           loading={purchaseOrderLoading}
-          sx={{ height: "100%" }}
+          sx={{ height: '100%' }}
           enablePagination={true}
           onPageChange={handlePageChange}
           onPageSizeChange={handlePageSizeChange}
@@ -333,7 +333,7 @@ const Ordered: React.FC = () => {
         <EditPurchaseOrderDraft
           openModal={isEditModalOpen}
           onClose={closeEditModal}
-          id={selectedRow?._id || ""}
+          id={selectedRow?._id || ''}
           drugItems={drugItems}
           drugVendors={drugVendors}
         />
@@ -344,7 +344,7 @@ const Ordered: React.FC = () => {
         <ViewPurchaseOrder
           openModal={isViewModalOpen}
           onClose={closeViewModal}
-          id={selectedRow?._id || ""}
+          id={selectedRow?._id || ''}
         />
       )}
 

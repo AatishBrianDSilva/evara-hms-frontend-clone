@@ -9,11 +9,11 @@ import {
   Typography,
   Grid,
   Skeleton,
-} from "@mui/material";
-import { DataGrid } from "@mui/x-data-grid";
-import React from "react";
-import { useGetPurchaseOrderByIdQuery } from "../../../../services/pharmacyDashboardService/purchaseOrderApi";
-import { IPurchaseOrder } from "../../../../types/pharmacyDashboard/purchaseOrder";
+} from '@mui/material';
+import { DataGrid } from '@mui/x-data-grid';
+import React from 'react';
+import { useGetPurchaseOrderByIdQuery } from '../../../../services/pharmacyDashboardService/purchaseOrderApi';
+import { IPurchaseOrder } from '../../../../types/pharmacyDashboard/purchaseOrder';
 
 interface ViewPurchaseOrderProps {
   openModal: boolean;
@@ -78,24 +78,28 @@ const ViewPartiallyProcessedPurchaseOrder: React.FC<ViewPurchaseOrderProps> = ({
   onClose,
   id,
 }) => {
-  const { data: purchaseOrderData, isLoading, isFetching } = useGetPurchaseOrderByIdQuery(id);
+  const {
+    data: purchaseOrderData,
+    isLoading,
+    isFetching,
+  } = useGetPurchaseOrderByIdQuery(id);
   const purchaseOrder = purchaseOrderData?.data;
   const isLoadingOrder = isLoading || isFetching;
 
   const columns = [
-    { field: "id", headerName: "#", flex: 0.5 },
-    { field: "description", headerName: "Description", flex: 2 },
-    { field: "noOfPacks", headerName: "Quantity", flex: 1 },
+    { field: 'id', headerName: '#', flex: 0.5 },
+    { field: 'description', headerName: 'Description', flex: 2 },
+    { field: 'noOfPacks', headerName: 'Quantity', flex: 1 },
 
-    { field: "free", headerName: "Free Qty", flex: 1 },
+    { field: 'free', headerName: 'Free Qty', flex: 1 },
 
-    { field: "amount", headerName: "Rate", flex: 1 },
-    { field: "totalAmount", headerName: "Amount", flex: 1 },
-    { field: "discount", headerName: "Discount(%)", flex: 1 },
+    { field: 'amount', headerName: 'Rate', flex: 1 },
+    { field: 'totalAmount', headerName: 'Amount', flex: 1 },
+    { field: 'discount', headerName: 'Discount(%)', flex: 1 },
 
-    { field: "tax", headerName: "Tax(%)", flex: 1 },
+    { field: 'tax', headerName: 'Tax(%)', flex: 1 },
 
-    { field: "mrp", headerName: "Total", flex: 1 },
+    { field: 'mrp', headerName: 'Total', flex: 1 },
   ];
   const rows =
     purchaseOrder?.request.items.map((item, index) => {
@@ -119,23 +123,25 @@ const ViewPartiallyProcessedPurchaseOrder: React.FC<ViewPurchaseOrderProps> = ({
 
       return {
         id: index + 1,
-        description: item.item?.name || "-",
-        noOfPacks: noOfPacks || "-",
-        packSize: item.packSize || "-",
-        totalQuantity: item.quantity || "-",
-        free: item.freeQuantity || "-",
-        rate: item.mrpPerPack || "-",
-        amount: buyPrice || "-",
-        tax: taxPercentage || "-",
-        discount: discount || "-",
-        totalAmount: totalBeforeTax.toFixed(2) || "-",
-        mrp: totalWithTax.toFixed(2) || "-",
+        description: item.item?.name || '-',
+        noOfPacks: noOfPacks || '-',
+        packSize: item.packSize || '-',
+        totalQuantity: item.quantity || '-',
+        free: item.freeQuantity || '-',
+        rate: item.mrpPerPack || '-',
+        amount: buyPrice || '-',
+        tax: taxPercentage || '-',
+        discount: discount || '-',
+        totalAmount: totalBeforeTax.toFixed(2) || '-',
+        mrp: totalWithTax.toFixed(2) || '-',
       };
     }) || [];
 
-  const totalAmount = purchaseOrder?.request.netAmount || "-";
+  const totalAmount = purchaseOrder?.request.netAmount || '-';
 
-  const PurchaseOrderDetails: React.FC<{ purchaseOrder: IPurchaseOrder }> = ({ purchaseOrder }) => {
+  const PurchaseOrderDetails: React.FC<{ purchaseOrder: IPurchaseOrder }> = ({
+    purchaseOrder,
+  }) => {
     return (
       <Box>
         <Typography variant="h4" gutterBottom>
@@ -145,12 +151,14 @@ const ViewPartiallyProcessedPurchaseOrder: React.FC<ViewPurchaseOrderProps> = ({
         <Grid container spacing={2}>
           <Grid item xs={12} md={4}>
             <Typography variant="h6">Date</Typography>
-            <Typography variant="body1" sx={{ fontWeight: "bold" }}>
+            <Typography variant="body1" sx={{ fontWeight: 'bold' }}>
               Date
             </Typography>
             <Typography variant="body1">
-              {purchaseOrder?.date ? new Date(purchaseOrder.date).toLocaleDateString("en-GB") : "-"}
-            </Typography>{" "}
+              {purchaseOrder?.date
+                ? new Date(purchaseOrder.date).toLocaleDateString('en-GB')
+                : '-'}
+            </Typography>{' '}
           </Grid>
           <Grid item xs={12} md={4}>
             <Typography variant="h6">Total Amount</Typography>
@@ -184,8 +192,14 @@ const ViewPartiallyProcessedPurchaseOrder: React.FC<ViewPurchaseOrderProps> = ({
         <Typography variant="h6" gutterBottom>
           Purchase Order Details
         </Typography>
-        <div style={{ width: "100%" }}>
-          <DataGrid rows={rows} columns={columns} disableColumnMenu hideFooter autoHeight />
+        <div style={{ width: '100%' }}>
+          <DataGrid
+            rows={rows}
+            columns={columns}
+            disableColumnMenu
+            hideFooter
+            autoHeight
+          />
         </div>
       </Box>
     );
@@ -193,7 +207,7 @@ const ViewPartiallyProcessedPurchaseOrder: React.FC<ViewPurchaseOrderProps> = ({
 
   return (
     <Dialog open={openModal} onClose={onClose} maxWidth="lg" fullWidth>
-      <DialogTitle color={"primary"}>Purchase Order</DialogTitle>
+      <DialogTitle color={'primary'}>Purchase Order</DialogTitle>
       <DialogContent>
         {isLoadingOrder ? (
           <PurchaseOrderSkeleton />

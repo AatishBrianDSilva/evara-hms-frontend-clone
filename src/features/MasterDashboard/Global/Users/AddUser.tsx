@@ -1,4 +1,4 @@
-import React from "react";
+import React from 'react';
 import {
   Box,
   Button,
@@ -8,15 +8,15 @@ import {
   Grid,
   MenuItem,
   TextField,
-} from "@mui/material";
-import { useFormik } from "formik";
-import { useAddGlobalUserMutation } from "../../../../services/masterDashboardService/global/globalUser";
-import _ from "lodash";
-import { useToast } from "../../../../context/ToastContext";
-import { EUserRole } from "../../../../types/masterDashboard/global";
-import { useGetActiveBranchesQuery } from "../../../../services/masterDashboardService/global/globalBranch";
-import { CLINICID } from "../../../Auth/Login";
-import FieldAutocomplete from "../../../../components/FieldAutoComplete/FieldAutoComplete";
+} from '@mui/material';
+import { useFormik } from 'formik';
+import { useAddGlobalUserMutation } from '../../../../services/masterDashboardService/global/globalUser';
+import _ from 'lodash';
+import { useToast } from '../../../../context/ToastContext';
+import { EUserRole } from '../../../../types/masterDashboard/global';
+import { useGetActiveBranchesQuery } from '../../../../services/masterDashboardService/global/globalBranch';
+import { CLINICID } from '../../../Auth/Login';
+import FieldAutocomplete from '../../../../components/FieldAutoComplete/FieldAutoComplete';
 
 interface AddUserProps {
   openModal: boolean;
@@ -30,7 +30,7 @@ interface IFormValues {
   email: string;
   password: string;
   phone: string;
-  role: EUserRole | "";
+  role: EUserRole | '';
 }
 
 const AddUser: React.FC<AddUserProps> = ({ openModal, onClose }) => {
@@ -59,9 +59,9 @@ const AddUser: React.FC<AddUserProps> = ({ openModal, onClose }) => {
     const promise = addUser(payload).unwrap();
 
     showPromiseToast(promise, {
-      loading: "Adding...",
-      success: (data) => data || "Added Successfully",
-      error: (data) => data || "Adding Failed",
+      loading: 'Adding...',
+      success: data => data || 'Added Successfully',
+      error: data => data || 'Adding Failed',
     });
 
     try {
@@ -75,12 +75,12 @@ const AddUser: React.FC<AddUserProps> = ({ openModal, onClose }) => {
 
   const initialValues: IFormValues = {
     // clinicId: "",
-    username: "",
-    email: "",
-    password: "",
-    phone: "",
-    role: "",
-    branchId: "",
+    username: '',
+    email: '',
+    password: '',
+    phone: '',
+    role: '',
+    branchId: '',
   };
 
   const formik = useFormik({
@@ -91,9 +91,9 @@ const AddUser: React.FC<AddUserProps> = ({ openModal, onClose }) => {
 
   return (
     <Dialog open={openModal} onClose={onClose} maxWidth="md" fullWidth>
-      <DialogTitle color={"primary"}>Add Users</DialogTitle>
+      <DialogTitle color={'primary'}>Add Users</DialogTitle>
       <DialogContent>
-        <Box component={"form"} onSubmit={formik.handleSubmit} p={2}>
+        <Box component={'form'} onSubmit={formik.handleSubmit} p={2}>
           <Grid container spacing={2} mb={2} mt={2}>
             {/* <Grid item xs={8} sm={4} lg={3}>
               <TextField
@@ -109,19 +109,24 @@ const AddUser: React.FC<AddUserProps> = ({ openModal, onClose }) => {
               <FieldAutocomplete
                 fullWidth
                 options={branches}
-                getOptionLabel={(option) => (option ? option.branchName : "")}
-                isOptionEqualToValue={(option, value) => option.branchId === value.branchId}
+                getOptionLabel={option => (option ? option.branchName : '')}
+                isOptionEqualToValue={(option, value) =>
+                  option.branchId === value.branchId
+                }
                 loading={gettingBranches}
                 label="Branch"
                 value={
-                  branches.find((branch) => branch.branchId === formik.values.branchId) || null
+                  branches.find(
+                    branch => branch.branchId === formik.values.branchId,
+                  ) || null
                 }
-                onChange={(value) => {
-                  formik.setFieldValue("branchId", value?.branchId ?? "", true);
+                onChange={value => {
+                  formik.setFieldValue('branchId', value?.branchId ?? '', true);
                 }}
-                error={formik.touched.branchId && Boolean(formik.errors.branchId)}
+                error={
+                  formik.touched.branchId && Boolean(formik.errors.branchId)
+                }
                 helperText={formik.touched.branchId && formik.errors.branchId}
-
               />
             </Grid>
             <Grid item xs={8} sm={4} lg={3}>
@@ -175,7 +180,7 @@ const AddUser: React.FC<AddUserProps> = ({ openModal, onClose }) => {
                 value={formik.values.role}
                 onChange={formik.handleChange}
               >
-                {Object.values(EUserRole).map((role) => (
+                {Object.values(EUserRole).map(role => (
                   <MenuItem key={role} value={role}>
                     {_.kebabCase(role)}
                   </MenuItem>
@@ -185,9 +190,9 @@ const AddUser: React.FC<AddUserProps> = ({ openModal, onClose }) => {
           </Grid>
 
           <Box
-            display={"flex"}
-            justifyContent={"flex-end"}
-            alignItems={"center"}
+            display={'flex'}
+            justifyContent={'flex-end'}
+            alignItems={'center'}
             gap={2}
             mb={2}
           >
@@ -196,14 +201,14 @@ const AddUser: React.FC<AddUserProps> = ({ openModal, onClose }) => {
               color="primary"
               type="submit"
               disabled={_.isEqual(initialValues, formik.values) || UserLoading}
-              sx={{ width: "fit-content" }}
+              sx={{ width: 'fit-content' }}
             >
               Save
             </Button>
             <Button
               variant="contained"
               color="secondary"
-              sx={{ width: "fit-content" }}
+              sx={{ width: 'fit-content' }}
               onClick={onClose}
             >
               Cancel

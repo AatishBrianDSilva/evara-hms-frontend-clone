@@ -1,4 +1,4 @@
-import React from "react";
+import React from 'react';
 import {
   Box,
   Button,
@@ -10,15 +10,15 @@ import {
   Grid,
   Skeleton,
   TextField,
-} from "@mui/material";
-import { useFormik } from "formik";
-import { useToast } from "../../../../context/ToastContext";
+} from '@mui/material';
+import { useFormik } from 'formik';
+import { useToast } from '../../../../context/ToastContext';
 import {
   useEditDrugLocationMutation,
   useGetDrugLocationByIdQuery,
-} from "../../../../services/pharmacyDashboardService/master/drugLocationApi";
-import _ from "lodash";
-import { AddDrugLocationValidationSchema } from "../../../../yup/pharmacyDashboard";
+} from '../../../../services/pharmacyDashboardService/master/drugLocationApi';
+import _ from 'lodash';
+import { AddDrugLocationValidationSchema } from '../../../../yup/pharmacyDashboard';
 
 interface EditDrugLocationProps {
   openModal: boolean;
@@ -45,7 +45,13 @@ const skeletonLoader = () => {
             <Skeleton variant="rectangular" width="100%" height={56} />
           </Grid>
         </Grid>
-        <Box display={"flex"} justifyContent={"flex-end"} alignItems={"center"} gap={2} mb={2}>
+        <Box
+          display={'flex'}
+          justifyContent={'flex-end'}
+          alignItems={'center'}
+          gap={2}
+          mb={2}
+        >
           <Skeleton variant="rectangular" width={90} height={36} />
           <Skeleton variant="rectangular" width={90} height={36} />
         </Box>
@@ -54,29 +60,34 @@ const skeletonLoader = () => {
   );
 };
 
-const EditDrugLocation: React.FC<EditDrugLocationProps> = ({ openModal, onClose, id }) => {
+const EditDrugLocation: React.FC<EditDrugLocationProps> = ({
+  openModal,
+  onClose,
+  id,
+}) => {
   const { showPromiseToast } = useToast();
 
   const { data, isFetching, isLoading } = useGetDrugLocationByIdQuery(id);
   const location = data?.data;
   const loading = isFetching || isLoading;
 
-  const [editDrugLocation, { isLoading: editLoading }] = useEditDrugLocationMutation();
+  const [editDrugLocation, { isLoading: editLoading }] =
+    useEditDrugLocationMutation();
   const handleFormSubmit = async (values: IFormValues) => {
     const payload = {
       id,
       location: values.location,
       notes: values.notes,
       main: values.main,
-      status: values.status ? "Active" : "Inactive",
+      status: values.status ? 'Active' : 'Inactive',
     };
 
     const promise = editDrugLocation(payload).unwrap();
 
     showPromiseToast(promise, {
-      loading: "Editing Drug Location...",
-      success: (data) => data || "Drug Location Edited Successfully",
-      error: (data) => data || "Failed to Edit Drug Location",
+      loading: 'Editing Drug Location...',
+      success: data => data || 'Drug Location Edited Successfully',
+      error: data => data || 'Failed to Edit Drug Location',
     });
 
     try {
@@ -89,10 +100,10 @@ const EditDrugLocation: React.FC<EditDrugLocationProps> = ({ openModal, onClose,
   };
 
   const initialValues: IFormValues = {
-    location: location?.location || "",
-    notes: location?.notes || "",
+    location: location?.location || '',
+    notes: location?.notes || '',
     main: location?.main || false,
-    status: location?.status === "Active" ? true : false,
+    status: location?.status === 'Active' ? true : false,
   };
 
   const formik = useFormik({
@@ -104,12 +115,12 @@ const EditDrugLocation: React.FC<EditDrugLocationProps> = ({ openModal, onClose,
 
   return (
     <Dialog open={openModal} onClose={onClose} maxWidth="md" fullWidth>
-      <DialogTitle color={"primary"}>Edit Drug Location</DialogTitle>
+      <DialogTitle color={'primary'}>Edit Drug Location</DialogTitle>
       {loading ? (
         skeletonLoader()
       ) : (
         <DialogContent>
-          <Box component={"form"} onSubmit={formik.handleSubmit} p={2}>
+          <Box component={'form'} onSubmit={formik.handleSubmit} p={2}>
             <Grid container spacing={2} mb={2} mt={2}>
               <Grid item lg={4}>
                 <TextField
@@ -118,7 +129,9 @@ const EditDrugLocation: React.FC<EditDrugLocationProps> = ({ openModal, onClose,
                   label="Tax Rate"
                   value={formik.values.location}
                   onChange={formik.handleChange}
-                  error={formik.touched.location && Boolean(formik.errors.location)}
+                  error={
+                    formik.touched.location && Boolean(formik.errors.location)
+                  }
                   helperText={formik.touched.location && formik.errors.location}
                 />
               </Grid>
@@ -146,7 +159,7 @@ const EditDrugLocation: React.FC<EditDrugLocationProps> = ({ openModal, onClose,
                   }
                 />
               </Grid>
-              <Grid item lg={12} display={"flex"} justifyContent={"center"}>
+              <Grid item lg={12} display={'flex'} justifyContent={'center'}>
                 <FormControlLabel
                   label="Active ?"
                   control={
@@ -160,20 +173,28 @@ const EditDrugLocation: React.FC<EditDrugLocationProps> = ({ openModal, onClose,
                 />
               </Grid>
             </Grid>
-            <Box display={"flex"} justifyContent={"flex-end"} alignItems={"center"} gap={2} mb={2}>
+            <Box
+              display={'flex'}
+              justifyContent={'flex-end'}
+              alignItems={'center'}
+              gap={2}
+              mb={2}
+            >
               <Button
                 variant="contained"
                 color="primary"
                 type="submit"
-                disabled={editLoading || _.isEqual(initialValues, formik.values)}
-                sx={{ width: "fit-content" }}
+                disabled={
+                  editLoading || _.isEqual(initialValues, formik.values)
+                }
+                sx={{ width: 'fit-content' }}
               >
                 Save
               </Button>
               <Button
                 variant="contained"
                 color="secondary"
-                sx={{ width: "fit-content" }}
+                sx={{ width: 'fit-content' }}
                 onClick={onClose}
               >
                 Cancel

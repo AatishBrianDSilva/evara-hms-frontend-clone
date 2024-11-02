@@ -1,23 +1,23 @@
-import Box from "@mui/material/Box";
-import Button from "@mui/material/Button";
-import Divider from "@mui/material/Divider";
-import Grid from "@mui/material/Grid";
-import MenuItem from "@mui/material/MenuItem";
-import Modal from "@mui/material/Modal";
-import TextField from "@mui/material/TextField";
-import Typography from "@mui/material/Typography";
-import { useFormik } from "formik";
-import React from "react";
-import { PartnerRegistrationValidationSchema } from "../../../yup/patient";
-import { useAddPartnerMutation } from "../../../services/patientsApi";
-import { useToast } from "../../../context/ToastContext";
+import Box from '@mui/material/Box';
+import Button from '@mui/material/Button';
+import Divider from '@mui/material/Divider';
+import Grid from '@mui/material/Grid';
+import MenuItem from '@mui/material/MenuItem';
+import Modal from '@mui/material/Modal';
+import TextField from '@mui/material/TextField';
+import Typography from '@mui/material/Typography';
+import { useFormik } from 'formik';
+import React from 'react';
+import { PartnerRegistrationValidationSchema } from '../../../yup/patient';
+import { useAddPartnerMutation } from '../../../services/patientsApi';
+import { useToast } from '../../../context/ToastContext';
 // import { FileUploadAndPreview } from '../../components/FileUploadAndPreview/FileUploadButton'
-import { useSelector } from "react-redux";
-import { RootState } from "../../../app/store";
-import CustomDatePicker from "../../../components/CustomDatePicker/CustomDatePicker";
-import FileUploadButton from "../../../components/FileUploadAndPreview/FileUploadButton";
-import { EBuckets } from "../../../types/global";
-import FieldAutocomplete from "../../../components/FieldAutoComplete/FieldAutoComplete";
+import { useSelector } from 'react-redux';
+import { RootState } from '../../../app/store';
+import CustomDatePicker from '../../../components/CustomDatePicker/CustomDatePicker';
+import FileUploadButton from '../../../components/FileUploadAndPreview/FileUploadButton';
+import { EBuckets } from '../../../types/global';
+import FieldAutocomplete from '../../../components/FieldAutoComplete/FieldAutoComplete';
 
 interface IPatientDashboardAddPartnerProps {
   openAddPartnerModal: boolean;
@@ -40,47 +40,47 @@ const PatientDashboardAddPartner: React.FC<
   const [addPartner, { isLoading }] = useAddPartnerMutation();
 
   const indianStates = [
-    "Andhra Pradesh",
-    "Arunachal Pradesh",
-    "Assam",
-    "Bihar",
-    "Chhattisgarh",
-    "Goa",
-    "Gujarat",
-    "Haryana",
-    "Himachal Pradesh",
-    "Jharkhand",
-    "Karnataka",
-    "Kerala",
-    "Madhya Pradesh",
-    "Maharashtra",
-    "Manipur",
-    "Meghalaya",
-    "Mizoram",
-    "Nagaland",
-    "Odisha",
-    "Punjab",
-    "Rajasthan",
-    "Sikkim",
-    "Tamil Nadu",
-    "Telangana",
-    "Tripura",
-    "Uttar Pradesh",
-    "Uttarakhand",
-    "West Bengal",
-    "Andaman and Nicobar Islands",
-    "Chandigarh",
-    "Dadra and Nagar Haveli and Daman and Diu",
-    "Lakshadweep",
-    "Delhi",
-    "Puducherry",
-    "Ladakh",
-    "Jammu and Kashmir",
+    'Andhra Pradesh',
+    'Arunachal Pradesh',
+    'Assam',
+    'Bihar',
+    'Chhattisgarh',
+    'Goa',
+    'Gujarat',
+    'Haryana',
+    'Himachal Pradesh',
+    'Jharkhand',
+    'Karnataka',
+    'Kerala',
+    'Madhya Pradesh',
+    'Maharashtra',
+    'Manipur',
+    'Meghalaya',
+    'Mizoram',
+    'Nagaland',
+    'Odisha',
+    'Punjab',
+    'Rajasthan',
+    'Sikkim',
+    'Tamil Nadu',
+    'Telangana',
+    'Tripura',
+    'Uttar Pradesh',
+    'Uttarakhand',
+    'West Bengal',
+    'Andaman and Nicobar Islands',
+    'Chandigarh',
+    'Dadra and Nagar Haveli and Daman and Diu',
+    'Lakshadweep',
+    'Delhi',
+    'Puducherry',
+    'Ladakh',
+    'Jammu and Kashmir',
   ];
 
   const patientId = useSelector((state: RootState) => state.patients.patientId);
 
-  const [fileUploadedUrl, setFileUploadedUrl] = React.useState<string[]>([""]);
+  const [fileUploadedUrl, setFileUploadedUrl] = React.useState<string[]>(['']);
 
   const handleSubmit = async (values: any) => {
     values.image = fileUploadedUrl[0];
@@ -90,58 +90,58 @@ const PatientDashboardAddPartner: React.FC<
     }).unwrap();
 
     showPromiseToast(promise, {
-      loading: "Adding Partner",
-      success: (response) => response || "Partner added successfully",
-      error: (err) => `Error: ${err || "Failed to add partner"}`,
+      loading: 'Adding Partner',
+      success: response => response || 'Partner added successfully',
+      error: err => `Error: ${err || 'Failed to add partner'}`,
     });
 
     try {
       await promise;
       handleFormClose();
     } catch (error: any) {
-      console.error("Failed to add partner", error);
+      console.error('Failed to add partner', error);
     }
   };
 
   const formik = useFormik({
     initialValues: {
       //Personal Details
-      title: "",
-      firstName: "",
-      lastName: "",
-      occupation: "",
-      gender: "",
+      title: '',
+      firstName: '',
+      lastName: '',
+      occupation: '',
+      gender: '',
       dob: null,
-      maritalStatus: "",
-      bloodGroup: "",
-      countryBirth: "",
-      nationality: "",
-      motherTounge: "",
-      religion: "",
+      maritalStatus: '',
+      bloodGroup: '',
+      countryBirth: '',
+      nationality: '',
+      motherTounge: '',
+      religion: '',
       //Contact Details
-      mobile: "",
-      alernativeMobile: "",
-      email: "",
+      mobile: '',
+      alernativeMobile: '',
+      email: '',
       //Dependent Details
       dependentType: false,
-      dependentName: "",
-      dependentRelation: "",
-      dependentMobile: "",
-      dependentEmail: "",
+      dependentName: '',
+      dependentRelation: '',
+      dependentMobile: '',
+      dependentEmail: '',
       //Address Details
-      addressLine1: "",
-      addressLine2: "",
-      state: "",
-      city: "",
-      pincode: "",
+      addressLine1: '',
+      addressLine2: '',
+      state: '',
+      city: '',
+      pincode: '',
       // country: '',
       //ID Proof Details
-      idProofType: "",
-      idProofNumber: "",
-      idProofIssuedCountry: "",
-      ABHANumber: "",
+      idProofType: '',
+      idProofNumber: '',
+      idProofIssuedCountry: '',
+      ABHANumber: '',
       //Image
-      image: "",
+      image: '',
     },
     validationSchema: PartnerRegistrationValidationSchema,
     onSubmit: handleSubmit,
@@ -163,22 +163,22 @@ const PatientDashboardAddPartner: React.FC<
       aria-describedby="modal-modal-patient-dashboard-add-partner-description"
     >
       <Box
-        position={"absolute"}
-        top={"50%"}
-        left={"50%"}
-        width={"40%"}
+        position={'absolute'}
+        top={'50%'}
+        left={'50%'}
+        width={'40%'}
         borderRadius={1}
         boxShadow={5}
         px={8}
         py={5}
-        bgcolor={"background.paper"}
+        bgcolor={'background.paper'}
         sx={{
-          transform: "translate(-50%, -50%)",
+          transform: 'translate(-50%, -50%)',
         }}
       >
         <Typography
           id="modal-patient-title"
-          textAlign={"center"}
+          textAlign={'center'}
           variant="h6"
           component="h2"
           mb={2}
@@ -225,7 +225,7 @@ const PatientDashboardAddPartner: React.FC<
                 label="Date of Birth"
                 name="dob"
                 value={formik.values.dob}
-                onChange={(value) => formik.setFieldValue("dob", value)}
+                onChange={value => formik.setFieldValue('dob', value)}
                 error={formik.touched.dob && Boolean(formik.errors.dob)}
                 helperText={formik.touched.dob && formik.errors.dob}
               />
@@ -361,10 +361,10 @@ const PatientDashboardAddPartner: React.FC<
                 label="State"
                 options={indianStates}
                 isOptionEqualToValue={(option, value) => option === value}
-                getOptionLabel={(option) => option}
+                getOptionLabel={option => option}
                 value={formik.values.state}
-                onChange={(value) => {
-                  formik.setFieldValue("state", value);
+                onChange={value => {
+                  formik.setFieldValue('state', value);
                 }}
                 error={formik.touched.state && Boolean(formik.errors.state)}
                 helperText={formik.touched.state && formik.errors.state}
@@ -488,7 +488,7 @@ const PatientDashboardAddPartner: React.FC<
             </Grid>
           </Grid>
 
-          <Box display={"flex"} justifyContent={"center"} gap={1} mt={2} mb={2}>
+          <Box display={'flex'} justifyContent={'center'} gap={1} mt={2} mb={2}>
             {/* <Box flex={1}>
               <FileUploadAndPreview
                 labelName='Identity Document'
@@ -531,10 +531,10 @@ const PatientDashboardAddPartner: React.FC<
 
           <Divider />
 
-          <Box display={"flex"} gap={2} mt={2}>
+          <Box display={'flex'} gap={2} mt={2}>
             <Button
               variant="outlined"
-              sx={{ width: "100px" }}
+              sx={{ width: '100px' }}
               onClick={() => handleFormClose()}
             >
               Cancel
@@ -543,7 +543,7 @@ const PatientDashboardAddPartner: React.FC<
               type="submit"
               disabled={isLoading}
               variant="contained"
-              sx={{ width: "100px" }}
+              sx={{ width: '100px' }}
             >
               Save
             </Button>

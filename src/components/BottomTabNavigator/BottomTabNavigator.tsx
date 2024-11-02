@@ -4,7 +4,13 @@ import BottomNavigationAction from '@mui/material/BottomNavigationAction';
 import Paper from '@mui/material/Paper';
 import useMediaQuery from '@mui/material/useMediaQuery';
 import { useTheme } from '@mui/material';
-import { Home, Call, HealingSharp, AccountCircleOutlined, MoreHoriz } from '@mui/icons-material';
+import {
+  Home,
+  Call,
+  HealingSharp,
+  AccountCircleOutlined,
+  MoreHoriz,
+} from '@mui/icons-material';
 import { useLocation, useNavigate } from 'react-router-dom';
 import { useDispatch, useSelector } from 'react-redux';
 import { openMoreModal } from '../../features/More/moreSlice';
@@ -22,7 +28,7 @@ const BottomTabNavigator: React.FC = () => {
   const navigate = useNavigate();
   const location = useLocation();
   const dispatch = useDispatch();
-  const theme = useTheme()
+  const theme = useTheme();
 
   const isMobile = useMediaQuery(theme.breakpoints.down('sm'));
 
@@ -35,32 +41,51 @@ const BottomTabNavigator: React.FC = () => {
   }, [location]);
 
   const patientDashboardNavItems: NavItem[] = [
-    { value: `/patients/dashboard/${patientId}`, label: 'Home', icon: <Home /> },
-    { value: `/patients/dashboard/${patientId}/treatment/treatment-cycle`, label: 'Treatment', icon: <HealingSharp /> },
-    { value: `/patients/dashboard/${patientId}/demographics`, label: 'Patient', icon: <AccountCircleOutlined /> },
-    { label: 'More', icon: <MoreHoriz />, modal: "patient" },
+    {
+      value: `/patients/dashboard/${patientId}`,
+      label: 'Home',
+      icon: <Home />,
+    },
+    {
+      value: `/patients/dashboard/${patientId}/treatment/treatment-cycle`,
+      label: 'Treatment',
+      icon: <HealingSharp />,
+    },
+    {
+      value: `/patients/dashboard/${patientId}/demographics`,
+      label: 'Patient',
+      icon: <AccountCircleOutlined />,
+    },
+    { label: 'More', icon: <MoreHoriz />, modal: 'patient' },
   ];
 
   const generalNavItems: NavItem[] = [
-    { value: "/", label: "Home", icon: <Home /> },
-    { value: "/support", label: "Support", icon: <Call /> },
-    { value: "/profile", label: "Profile", icon: <AccountCircleOutlined /> },
-    { label: 'More', icon: <MoreHoriz />, modal: "home" },
+    { value: '/', label: 'Home', icon: <Home /> },
+    { value: '/support', label: 'Support', icon: <Call /> },
+    { value: '/profile', label: 'Profile', icon: <AccountCircleOutlined /> },
+    { label: 'More', icon: <MoreHoriz />, modal: 'home' },
   ];
 
-  const navItems = location.pathname.startsWith("/patients/dashboard") ? patientDashboardNavItems : generalNavItems;
+  const navItems = location.pathname.startsWith('/patients/dashboard')
+    ? patientDashboardNavItems
+    : generalNavItems;
 
   if (!isMobile) {
     return null; // Do not render this component on non-mobile devices
   }
 
   return (
-    <Paper sx={{ position: 'fixed', bottom: 0, left: 0, right: 0, zIndex: 2 }} elevation={3}>
+    <Paper
+      sx={{ position: 'fixed', bottom: 0, left: 0, right: 0, zIndex: 2 }}
+      elevation={3}
+    >
       <BottomNavigation
         showLabels
         value={value}
         onChange={(_, newValue) => {
-          const selectedItem = navItems.find(item => item.value === newValue || item.label === newValue);
+          const selectedItem = navItems.find(
+            item => item.value === newValue || item.label === newValue,
+          );
           if (selectedItem?.modal) {
             dispatch(openMoreModal(selectedItem.modal));
           } else if (selectedItem?.value) {
@@ -70,7 +95,13 @@ const BottomTabNavigator: React.FC = () => {
         }}
       >
         {navItems.map(({ value, label, icon, modal }) => (
-          <BottomNavigationAction key={label} value={value || label} label={label} icon={icon} onClick={modal ? () => dispatch(openMoreModal(modal)) : undefined} />
+          <BottomNavigationAction
+            key={label}
+            value={value || label}
+            label={label}
+            icon={icon}
+            onClick={modal ? () => dispatch(openMoreModal(modal)) : undefined}
+          />
         ))}
       </BottomNavigation>
       <More />

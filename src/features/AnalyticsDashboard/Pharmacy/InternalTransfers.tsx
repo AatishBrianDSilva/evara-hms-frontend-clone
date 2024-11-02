@@ -40,11 +40,13 @@ const InternalTransfers: React.FC = () => {
     setFilterClinic(event.target.value as string);
   };
 
-  const handleItemNameChange = (event: React.ChangeEvent<{ value: unknown }>) => {
+  const handleItemNameChange = (
+    event: React.ChangeEvent<{ value: unknown }>,
+  ) => {
     setFilterItemName(event.target.value as string);
   };
 
-  const filteredTransfers = internalTransfersData.filter((transfer) => {
+  const filteredTransfers = internalTransfersData.filter(transfer => {
     const searchTermLower = searchTerm.toLowerCase();
     const itemNameLower = filterItemName.toLowerCase();
 
@@ -67,14 +69,14 @@ const InternalTransfers: React.FC = () => {
           onChange={handleSearchChange}
           placeholder="Enter patient name/ID"
         />
-           <TextField
+        <TextField
           label="Search by Item Name"
           size="small"
           variant="outlined"
           onChange={handleSearchChange}
           placeholder="item name"
         />
-          <TextField
+        <TextField
           label="Search by Date"
           size="small"
           variant="outlined"
@@ -89,7 +91,7 @@ const InternalTransfers: React.FC = () => {
           value={filterClinic}
           onChange={handleClinicChange}
         >
-          {clinics.map((clinic) => (
+          {clinics.map(clinic => (
             <MenuItem key={clinic} value={clinic}>
               {clinic}
             </MenuItem>
@@ -103,7 +105,7 @@ const InternalTransfers: React.FC = () => {
           value={filterItemName}
           onChange={handleItemNameChange}
         >
-          {itemNames.map((itemName) => (
+          {itemNames.map(itemName => (
             <MenuItem key={itemName} value={itemName}>
               {itemName}
             </MenuItem>

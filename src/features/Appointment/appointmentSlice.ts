@@ -1,5 +1,5 @@
-import { createSlice, PayloadAction } from "@reduxjs/toolkit";
-import { IDoctor } from "../../types/doctor";
+import { createSlice, PayloadAction } from '@reduxjs/toolkit';
+import { IDoctor } from '../../types/doctor';
 
 interface AppointmentState {
   selectedDate: string;
@@ -16,13 +16,13 @@ const initialState: AppointmentState = {
 };
 
 export const appointmentSlice = createSlice({
-  name: "appointment",
+  name: 'appointment',
   initialState,
   reducers: {
     setSelectedDate: (state, action: PayloadAction<string>) => {
-      console.log("paylaod", action.payload);
+      console.log('paylaod', action.payload);
       state.selectedDate = new Date(action.payload).toISOString();
-      console.log("Updated selectedDate Payload:", state.selectedDate);
+      console.log('Updated selectedDate Payload:', state.selectedDate);
     },
 
     setSelectedTimeslot: (state, action: PayloadAction<string | null>) => {
@@ -34,7 +34,7 @@ export const appointmentSlice = createSlice({
     setEditingAppointmentId: (state, action: PayloadAction<string | null>) => {
       state.editingAppointmentId = action.payload;
     },
-    resetAppointment: (state) => {
+    resetAppointment: state => {
       state.selectedDate = initialState.selectedDate;
       state.selectedTimeslot = initialState.selectedTimeslot;
       state.selectedDoctor = initialState.selectedDoctor;
@@ -43,7 +43,11 @@ export const appointmentSlice = createSlice({
   },
 });
 
-export const { setSelectedDate, setSelectedTimeslot, setSelectedDoctor, resetAppointment } =
-  appointmentSlice.actions;
+export const {
+  setSelectedDate,
+  setSelectedTimeslot,
+  setSelectedDoctor,
+  resetAppointment,
+} = appointmentSlice.actions;
 
 export default appointmentSlice.reducer;

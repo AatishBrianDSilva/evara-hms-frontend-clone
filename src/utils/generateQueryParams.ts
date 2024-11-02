@@ -1,4 +1,4 @@
-import { IQueryOptions } from "../types/global";
+import { IQueryOptions } from '../types/global';
 
 function generateQueryParams(options: IQueryOptions = {}): string {
   const queryParams = new URLSearchParams();
@@ -8,14 +8,14 @@ function generateQueryParams(options: IQueryOptions = {}): string {
     if (value !== undefined) queryParams.append(key, value.toString());
   };
 
-  addParam("page", options.page);
-  addParam("limit", options.limit);
-  addParam("sort", options.sort ? JSON.stringify(options.sort) : undefined);
-  addParam("select", options.select);
-  addParam("lean", options.lean);
-  addParam("leanWithId", options.leanWithId);
-  addParam("paginate", options.paginate);
-  addParam("searchQuery", options.searchQuery);
+  addParam('page', options.page);
+  addParam('limit', options.limit);
+  addParam('sort', options.sort ? JSON.stringify(options.sort) : undefined);
+  addParam('select', options.select);
+  addParam('lean', options.lean);
+  addParam('leanWithId', options.leanWithId);
+  addParam('paginate', options.paginate);
+  addParam('searchQuery', options.searchQuery);
 
   // Loop through filters and add them to queryParams
   Object.entries(options.filters || {}).forEach(([key, value]) => {

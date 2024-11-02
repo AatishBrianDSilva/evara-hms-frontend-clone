@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from "react";
+import React, { useState, useEffect } from 'react';
 import {
   Box,
   Button,
@@ -11,18 +11,18 @@ import {
   Skeleton,
   TextField,
   Typography,
-} from "@mui/material";
-import { Add, Delete } from "@mui/icons-material";
+} from '@mui/material';
+import { Add, Delete } from '@mui/icons-material';
 import {
   useGetBillingByIdQuery,
   useAddRefundMutation,
-} from "../../../../services/patientDashboardService/billings/billingApi";
-import FieldAutocomplete from "../../../../components/FieldAutoComplete/FieldAutoComplete";
-import { useToast } from "../../../../context/ToastContext";
-import FileUploadButton from "../../../../components/FileUploadAndPreview/FileUploadButton";
-import { EBuckets, EDocumentTypes } from "../../../../types/global";
-import { useSelector } from "react-redux";
-import { RootState } from "../../../../app/store";
+} from '../../../../services/patientDashboardService/billings/billingApi';
+import FieldAutocomplete from '../../../../components/FieldAutoComplete/FieldAutoComplete';
+import { useToast } from '../../../../context/ToastContext';
+import FileUploadButton from '../../../../components/FileUploadAndPreview/FileUploadButton';
+import { EBuckets, EDocumentTypes } from '../../../../types/global';
+import { useSelector } from 'react-redux';
+import { RootState } from '../../../../app/store';
 
 interface CreateRefundProps {
   openModal: boolean;
@@ -47,7 +47,11 @@ interface RefundItem {
   discount: number;
 }
 
-const CreateRefund: React.FC<CreateRefundProps> = ({ openModal, onClose, id }) => {
+const CreateRefund: React.FC<CreateRefundProps> = ({
+  openModal,
+  onClose,
+  id,
+}) => {
   const { data, isLoading } = useGetBillingByIdQuery(id);
   const billing = data?.data;
 
@@ -56,14 +60,14 @@ const CreateRefund: React.FC<CreateRefundProps> = ({ openModal, onClose, id }) =
   const { showPromiseToast } = useToast();
 
   const [refundItems, setRefundItems] = useState<RefundItem[]>([
-    { item: null, batchNo: "", qtyToRefund: 0, amountToRefund: 0, discount: 0 },
+    { item: null, batchNo: '', qtyToRefund: 0, amountToRefund: 0, discount: 0 },
   ]);
   const [refundDetails, setRefundDetails] = useState({
-    mode: "",
-    details: "",
-    reason: "",
-    charges: "",
-    refundNumber: "",
+    mode: '',
+    details: '',
+    reason: '',
+    charges: '',
+    refundNumber: '',
     files: [] as string[],
   });
 
@@ -73,7 +77,13 @@ const CreateRefund: React.FC<CreateRefundProps> = ({ openModal, onClose, id }) =
   const addRefundItem = () => {
     setRefundItems([
       ...refundItems,
-      { item: null, batchNo: "", qtyToRefund: 0, amountToRefund: 0, discount: 0 },
+      {
+        item: null,
+        batchNo: '',
+        qtyToRefund: 0,
+        amountToRefund: 0,
+        discount: 0,
+      },
     ]);
   };
 
@@ -82,11 +92,15 @@ const CreateRefund: React.FC<CreateRefundProps> = ({ openModal, onClose, id }) =
     setRefundItems(updatedRefundItems);
   };
 
-  const handleItemChange = (index: number, selectedItem: IBillingItem | null) => {
+  const handleItemChange = (
+    index: number,
+    selectedItem: IBillingItem | null,
+  ) => {
     const updatedRefundItems = [...refundItems];
 
     if (selectedItem) {
-      const totalPrice = billing?.items.reduce((acc, item) => acc + item.price, 0) || 0;
+      const totalPrice =
+        billing?.items.reduce((acc, item) => acc + item.price, 0) || 0;
       const discountPerItem = billing?.discount
         ? (billing.discount * selectedItem.price) / totalPrice
         : 0;
@@ -94,7 +108,7 @@ const CreateRefund: React.FC<CreateRefundProps> = ({ openModal, onClose, id }) =
       updatedRefundItems[index] = {
         ...updatedRefundItems[index],
         item: selectedItem,
-        batchNo: "",
+        batchNo: '',
         qtyToRefund: 0,
         amountToRefund: 0,
         discount: discountPerItem, // Set the calculated discount
@@ -103,7 +117,7 @@ const CreateRefund: React.FC<CreateRefundProps> = ({ openModal, onClose, id }) =
       updatedRefundItems[index] = {
         ...updatedRefundItems[index],
         item: null,
-        batchNo: "",
+        batchNo: '',
         qtyToRefund: 0,
         amountToRefund: 0,
         discount: 0, // Reset discount if no item selected
@@ -116,10 +130,14 @@ const CreateRefund: React.FC<CreateRefundProps> = ({ openModal, onClose, id }) =
   const getFilteredItems = (index: any) => {
     const selectedServiceIds = refundItems
       .filter((_, i) => i !== index)
-      .map((item) => item.item?.serviceId)
-      .filter((id) => id);
+      .map(item => item.item?.serviceId)
+      .filter(id => id);
 
-    return billing?.items.filter((item) => !selectedServiceIds.includes(item.serviceId)) || [];
+    return (
+      billing?.items.filter(
+        item => !selectedServiceIds.includes(item.serviceId),
+      ) || []
+    );
   };
 
   const handleBatchChange = (index: number, batchNo: string) => {
@@ -133,10 +151,12 @@ const CreateRefund: React.FC<CreateRefundProps> = ({ openModal, onClose, id }) =
 
     if (updatedRefundItems[index].item) {
       const pricePerItem =
-        updatedRefundItems[index].item!.price / updatedRefundItems[index].item!.quantity;
+        updatedRefundItems[index].item!.price /
+        updatedRefundItems[index].item!.quantity;
       const totalDiscount =
         qtyToRefund *
-        (updatedRefundItems[index].discount / updatedRefundItems[index].item!.quantity);
+        (updatedRefundItems[index].discount /
+          updatedRefundItems[index].item!.quantity);
       const amountToRefund = qtyToRefund * pricePerItem - totalDiscount;
 
       updatedRefundItems[index] = {
@@ -161,7 +181,7 @@ const CreateRefund: React.FC<CreateRefundProps> = ({ openModal, onClose, id }) =
   const handleRefundDetailChange = (field: string, value: any) => {
     let validatedValue = value;
 
-    if (field === "charges") {
+    if (field === 'charges') {
       validatedValue = Math.min(parseFloat(value), calculateTotalRefund());
     }
 
@@ -169,26 +189,27 @@ const CreateRefund: React.FC<CreateRefundProps> = ({ openModal, onClose, id }) =
   };
 
   const formatDate = (dateInput?: string | Date) => {
-    if (!dateInput) return "N/A";
-    const date = typeof dateInput === "string" ? new Date(dateInput) : dateInput;
-    const day = String(date.getDate()).padStart(2, "0");
-    const month = String(date.getMonth() + 1).padStart(2, "0");
+    if (!dateInput) return 'N/A';
+    const date =
+      typeof dateInput === 'string' ? new Date(dateInput) : dateInput;
+    const day = String(date.getDate()).padStart(2, '0');
+    const month = String(date.getMonth() + 1).padStart(2, '0');
     const year = String(date.getFullYear()).slice(-2);
     return `${day}/${month}/${year}`;
   };
 
   const cardStyle = {
-    display: "flex",
+    display: 'flex',
     flex: 1,
-    justifyContent: "space-between",
-    alignItems: "center",
+    justifyContent: 'space-between',
+    alignItems: 'center',
     elevation: 1,
-    border: "1px solid #E0E0E0",
-    position: "relative",
-    padding: "16px",
-    borderRadius: "4px",
-    height: "100px",
-    marginBottom: "16px",
+    border: '1px solid #E0E0E0',
+    position: 'relative',
+    padding: '16px',
+    borderRadius: '4px',
+    height: '100px',
+    marginBottom: '16px',
   };
 
   const calculateTotalRefund = () => {
@@ -196,9 +217,10 @@ const CreateRefund: React.FC<CreateRefundProps> = ({ openModal, onClose, id }) =
   };
 
   const getBatchOptions = (item: IBillingItem | null) => {
-    if (!item || billing?.billType !== "Pharmacy" || !billing?.pharmacyData) return [];
+    if (!item || billing?.billType !== 'Pharmacy' || !billing?.pharmacyData)
+      return [];
     const pharmacyItem = billing?.pharmacyData.find(
-      (pharmacy: any) => pharmacy._id === item.serviceId
+      (pharmacy: any) => pharmacy._id === item.serviceId,
     );
     return pharmacyItem && pharmacyItem.item
       ? pharmacyItem.item.map((detail: any) => detail.batchNumber)
@@ -206,20 +228,23 @@ const CreateRefund: React.FC<CreateRefundProps> = ({ openModal, onClose, id }) =
   };
 
   const totalRefund = calculateTotalRefund();
-  const netAmount = Math.max(0, totalRefund - (parseFloat(refundDetails.charges) || 0));
+  const netAmount = Math.max(
+    0,
+    totalRefund - (parseFloat(refundDetails.charges) || 0),
+  );
 
   const handleProcessRefund = async () => {
     if (!billing) return;
 
     const pharmacyItems = refundItems
-      .filter((item) => billing.billType === "Pharmacy" && item.item)
-      .map((item) => {
+      .filter(item => billing.billType === 'Pharmacy' && item.item)
+      .map(item => {
         const pharmacyItem = billing.pharmacyData.find(
-          (pharmacy: any) => pharmacy._id === item.item?.serviceId
+          (pharmacy: any) => pharmacy._id === item.item?.serviceId,
         );
 
         const billingItem = billing.items.find(
-          (billingItem) => billingItem.serviceId === item.item?.serviceId
+          billingItem => billingItem.serviceId === item.item?.serviceId,
         );
 
         return {
@@ -249,7 +274,7 @@ const CreateRefund: React.FC<CreateRefundProps> = ({ openModal, onClose, id }) =
         reason: refundDetails.reason,
         details: refundDetails.details,
         charges: parseFloat(refundDetails.charges) || 0,
-        items: refundItems.map((item) => ({
+        items: refundItems.map(item => ({
           serviceName: item.item?.serviceName,
           itemName: item.item?.serviceName,
           batchNo: item.batchNo,
@@ -257,38 +282,40 @@ const CreateRefund: React.FC<CreateRefundProps> = ({ openModal, onClose, id }) =
           amountToRefund: item.amountToRefund,
           itemId: (
             billing.items.find(
-              (billingItem) => billingItem.serviceId === item.item?.serviceId
+              billingItem => billingItem.serviceId === item.item?.serviceId,
             ) as unknown as { _id: string }
           )?._id,
         })),
         refundNumber: refundDetails.refundNumber,
         files: refundDetails.files,
       },
-      pharmacyData: billing.billType === "Pharmacy" ? pharmacyItems : undefined,
+      pharmacyData: billing.billType === 'Pharmacy' ? pharmacyItems : undefined,
     };
 
     const promise = addRefund(refundData).unwrap();
 
     showPromiseToast(promise, {
-      loading: "Processing Refund...",
-      success: (response) => response.message || "Refund processed successfully",
-      error: (err) => `Failed to process refund: ${err.response?.data?.message || err.message}`,
+      loading: 'Processing Refund...',
+      success: response => response.message || 'Refund processed successfully',
+      error: err =>
+        `Failed to process refund: ${err.response?.data?.message || err.message}`,
     });
 
     try {
       await promise;
       onClose();
     } catch (error) {
-      console.error("Refund processing failed:", error);
+      console.error('Refund processing failed:', error);
     }
   };
 
   const validateForm = () => {
     const refundDetailsValid = refundDetails.mode && refundDetails.reason;
 
-    const refundItemsValid = refundItems.every((item) => {
-      if (!item.item || item.qtyToRefund <= 0 || item.amountToRefund <= 0) return false;
-      if (billing?.billType === "Pharmacy" && !item.batchNo) return false;
+    const refundItemsValid = refundItems.every(item => {
+      if (!item.item || item.qtyToRefund <= 0 || item.amountToRefund <= 0)
+        return false;
+      if (billing?.billType === 'Pharmacy' && !item.batchNo) return false;
       return true;
     });
 
@@ -311,23 +338,44 @@ const CreateRefund: React.FC<CreateRefundProps> = ({ openModal, onClose, id }) =
           <Box sx={{ ...cardStyle }}>
             <Grid container spacing={2}>
               <Grid item xs={12} md={4}>
-                <Typography variant="subtitle2" color="text.secondary" component="div">
+                <Typography
+                  variant="subtitle2"
+                  color="text.secondary"
+                  component="div"
+                >
                   <strong>Bill No:</strong> {billing?.billingId}
                 </Typography>
-                <Typography variant="subtitle2" color="text.secondary" component="div">
-                  <strong>Category:</strong> {billing?.billType || "Service"}
+                <Typography
+                  variant="subtitle2"
+                  color="text.secondary"
+                  component="div"
+                >
+                  <strong>Category:</strong> {billing?.billType || 'Service'}
                 </Typography>
               </Grid>
               <Grid item xs={12} md={4}>
-                <Typography variant="subtitle2" color="text.secondary" component="div">
-                  <strong>Billing Date:</strong> {formatDate(billing?.createdAt || "")}
+                <Typography
+                  variant="subtitle2"
+                  color="text.secondary"
+                  component="div"
+                >
+                  <strong>Billing Date:</strong>{' '}
+                  {formatDate(billing?.createdAt || '')}
                 </Typography>
-                <Typography variant="subtitle2" color="text.secondary" component="div">
+                <Typography
+                  variant="subtitle2"
+                  color="text.secondary"
+                  component="div"
+                >
                   <strong>Total Amount:</strong> Rs.{billing?.totalPaid}
                 </Typography>
               </Grid>
               <Grid item xs={12} md={4}>
-                <Typography variant="subtitle2" color="text.secondary" component="div">
+                <Typography
+                  variant="subtitle2"
+                  color="text.secondary"
+                  component="div"
+                >
                   <strong>Patient ID:</strong> {billing?.patientCode}
                 </Typography>
               </Grid>
@@ -342,38 +390,40 @@ const CreateRefund: React.FC<CreateRefundProps> = ({ openModal, onClose, id }) =
                 <FieldAutocomplete
                   label="Item"
                   options={getFilteredItems(index)}
-                  isOptionEqualToValue={(option, value) => option.serviceId === value.serviceId}
-                  getOptionLabel={(option) => option.serviceName}
+                  isOptionEqualToValue={(option, value) =>
+                    option.serviceId === value.serviceId
+                  }
+                  getOptionLabel={option => option.serviceName}
                   value={refundItem.item}
-                  onChange={(value) => handleItemChange(index, value)}
+                  onChange={value => handleItemChange(index, value)}
                 />
               </Grid>
-              {billing?.billType === "Pharmacy" && (
+              {billing?.billType === 'Pharmacy' && (
                 <Grid item xs={2}>
                   <FieldAutocomplete
                     label="Batch No"
                     options={getBatchOptions(refundItem.item)}
                     isOptionEqualToValue={(option, value) => option === value}
-                    getOptionLabel={(option) => option}
+                    getOptionLabel={option => option}
                     value={refundItem.batchNo}
-                    onChange={(value) => handleBatchChange(index, value)}
+                    onChange={value => handleBatchChange(index, value)}
                     disabled={!refundItem.item}
                   />
                 </Grid>
               )}
-              <Grid item xs={billing?.billType === "Pharmacy" ? 2 : 3}>
+              <Grid item xs={billing?.billType === 'Pharmacy' ? 2 : 3}>
                 <TextField
                   fullWidth
                   label="Quantity"
-                  value={refundItem.item?.quantity || ""}
+                  value={refundItem.item?.quantity || ''}
                   disabled
                 />
               </Grid>
-              <Grid item xs={billing?.billType === "Pharmacy" ? 2 : 3}>
+              <Grid item xs={billing?.billType === 'Pharmacy' ? 2 : 3}>
                 <TextField
                   fullWidth
                   label="Amount"
-                  value={refundItem.item?.price || ""}
+                  value={refundItem.item?.price || ''}
                   disabled={!refundItem.item}
                 />
               </Grid>
@@ -382,14 +432,23 @@ const CreateRefund: React.FC<CreateRefundProps> = ({ openModal, onClose, id }) =
                   fullWidth
                   label="Qty to refund"
                   type="number"
-                  InputProps={{ inputProps: { min: 0, max: refundItem.item?.quantity || 0 } }}
+                  InputProps={{
+                    inputProps: { min: 0, max: refundItem.item?.quantity || 0 },
+                  }}
                   value={refundItem.qtyToRefund}
                   disabled={!refundItem.item}
-                  onChange={(e) => handleQtyChange(index, parseInt(e.target.value))}
+                  onChange={e =>
+                    handleQtyChange(index, parseInt(e.target.value))
+                  }
                 />
               </Grid>
               <Grid item xs={1}>
-                <TextField fullWidth label="Total Discount" value={refundItem.discount} disabled />
+                <TextField
+                  fullWidth
+                  label="Total Discount"
+                  value={refundItem.discount}
+                  disabled
+                />
               </Grid>
               <Grid item xs={1}>
                 <TextField
@@ -399,9 +458,18 @@ const CreateRefund: React.FC<CreateRefundProps> = ({ openModal, onClose, id }) =
                   disabled
                 />
               </Grid>
-              <Grid item xs={1} display="flex" alignItems="center" justifyContent="center">
+              <Grid
+                item
+                xs={1}
+                display="flex"
+                alignItems="center"
+                justifyContent="center"
+              >
                 {refundItems.length > 1 && (
-                  <IconButton onClick={() => deleteRefundItem(index)} color="secondary">
+                  <IconButton
+                    onClick={() => deleteRefundItem(index)}
+                    color="secondary"
+                  >
                     <Delete />
                   </IconButton>
                 )}
@@ -421,7 +489,12 @@ const CreateRefund: React.FC<CreateRefundProps> = ({ openModal, onClose, id }) =
           </Button>
         </Box>
 
-        <Box display="flex" justifyContent="space-between" alignItems="center" mt={3}>
+        <Box
+          display="flex"
+          justifyContent="space-between"
+          alignItems="center"
+          mt={3}
+        >
           {isLoading ? (
             <Skeleton width="100%" height={30} />
           ) : (
@@ -432,7 +505,12 @@ const CreateRefund: React.FC<CreateRefundProps> = ({ openModal, onClose, id }) =
               <TextField
                 label="Charges"
                 value={refundDetails.charges}
-                onChange={(e) => handleRefundDetailChange("charges", parseFloat(e.target.value))}
+                onChange={e =>
+                  handleRefundDetailChange(
+                    'charges',
+                    parseFloat(e.target.value),
+                  )
+                }
                 InputProps={{ inputProps: { min: 0, max: totalRefund } }}
               />
               <Typography variant="subtitle2" component="div">
@@ -450,7 +528,7 @@ const CreateRefund: React.FC<CreateRefundProps> = ({ openModal, onClose, id }) =
                 select
                 label="Mode of Refund"
                 value={refundDetails.mode}
-                onChange={(e) => handleRefundDetailChange("mode", e.target.value)}
+                onChange={e => handleRefundDetailChange('mode', e.target.value)}
               >
                 <MenuItem value="Cash">Cash</MenuItem>
                 <MenuItem value="CreditCard">Credit Card</MenuItem>
@@ -464,7 +542,9 @@ const CreateRefund: React.FC<CreateRefundProps> = ({ openModal, onClose, id }) =
                 fullWidth
                 label="Details"
                 value={refundDetails.details}
-                onChange={(e) => handleRefundDetailChange("details", e.target.value)}
+                onChange={e =>
+                  handleRefundDetailChange('details', e.target.value)
+                }
               />
             </Grid>
             <Grid item xs={3}>
@@ -472,7 +552,9 @@ const CreateRefund: React.FC<CreateRefundProps> = ({ openModal, onClose, id }) =
                 fullWidth
                 label="Reason for Refund"
                 value={refundDetails.reason}
-                onChange={(e) => handleRefundDetailChange("reason", e.target.value)}
+                onChange={e =>
+                  handleRefundDetailChange('reason', e.target.value)
+                }
               />
             </Grid>
             <Grid item xs={3}>
@@ -480,7 +562,9 @@ const CreateRefund: React.FC<CreateRefundProps> = ({ openModal, onClose, id }) =
                 fullWidth
                 label="Refund Invoice No"
                 value={refundDetails.refundNumber}
-                onChange={(e) => handleRefundDetailChange("refundNumber", e.target.value)}
+                onChange={e =>
+                  handleRefundDetailChange('refundNumber', e.target.value)
+                }
               />
             </Grid>
           </Grid>
@@ -489,14 +573,20 @@ const CreateRefund: React.FC<CreateRefundProps> = ({ openModal, onClose, id }) =
         <Box mt={3}>
           <Grid container spacing={2}>
             <Grid item xs={12}>
-              <Typography variant="subtitle1" color={"primary"} sx={{ mt: 2, mb: 2 }}>
+              <Typography
+                variant="subtitle1"
+                color={'primary'}
+                sx={{ mt: 2, mb: 2 }}
+              >
                 Invoice Upload
               </Typography>
               <FileUploadButton
                 acceptTypes="application/pdf"
                 maxFiles={5}
                 maxFileSizeinMB={10}
-                onUploadFiles={(files) => setRefundDetails({ ...refundDetails, files })}
+                onUploadFiles={files =>
+                  setRefundDetails({ ...refundDetails, files })
+                }
                 bucket={EBuckets.PharmacyInvoices}
                 documentType={EDocumentTypes.Invoice}
                 user={id}

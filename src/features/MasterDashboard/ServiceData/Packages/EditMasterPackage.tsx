@@ -1,4 +1,4 @@
-import React from "react";
+import React from 'react';
 import {
   Box,
   Button,
@@ -12,15 +12,15 @@ import {
   MenuItem,
   Typography,
   Skeleton,
-} from "@mui/material";
-import { useFormik } from "formik";
+} from '@mui/material';
+import { useFormik } from 'formik';
 
-import { useToast } from "../../../../context/ToastContext";
+import { useToast } from '../../../../context/ToastContext';
 
 import {
   useEditMasterPackageMutation,
   useGetMasterPackageByIdQuery,
-} from "../../../../services/masterDashboardService/serviceData/masterPackagesApi";
+} from '../../../../services/masterDashboardService/serviceData/masterPackagesApi';
 
 // Define the types for package data
 interface PackageItem {
@@ -78,7 +78,13 @@ const skeletonLoader = () => (
       <Grid item xs={12} sm={6} lg={4} mb={2} mt={4}>
         <Skeleton variant="rectangular" width="100%" height={32} />
       </Grid>
-      <Box display={"flex"} justifyContent={"flex-end"} alignItems={"center"} gap={2} mb={2}>
+      <Box
+        display={'flex'}
+        justifyContent={'flex-end'}
+        alignItems={'center'}
+        gap={2}
+        mb={2}
+      >
         <Skeleton variant="rectangular" width={90} height={36} />
         <Skeleton variant="rectangular" width={90} height={36} />
       </Box>
@@ -86,20 +92,25 @@ const skeletonLoader = () => (
   </DialogContent>
 );
 
-const EditMasterPackage: React.FC<EditMasterPackageProps> = ({ openModal, onClose, id }) => {
+const EditMasterPackage: React.FC<EditMasterPackageProps> = ({
+  openModal,
+  onClose,
+  id,
+}) => {
   const { showPromiseToast } = useToast();
 
   // Fetch the existing package details
-  const { data: masterPackageData, isLoading: isPackageLoading } = useGetMasterPackageByIdQuery(id);
+  const { data: masterPackageData, isLoading: isPackageLoading } =
+    useGetMasterPackageByIdQuery(id);
   const packageData: MasterPackageData | undefined = masterPackageData?.data;
 
   const [updatePackage, { isLoading }] = useEditMasterPackageMutation();
 
   const initialValues: IFormValues = {
-    packageName: packageData?.name || "",
+    packageName: packageData?.name || '',
     price: packageData?.cost || 0,
     validTill: packageData?.validTill ? new Date(packageData.validTill) : null,
-    gender: packageData?.gender || "",
+    gender: packageData?.gender || '',
     isActive: packageData?.active || false,
   };
 
@@ -109,20 +120,26 @@ const EditMasterPackage: React.FC<EditMasterPackageProps> = ({ openModal, onClos
       const payload = {
         id,
         isActive: values.isActive,
-        procedures: packageData?.procedures?.map((item) => ({ id: item.itemId })) || [],
-        investigations: packageData?.investigations?.map((item) => ({ id: item.itemId })) || [],
+        procedures:
+          packageData?.procedures?.map(item => ({ id: item.itemId })) || [],
+        investigations:
+          packageData?.investigations?.map(item => ({ id: item.itemId })) || [],
         cryoPreservations:
-          packageData?.cryoPreservations?.map((item) => ({ id: item.itemId })) || [],
-        services: packageData?.services?.map((item) => ({ id: item.itemId })) || [],
-        treatmentCycles: packageData?.treatmentCycles?.map((item) => ({ id: item.itemId })) || [],
+          packageData?.cryoPreservations?.map(item => ({ id: item.itemId })) ||
+          [],
+        services:
+          packageData?.services?.map(item => ({ id: item.itemId })) || [],
+        treatmentCycles:
+          packageData?.treatmentCycles?.map(item => ({ id: item.itemId })) ||
+          [],
       };
 
       const promise = updatePackage(payload).unwrap();
 
       showPromiseToast(promise, {
-        loading: "Updating...",
-        success: (data) => data || "Updated Successfully",
-        error: (data) => data || "Update Failed",
+        loading: 'Updating...',
+        success: data => data || 'Updated Successfully',
+        error: data => data || 'Update Failed',
       });
 
       try {
@@ -138,12 +155,12 @@ const EditMasterPackage: React.FC<EditMasterPackageProps> = ({ openModal, onClos
 
   return (
     <Dialog open={openModal} onClose={onClose} maxWidth="md" fullWidth>
-      <DialogTitle color={"primary"}>Edit Master Package</DialogTitle>
+      <DialogTitle color={'primary'}>Edit Master Package</DialogTitle>
       {isPackageLoading ? (
         skeletonLoader()
       ) : (
         <DialogContent>
-          <Box component={"form"} onSubmit={formik.handleSubmit} p={2}>
+          <Box component={'form'} onSubmit={formik.handleSubmit} p={2}>
             {/* Package details */}
             <Grid container spacing={2} mb={2} mt={2} alignItems="center">
               <Grid item xs={12} sm={6} lg={3}>
@@ -177,54 +194,61 @@ const EditMasterPackage: React.FC<EditMasterPackageProps> = ({ openModal, onClos
                   value={formik.values.gender}
                   disabled
                 >
-                  <MenuItem value={"male"}>Male</MenuItem>
-                  <MenuItem value={"female"}>Female</MenuItem>
+                  <MenuItem value={'male'}>Male</MenuItem>
+                  <MenuItem value={'female'}>Female</MenuItem>
                 </TextField>
               </Grid>
             </Grid>
 
             {/* Display selected items */}
             <Grid container spacing={2} mb={2} mt={2}>
-              {packageData?.treatmentCycles && packageData.treatmentCycles.length > 0 && (
-                <Grid item xs={12}>
-                  <Typography variant="h6">Treatment Cycles:</Typography>
-                  {packageData.treatmentCycles.map((cycle) => (
-                    <Typography key={cycle.itemId}>{cycle.name}</Typography>
-                  ))}
-                </Grid>
-              )}
+              {packageData?.treatmentCycles &&
+                packageData.treatmentCycles.length > 0 && (
+                  <Grid item xs={12}>
+                    <Typography variant="h6">Treatment Cycles:</Typography>
+                    {packageData.treatmentCycles.map(cycle => (
+                      <Typography key={cycle.itemId}>{cycle.name}</Typography>
+                    ))}
+                  </Grid>
+                )}
 
               {packageData?.procedures && packageData.procedures.length > 0 && (
                 <Grid item xs={12}>
                   <Typography variant="h6">Procedures:</Typography>
-                  {packageData.procedures.map((procedure) => (
-                    <Typography key={procedure.itemId}>{procedure.name}</Typography>
+                  {packageData.procedures.map(procedure => (
+                    <Typography key={procedure.itemId}>
+                      {procedure.name}
+                    </Typography>
                   ))}
                 </Grid>
               )}
 
-              {packageData?.investigations && packageData.investigations.length > 0 && (
-                <Grid item xs={12}>
-                  <Typography variant="h6">Investigations:</Typography>
-                  {packageData.investigations.map((investigation) => (
-                    <Typography key={investigation.itemId}>{investigation.name}</Typography>
-                  ))}
-                </Grid>
-              )}
+              {packageData?.investigations &&
+                packageData.investigations.length > 0 && (
+                  <Grid item xs={12}>
+                    <Typography variant="h6">Investigations:</Typography>
+                    {packageData.investigations.map(investigation => (
+                      <Typography key={investigation.itemId}>
+                        {investigation.name}
+                      </Typography>
+                    ))}
+                  </Grid>
+                )}
 
-              {packageData?.cryoPreservations && packageData.cryoPreservations.length > 0 && (
-                <Grid item xs={12}>
-                  <Typography variant="h6">Cryo Preservations:</Typography>
-                  {packageData.cryoPreservations.map((cryo) => (
-                    <Typography key={cryo.itemId}>{cryo.name}</Typography>
-                  ))}
-                </Grid>
-              )}
+              {packageData?.cryoPreservations &&
+                packageData.cryoPreservations.length > 0 && (
+                  <Grid item xs={12}>
+                    <Typography variant="h6">Cryo Preservations:</Typography>
+                    {packageData.cryoPreservations.map(cryo => (
+                      <Typography key={cryo.itemId}>{cryo.name}</Typography>
+                    ))}
+                  </Grid>
+                )}
 
               {packageData?.services && packageData.services.length > 0 && (
                 <Grid item xs={12}>
                   <Typography variant="h6">Services:</Typography>
-                  {packageData.services.map((service) => (
+                  {packageData.services.map(service => (
                     <Typography key={service.itemId}>{service.name}</Typography>
                   ))}
                 </Grid>
@@ -246,20 +270,26 @@ const EditMasterPackage: React.FC<EditMasterPackageProps> = ({ openModal, onClos
             </Grid>
 
             {/* Save and Cancel buttons */}
-            <Box display={"flex"} justifyContent={"flex-end"} alignItems={"center"} gap={2} mb={2}>
+            <Box
+              display={'flex'}
+              justifyContent={'flex-end'}
+              alignItems={'center'}
+              gap={2}
+              mb={2}
+            >
               <Button
                 variant="contained"
                 color="primary"
                 type="submit"
                 disabled={isLoading || isPackageLoading}
-                sx={{ width: "fit-content" }}
+                sx={{ width: 'fit-content' }}
               >
                 Save
               </Button>
               <Button
                 variant="contained"
                 color="secondary"
-                sx={{ width: "fit-content" }}
+                sx={{ width: 'fit-content' }}
                 onClick={onClose}
               >
                 Cancel

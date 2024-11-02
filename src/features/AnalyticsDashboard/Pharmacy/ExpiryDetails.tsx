@@ -1,20 +1,19 @@
-import React, { useState, useCallback } from "react";
-import ContentSection from "../../../components/ContentSection/ContentSection";
-import { Box, TextField, Button } from "@mui/material";
-import CustomDataGrid from "../../../components/CustomDataGrid/CustomDataGrid";
-import { GridColDef } from "@mui/x-data-grid";
-import { useGetExpiryDetailsQuery } from "../../../services/analyticsDashboardService/pharmacy/expiryDetailaApi";
-import { exportToCSV } from "../../../utils/exportCSV";
-import _ from "lodash";
-import { format } from "date-fns";
-import CustomeDateRangePicker from "../../../components/CustomDateRangePicker/CustomDateRangePicker";
-import { formatToIndianCurrencyFormat } from "../../../utils/formatToIndianCurrencyFormat";
-
+import React, { useState, useCallback } from 'react';
+import ContentSection from '../../../components/ContentSection/ContentSection';
+import { Box, TextField, Button } from '@mui/material';
+import CustomDataGrid from '../../../components/CustomDataGrid/CustomDataGrid';
+import { GridColDef } from '@mui/x-data-grid';
+import { useGetExpiryDetailsQuery } from '../../../services/analyticsDashboardService/pharmacy/expiryDetailaApi';
+import { exportToCSV } from '../../../utils/exportCSV';
+import _ from 'lodash';
+import { format } from 'date-fns';
+import CustomeDateRangePicker from '../../../components/CustomDateRangePicker/CustomDateRangePicker';
+import { formatToIndianCurrencyFormat } from '../../../utils/formatToIndianCurrencyFormat';
 
 const ExpiryDetails: React.FC = () => {
   const [page, setPage] = useState<number>(1);
   const [pageSize, setPageSize] = useState<number>(25);
-  const [drugName, setDrugName] = useState<string>("");
+  const [drugName, setDrugName] = useState<string>('');
 
   const [startDate, setStartDate] = useState<Date | null>(null); // For start date
   const [endDate, setEndDate] = useState<Date | null>(null); // For end date
@@ -29,14 +28,14 @@ const ExpiryDetails: React.FC = () => {
 
   // Convert start and end dates to UTC date-only format for the API
   const startDateUTC = startDate;
-  const endDateUTC = endDate
+  const endDateUTC = endDate;
 
   // Handle search input with debounce
   const handleSearchChange = useCallback(
     _.debounce((query: string) => {
       setDrugName(query);
     }, 500),
-    []
+    [],
   );
 
   // Fetch data from the API with dynamic query parameters
@@ -50,7 +49,7 @@ const ExpiryDetails: React.FC = () => {
     },
   });
 
-  console.log("Expiry Details Data:", data);
+  console.log('Expiry Details Data:', data);
 
   const handlePageChange = (newPage: number) => {
     setPage(newPage);
@@ -64,66 +63,68 @@ const ExpiryDetails: React.FC = () => {
     if (data?.data?.records && data.data.records.length > 0) {
       // Define the headers for the CSV file
       const headers = [
-        "S No",
-        "Centre",
-        "Invoice No",
-        "Vendor Name",
-        "Drug Category",
-        "Drug Name",
-        "Batch No",
-        "Expiry Date",
-        "Unit Cost",
-        "Total Qty",
-        "Sum Total Value",
+        'S No',
+        'Centre',
+        'Invoice No',
+        'Vendor Name',
+        'Drug Category',
+        'Drug Name',
+        'Batch No',
+        'Expiry Date',
+        'Unit Cost',
+        'Total Qty',
+        'Sum Total Value',
       ];
 
       // Format the data for CSV export
-      const formattedData = data.data.records.map((record) => {
+      const formattedData = data.data.records.map(record => {
         return {
           serialNumber: record.serialNumber,
-          centre: record.centre || "",
-          invoiceNo: record.invoiceNo || "",
-          vendorName: record.vendorName || "",
-          drugCategory: record.drugCategory || "",
-          drugName: record.drugName || "",
-          batchNo: record.batchNo || "",
-          expiryDate: record.expiryDate || "",
-          unitCost: record.unitCost || "",
-          totalQty: record.totalQty || "",
-          sumTotalValue: formatToIndianCurrencyFormat(record.sumTotalValue || ""), // Ensure 2 decimal places
+          centre: record.centre || '',
+          invoiceNo: record.invoiceNo || '',
+          vendorName: record.vendorName || '',
+          drugCategory: record.drugCategory || '',
+          drugName: record.drugName || '',
+          batchNo: record.batchNo || '',
+          expiryDate: record.expiryDate || '',
+          unitCost: record.unitCost || '',
+          totalQty: record.totalQty || '',
+          sumTotalValue: formatToIndianCurrencyFormat(
+            record.sumTotalValue || '',
+          ), // Ensure 2 decimal places
         };
       });
 
       // Export formatted data to CSV
-      exportToCSV([headers, ...formattedData], "ExpiryDetails_Report");
+      exportToCSV([headers, ...formattedData], 'ExpiryDetails_Report');
     } else {
-      console.log("No data to export");
+      console.log('No data to export');
     }
   };
 
-  const formatDate = (date: string) => format(new Date(date), "dd/MM/yyyy");
+  const formatDate = (date: string) => format(new Date(date), 'dd/MM/yyyy');
 
   const columnsConfig: GridColDef[] = [
-    { field: "serialNumber", headerName: "S No", flex: 0.5 },
-    { field: "centre", headerName: "Centre", flex: 1 },
-    { field: "invoiceNo", headerName: "Invoice No", flex: 1 },
-    { field: "vendorName", headerName: "Vendor Name", flex: 1 },
-    { field: "drugCategory", headerName: "Drug Category", flex: 1 },
-    { field: "drugName", headerName: "Drug Name", flex: 1 },
-    { field: "batchNo", headerName: "Batch No", flex: 1 },
+    { field: 'serialNumber', headerName: 'S No', flex: 0.5 },
+    { field: 'centre', headerName: 'Centre', flex: 1 },
+    { field: 'invoiceNo', headerName: 'Invoice No', flex: 1 },
+    { field: 'vendorName', headerName: 'Vendor Name', flex: 1 },
+    { field: 'drugCategory', headerName: 'Drug Category', flex: 1 },
+    { field: 'drugName', headerName: 'Drug Name', flex: 1 },
+    { field: 'batchNo', headerName: 'Batch No', flex: 1 },
     {
-      field: "expiryDate",
-      headerName: "Expiry Date",
+      field: 'expiryDate',
+      headerName: 'Expiry Date',
       flex: 1,
-      valueFormatter: (params) => formatDate(params.value),
+      valueFormatter: params => formatDate(params.value),
     },
-    { field: "unitCost", headerName: "Unit Cost", flex: 1 },
-    { field: "totalQty", headerName: "Total Qty", flex: 1 },
+    { field: 'unitCost', headerName: 'Unit Cost', flex: 1 },
+    { field: 'totalQty', headerName: 'Total Qty', flex: 1 },
     {
-      field: "sumTotalValue",
-      headerName: "Sum Total Value",
+      field: 'sumTotalValue',
+      headerName: 'Sum Total Value',
       flex: 1,
-      valueFormatter: (params) => formatToIndianCurrencyFormat(params.value),
+      valueFormatter: params => formatToIndianCurrencyFormat(params.value),
     },
   ];
 
@@ -140,7 +141,7 @@ const ExpiryDetails: React.FC = () => {
           label="Drug Name"
           size="small"
           variant="outlined"
-          onChange={(e) => handleSearchChange(e.target.value)}
+          onChange={e => handleSearchChange(e.target.value)}
           placeholder="Enter Drug Name"
         />
         <Button variant="contained" color="primary" onClick={handleDownloadCSV}>
@@ -148,7 +149,7 @@ const ExpiryDetails: React.FC = () => {
         </Button>
       </Box>
 
-      <Box mt={2} flex={"1 1 auto"}>
+      <Box mt={2} flex={'1 1 auto'}>
         <CustomDataGrid
           autoHeight={false}
           columns={columnsConfig}
@@ -158,7 +159,7 @@ const ExpiryDetails: React.FC = () => {
           totalRows={totalRows} // Total rows from API pagination info
           loading={isLoading} // Show loading while data is being fetched
           getRowId={getRowId} // Provide custom id for each row
-          sx={{ height: "100%" }}
+          sx={{ height: '100%' }}
           enablePagination={true}
           onPageChange={handlePageChange}
           onPageSizeChange={handlePageSizeChange}

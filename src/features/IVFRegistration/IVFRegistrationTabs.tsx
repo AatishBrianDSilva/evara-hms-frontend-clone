@@ -8,13 +8,16 @@ import { EIVFRegistrationTabPaths } from '../../types/global';
 import ContentSection from '../../components/ContentSection/ContentSection';
 
 const IVFRegistrationTab = () => {
-  const theme = useTheme()
+  const theme = useTheme();
 
   const basePath = `/ivf-registration`;
-  const { activeTab, handleTabChange } = useTabNavigation(basePath, Object.values(EIVFRegistrationTabPaths));
+  const { activeTab, handleTabChange } = useTabNavigation(
+    basePath,
+    Object.values(EIVFRegistrationTabPaths),
+  );
 
   return (
-    <Box display={"flex"} flexDirection={"column"} flex={1}>
+    <Box display={'flex'} flexDirection={'column'} flex={1}>
       <ContentSection>
         <Tabs
           value={activeTab}
@@ -24,22 +27,20 @@ const IVFRegistrationTab = () => {
           aria-label="Patient Main Tabs"
           sx={{ borderBottom: `1px solid ${theme.palette.divider}` }}
         >
-          <Tab label="Patients" id='ivf-regisrtation-main-tabpanel-0' />
-          <Tab label="Donor From Bank" id='ivf-regisrtation-main-tabpanel-1' />
-          <Tab label="Donor From Hospital" id='ivf-regisrtation-main-tabpanel-2' />
+          <Tab label="Patients" id="ivf-regisrtation-main-tabpanel-0" />
+          <Tab label="Donor From Bank" id="ivf-regisrtation-main-tabpanel-1" />
+          <Tab
+            label="Donor From Hospital"
+            id="ivf-regisrtation-main-tabpanel-2"
+          />
         </Tabs>
 
-
-        <Box
-          p={2}
-          display={"flex"} flexDirection={"column"}
-          flex={"1 1 auto"}
-        >
+        <Box p={2} display={'flex'} flexDirection={'column'} flex={'1 1 auto'}>
           <Outlet />
         </Box>
       </ContentSection>
     </Box>
-  )
-}
+  );
+};
 
-export default IVFRegistrationTab
+export default IVFRegistrationTab;

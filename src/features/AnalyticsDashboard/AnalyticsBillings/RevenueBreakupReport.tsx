@@ -1,34 +1,38 @@
-import React, { useState, useCallback } from "react";
-import { Box, TextField, Button, MenuItem, Typography } from "@mui/material";
-import ContentSection from "../../../components/ContentSection/ContentSection";
-import CustomDataGrid from "../../../components/CustomDataGrid/CustomDataGrid";
-import { GridColDef } from "@mui/x-data-grid";
-import { formatToIndianCurrencyFormat } from "../../../utils/formatToIndianCurrencyFormat";
-import debounce from "lodash/debounce";
-import { exportToCSV } from "../../../utils/exportCSV"; // Import the CSV utility
-import { revenueBreakupResponse, useGetRevenueBreakupQuery } from "../../../services/analyticsDashboardService/billings/revenueBreakupApi";
-import CustomeDateRangePicker from "../../../components/CustomDateRangePicker/CustomDateRangePicker";
-import { endOfWeek, startOfWeek } from "date-fns";
-
+import React, { useState, useCallback } from 'react';
+import { Box, TextField, Button, MenuItem, Typography } from '@mui/material';
+import ContentSection from '../../../components/ContentSection/ContentSection';
+import CustomDataGrid from '../../../components/CustomDataGrid/CustomDataGrid';
+import { GridColDef } from '@mui/x-data-grid';
+import { formatToIndianCurrencyFormat } from '../../../utils/formatToIndianCurrencyFormat';
+import debounce from 'lodash/debounce';
+import { exportToCSV } from '../../../utils/exportCSV'; // Import the CSV utility
+import {
+  revenueBreakupResponse,
+  useGetRevenueBreakupQuery,
+} from '../../../services/analyticsDashboardService/billings/revenueBreakupApi';
+import CustomeDateRangePicker from '../../../components/CustomDateRangePicker/CustomDateRangePicker';
+import { endOfWeek, startOfWeek } from 'date-fns';
 
 const RevenueBreakupReport: React.FC = () => {
   const [page, setPage] = useState<number>(1);
   const [pageSize, setPageSize] = useState<number>(25);
 
   const [startDate, setStartDate] = useState<Date | null>(
-    startOfWeek(new Date(), { weekStartsOn: 1 })
+    startOfWeek(new Date(), { weekStartsOn: 1 }),
   );
-  const [endDate, setEndDate] = useState<Date | null>(endOfWeek(new Date(), { weekStartsOn: 1 }));
+  const [endDate, setEndDate] = useState<Date | null>(
+    endOfWeek(new Date(), { weekStartsOn: 1 }),
+  );
 
-  const [paymentMode, setPaymentMode] = useState<string>("All");
-  const [createdBy, setCreatedBy] = useState<string>("All");
+  const [paymentMode, setPaymentMode] = useState<string>('All');
+  const [createdBy, setCreatedBy] = useState<string>('All');
 
   // Debounce function for setting payment mode
   const debouncedSetPaymentMode = useCallback(
     debounce((value: string) => {
       setPaymentMode(value);
     }, 300), // Adjust the delay as needed (e.g., 300 ms)
-    []
+    [],
   );
 
   // Debounce function for setting created by
@@ -36,7 +40,7 @@ const RevenueBreakupReport: React.FC = () => {
     debounce((value: string) => {
       setCreatedBy(value);
     }, 300),
-    []
+    [],
   );
 
   // Handle the date range change
@@ -47,14 +51,17 @@ const RevenueBreakupReport: React.FC = () => {
     }
   };
 
-  const handlePaymentModeChange = (event: React.ChangeEvent<{ value: unknown }>) => {
+  const handlePaymentModeChange = (
+    event: React.ChangeEvent<{ value: unknown }>,
+  ) => {
     debouncedSetPaymentMode(event.target.value as string);
   };
 
-  const handleCreatedByChange = (event: React.ChangeEvent<{ value: unknown }>) => {
+  const handleCreatedByChange = (
+    event: React.ChangeEvent<{ value: unknown }>,
+  ) => {
     debouncedSetCreatedBy(event.target.value as string);
   };
-
 
   const handlePageChange = (newPage: number) => {
     setPage(newPage + 1); // Add 1 because page in pagination is 1-based
@@ -74,16 +81,22 @@ const RevenueBreakupReport: React.FC = () => {
     page: pageSize === -1 ? undefined : page, // Send undefined for page if "All" is selected
     limit: pageSize === -1 ? undefined : pageSize, // Send undefined for limit if "All" is selected
     filters: {
-      paymentMode: paymentMode === "All" ? undefined : paymentMode,
-      createdBy: createdBy === "All" ? undefined : createdBy,
-    }
+      paymentMode: paymentMode === 'All' ? undefined : paymentMode,
+      createdBy: createdBy === 'All' ? undefined : createdBy,
+    },
   });
 
   const records = data?.data?.records || [];
   const pagination = data?.data?.pagination;
 
-  const totalBillingAmount = records.reduce((acc, record) => acc + record.totalAmount, 0);
-  const totalRefunds = records.reduce((acc, record) => acc + record.totalRefunded, 0);
+  const totalBillingAmount = records.reduce(
+    (acc, record) => acc + record.totalAmount,
+    0,
+  );
+  const totalRefunds = records.reduce(
+    (acc, record) => acc + record.totalRefunded,
+    0,
+  );
 
   // const totalRefunds = refundDetails.reduce((acc, refund) => acc + refund.refundAmount, 0);
 
@@ -91,10 +104,10 @@ const RevenueBreakupReport: React.FC = () => {
   const handleDownloadCSV = () => {
     if (records.length > 0) {
       const headers = [
-        "User",
-        "Payment Method",
-        "Billing Amount",
-        "Refund Amount",
+        'User',
+        'Payment Method',
+        'Billing Amount',
+        'Refund Amount',
       ];
 
       const formattedData = records.map((refund: revenueBreakupResponse) => [
@@ -104,39 +117,35 @@ const RevenueBreakupReport: React.FC = () => {
         formatToIndianCurrencyFormat(refund.totalRefunded),
       ]);
 
-      exportToCSV([headers, ...formattedData], "Revenue Breakup");
+      exportToCSV([headers, ...formattedData], 'Revenue Breakup');
     } else {
-      console.log("No data to export");
+      console.log('No data to export');
     }
   };
 
   const columnsConfig: GridColDef[] = [
     {
-      field: "createdBy",
-      headerName: "User",
+      field: 'createdBy',
+      headerName: 'User',
       flex: 1,
     },
     {
-      field: "paymentMethod",
-      headerName: "Payment Method",
+      field: 'paymentMethod',
+      headerName: 'Payment Method',
       flex: 1,
     },
     {
-      field: "totalAmount",
-      headerName: "Billing Amount",
+      field: 'totalAmount',
+      headerName: 'Billing Amount',
       flex: 1,
-      valueFormatter: (params) =>
-        formatToIndianCurrencyFormat(params.value),
-
+      valueFormatter: params => formatToIndianCurrencyFormat(params.value),
     },
     {
-      field: "totalRefunded",
-      headerName: "Refund Amount",
+      field: 'totalRefunded',
+      headerName: 'Refund Amount',
       flex: 1,
-      valueFormatter: (params) =>
-        formatToIndianCurrencyFormat(params.value),
+      valueFormatter: params => formatToIndianCurrencyFormat(params.value),
     },
-
   ];
 
   return (
@@ -146,7 +155,7 @@ const RevenueBreakupReport: React.FC = () => {
 
         <TextField
           label="Payment Mode"
-          sx={{ width: "150px" }}
+          sx={{ width: '150px' }}
           value={paymentMode}
           onChange={handlePaymentModeChange}
           select
@@ -161,7 +170,7 @@ const RevenueBreakupReport: React.FC = () => {
 
         <TextField
           label="User"
-          sx={{ width: "150px" }}
+          sx={{ width: '150px' }}
           value={createdBy}
           onChange={handleCreatedByChange}
           select
@@ -187,14 +196,18 @@ const RevenueBreakupReport: React.FC = () => {
         onPageChange={handlePageChange}
         onPageSizeChange={handlePageSizeChange}
         loading={isLoading || isFetching} // Use the loading prop in DataGrid
-        extendedPageSizeOptions={[25, 50, 100, { label: "All", value: -1 }]} // Add pagination options
+        extendedPageSizeOptions={[25, 50, 100, { label: 'All', value: -1 }]} // Add pagination options
       />
 
-      <Box mt={2} display={"flex"} flexDirection={"column"} justifyContent="space-between" alignItems="flex-end">
+      <Box
+        mt={2}
+        display={'flex'}
+        flexDirection={'column'}
+        justifyContent="space-between"
+        alignItems="flex-end"
+      >
         <Box>
-          <Typography variant="h5">
-            Summary
-          </Typography>
+          <Typography variant="h5">Summary</Typography>
           <Typography variant="h6">
             Total Billing: {formatToIndianCurrencyFormat(totalBillingAmount)}
           </Typography>

@@ -1,5 +1,5 @@
-import * as React from "react";
-import { Box, Typography, Chip, useTheme, IconButton } from "@mui/material";
+import * as React from 'react';
+import { Box, Typography, Chip, useTheme, IconButton } from '@mui/material';
 import {
   BarChart,
   Bar,
@@ -9,8 +9,8 @@ import {
   Tooltip,
   ResponsiveContainer,
   Cell,
-} from "recharts";
-import { ArrowForward, Event } from "@mui/icons-material"; // Importing the icons
+} from 'recharts';
+import { ArrowForward, Event } from '@mui/icons-material'; // Importing the icons
 
 interface BadgeData {
   color: string;
@@ -37,13 +37,13 @@ const AnalyticsCardWithGraph: React.FC<AnalyticsCardWithGraphProps> = ({
   const getColor = (color: string) => {
     // Map color keys to the corresponding color from the theme
     switch (color) {
-      case "info":
+      case 'info':
         return theme.palette.info.main;
-      case "warning":
+      case 'warning':
         return theme.palette.warning.main;
-      case "success":
+      case 'success':
         return theme.palette.success.main;
-      case "error":
+      case 'error':
         return theme.palette.error.main;
       default:
         return theme.palette.primary.main; // Fallback to primary color if not found
@@ -92,7 +92,13 @@ const AnalyticsCardWithGraph: React.FC<AnalyticsCardWithGraphProps> = ({
       </Box>
 
       {/* Content Section */}
-      <Box display="flex" flexDirection="row" justifyContent="space-between" flex={1} p={2}>
+      <Box
+        display="flex"
+        flexDirection="row"
+        justifyContent="space-between"
+        flex={1}
+        p={2}
+      >
         {/* Left Column - Heading, Main Value, and Graph */}
         <Box
           display="flex"
@@ -107,7 +113,7 @@ const AnalyticsCardWithGraph: React.FC<AnalyticsCardWithGraphProps> = ({
 
           {/* Bar Graph */}
           <Box height={160} width="100%">
-            {" "}
+            {' '}
             {/* Restrict width to align graph with heading */}
             <ResponsiveContainer width="100%" height="100%">
               <BarChart data={badgesData}>
@@ -115,14 +121,14 @@ const AnalyticsCardWithGraph: React.FC<AnalyticsCardWithGraphProps> = ({
                 <XAxis
                   dataKey="label"
                   tick={{
-                    fontSize: "8px",
+                    fontSize: '8px',
                     fontFamily: theme.typography.fontFamily,
                     fill: theme.palette.text.secondary,
                   }}
                 />
                 <YAxis
                   tick={{
-                    fontSize: "10px",
+                    fontSize: '10px',
                     fontFamily: theme.typography.fontFamily,
                     fill: theme.palette.text.secondary,
                   }}
@@ -130,7 +136,7 @@ const AnalyticsCardWithGraph: React.FC<AnalyticsCardWithGraphProps> = ({
                 <Tooltip
                   contentStyle={{
                     backgroundColor: theme.palette.background.paper,
-                    borderRadius: "8px",
+                    borderRadius: '8px',
                     fontFamily: theme.typography.fontFamily,
                     fontSize: theme.typography.fontSize,
                     color: theme.palette.text.primary,
@@ -147,7 +153,12 @@ const AnalyticsCardWithGraph: React.FC<AnalyticsCardWithGraphProps> = ({
         </Box>
 
         {/* Right Column - Badges */}
-        <Box display="flex" flexDirection="column" justifyContent="flex-start" gap={1}>
+        <Box
+          display="flex"
+          flexDirection="column"
+          justifyContent="flex-start"
+          gap={1}
+        >
           {badgesData.map((badge, index) => (
             <Chip
               key={index}
@@ -155,11 +166,15 @@ const AnalyticsCardWithGraph: React.FC<AnalyticsCardWithGraphProps> = ({
               variant="outlined"
               color={badge.color as any}
               label={
-                <Box display="flex" alignItems="center" justifyContent="space-between">
+                <Box
+                  display="flex"
+                  alignItems="center"
+                  justifyContent="space-between"
+                >
                   <Typography variant="body2" sx={{ mr: 1 }}>
                     {badge.label}
                   </Typography>
-                  <Typography variant="body2" sx={{ fontWeight: "bold" }}>
+                  <Typography variant="body2" sx={{ fontWeight: 'bold' }}>
                     {badge.count}
                   </Typography>
                 </Box>

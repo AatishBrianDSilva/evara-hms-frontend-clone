@@ -1,28 +1,36 @@
-import React, { useState } from "react";
-import { Box, Button } from "@mui/material";
-import { Add, Edit } from "@mui/icons-material";
-import { GridActionsCellItem, GridColDef, GridRowParams } from "@mui/x-data-grid";
-import _ from "lodash";
+import React, { useState } from 'react';
+import { Box, Button } from '@mui/material';
+import { Add, Edit } from '@mui/icons-material';
+import {
+  GridActionsCellItem,
+  GridColDef,
+  GridRowParams,
+} from '@mui/x-data-grid';
+import _ from 'lodash';
 
-import EditMasterCycleConsumable from "./EditMasterCycleConsumable";
-import AddMasterCycleConsumable from "./AddMasterCycleConsumable";
-import ContentSection from "../../../../../components/ContentSection/ContentSection";
-import CustomDataGrid from "../../../../../components/CustomDataGrid/CustomDataGrid";
-import { useGetServiceCycleConsumablesQuery } from "../../../../../services/masterDashboardService/serviceData/cycles/masterCyclesConsumablesApi";
+import EditMasterCycleConsumable from './EditMasterCycleConsumable';
+import AddMasterCycleConsumable from './AddMasterCycleConsumable';
+import ContentSection from '../../../../../components/ContentSection/ContentSection';
+import CustomDataGrid from '../../../../../components/CustomDataGrid/CustomDataGrid';
+import { useGetServiceCycleConsumablesQuery } from '../../../../../services/masterDashboardService/serviceData/cycles/masterCyclesConsumablesApi';
 
 interface RowType {
   _id: string;
 }
 
 const MasterCycleConsumables: React.FC = () => {
-
   const [selectedRow, setSelectedRow] = useState<any>(null);
   const [isAddModalOpen, setIsAddModalOpen] = useState<boolean>(false);
   const [isEditModalOpen, setIsEditModalOpen] = useState<boolean>(false);
 
-  const { data: investigationsData, isLoading: investigationsLoading, isFetching: investigationsFetching } =
-    useGetServiceCycleConsumablesQuery({ paginate: false, filters: { isAdmin: true } });
-
+  const {
+    data: investigationsData,
+    isLoading: investigationsLoading,
+    isFetching: investigationsFetching,
+  } = useGetServiceCycleConsumablesQuery({
+    paginate: false,
+    filters: { isAdmin: true },
+  });
 
   const loading = investigationsLoading || investigationsFetching;
   const investigations = investigationsData?.data || [];
@@ -31,25 +39,28 @@ const MasterCycleConsumables: React.FC = () => {
 
   const columnsConfig: GridColDef[] = [
     {
-      field: "pharmacyStock",
-      headerName: "Pharmacy Item",
+      field: 'pharmacyStock',
+      headerName: 'Pharmacy Item',
       flex: 1,
       valueGetter(params) {
         return `${params.row?.pharmacyStock?.item?.name}`;
       },
     },
     {
-      field: "stage", headerName: "Stage", flex: 1, valueGetter(params) {
+      field: 'stage',
+      headerName: 'Stage',
+      flex: 1,
+      valueGetter(params) {
         return `${params.row?.stage?.name}`;
       },
     },
 
-    { field: "treatment", headerName: "Treatment", flex: 1 },
+    { field: 'treatment', headerName: 'Treatment', flex: 1 },
     {
-      field: "actions",
-      headerName: "Actions",
+      field: 'actions',
+      headerName: 'Actions',
       flex: 1,
-      type: "actions",
+      type: 'actions',
       getActions: (params: GridRowParams) => {
         const row = params.row;
         return [
@@ -97,13 +108,17 @@ const MasterCycleConsumables: React.FC = () => {
         </Button>
       </Box>
 
-      <Box mt={2} flex={"1 1 auto"} style={{ maxWidth: "100%", overflowX: "auto" }}>
+      <Box
+        mt={2}
+        flex={'1 1 auto'}
+        style={{ maxWidth: '100%', overflowX: 'auto' }}
+      >
         <CustomDataGrid
           autoHeight={false}
           columns={columnsConfig}
           rows={investigations}
           loading={loading}
-          sx={{ height: "100%" }}
+          sx={{ height: '100%' }}
           getRowId={getRowId}
         />
       </Box>

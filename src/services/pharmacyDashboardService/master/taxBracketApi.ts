@@ -1,8 +1,12 @@
-import { createApi } from "@reduxjs/toolkit/query/react";
-import { ApiResponse, IQueryOptions, PaginatedResponse } from "../../../types/global";
-import generateQueryParams from "../../../utils/generateQueryParams";
-import { ITaxRate } from "../../../types/pharmacyDashboard/master";
-import { baseQuery } from "../../baseQuery";
+import { createApi } from '@reduxjs/toolkit/query/react';
+import {
+  ApiResponse,
+  IQueryOptions,
+  PaginatedResponse,
+} from '../../../types/global';
+import generateQueryParams from '../../../utils/generateQueryParams';
+import { ITaxRate } from '../../../types/pharmacyDashboard/master';
+import { baseQuery } from '../../baseQuery';
 
 interface AddTaxBracketPayload {
   taxRate: number | string;
@@ -16,46 +20,55 @@ interface EditTaxBracketPayload {
 }
 
 export const taxBracketApi = createApi({
-  reducerPath: "taxBracketApi",
+  reducerPath: 'taxBracketApi',
   baseQuery: baseQuery,
-  tagTypes: ["TaxBracket"],
-  endpoints: (builder) => ({
-    addTaxBracket: builder.mutation<ApiResponse<ITaxRate>, AddTaxBracketPayload>({
-      query: (taxBracketData) => ({
-        url: "pharmacy-dashboard/master/tax-rates/add",
-        method: "POST",
+  tagTypes: ['TaxBracket'],
+  endpoints: builder => ({
+    addTaxBracket: builder.mutation<
+      ApiResponse<ITaxRate>,
+      AddTaxBracketPayload
+    >({
+      query: taxBracketData => ({
+        url: 'pharmacy-dashboard/master/tax-rates/add',
+        method: 'POST',
         body: taxBracketData,
       }),
-      invalidatesTags: ["TaxBracket"],
+      invalidatesTags: ['TaxBracket'],
     }),
-    editTaxBracket: builder.mutation<ApiResponse<ITaxRate>, EditTaxBracketPayload>({
-      query: (taxBracketData) => ({
+    editTaxBracket: builder.mutation<
+      ApiResponse<ITaxRate>,
+      EditTaxBracketPayload
+    >({
+      query: taxBracketData => ({
         url: `pharmacy-dashboard/master/tax-rates/${taxBracketData.id}`,
-        method: "PUT",
+        method: 'PUT',
         body: taxBracketData,
       }),
-      invalidatesTags: ["TaxBracket"],
+      invalidatesTags: ['TaxBracket'],
     }),
     deleteTaxBracket: builder.mutation<ApiResponse<null>, string>({
       query: (id: string) => ({
         url: `pharmacy-dashboard/master/tax-rates/${id}`,
-        method: "PATCH",
+        method: 'PATCH',
       }),
-      invalidatesTags: ["TaxBracket"],
+      invalidatesTags: ['TaxBracket'],
     }),
-    getTaxBrackets: builder.query<ApiResponse<PaginatedResponse<ITaxRate>>, IQueryOptions>({
-      query: (options) => {
+    getTaxBrackets: builder.query<
+      ApiResponse<PaginatedResponse<ITaxRate>>,
+      IQueryOptions
+    >({
+      query: options => {
         const queryParams = generateQueryParams(options);
         return {
           url: `pharmacy-dashboard/master/tax-rates?${queryParams}`,
-          method: "GET",
+          method: 'GET',
         };
       },
-      providesTags: (_result, _error, _args) => ["TaxBracket"],
+      providesTags: (_result, _error, _args) => ['TaxBracket'],
     }),
     getTaxBracketById: builder.query<ApiResponse<ITaxRate>, string>({
-      query: (id) => `pharmacy-dashboard/master/tax-rates/${id}`,
-      providesTags: (_result, _error, id) => [{ type: "TaxBracket", id }],
+      query: id => `pharmacy-dashboard/master/tax-rates/${id}`,
+      providesTags: (_result, _error, id) => [{ type: 'TaxBracket', id }],
     }),
   }),
 });

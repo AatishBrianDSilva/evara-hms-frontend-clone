@@ -4,24 +4,25 @@ import Grid from '@mui/material/Grid';
 import MenuItem from '@mui/material/MenuItem';
 import TextField from '@mui/material/TextField';
 import Typography from '@mui/material/Typography';
-import React from 'react'
-import TreatmentCyclesTable from './TreatmentCyclesTable'
-import PatientInfo from './PatientInfo'
+import React from 'react';
+import TreatmentCyclesTable from './TreatmentCyclesTable';
+import PatientInfo from './PatientInfo';
 import CustomDatePicker from '../../components/CustomDatePicker/CustomDatePicker';
 import CustomTimePicker from '../../components/CustomDatePicker/CustomTimePicker';
 
 const AndrologySpermFreezing: React.FC = () => {
   return (
-    <div className='main-container'>
+    <div className="main-container">
       <PatientInfo />
 
       <TreatmentCyclesTable />
 
-      <Typography variant='h6' sx={{ mt: 2, mb: 2 }}>Sperm Freezing </Typography>
+      <Typography variant="h6" sx={{ mt: 2, mb: 2 }}>
+        Sperm Freezing{' '}
+      </Typography>
 
-      <Box display={"flex"} gap={2} mb={2} >
-
-        <Button variant='contained' sx={{ width: 'fit-content' }}>
+      <Box display={'flex'} gap={2} mb={2}>
+        <Button variant="contained" sx={{ width: 'fit-content' }}>
           Export
         </Button>
       </Box>
@@ -29,13 +30,25 @@ const AndrologySpermFreezing: React.FC = () => {
       {/* Add Semen Form */}
       <Grid container spacing={2} marginBottom={2}>
         <Grid item xs={12} sm={6} md={3}>
-          <CustomDatePicker label="Date" value={new Date()} sx={{ width: '100%' }} />
+          <CustomDatePicker
+            label="Date"
+            value={new Date()}
+            sx={{ width: '100%' }}
+          />
         </Grid>
         <Grid item xs={12} sm={6} md={3}>
-          <TextField label="Sperm DFI" name='sperm-dfi' sx={{ width: '100%' }} />
+          <TextField
+            label="Sperm DFI"
+            name="sperm-dfi"
+            sx={{ width: '100%' }}
+          />
         </Grid>
         <Grid item xs={12} sm={6} md={3}>
-          <CustomTimePicker label="Time of sample received at hospital" value={null} sx={{ width: '100%' }} />
+          <CustomTimePicker
+            label="Time of sample received at hospital"
+            value={null}
+            sx={{ width: '100%' }}
+          />
         </Grid>
       </Grid>
 
@@ -44,10 +57,18 @@ const AndrologySpermFreezing: React.FC = () => {
           <TextField label="Place of Collection" fullWidth />
         </Grid>
         <Grid item xs={12} sm={6} md={3}>
-          <CustomTimePicker label="Time Of Collection" value={null} sx={{ width: '100%' }} />
+          <CustomTimePicker
+            label="Time Of Collection"
+            value={null}
+            sx={{ width: '100%' }}
+          />
         </Grid>
         <Grid item xs={12} sm={6} md={3}>
-          <CustomTimePicker label="Time Of Evaluation" value={null} sx={{ width: '100%' }} />
+          <CustomTimePicker
+            label="Time Of Evaluation"
+            value={null}
+            sx={{ width: '100%' }}
+          />
         </Grid>
       </Grid>
       <Grid container spacing={2} marginBottom={2}>
@@ -80,7 +101,9 @@ const AndrologySpermFreezing: React.FC = () => {
         </Grid>
       </Grid>
 
-      <Typography variant="subtitle1" sx={{ mt: 2, mb: 2 }}>Sperm Motility</Typography>
+      <Typography variant="subtitle1" sx={{ mt: 2, mb: 2 }}>
+        Sperm Motility
+      </Typography>
       <Grid container spacing={2} marginBottom={2}>
         <Grid item xs={12} sm={6} md={3}>
           <TextField label="Rapid Progressive Grade A" fullWidth />
@@ -104,7 +127,9 @@ const AndrologySpermFreezing: React.FC = () => {
         </Grid>
       </Grid>
 
-      <Typography variant="subtitle1" sx={{ mt: 2, mb: 2 }}>Morphology Assessment</Typography>
+      <Typography variant="subtitle1" sx={{ mt: 2, mb: 2 }}>
+        Morphology Assessment
+      </Typography>
       <Grid container spacing={2} marginBottom={2}>
         <Grid item xs={12} sm={6} md={3}>
           <TextField label="Normal Forms" fullWidth />
@@ -137,7 +162,9 @@ const AndrologySpermFreezing: React.FC = () => {
         </Grid>
       </Grid>
 
-      <Typography variant="subtitle1" sx={{ mt: 2, mb: 2 }}>Advanced Sperm Fertilization Parameter Assessment</Typography>
+      <Typography variant="subtitle1" sx={{ mt: 2, mb: 2 }}>
+        Advanced Sperm Fertilization Parameter Assessment
+      </Typography>
       <Grid container spacing={2} marginBottom={2}>
         <Grid item xs={12} sm={6} md={3}>
           <TextField label="HOS(Hypo-Osmotic Swelling)" fullWidth />
@@ -146,27 +173,46 @@ const AndrologySpermFreezing: React.FC = () => {
           <TextField label="Acrosome Intactness(AI)" fullWidth />
         </Grid>
         <Grid item xs={12} sm={6} md={3}>
-          <TextField label="Zona Binding Potential Of Sperm As Per AI Testing" fullWidth />
+          <TextField
+            label="Zona Binding Potential Of Sperm As Per AI Testing"
+            fullWidth
+          />
         </Grid>
       </Grid>
 
-      <Typography variant="subtitle1" sx={{ mt: 2, mb: 2 }}>Final Semen Analysis & Advanced Sperm Assessment</Typography>
+      <Typography variant="subtitle1" sx={{ mt: 2, mb: 2 }}>
+        Final Semen Analysis & Advanced Sperm Assessment
+      </Typography>
       <Grid container spacing={2} marginBottom={2}>
         <Grid item xs={12} sm={6} md={6}>
           <TextField label="Analysis" multiline minRows={2} fullWidth />
         </Grid>
       </Grid>
 
-      <Box display={"flex"} justifyContent={"center"} alignItems={"center"} gap={2} mb={2} >
-        <Button variant='contained' color='primary' sx={{ width: 'fit-content' }}>
+      <Box
+        display={'flex'}
+        justifyContent={'center'}
+        alignItems={'center'}
+        gap={2}
+        mb={2}
+      >
+        <Button
+          variant="contained"
+          color="primary"
+          sx={{ width: 'fit-content' }}
+        >
           Save
         </Button>
-        <Button variant='contained' color='secondary' sx={{ width: 'fit-content' }}>
+        <Button
+          variant="contained"
+          color="secondary"
+          sx={{ width: 'fit-content' }}
+        >
           Cancel
         </Button>
       </Box>
     </div>
-  )
-}
+  );
+};
 
-export default AndrologySpermFreezing
+export default AndrologySpermFreezing;

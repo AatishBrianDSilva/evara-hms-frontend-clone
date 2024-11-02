@@ -1,19 +1,23 @@
-import React, { useState } from "react";
-import ContentSection from "../../../../../components/ContentSection/ContentSection";
-import { Box, Button } from "@mui/material";
-import { Add, Edit } from "@mui/icons-material";
-import CustomDataGrid from "../../../../../components/CustomDataGrid/CustomDataGrid";
-import { GridActionsCellItem, GridColDef, GridRowParams } from "@mui/x-data-grid";
-import Delete from "@mui/icons-material/Delete";
-import DeleteConfirmationModal from "../../../../../components/DeleteConfirmationModal/DeleteConfirmationModal";
-import { useToast } from "../../../../../context/ToastContext";
-import _ from "lodash";
+import React, { useState } from 'react';
+import ContentSection from '../../../../../components/ContentSection/ContentSection';
+import { Box, Button } from '@mui/material';
+import { Add, Edit } from '@mui/icons-material';
+import CustomDataGrid from '../../../../../components/CustomDataGrid/CustomDataGrid';
+import {
+  GridActionsCellItem,
+  GridColDef,
+  GridRowParams,
+} from '@mui/x-data-grid';
+import Delete from '@mui/icons-material/Delete';
+import DeleteConfirmationModal from '../../../../../components/DeleteConfirmationModal/DeleteConfirmationModal';
+import { useToast } from '../../../../../context/ToastContext';
+import _ from 'lodash';
 import {
   useGetReferralDoctorsQuery,
   useDeleteReferralDoctorMutation,
-} from "../../../../../services/masterDashboardService/local/referralDoctorApi";
-import AddLocalReferralDoctor from "./AddReferralDoctor";
-import EditLocalReferralDoctor from "./EditReferralDoctor";
+} from '../../../../../services/masterDashboardService/local/referralDoctorApi';
+import AddLocalReferralDoctor from './AddReferralDoctor';
+import EditLocalReferralDoctor from './EditReferralDoctor';
 
 interface RowType {
   _id: string;
@@ -22,7 +26,7 @@ interface RowType {
 const LocalReferralDoctor: React.FC = () => {
   const { showPromiseToast } = useToast();
 
-  const [selectedRow, setSelectedRow] = useState<string>("");
+  const [selectedRow, setSelectedRow] = useState<string>('');
   const [isAddModalOpen, setIsAddModalOpen] = useState<boolean>(false);
   const [isEditModalOpen, setIsEditModalOpen] = useState<boolean>(false);
   const [isDeleteModalOpen, setIsDeleteModalOpen] = useState<boolean>(false);
@@ -31,46 +35,49 @@ const LocalReferralDoctor: React.FC = () => {
     data: DoctorData,
     isLoading: DoctorLoading,
     isFetching: DoctorFetching,
-  } = useGetReferralDoctorsQuery({ paginate: false, filters: { isAdmin: true, isGlobal: false } });
+  } = useGetReferralDoctorsQuery({
+    paginate: false,
+    filters: { isAdmin: true, isGlobal: false },
+  });
 
   const Doctors = DoctorData?.data || [];
 
-  console.log("Doctor Data", Doctors);
+  console.log('Doctor Data', Doctors);
 
   const getRowId = (row: RowType) => row._id;
 
   const columnsConfig: GridColDef[] = [
     {
-      field: "clinicId",
-      headerName: "Clinic Id",
+      field: 'clinicId',
+      headerName: 'Clinic Id',
       flex: 1,
     },
-    { field: "branchId", headerName: "Branch Id", flex: 1 },
+    { field: 'branchId', headerName: 'Branch Id', flex: 1 },
     {
-      field: "name",
-      headerName: "Name",
-      flex: 1,
-    },
-    {
-      field: "phone",
-      headerName: "Phone",
+      field: 'name',
+      headerName: 'Name',
       flex: 1,
     },
     {
-      field: "city",
-      headerName: "City",
+      field: 'phone',
+      headerName: 'Phone',
       flex: 1,
     },
     {
-      field: "speciality",
-      headerName: "Speciality",
+      field: 'city',
+      headerName: 'City',
       flex: 1,
     },
     {
-      field: "actions",
-      headerName: "Actions",
+      field: 'speciality',
+      headerName: 'Speciality',
       flex: 1,
-      type: "actions",
+    },
+    {
+      field: 'actions',
+      headerName: 'Actions',
+      flex: 1,
+      type: 'actions',
       getActions: (params: GridRowParams) => {
         const row = params.row;
         return [
@@ -89,15 +96,16 @@ const LocalReferralDoctor: React.FC = () => {
     },
   ];
 
-  const [deleteUser, { isLoading: DeleteLoading }] = useDeleteReferralDoctorMutation();
+  const [deleteUser, { isLoading: DeleteLoading }] =
+    useDeleteReferralDoctorMutation();
 
   const handleDelete = async () => {
     const promise = deleteUser(selectedRow).unwrap();
 
     showPromiseToast(promise, {
-      loading: "Deleting...",
-      success: (data) => data || "Deleted Successfully",
-      error: (data) => data || "Failed to Delete",
+      loading: 'Deleting...',
+      success: data => data || 'Deleted Successfully',
+      error: data => data || 'Failed to Delete',
     });
 
     try {
@@ -157,19 +165,22 @@ const LocalReferralDoctor: React.FC = () => {
         </Button>
       </Box>
 
-      <Box mt={2} flex={"1 1 auto"}>
+      <Box mt={2} flex={'1 1 auto'}>
         <CustomDataGrid
           autoHeight={false}
           columns={columnsConfig}
           rows={Doctors}
           loading={DoctorLoading || DoctorFetching}
-          sx={{ height: "100%" }}
+          sx={{ height: '100%' }}
           getRowId={getRowId}
         />
       </Box>
 
       {isAddModalOpen && (
-        <AddLocalReferralDoctor openModal={isAddModalOpen} onClose={closeAddModal} />
+        <AddLocalReferralDoctor
+          openModal={isAddModalOpen}
+          onClose={closeAddModal}
+        />
       )}
 
       {isEditModalOpen && (

@@ -1,32 +1,32 @@
 export enum EPatientBillingStatus {
-  Pending = "Pending",
-  Advance = "Advance",
-  Refunded = "Refunded",
-  Paid = "Paid",
-  Archived = "Archived",
+  Pending = 'Pending',
+  Advance = 'Advance',
+  Refunded = 'Refunded',
+  Paid = 'Paid',
+  Archived = 'Archived',
 }
 
 export enum EPaitentBillingPaymentType {
-  Payment = "Payment",
-  Refund = "Refund",
-  Advance = "Advance",
+  Payment = 'Payment',
+  Refund = 'Refund',
+  Advance = 'Advance',
 }
 
 export enum EPatientBillingServiceType {
-  Investigation = "Investigation",
-  Procedure = "Procedure",
-  Medicine = "Medicine",
-  Service = "Service",
-  CryoPreservation = "CryoPreservation",
-  TreatmentCycle = "TreatmentCycle",
+  Investigation = 'Investigation',
+  Procedure = 'Procedure',
+  Medicine = 'Medicine',
+  Service = 'Service',
+  CryoPreservation = 'CryoPreservation',
+  TreatmentCycle = 'TreatmentCycle',
 }
 
 export enum EPaymentMethod {
-  Cash = "Cash",
-  CreditCard = "CreditCard",
-  BankTransfer = "BankTransfer",
-  Online = "Online",
-  UPI = "UPI",
+  Cash = 'Cash',
+  CreditCard = 'CreditCard',
+  BankTransfer = 'BankTransfer',
+  Online = 'Online',
+  UPI = 'UPI',
 }
 
 interface PaymentDetail {

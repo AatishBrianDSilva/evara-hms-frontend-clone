@@ -1,7 +1,7 @@
-import React from 'react'
-import { Outlet } from 'react-router-dom'
-import { Box } from '@mui/material'
-import AnalyticsSidebar from '../../components/SideBar/AnalyticsSidebar'
+import React from 'react';
+import { Outlet } from 'react-router-dom';
+import { Box } from '@mui/material';
+import AnalyticsSidebar from '../../components/SideBar/AnalyticsSidebar';
 
 const AnalyticsDashboard: React.FC = () => {
   return (
@@ -11,7 +11,7 @@ const AnalyticsDashboard: React.FC = () => {
         <Outlet />
       </Box>
     </Box>
-  )
-}
+  );
+};
 
-export default AnalyticsDashboard
+export default AnalyticsDashboard;

@@ -1,6 +1,6 @@
-import { IDoctor } from "../doctor";
-import { ETestType, IMasterInvestigation, IMasterPackage } from "../master";
-import { IPatient } from "../patient";
+import { IDoctor } from '../doctor';
+import { ETestType, IMasterInvestigation, IMasterPackage } from '../master';
+import { IPatient } from '../patient';
 
 export interface IEditInvestigationForm<T> {
   result: T;
@@ -363,7 +363,7 @@ export interface ICryoPreservationSpermForm {
       nonProgressiveMotility: string;
       immotile: string;
       washType: string;
-    }
+    },
   ];
 }
 

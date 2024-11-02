@@ -1,14 +1,14 @@
-import useMediaQuery from "@mui/material/useMediaQuery";
-import { useTheme } from "@mui/material";
-import { GridColDef } from "@mui/x-data-grid";
+import useMediaQuery from '@mui/material/useMediaQuery';
+import { useTheme } from '@mui/material';
+import { GridColDef } from '@mui/x-data-grid';
 
 // Custom hook to generate responsive columns
 function useResponsiveColumns(columnsConfig: GridColDef[]): GridColDef[] {
   const theme = useTheme();
   // Adjusted to use theme.breakpoints.down to correctly identify mobile screens
-  const isMobile = useMediaQuery(theme.breakpoints.down("sm"));
+  const isMobile = useMediaQuery(theme.breakpoints.down('sm'));
 
-  const columns: GridColDef[] = columnsConfig.map((column) => {
+  const columns: GridColDef[] = columnsConfig.map(column => {
     // Apply mobile-specific adjustments
     if (isMobile) {
       return {

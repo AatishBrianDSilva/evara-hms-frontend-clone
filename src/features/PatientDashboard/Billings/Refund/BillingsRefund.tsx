@@ -1,15 +1,15 @@
-import Box from "@mui/material/Box";
-import React, { useState } from "react";
-import CustomDataGrid from "../../../../components/CustomDataGrid/CustomDataGrid";
-import { GridActionsCellItem, GridColDef } from "@mui/x-data-grid";
-import { Chip, Skeleton } from "@mui/material";
-import { Print, Visibility } from "@mui/icons-material";
-import { useGetRefundsQuery } from "../../../../services/patientDashboardService/billings/billingApi";
-import { useSelector } from "react-redux";
-import { RootState } from "../../../../app/store";
-import { formatToIndianCurrencyFormat } from "../../../../utils/formatToIndianCurrencyFormat";
-import ViewReports from "../../Journey/ViewReports";
-import { usePrint } from "../../../../context/PrintPDFContext";
+import Box from '@mui/material/Box';
+import React, { useState } from 'react';
+import CustomDataGrid from '../../../../components/CustomDataGrid/CustomDataGrid';
+import { GridActionsCellItem, GridColDef } from '@mui/x-data-grid';
+import { Chip, Skeleton } from '@mui/material';
+import { Print, Visibility } from '@mui/icons-material';
+import { useGetRefundsQuery } from '../../../../services/patientDashboardService/billings/billingApi';
+import { useSelector } from 'react-redux';
+import { RootState } from '../../../../app/store';
+import { formatToIndianCurrencyFormat } from '../../../../utils/formatToIndianCurrencyFormat';
+import ViewReports from '../../Journey/ViewReports';
+import { usePrint } from '../../../../context/PrintPDFContext';
 
 interface RowType {
   _id: string;
@@ -54,10 +54,10 @@ const BillingsRefund: React.FC = () => {
       skip: !patient?.patientId,
       refetchOnFocus: true,
       refetchOnMountOrArgChange: true,
-    }
+    },
   );
 
-  console.log("Current Refund", data);
+  console.log('Current Refund', data);
 
   // Flatten refund details into rows for the table
   const patientBillingsRefund: RowType[] =
@@ -66,21 +66,22 @@ const BillingsRefund: React.FC = () => {
         refund.refundDetails?.items?.map((item: any) => ({
           _id: refund._id,
           createdAt: item.refundDate || refund.createdAt,
-          serviceName: item.serviceName || "",
-          itemName: item.itemName || "",
-          batchNo: item.batchNo || "",
+          serviceName: item.serviceName || '',
+          itemName: item.itemName || '',
+          batchNo: item.batchNo || '',
           quantity: item.qtyToRefund || 0,
           amount: refund.refundDetails.refundAmount || 0,
-          reason: refund.refundDetails.reason || "",
+          reason: refund.refundDetails.reason || '',
           files: refund.refundDetails.files || [], // Include files here
-        })) || []
+        })) || [],
     ) || [];
 
   patientBillingsRefund.sort(
-    (a, b) => new Date(b.createdAt).getTime() - new Date(a.createdAt).getTime()
+    (a, b) => new Date(b.createdAt).getTime() - new Date(a.createdAt).getTime(),
   );
 
-  const [isViewInvoicesModalOpen, setIsViewInvoicesModalOpen] = useState<boolean>(false);
+  const [isViewInvoicesModalOpen, setIsViewInvoicesModalOpen] =
+    useState<boolean>(false);
   const [selectedFiles, setSelectedFiles] = useState<string[]>([]);
 
   const handleViewInvoices = (files: string[]) => {
@@ -95,56 +96,56 @@ const BillingsRefund: React.FC = () => {
   const patientBillingsPagination = data?.data?.pagination;
   const patientBillingsLoading = isLoading || isFetching;
 
-  console.log("Refund Data", patientBillingsRefund);
+  console.log('Refund Data', patientBillingsRefund);
 
   const getRowId = (row: RowType) => row._id;
 
   const columnsConfig: GridColDef[] = [
     {
-      field: "createdAt",
-      headerName: "Date",
-      type: "date",
+      field: 'createdAt',
+      headerName: 'Date',
+      type: 'date',
       flex: 1,
       valueFormatter(params) {
         const date = new Date(params.value);
-        const day = String(date.getDate()).padStart(2, "0");
-        const month = String(date.getMonth() + 1).padStart(2, "0"); // Months are 0-based
+        const day = String(date.getDate()).padStart(2, '0');
+        const month = String(date.getMonth() + 1).padStart(2, '0'); // Months are 0-based
         const year = String(date.getFullYear()).slice(-2); // Get last two digits of the year
         return `${day}/${month}/${year}`;
       },
     },
     {
-      field: "itemName",
-      headerName: "Item",
+      field: 'itemName',
+      headerName: 'Item',
       flex: 1,
     },
     {
-      field: "batchNo",
-      headerName: "Batch",
+      field: 'batchNo',
+      headerName: 'Batch',
       flex: 1,
     },
     {
-      field: "quantity",
-      headerName: "Qty",
+      field: 'quantity',
+      headerName: 'Qty',
       flex: 1,
     },
     {
-      field: "amount",
-      headerName: "Amount",
+      field: 'amount',
+      headerName: 'Amount',
       flex: 1,
-      valueFormatter: (params) => formatToIndianCurrencyFormat(params.value),
+      valueFormatter: params => formatToIndianCurrencyFormat(params.value),
     },
     {
-      field: "reason",
-      headerName: "Reason for Refund",
+      field: 'reason',
+      headerName: 'Reason for Refund',
       flex: 2,
     },
     {
-      field: "actions",
-      headerName: "Actions",
+      field: 'actions',
+      headerName: 'Actions',
       flex: 1,
-      type: "actions",
-      getActions: (params) => {
+      type: 'actions',
+      getActions: params => {
         const row = params.row;
         return [
           <GridActionsCellItem
@@ -163,21 +164,34 @@ const BillingsRefund: React.FC = () => {
   ];
 
   return (
-    <Box p={2} display={"flex"} flexDirection={"column"} flex={1}>
+    <Box p={2} display={'flex'} flexDirection={'column'} flex={1}>
       {patientBillingsLoading ? (
-        <Box display={"flex"} justifyContent="space-between" alignItems="center" mb={3}>
+        <Box
+          display={'flex'}
+          justifyContent="space-between"
+          alignItems="center"
+          mb={3}
+        >
           <Skeleton width={125} height={35} variant="rounded" />
           <Skeleton width={125} height={30} variant="rounded" />
           <Skeleton width={125} height={30} variant="rounded" />
           <Skeleton width={125} height={30} variant="rounded" />
         </Box>
       ) : (
-        <Box display={"flex"} justifyContent="space-between" alignItems="center" mb={3}>
+        <Box
+          display={'flex'}
+          justifyContent="space-between"
+          alignItems="center"
+          mb={3}
+        >
           <Chip
             label={
-              "Total Refunds: " +
+              'Total Refunds: ' +
               formatToIndianCurrencyFormat(
-                patientBillingsRefund.reduce((acc, refund) => acc + refund.amount, 0)
+                patientBillingsRefund.reduce(
+                  (acc, refund) => acc + refund.amount,
+                  0,
+                ),
               )
             }
             color="primary"
@@ -196,7 +210,7 @@ const BillingsRefund: React.FC = () => {
         onPageChange={handlePageChange}
         onPageSizeChange={handlePageSizeChange}
         loading={patientBillingsLoading}
-        sx={{ height: "100%" }}
+        sx={{ height: '100%' }}
         enablePagination={true}
       />
 

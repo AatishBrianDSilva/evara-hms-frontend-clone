@@ -1,25 +1,25 @@
-import { Box, Button, Grid, TextField, Typography } from "@mui/material";
-import { useFormik } from "formik";
-import React, { useContext } from "react";
+import { Box, Button, Grid, TextField, Typography } from '@mui/material';
+import { useFormik } from 'formik';
+import React, { useContext } from 'react';
 // import { IVFReportValidationSchema } from "../../../../../yup/patientDashboard/treatmentCycle";
-import ModalContext from "../../../../../context/ModalContext";
+import ModalContext from '../../../../../context/ModalContext';
 
-import { useToast } from "../../../../../context/ToastContext";
-import _ from "lodash";
-import CustomDatePicker from "../../../../../components/CustomDatePicker/CustomDatePicker";
-import CustomTimePicker from "../../../../../components/CustomDatePicker/CustomTimePicker";
+import { useToast } from '../../../../../context/ToastContext';
+import _ from 'lodash';
+import CustomDatePicker from '../../../../../components/CustomDatePicker/CustomDatePicker';
+import CustomTimePicker from '../../../../../components/CustomDatePicker/CustomTimePicker';
 import {
   useEditTreatmentCycleMutation,
   useGetTreatmentCyclesQuery,
-} from "../../../../../services/patientDashboardService/treatmentCycleApi";
-import { IPatientTreatmentCycleReport } from "../../../../../types/patientDashboard/treatmentCycle";
-import FileUploadButton from "../../../../../components/FileUploadAndPreview/FileUploadButton";
-import { EBuckets, EDocumentTypes } from "../../../../../types/global";
-import { useSelector } from "react-redux";
-import { RootState } from "../../../../../app/store";
-import FieldAutocomplete from "../../../../../components/FieldAutoComplete/FieldAutoComplete";
-import { DoctorSpeciality } from "../../../../../types/masterDashboard/global";
-import { useGetDoctorsQuery } from "../../../../../services/doctorsApi";
+} from '../../../../../services/patientDashboardService/treatmentCycleApi';
+import { IPatientTreatmentCycleReport } from '../../../../../types/patientDashboard/treatmentCycle';
+import FileUploadButton from '../../../../../components/FileUploadAndPreview/FileUploadButton';
+import { EBuckets, EDocumentTypes } from '../../../../../types/global';
+import { useSelector } from 'react-redux';
+import { RootState } from '../../../../../app/store';
+import FieldAutocomplete from '../../../../../components/FieldAutoComplete/FieldAutoComplete';
+import { DoctorSpeciality } from '../../../../../types/masterDashboard/global';
+import { useGetDoctorsQuery } from '../../../../../services/doctorsApi';
 
 interface IFormValues {
   embryologistA: string;
@@ -54,11 +54,14 @@ interface IVFReportProps {
   treatmentCycleId: string;
 }
 
-const EmbryoTransferReport: React.FC<IVFReportProps> = ({ report, treatmentCycleId }) => {
+const EmbryoTransferReport: React.FC<IVFReportProps> = ({
+  report,
+  treatmentCycleId,
+}) => {
   const { closeModal } = useContext(ModalContext);
   const { showPromiseToast } = useToast();
   const patient = useSelector((state: RootState) => state.patients.patient);
-  const [fileUploadedUrl, setFileUploadedUrl] = React.useState<string[]>([""]);
+  const [fileUploadedUrl, setFileUploadedUrl] = React.useState<string[]>(['']);
   const [updateReport, { isLoading }] = useEditTreatmentCycleMutation();
 
   // Fetch doctors for the doctor selection
@@ -76,23 +79,25 @@ const EmbryoTransferReport: React.FC<IVFReportProps> = ({ report, treatmentCycle
     },
     {
       skip: !patient?.patientId,
-    }
+    },
   );
 
   const patientTreatmentCycles = treatmentCyclesData?.data || [];
 
   // Find the specific treatment cycle by ID
   const currentTreatmentCycle = patientTreatmentCycles.find(
-    (cycle) => cycle._id === treatmentCycleId
+    cycle => cycle._id === treatmentCycleId,
   );
 
   // Find the specific report by category and ID
-  const currentReport = currentTreatmentCycle?.reports.find((r) => r._id === report._id);
+  const currentReport = currentTreatmentCycle?.reports.find(
+    r => r._id === report._id,
+  );
 
   const handleFormSubmit = async (values: IFormValues) => {
     const options = {
       conditions: {
-        editType: "update",
+        editType: 'update',
         category: report.category,
       },
     };
@@ -109,9 +114,9 @@ const EmbryoTransferReport: React.FC<IVFReportProps> = ({ report, treatmentCycle
     const promise = updateReport({ payload, options }).unwrap();
 
     showPromiseToast(promise, {
-      loading: "Adding Report...",
-      success: (data) => data.message || "Report Updated Successfully",
-      error: (data) => data.message || "Error Updating Report",
+      loading: 'Adding Report...',
+      success: data => data.message || 'Report Updated Successfully',
+      error: data => data.message || 'Error Updating Report',
     });
 
     try {
@@ -122,32 +127,36 @@ const EmbryoTransferReport: React.FC<IVFReportProps> = ({ report, treatmentCycle
   };
 
   const initialValues: IFormValues = {
-    embryologistA: currentReport?.details?.embryologistA || "",
-    embryologistB: currentReport?.details?.embryologistB || "",
-    gynecologistA: currentReport?.details?.gynecologistA || "",
-    gynecologistB: currentReport?.details?.gynecologistB || "",
-    ReferenceDoctor: currentReport?.details?.ReferenceDoctor || "",
+    embryologistA: currentReport?.details?.embryologistA || '',
+    embryologistB: currentReport?.details?.embryologistB || '',
+    gynecologistA: currentReport?.details?.gynecologistA || '',
+    gynecologistB: currentReport?.details?.gynecologistB || '',
+    ReferenceDoctor: currentReport?.details?.ReferenceDoctor || '',
     files: currentReport?.details?.files || null,
     dateOfThawing: currentReport?.details?.dateOfThawing || null,
     timeOfThawing: currentReport?.details?.timeOfThawing || null,
-    NoOfEmbryosThawed: currentReport?.details?.NoOfEmbryosThawed || "",
-    PostThawingSurvival: currentReport?.details?.PostThawingSurvival || "",
-    NumberOfEmbryosTransferred: currentReport?.details?.NumberOfEmbryosTransferred || "",
-    StatusOfTRemainigEmbryos: currentReport?.details?.StatusOfTRemainigEmbryos || "",
+    NoOfEmbryosThawed: currentReport?.details?.NoOfEmbryosThawed || '',
+    PostThawingSurvival: currentReport?.details?.PostThawingSurvival || '',
+    NumberOfEmbryosTransferred:
+      currentReport?.details?.NumberOfEmbryosTransferred || '',
+    StatusOfTRemainigEmbryos:
+      currentReport?.details?.StatusOfTRemainigEmbryos || '',
     EmbryoExpiryDate: currentReport?.details?.EmbryoExpiryDate || null,
     timeOfEmbryoTransfer: currentReport?.details?.timeOfEmbryoTransfer || null,
-    StagesOfEmbryoonicDevelopment: currentReport?.details?.StagesOfEmbryoonicDevelopment || "",
-    TransferComments: currentReport?.details?.TransferComments || "",
+    StagesOfEmbryoonicDevelopment:
+      currentReport?.details?.StagesOfEmbryoonicDevelopment || '',
+    TransferComments: currentReport?.details?.TransferComments || '',
     endometrialThicknessOnDayOfTransfer:
-      currentReport?.details?.endometrialThicknessOnDayOfTransfer || "",
-    DescriptionOfEmbryoTransfer: currentReport?.details?.DescriptionOfEmbryoTransfer || "",
-    EmbryoDiscarded: currentReport?.details?.EmbryoDiscarded || "",
+      currentReport?.details?.endometrialThicknessOnDayOfTransfer || '',
+    DescriptionOfEmbryoTransfer:
+      currentReport?.details?.DescriptionOfEmbryoTransfer || '',
+    EmbryoDiscarded: currentReport?.details?.EmbryoDiscarded || '',
     serumBetaHCGDate: currentReport?.details?.serumBetaHCGDate || null,
-    AssistedHatching: currentReport?.details?.AssistedHatching || "",
-    doctorRemarks: currentReport?.details?.doctorRemarks || "",
-    Advise: currentReport?.details?.Advise || "",
+    AssistedHatching: currentReport?.details?.AssistedHatching || '',
+    doctorRemarks: currentReport?.details?.doctorRemarks || '',
+    Advise: currentReport?.details?.Advise || '',
     MedicationAsPerDoctorPrescription:
-      currentReport?.details?.MedicationAsPerDoctorPrescription || "",
+      currentReport?.details?.MedicationAsPerDoctorPrescription || '',
   };
 
   const formik = useFormik({
@@ -158,7 +167,7 @@ const EmbryoTransferReport: React.FC<IVFReportProps> = ({ report, treatmentCycle
   });
 
   return (
-    <Box component={"form"} onSubmit={formik.handleSubmit} p={2}>
+    <Box component={'form'} onSubmit={formik.handleSubmit} p={2}>
       <Typography variant="h6" color="primary">
         Embryo Transfer Report
       </Typography>
@@ -171,36 +180,54 @@ const EmbryoTransferReport: React.FC<IVFReportProps> = ({ report, treatmentCycle
         <Grid item xs={12} sm={6} md={3}>
           <FieldAutocomplete
             options={doctors}
-            getOptionLabel={(option) => `${option.firstName || ""} ${option.lastName || ""}`}
+            getOptionLabel={option =>
+              `${option.firstName || ''} ${option.lastName || ''}`
+            }
             filterOptions={(options, _state) => {
               return options.filter(
-                (option) => option.speciality === DoctorSpeciality.Embryologist
+                option => option.speciality === DoctorSpeciality.Embryologist,
               );
             }}
             isOptionEqualToValue={(option, value) => option._id === value._id}
             value={formik.values.embryologistA}
-            onChange={(newValue) => formik.setFieldValue("embryologistA", newValue)}
+            onChange={newValue =>
+              formik.setFieldValue('embryologistA', newValue)
+            }
             label="Embryologist A"
-            error={formik.touched.embryologistA && Boolean(formik.errors.embryologistA)}
-            helperText={formik.touched.embryologistA && formik.errors.embryologistA}
+            error={
+              formik.touched.embryologistA &&
+              Boolean(formik.errors.embryologistA)
+            }
+            helperText={
+              formik.touched.embryologistA && formik.errors.embryologistA
+            }
           />
         </Grid>
 
         <Grid item xs={12} sm={6} md={3}>
           <FieldAutocomplete
             options={doctors}
-            getOptionLabel={(option) => `${option.firstName || ""} ${option.lastName || ""}`}
+            getOptionLabel={option =>
+              `${option.firstName || ''} ${option.lastName || ''}`
+            }
             filterOptions={(options, _state) => {
               return options.filter(
-                (option) => option.speciality === DoctorSpeciality.Embryologist
+                option => option.speciality === DoctorSpeciality.Embryologist,
               );
             }}
             isOptionEqualToValue={(option, value) => option._id === value._id}
             value={formik.values.embryologistB}
-            onChange={(newValue) => formik.setFieldValue("embryologistB", newValue)}
+            onChange={newValue =>
+              formik.setFieldValue('embryologistB', newValue)
+            }
             label="Embryologist B"
-            error={formik.touched.embryologistB && Boolean(formik.errors.embryologistB)}
-            helperText={formik.touched.embryologistB && formik.errors.embryologistB}
+            error={
+              formik.touched.embryologistB &&
+              Boolean(formik.errors.embryologistB)
+            }
+            helperText={
+              formik.touched.embryologistB && formik.errors.embryologistB
+            }
           />
         </Grid>
         {/* <Grid item xs={12} sm={6} md={3}>
@@ -222,36 +249,54 @@ const EmbryoTransferReport: React.FC<IVFReportProps> = ({ report, treatmentCycle
         <Grid item xs={12} sm={6} md={3}>
           <FieldAutocomplete
             options={doctors}
-            getOptionLabel={(option) => `${option.firstName || ""} ${option.lastName || ""}`}
+            getOptionLabel={option =>
+              `${option.firstName || ''} ${option.lastName || ''}`
+            }
             filterOptions={(options, _state) => {
               return options.filter(
-                (option) => option.speciality === DoctorSpeciality.Gynecologist
+                option => option.speciality === DoctorSpeciality.Gynecologist,
               );
             }}
             isOptionEqualToValue={(option, value) => option._id === value._id}
             value={formik.values.gynecologistA}
-            onChange={(newValue) => formik.setFieldValue("gynecologistA", newValue)}
+            onChange={newValue =>
+              formik.setFieldValue('gynecologistA', newValue)
+            }
             label="Gynecologist A"
-            error={formik.touched.gynecologistA && Boolean(formik.errors.gynecologistA)}
-            helperText={formik.touched.gynecologistA && formik.errors.gynecologistA}
+            error={
+              formik.touched.gynecologistA &&
+              Boolean(formik.errors.gynecologistA)
+            }
+            helperText={
+              formik.touched.gynecologistA && formik.errors.gynecologistA
+            }
           />
         </Grid>
 
         <Grid item xs={12} sm={6} md={3}>
           <FieldAutocomplete
             options={doctors}
-            getOptionLabel={(option) => `${option.firstName || ""} ${option.lastName || ""}`}
+            getOptionLabel={option =>
+              `${option.firstName || ''} ${option.lastName || ''}`
+            }
             filterOptions={(options, _state) => {
               return options.filter(
-                (option) => option.speciality === DoctorSpeciality.Gynecologist
+                option => option.speciality === DoctorSpeciality.Gynecologist,
               );
             }}
             isOptionEqualToValue={(option, value) => option._id === value._id}
             value={formik.values.gynecologistB}
-            onChange={(newValue) => formik.setFieldValue("gynecologistB", newValue)}
+            onChange={newValue =>
+              formik.setFieldValue('gynecologistB', newValue)
+            }
             label="Gynecologist B"
-            error={formik.touched.gynecologistB && Boolean(formik.errors.gynecologistB)}
-            helperText={formik.touched.gynecologistB && formik.errors.gynecologistB}
+            error={
+              formik.touched.gynecologistB &&
+              Boolean(formik.errors.gynecologistB)
+            }
+            helperText={
+              formik.touched.gynecologistB && formik.errors.gynecologistB
+            }
           />
         </Grid>
         {/* <Typography variant='h6' color='primary' gutterBottom>Semen Details</Typography> */}
@@ -261,8 +306,13 @@ const EmbryoTransferReport: React.FC<IVFReportProps> = ({ report, treatmentCycle
             label="Reference Doctor"
             fullWidth
             name="ReferenceDoctor"
-            error={formik.touched.ReferenceDoctor && Boolean(formik.errors.ReferenceDoctor)}
-            helperText={formik.touched.ReferenceDoctor && formik.errors.ReferenceDoctor}
+            error={
+              formik.touched.ReferenceDoctor &&
+              Boolean(formik.errors.ReferenceDoctor)
+            }
+            helperText={
+              formik.touched.ReferenceDoctor && formik.errors.ReferenceDoctor
+            }
             onChange={formik.handleChange}
           />
         </Grid>
@@ -280,9 +330,14 @@ const EmbryoTransferReport: React.FC<IVFReportProps> = ({ report, treatmentCycle
             name="dateOfThawing"
             label="Date Of Thawing"
             value={formik.values.dateOfThawing}
-            onChange={(date) => formik.setFieldValue("dateOfThawing", date)}
-            error={formik.touched.dateOfThawing && Boolean(formik.errors.dateOfThawing)}
-            helperText={formik.touched.dateOfThawing && formik.errors.dateOfThawing}
+            onChange={date => formik.setFieldValue('dateOfThawing', date)}
+            error={
+              formik.touched.dateOfThawing &&
+              Boolean(formik.errors.dateOfThawing)
+            }
+            helperText={
+              formik.touched.dateOfThawing && formik.errors.dateOfThawing
+            }
           />
         </Grid>
 
@@ -290,9 +345,14 @@ const EmbryoTransferReport: React.FC<IVFReportProps> = ({ report, treatmentCycle
           <CustomTimePicker
             label="Time Of Thawing"
             value={formik.values.timeOfThawing}
-            onChange={(date) => formik.setFieldValue("timeOfThawing", date)}
-            error={formik.touched.timeOfThawing && Boolean(formik.errors.timeOfThawing)}
-            helperText={formik.touched.timeOfThawing && formik.errors.timeOfThawing}
+            onChange={date => formik.setFieldValue('timeOfThawing', date)}
+            error={
+              formik.touched.timeOfThawing &&
+              Boolean(formik.errors.timeOfThawing)
+            }
+            helperText={
+              formik.touched.timeOfThawing && formik.errors.timeOfThawing
+            }
           />
         </Grid>
 
@@ -303,8 +363,14 @@ const EmbryoTransferReport: React.FC<IVFReportProps> = ({ report, treatmentCycle
             label="No Of Embryos Thawed"
             value={formik.values.NoOfEmbryosThawed}
             onChange={formik.handleChange}
-            error={formik.touched.NoOfEmbryosThawed && Boolean(formik.errors.NoOfEmbryosThawed)}
-            helperText={formik.touched.NoOfEmbryosThawed && formik.errors.NoOfEmbryosThawed}
+            error={
+              formik.touched.NoOfEmbryosThawed &&
+              Boolean(formik.errors.NoOfEmbryosThawed)
+            }
+            helperText={
+              formik.touched.NoOfEmbryosThawed &&
+              formik.errors.NoOfEmbryosThawed
+            }
           />
         </Grid>
         <Grid item lg={4}>
@@ -314,8 +380,14 @@ const EmbryoTransferReport: React.FC<IVFReportProps> = ({ report, treatmentCycle
             label="Post Thaw Survival and their Description"
             value={formik.values.PostThawingSurvival}
             onChange={formik.handleChange}
-            error={formik.touched.PostThawingSurvival && Boolean(formik.errors.PostThawingSurvival)}
-            helperText={formik.touched.PostThawingSurvival && formik.errors.PostThawingSurvival}
+            error={
+              formik.touched.PostThawingSurvival &&
+              Boolean(formik.errors.PostThawingSurvival)
+            }
+            helperText={
+              formik.touched.PostThawingSurvival &&
+              formik.errors.PostThawingSurvival
+            }
           />
         </Grid>
       </Grid>
@@ -336,7 +408,8 @@ const EmbryoTransferReport: React.FC<IVFReportProps> = ({ report, treatmentCycle
               Boolean(formik.errors.NumberOfEmbryosTransferred)
             }
             helperText={
-              formik.touched.NumberOfEmbryosTransferred && formik.errors.NumberOfEmbryosTransferred
+              formik.touched.NumberOfEmbryosTransferred &&
+              formik.errors.NumberOfEmbryosTransferred
             }
           />
         </Grid>
@@ -353,7 +426,8 @@ const EmbryoTransferReport: React.FC<IVFReportProps> = ({ report, treatmentCycle
               Boolean(formik.errors.StatusOfTRemainigEmbryos)
             }
             helperText={
-              formik.touched.StatusOfTRemainigEmbryos && formik.errors.StatusOfTRemainigEmbryos
+              formik.touched.StatusOfTRemainigEmbryos &&
+              formik.errors.StatusOfTRemainigEmbryos
             }
           />
         </Grid>
@@ -362,9 +436,14 @@ const EmbryoTransferReport: React.FC<IVFReportProps> = ({ report, treatmentCycle
             label="Embryo Expiry Date"
             name="EmbryoExpiryDate"
             value={formik.values.EmbryoExpiryDate}
-            onChange={(date) => formik.setFieldValue("EmbryoExpiryDate", date)}
-            error={formik.touched.EmbryoExpiryDate && Boolean(formik.errors.EmbryoExpiryDate)}
-            helperText={formik.touched.EmbryoExpiryDate && formik.errors.EmbryoExpiryDate}
+            onChange={date => formik.setFieldValue('EmbryoExpiryDate', date)}
+            error={
+              formik.touched.EmbryoExpiryDate &&
+              Boolean(formik.errors.EmbryoExpiryDate)
+            }
+            helperText={
+              formik.touched.EmbryoExpiryDate && formik.errors.EmbryoExpiryDate
+            }
           />
         </Grid>
         <Grid item lg={4}>
@@ -372,11 +451,17 @@ const EmbryoTransferReport: React.FC<IVFReportProps> = ({ report, treatmentCycle
             label="Time Of Embryo Transfer"
             value={formik.values.timeOfEmbryoTransfer}
             name="timeOfEmbryoTransfer"
-            onChange={(date) => formik.setFieldValue("timeOfEmbryoTransfer", date)}
-            error={
-              formik.touched.timeOfEmbryoTransfer && Boolean(formik.errors.timeOfEmbryoTransfer)
+            onChange={date =>
+              formik.setFieldValue('timeOfEmbryoTransfer', date)
             }
-            helperText={formik.touched.timeOfEmbryoTransfer && formik.errors.timeOfEmbryoTransfer}
+            error={
+              formik.touched.timeOfEmbryoTransfer &&
+              Boolean(formik.errors.timeOfEmbryoTransfer)
+            }
+            helperText={
+              formik.touched.timeOfEmbryoTransfer &&
+              formik.errors.timeOfEmbryoTransfer
+            }
           />
         </Grid>
         <Grid item lg={4}>
@@ -403,8 +488,13 @@ const EmbryoTransferReport: React.FC<IVFReportProps> = ({ report, treatmentCycle
             name="TransferComments"
             value={formik.values.TransferComments}
             onChange={formik.handleChange}
-            error={formik.touched.TransferComments && Boolean(formik.errors.TransferComments)}
-            helperText={formik.touched.TransferComments && formik.errors.TransferComments}
+            error={
+              formik.touched.TransferComments &&
+              Boolean(formik.errors.TransferComments)
+            }
+            helperText={
+              formik.touched.TransferComments && formik.errors.TransferComments
+            }
           />
         </Grid>
         <Grid item lg={4}>
@@ -448,8 +538,13 @@ const EmbryoTransferReport: React.FC<IVFReportProps> = ({ report, treatmentCycle
             name="EmbryoDiscarded"
             value={formik.values.EmbryoDiscarded}
             onChange={formik.handleChange}
-            error={formik.touched.EmbryoDiscarded && Boolean(formik.errors.EmbryoDiscarded)}
-            helperText={formik.touched.EmbryoDiscarded && formik.errors.EmbryoDiscarded}
+            error={
+              formik.touched.EmbryoDiscarded &&
+              Boolean(formik.errors.EmbryoDiscarded)
+            }
+            helperText={
+              formik.touched.EmbryoDiscarded && formik.errors.EmbryoDiscarded
+            }
           />
         </Grid>
         <Grid item lg={4}>
@@ -457,9 +552,14 @@ const EmbryoTransferReport: React.FC<IVFReportProps> = ({ report, treatmentCycle
             label="Serum Beta HCG Date"
             name="serumBetaHCGDate"
             value={formik.values.serumBetaHCGDate}
-            onChange={(date) => formik.setFieldValue("serumBetaHCGDate", date)}
-            error={formik.touched.serumBetaHCGDate && Boolean(formik.errors.serumBetaHCGDate)}
-            helperText={formik.touched.serumBetaHCGDate && formik.errors.serumBetaHCGDate}
+            onChange={date => formik.setFieldValue('serumBetaHCGDate', date)}
+            error={
+              formik.touched.serumBetaHCGDate &&
+              Boolean(formik.errors.serumBetaHCGDate)
+            }
+            helperText={
+              formik.touched.serumBetaHCGDate && formik.errors.serumBetaHCGDate
+            }
           />
         </Grid>
 
@@ -470,8 +570,13 @@ const EmbryoTransferReport: React.FC<IVFReportProps> = ({ report, treatmentCycle
             name="AssistedHatching"
             value={formik.values.AssistedHatching}
             onChange={formik.handleChange}
-            error={formik.touched.AssistedHatching && Boolean(formik.errors.AssistedHatching)}
-            helperText={formik.touched.AssistedHatching && formik.errors.AssistedHatching}
+            error={
+              formik.touched.AssistedHatching &&
+              Boolean(formik.errors.AssistedHatching)
+            }
+            helperText={
+              formik.touched.AssistedHatching && formik.errors.AssistedHatching
+            }
           />
         </Grid>
         <Grid item lg={4}>
@@ -481,8 +586,13 @@ const EmbryoTransferReport: React.FC<IVFReportProps> = ({ report, treatmentCycle
             name="doctorRemarks"
             value={formik.values.doctorRemarks}
             onChange={formik.handleChange}
-            error={formik.touched.doctorRemarks && Boolean(formik.errors.doctorRemarks)}
-            helperText={formik.touched.doctorRemarks && formik.errors.doctorRemarks}
+            error={
+              formik.touched.doctorRemarks &&
+              Boolean(formik.errors.doctorRemarks)
+            }
+            helperText={
+              formik.touched.doctorRemarks && formik.errors.doctorRemarks
+            }
           />
         </Grid>
         <Grid container pl={2} pt={2}>
@@ -542,23 +652,30 @@ const EmbryoTransferReport: React.FC<IVFReportProps> = ({ report, treatmentCycle
           )}
         </Grid>
       </Grid>
-      <Box display={"flex"} justifyContent={"flex-end"} alignItems={"center"} gap={2} mb={2}>
+      <Box
+        display={'flex'}
+        justifyContent={'flex-end'}
+        alignItems={'center'}
+        gap={2}
+        mb={2}
+      >
         <Button
           variant="contained"
           color="primary"
           type="submit"
           disabled={
             isLoading ||
-            (_.isEqual(formik.values, formik.initialValues) && fileUploadedUrl.length === 0)
+            (_.isEqual(formik.values, formik.initialValues) &&
+              fileUploadedUrl.length === 0)
           }
-          sx={{ width: "fit-content" }}
+          sx={{ width: 'fit-content' }}
         >
           Save
         </Button>
         <Button
           variant="contained"
           color="secondary"
-          sx={{ width: "fit-content" }}
+          sx={{ width: 'fit-content' }}
           onClick={closeModal}
         >
           Cancel

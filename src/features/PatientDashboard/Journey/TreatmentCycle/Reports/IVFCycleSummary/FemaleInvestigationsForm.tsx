@@ -1,6 +1,6 @@
-import React from "react";
-import { Grid, TextField, Typography } from "@mui/material";
-import { FormikProps } from "formik";
+import React from 'react';
+import { Grid, TextField, Typography } from '@mui/material';
+import { FormikProps } from 'formik';
 
 // Define the type for form values
 interface IFormValues {
@@ -17,7 +17,9 @@ interface FemaleInvestigationsFormProps {
   formik: FormikProps<IFormValues>;
 }
 
-const FemaleInvestigationsForm: React.FC<FemaleInvestigationsFormProps> = ({ formik }) => (
+const FemaleInvestigationsForm: React.FC<FemaleInvestigationsFormProps> = ({
+  formik,
+}) => (
   <>
     <Typography variant="h6" pt={2} pb={2}>
       Female Investigations

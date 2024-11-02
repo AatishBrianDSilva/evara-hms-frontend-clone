@@ -1,26 +1,30 @@
-import Button from "@mui/material/Button";
+import Button from '@mui/material/Button';
 
-import Box from "@mui/material/Box";
+import Box from '@mui/material/Box';
 
-import React, { useState } from "react";
-import Add from "@mui/icons-material/Add";
-import Delete from "@mui/icons-material/Delete";
+import React, { useState } from 'react';
+import Add from '@mui/icons-material/Add';
+import Delete from '@mui/icons-material/Delete';
 
-import CustomDataGrid from "../../../../components/CustomDataGrid/CustomDataGrid";
-import { GridColDef, GridActionsCellItem, GridRowParams } from "@mui/x-data-grid";
-import { useSelector } from "react-redux";
-import { RootState } from "../../../../app/store";
-import AddService from "./AddService";
-import { useGetDoctorsQuery } from "../../../../services/doctorsApi";
-import { useGetMasterServicesQuery } from "../../../../services/masterDashboardService/serviceData/masterServicesApi";
-import { CircularProgress } from "@mui/material";
+import CustomDataGrid from '../../../../components/CustomDataGrid/CustomDataGrid';
+import {
+  GridColDef,
+  GridActionsCellItem,
+  GridRowParams,
+} from '@mui/x-data-grid';
+import { useSelector } from 'react-redux';
+import { RootState } from '../../../../app/store';
+import AddService from './AddService';
+import { useGetDoctorsQuery } from '../../../../services/doctorsApi';
+import { useGetMasterServicesQuery } from '../../../../services/masterDashboardService/serviceData/masterServicesApi';
+import { CircularProgress } from '@mui/material';
 import {
   useDeleteServiceMutation,
   useGetServicesQuery,
-} from "../../../../services/patientDashboardService/serviceApi";
-import DeleteConfirmationModal from "../../../../components/DeleteConfirmationModal/DeleteConfirmationModal";
-import { useToast } from "../../../../context/ToastContext";
-import { useNavigate, useParams } from "react-router-dom";
+} from '../../../../services/patientDashboardService/serviceApi';
+import DeleteConfirmationModal from '../../../../components/DeleteConfirmationModal/DeleteConfirmationModal';
+import { useToast } from '../../../../context/ToastContext';
+import { useNavigate, useParams } from 'react-router-dom';
 
 const Services: React.FC = () => {
   const { showPromiseToast } = useToast();
@@ -56,7 +60,7 @@ const Services: React.FC = () => {
     },
     {
       skip: !patient?.patientId,
-    }
+    },
   );
   const masterServices = MasterServicesData?.data || [];
 
@@ -77,17 +81,21 @@ const Services: React.FC = () => {
     },
     {
       skip: !patient?.patientId,
-    }
+    },
   );
   const patientServices = servicesData?.data?.records || [];
   const patientServicesPagination = servicesData?.data?.pagination;
   const patientServicesLoading = serviceLoading || serviceFetching;
 
   // Delete service
-  const [deleteService, { isLoading: deletingService }] = useDeleteServiceMutation();
+  const [deleteService, { isLoading: deletingService }] =
+    useDeleteServiceMutation();
 
   const loading =
-    DoctorsLoading || MasterServicesLoading || DoctorFetching || MasterServiceFetching;
+    DoctorsLoading ||
+    MasterServicesLoading ||
+    DoctorFetching ||
+    MasterServiceFetching;
 
   // State variables for controlling various dialogs
   const [addServiceOpen, setAddServiceOpen] = useState<boolean>(false);
@@ -95,42 +103,45 @@ const Services: React.FC = () => {
     id: string;
     name: string;
     status: boolean;
-  }>({ id: "", name: "", status: false });
+  }>({ id: '', name: '', status: false });
 
   // Columns configuration for the data grid
   const columns: GridColDef[] = [
     {
-      field: "date",
-      headerName: "Date",
+      field: 'date',
+      headerName: 'Date',
       flex: 1,
-      type: "date",
-      valueFormatter: (params) => new Date(params.value as string).toLocaleDateString(),
+      type: 'date',
+      valueFormatter: params =>
+        new Date(params.value as string).toLocaleDateString(),
     },
     {
-      field: "service",
-      headerName: "Service",
+      field: 'service',
+      headerName: 'Service',
       flex: 1,
       valueGetter(params) {
         return params.row.service?.name;
       },
     },
     {
-      field: "doctor",
-      headerName: "Doctor",
+      field: 'doctor',
+      headerName: 'Doctor',
       flex: 1,
       valueGetter(params) {
         if (params.row.doctor) {
-          return params.row.doctor?.firstName + " " + params.row.doctor?.lastName;
+          return (
+            params.row.doctor?.firstName + ' ' + params.row.doctor?.lastName
+          );
         }
-        return "N/A";
+        return 'N/A';
       },
     },
     {
-      field: "actions",
-      type: "actions",
-      headerName: "Actions",
+      field: 'actions',
+      type: 'actions',
+      headerName: 'Actions',
       flex: 1,
-      cellClassName: "actions",
+      cellClassName: 'actions',
       // custom actions for the actions column
       getActions: (params: GridRowParams) => {
         const row = params.row;
@@ -154,23 +165,23 @@ const Services: React.FC = () => {
   };
 
   const closeDeleteDialog = () => {
-    setDeleteServiceOpen({ id: "", name: "", status: false });
+    setDeleteServiceOpen({ id: '', name: '', status: false });
   };
 
   const handleServiceDelete = async () => {
     const id = deleteServiceOpen.id;
     const promise = deleteService(id).unwrap();
     showPromiseToast(promise, {
-      loading: "Deleting service...",
-      success: () => "Service deleted successfully",
-      error: () => "Error deleting service",
+      loading: 'Deleting service...',
+      success: () => 'Service deleted successfully',
+      error: () => 'Error deleting service',
     });
 
     try {
       await promise;
       closeDeleteDialog();
     } catch (error) {
-      console.error("Error deleting service", error);
+      console.error('Error deleting service', error);
     }
   };
 
@@ -196,15 +207,27 @@ const Services: React.FC = () => {
 
   // Main return statement
   return (
-    <Box p={2} display={"flex"} flexDirection={"column"} flex={1}>
-      <Box display={"flex"} justifyContent="flex-end" alignItems="center" mb={3}>
+    <Box p={2} display={'flex'} flexDirection={'column'} flex={1}>
+      <Box
+        display={'flex'}
+        justifyContent="flex-end"
+        alignItems="center"
+        mb={3}
+      >
         {hasFilters && (
-          <Button variant="contained" color="primary" onClick={handleResetFilters} sx={{ mr: 2 }}>
+          <Button
+            variant="contained"
+            color="primary"
+            onClick={handleResetFilters}
+            sx={{ mr: 2 }}
+          >
             Remove Filter
           </Button>
         )}
         <Button
-          startIcon={loading ? <CircularProgress size={16} color="secondary" /> : <Add />}
+          startIcon={
+            loading ? <CircularProgress size={16} color="secondary" /> : <Add />
+          }
           variant="contained"
           color="primary"
           onClick={() => setAddServiceOpen(true)}
@@ -222,7 +245,7 @@ const Services: React.FC = () => {
         onPageChange={handlePageChange}
         onPageSizeChange={handlePageSizeChange}
         loading={patientServicesLoading}
-        sx={{ height: "100%" }}
+        sx={{ height: '100%' }}
         enablePagination={true}
       />
 

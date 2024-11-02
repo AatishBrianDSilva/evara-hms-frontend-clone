@@ -1,5 +1,5 @@
-import React, { useState, useEffect } from "react";
-import ContentSection from "../../../components/ContentSection/ContentSection";
+import React, { useState, useEffect } from 'react';
+import ContentSection from '../../../components/ContentSection/ContentSection';
 import {
   Box,
   TextField,
@@ -9,27 +9,30 @@ import {
   Select,
   Tooltip,
   SelectChangeEvent,
-} from "@mui/material";
-import CustomDataGrid from "../../../components/CustomDataGrid/CustomDataGrid";
-import { GridActionsCellItem, GridColDef, GridRowParams } from "@mui/x-data-grid";
-import { Visibility } from "@mui/icons-material";
-import ViewPurchaseOrder from "./ViewPurchaseOrder";
+} from '@mui/material';
+import CustomDataGrid from '../../../components/CustomDataGrid/CustomDataGrid';
+import {
+  GridActionsCellItem,
+  GridColDef,
+  GridRowParams,
+} from '@mui/x-data-grid';
+import { Visibility } from '@mui/icons-material';
+import ViewPurchaseOrder from './ViewPurchaseOrder';
 import {
   EPurchaseOrderStatus,
   IPurchaseOrder,
-} from "../../../types/pharmacyDashboard/purchaseOrder";
-import { useGetPurchaseOrderReportQuery } from "../../../services/analyticsDashboardService/pharmacy/purchaseOrderReportApi";
-import CustomeDateRangePicker from "../../../components/CustomDateRangePicker/CustomDateRangePicker";
-
+} from '../../../types/pharmacyDashboard/purchaseOrder';
+import { useGetPurchaseOrderReportQuery } from '../../../services/analyticsDashboardService/pharmacy/purchaseOrderReportApi';
+import CustomeDateRangePicker from '../../../components/CustomDateRangePicker/CustomDateRangePicker';
 
 const PurchaseOrderReport: React.FC = () => {
   const [page, setPage] = useState<number>(1);
   const [pageSize, setPageSize] = useState<number>(25);
   const [isViewModalOpen, setIsViewModalOpen] = useState<boolean>(false);
-  const [vendorNameQuery, setVendorNameQuery] = useState<string>("");
+  const [vendorNameQuery, setVendorNameQuery] = useState<string>('');
   const [selectedRow, setSelectedRow] = useState<IPurchaseOrder | undefined>();
   const [selectedStatus, setSelectedStatus] = useState<EPurchaseOrderStatus>(
-    EPurchaseOrderStatus.Processed
+    EPurchaseOrderStatus.Processed,
   );
 
   const [startDate, setStartDate] = useState<Date | null>(null); // For start date
@@ -44,7 +47,7 @@ const PurchaseOrderReport: React.FC = () => {
   };
 
   const startDateUTC = startDate;
-  const endDateUTC = endDate
+  const endDateUTC = endDate;
 
   // Fetch purchase orders with filtering
   const {
@@ -73,7 +76,7 @@ const PurchaseOrderReport: React.FC = () => {
   const getRowId = (row: any) => row._id;
 
   useEffect(() => {
-    console.log("Refetching with vendorNameQuery:", vendorNameQuery);
+    console.log('Refetching with vendorNameQuery:', vendorNameQuery);
     refetch();
   }, [selectedStatus, vendorNameQuery, refetch]);
 
@@ -85,11 +88,15 @@ const PurchaseOrderReport: React.FC = () => {
     setPageSize(newPageSize);
   };
 
-  const handleVendorNameQueryChange = (event: React.ChangeEvent<HTMLInputElement>) => {
+  const handleVendorNameQueryChange = (
+    event: React.ChangeEvent<HTMLInputElement>,
+  ) => {
     setVendorNameQuery(event.target.value);
   };
 
-  const handleStatusChange = (event: SelectChangeEvent<EPurchaseOrderStatus>) => {
+  const handleStatusChange = (
+    event: SelectChangeEvent<EPurchaseOrderStatus>,
+  ) => {
     setSelectedStatus(event.target.value as EPurchaseOrderStatus);
   };
 
@@ -104,32 +111,33 @@ const PurchaseOrderReport: React.FC = () => {
   };
 
   const columnsConfig: GridColDef[] = [
-    { field: "poNumber", headerName: "PO Number", flex: 1 },
+    { field: 'poNumber', headerName: 'PO Number', flex: 1 },
     {
-      field: "date",
-      type: "date",
-      headerName: "PO Date",
+      field: 'date',
+      type: 'date',
+      headerName: 'PO Date',
       flex: 1,
-      valueFormatter: (params) => new Date(params.value as string).toLocaleDateString(),
+      valueFormatter: params =>
+        new Date(params.value as string).toLocaleDateString(),
     },
     {
-      field: "vendor",
-      headerName: "Vendor Name",
+      field: 'vendor',
+      headerName: 'Vendor Name',
       flex: 1,
-      valueGetter: (params) => params.row.vendor.name,
+      valueGetter: params => params.row.vendor.name,
     },
     {
-      field: "netAmount",
-      headerName: "Amount",
+      field: 'netAmount',
+      headerName: 'Amount',
       flex: 1,
-      valueGetter: (params) => `₹ ${params.row.request.netAmount}`,
+      valueGetter: params => `₹ ${params.row.request.netAmount}`,
     },
-    { field: "authorizedBy", headerName: "Processed By", flex: 1 },
+    { field: 'authorizedBy', headerName: 'Processed By', flex: 1 },
     {
-      field: "actions",
-      headerName: "Actions",
+      field: 'actions',
+      headerName: 'Actions',
       flex: 1,
-      type: "actions",
+      type: 'actions',
       getActions: (params: GridRowParams) => [
         <Tooltip title="View" key="view">
           <GridActionsCellItem
@@ -153,7 +161,7 @@ const PurchaseOrderReport: React.FC = () => {
             onChange={handleStatusChange}
             style={{ minWidth: 150 }}
           >
-            {Object.values(EPurchaseOrderStatus).map((status) => (
+            {Object.values(EPurchaseOrderStatus).map(status => (
               <MenuItem key={status} value={status}>
                 {status}
               </MenuItem>
@@ -173,7 +181,7 @@ const PurchaseOrderReport: React.FC = () => {
           placeholder="Enter vendor name"
         />
       </Box>
-      <Box mt={2} flex={"1 1 auto"}>
+      <Box mt={2} flex={'1 1 auto'}>
         <CustomDataGrid
           autoHeight={false}
           getRowId={getRowId}
@@ -183,7 +191,7 @@ const PurchaseOrderReport: React.FC = () => {
           pageSize={pageSize}
           totalRows={purchaseOrdersPagination?.totalDocs || 0}
           loading={purchaseOrderLoading}
-          sx={{ height: "100%" }}
+          sx={{ height: '100%' }}
           enablePagination={true}
           onPageChange={handlePageChange}
           onPageSizeChange={handlePageSizeChange}
@@ -193,7 +201,7 @@ const PurchaseOrderReport: React.FC = () => {
         <ViewPurchaseOrder
           openModal={isViewModalOpen}
           onClose={closeViewModal}
-          id={selectedRow?._id || ""}
+          id={selectedRow?._id || ''}
         />
       )}
     </ContentSection>

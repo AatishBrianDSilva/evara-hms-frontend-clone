@@ -1,4 +1,4 @@
-import React from "react";
+import React from 'react';
 import {
   Dialog,
   DialogTitle,
@@ -8,8 +8,8 @@ import {
   Typography,
   Box,
   Grid,
-} from "@mui/material";
-import { DataGrid, GridColDef } from "@mui/x-data-grid";
+} from '@mui/material';
+import { DataGrid, GridColDef } from '@mui/x-data-grid';
 
 interface ViewTreatmentAdviceProps {
   open: boolean;
@@ -22,40 +22,44 @@ const ViewTreatmentAdvice: React.FC<ViewTreatmentAdviceProps> = ({
   onClose,
   treatmentAdvice,
 }) => {
-  console.log("Treatment Advice", treatmentAdvice);
+  console.log('Treatment Advice', treatmentAdvice);
 
   const columns: GridColDef[] = [
     {
-      field: "callDate",
-      headerName: "Call Date",
+      field: 'callDate',
+      headerName: 'Call Date',
       flex: 1,
-      valueFormatter: (params) => new Date(params.value).toLocaleDateString(),
+      valueFormatter: params => new Date(params.value).toLocaleDateString(),
     },
     {
-      field: "callTime",
-      headerName: "Call Time",
+      field: 'callTime',
+      headerName: 'Call Time',
       flex: 1,
-      valueFormatter: (params) => new Date(params.value).toLocaleTimeString(),
+      valueFormatter: params => new Date(params.value).toLocaleTimeString(),
     },
-    { field: "comments", headerName: "Comments", flex: 2 },
+    { field: 'comments', headerName: 'Comments', flex: 2 },
   ];
 
-  const rows = treatmentAdvice.callDetails.map((detail: any, index: number) => ({
-    id: index + 1,
-    callDate: detail.callDate,
-    callTime: detail.callTime,
-    comments: detail.comments,
-  }));
+  const rows = treatmentAdvice.callDetails.map(
+    (detail: any, index: number) => ({
+      id: index + 1,
+      callDate: detail.callDate,
+      callTime: detail.callTime,
+      comments: detail.comments,
+    }),
+  );
 
   return (
     <Dialog open={open} onClose={onClose} maxWidth="md" fullWidth>
-      <DialogTitle sx={{ color: "primary.main" }}>Treatment Advice</DialogTitle>
+      <DialogTitle sx={{ color: 'primary.main' }}>Treatment Advice</DialogTitle>
       <DialogContent>
         <Box mb={2}>
           <Grid container spacing={2}>
             <Grid item xs={4}>
               <Typography variant="h6">Treatment Advice:</Typography>
-              <Typography variant="body1">{treatmentAdvice.treatmentAdvice}</Typography>
+              <Typography variant="body1">
+                {treatmentAdvice.treatmentAdvice}
+              </Typography>
             </Grid>
             <Grid item xs={4}>
               <Typography variant="h6">Status:</Typography>
@@ -81,8 +85,13 @@ const ViewTreatmentAdvice: React.FC<ViewTreatmentAdviceProps> = ({
           <Typography variant="h6" gutterBottom>
             Call Details
           </Typography>
-          <div style={{ height: 300, width: "100%" }}>
-            <DataGrid rows={rows} columns={columns} disableColumnMenu hideFooterPagination />
+          <div style={{ height: 300, width: '100%' }}>
+            <DataGrid
+              rows={rows}
+              columns={columns}
+              disableColumnMenu
+              hideFooterPagination
+            />
           </div>
         </Box>
       </DialogContent>

@@ -1,9 +1,17 @@
-import React from "react";
-import { Box, Button, Dialog, DialogContent, DialogTitle, Grid, TextField } from "@mui/material";
-import { useFormik } from "formik";
-import _ from "lodash";
-import { useToast } from "../../../../../context/ToastContext";
-import { useAddNotesTreatmentAdviceMutation } from "../../../../../services/masterDashboardService/local/notesTreatmentAdviceApi";
+import React from 'react';
+import {
+  Box,
+  Button,
+  Dialog,
+  DialogContent,
+  DialogTitle,
+  Grid,
+  TextField,
+} from '@mui/material';
+import { useFormik } from 'formik';
+import _ from 'lodash';
+import { useToast } from '../../../../../context/ToastContext';
+import { useAddNotesTreatmentAdviceMutation } from '../../../../../services/masterDashboardService/local/notesTreatmentAdviceApi';
 
 interface AddAdviceProps {
   openModal: boolean;
@@ -16,7 +24,8 @@ interface IFormValues {
 const AddAdvice: React.FC<AddAdviceProps> = ({ openModal, onClose }) => {
   const { showPromiseToast } = useToast();
 
-  const [addAdvice, { isLoading: AdviceLoading }] = useAddNotesTreatmentAdviceMutation();
+  const [addAdvice, { isLoading: AdviceLoading }] =
+    useAddNotesTreatmentAdviceMutation();
 
   const handleFormSubmit = async (values: IFormValues) => {
     const payload = {
@@ -28,9 +37,9 @@ const AddAdvice: React.FC<AddAdviceProps> = ({ openModal, onClose }) => {
     const promise = addAdvice(payload).unwrap();
 
     showPromiseToast(promise, {
-      loading: "Adding...",
-      success: (data) => data || "Added Successfully",
-      error: (data) => data || "Adding Failed",
+      loading: 'Adding...',
+      success: data => data || 'Added Successfully',
+      error: data => data || 'Adding Failed',
     });
 
     try {
@@ -43,7 +52,7 @@ const AddAdvice: React.FC<AddAdviceProps> = ({ openModal, onClose }) => {
   };
 
   const initialValues: IFormValues = {
-    name: "",
+    name: '',
   };
 
   const formik = useFormik({
@@ -55,9 +64,9 @@ const AddAdvice: React.FC<AddAdviceProps> = ({ openModal, onClose }) => {
 
   return (
     <Dialog open={openModal} onClose={onClose} maxWidth="md" fullWidth>
-      <DialogTitle color={"primary"}>Add Advice</DialogTitle>
+      <DialogTitle color={'primary'}>Add Advice</DialogTitle>
       <DialogContent>
-        <Box component={"form"} onSubmit={formik.handleSubmit} p={2}>
+        <Box component={'form'} onSubmit={formik.handleSubmit} p={2}>
           <Grid container spacing={1} mb={2} mt={2}>
             <Grid item xs={8} sm={4} lg={3}>
               <TextField
@@ -71,20 +80,28 @@ const AddAdvice: React.FC<AddAdviceProps> = ({ openModal, onClose }) => {
             </Grid>
           </Grid>
 
-          <Box display={"flex"} justifyContent={"flex-end"} alignItems={"center"} gap={2} mb={2}>
+          <Box
+            display={'flex'}
+            justifyContent={'flex-end'}
+            alignItems={'center'}
+            gap={2}
+            mb={2}
+          >
             <Button
               variant="contained"
               color="primary"
               type="submit"
-              disabled={AdviceLoading || _.isEqual(initialValues, formik.values)}
-              sx={{ width: "fit-content" }}
+              disabled={
+                AdviceLoading || _.isEqual(initialValues, formik.values)
+              }
+              sx={{ width: 'fit-content' }}
             >
               Save
             </Button>
             <Button
               variant="contained"
               color="secondary"
-              sx={{ width: "fit-content" }}
+              sx={{ width: 'fit-content' }}
               onClick={onClose}
             >
               Cancel

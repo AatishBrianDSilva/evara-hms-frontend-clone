@@ -1,21 +1,25 @@
-import React, { useState } from "react";
-import Button from "@mui/material/Button";
-import Box from "@mui/material/Box";
-import Add from "@mui/icons-material/Add";
-import Delete from "@mui/icons-material/Delete";
-import CustomDataGrid from "../../../../components/CustomDataGrid/CustomDataGrid";
-import { GridColDef, GridActionsCellItem, GridRowParams } from "@mui/x-data-grid";
-import { useSelector } from "react-redux";
-import { RootState } from "../../../../app/store";
-import AddPackage from "./AddPackage";
-import { useGetMasterPackagesQuery } from "../../../../services/masterDashboardService/serviceData/masterPackagesApi";
+import React, { useState } from 'react';
+import Button from '@mui/material/Button';
+import Box from '@mui/material/Box';
+import Add from '@mui/icons-material/Add';
+import Delete from '@mui/icons-material/Delete';
+import CustomDataGrid from '../../../../components/CustomDataGrid/CustomDataGrid';
+import {
+  GridColDef,
+  GridActionsCellItem,
+  GridRowParams,
+} from '@mui/x-data-grid';
+import { useSelector } from 'react-redux';
+import { RootState } from '../../../../app/store';
+import AddPackage from './AddPackage';
+import { useGetMasterPackagesQuery } from '../../../../services/masterDashboardService/serviceData/masterPackagesApi';
 import {
   useDeletePackageMutation,
   useGetPackagesQuery,
-} from "../../../../services/patientDashboardService/packageApi";
-import { useGetDoctorsQuery } from "../../../../services/doctorsApi";
-import DeleteConfirmationModal from "../../../../components/DeleteConfirmationModal/DeleteConfirmationModal";
-import { useToast } from "../../../../context/ToastContext";
+} from '../../../../services/patientDashboardService/packageApi';
+import { useGetDoctorsQuery } from '../../../../services/doctorsApi';
+import DeleteConfirmationModal from '../../../../components/DeleteConfirmationModal/DeleteConfirmationModal';
+import { useToast } from '../../../../context/ToastContext';
 
 const Packages: React.FC = () => {
   const { showPromiseToast } = useToast();
@@ -28,7 +32,7 @@ const Packages: React.FC = () => {
     id: string;
     name: string;
     status: boolean;
-  }>({ id: "", name: "", status: false });
+  }>({ id: '', name: '', status: false });
 
   // Get doctors
   const {
@@ -53,7 +57,7 @@ const Packages: React.FC = () => {
     },
     {
       skip: !patient?.patientId,
-    }
+    },
   );
   const masterPackages = MasterPackagesData?.data || [];
 
@@ -73,50 +77,54 @@ const Packages: React.FC = () => {
     },
     {
       skip: !patient?.patientId,
-    }
+    },
   );
   const patientPackages = packagesData?.data?.records || [];
   const patientPackagesPagination = packagesData?.data?.pagination;
   const patientPackagesLoading = packageLoading || packageFetching;
 
-  console.log("Master Packages", masterPackages);
+  console.log('Master Packages', masterPackages);
 
-  console.log("Packages", patientPackages);
+  console.log('Packages', patientPackages);
 
   // Delete package
-  const [deletePackage, { isLoading: deletingPackage }] = useDeletePackageMutation();
+  const [deletePackage, { isLoading: deletingPackage }] =
+    useDeletePackageMutation();
 
   const loading =
-    MasterPackagesLoading || MasterPackageFetching || DoctorsLoading || DoctorFetching;
+    MasterPackagesLoading ||
+    MasterPackageFetching ||
+    DoctorsLoading ||
+    DoctorFetching;
 
   const columns: GridColDef[] = [
     {
-      field: "dateAssigned",
-      headerName: "Date",
+      field: 'dateAssigned',
+      headerName: 'Date',
       flex: 1,
-      type: "date",
-      valueFormatter: (params) => {
+      type: 'date',
+      valueFormatter: params => {
         const date = new Date(params.value as string);
-        const day = String(date.getDate()).padStart(2, "0");
-        const month = String(date.getMonth() + 1).padStart(2, "0"); // Months are zero-indexed
+        const day = String(date.getDate()).padStart(2, '0');
+        const month = String(date.getMonth() + 1).padStart(2, '0'); // Months are zero-indexed
         const year = String(date.getFullYear()).slice(-2);
         return `${day}/${month}/${year}`;
       },
     },
     {
-      field: "package",
-      headerName: "Package",
+      field: 'package',
+      headerName: 'Package',
       flex: 1,
       valueGetter(params) {
         return params.row.package?.name;
       },
     },
     {
-      field: "actions",
-      type: "actions",
-      headerName: "Actions",
+      field: 'actions',
+      type: 'actions',
+      headerName: 'Actions',
       flex: 1,
-      cellClassName: "actions",
+      cellClassName: 'actions',
       getActions: (params: GridRowParams) => {
         const row = params.row;
         return [
@@ -139,23 +147,23 @@ const Packages: React.FC = () => {
   };
 
   const closeDeleteDialog = () => {
-    setDeletePackageOpen({ id: "", name: "", status: false });
+    setDeletePackageOpen({ id: '', name: '', status: false });
   };
 
   const handlePackageDelete = async () => {
     const id = deletePackageOpen.id;
     const promise = deletePackage(id).unwrap();
     showPromiseToast(promise, {
-      loading: "Deleting package...",
-      success: () => "Package deleted successfully",
-      error: () => "Error deleting package",
+      loading: 'Deleting package...',
+      success: () => 'Package deleted successfully',
+      error: () => 'Error deleting package',
     });
 
     try {
       await promise;
       closeDeleteDialog();
     } catch (error) {
-      console.error("Error deleting package", error);
+      console.error('Error deleting package', error);
     }
   };
 
@@ -172,8 +180,13 @@ const Packages: React.FC = () => {
   };
 
   return (
-    <Box p={2} display={"flex"} flexDirection={"column"} flex={1}>
-      <Box display={"flex"} justifyContent="flex-end" alignItems="center" mb={3}>
+    <Box p={2} display={'flex'} flexDirection={'column'} flex={1}>
+      <Box
+        display={'flex'}
+        justifyContent="flex-end"
+        alignItems="center"
+        mb={3}
+      >
         <Button
           startIcon={<Add />}
           variant="contained"
@@ -194,7 +207,7 @@ const Packages: React.FC = () => {
         onPageChange={handlePageChange}
         onPageSizeChange={handlePageSizeChange}
         loading={patientPackagesLoading}
-        sx={{ height: "100%" }}
+        sx={{ height: '100%' }}
         enablePagination={true}
       />
 

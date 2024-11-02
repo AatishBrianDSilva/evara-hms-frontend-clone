@@ -1,4 +1,4 @@
-import { IDrugItem, IDrugLocation, IDrugVendor } from "./master";
+import { IDrugItem, IDrugLocation, IDrugVendor } from './master';
 
 export interface ILocationQuantity {
   location: IDrugLocation;

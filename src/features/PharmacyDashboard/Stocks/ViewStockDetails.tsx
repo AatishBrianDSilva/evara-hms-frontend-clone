@@ -1,12 +1,23 @@
-import { Box, Button, Dialog, DialogActions, DialogContent, DialogTitle, Divider, Grid, Skeleton, Typography } from '@mui/material'
-import React from 'react'
-import { useGetStockByIdQuery } from '../../../services/pharmacyDashboardService/stocksApi'
+import {
+  Box,
+  Button,
+  Dialog,
+  DialogActions,
+  DialogContent,
+  DialogTitle,
+  Divider,
+  Grid,
+  Skeleton,
+  Typography,
+} from '@mui/material';
+import React from 'react';
+import { useGetStockByIdQuery } from '../../../services/pharmacyDashboardService/stocksApi';
 import StockDetails from './StockDetails';
 
 interface ViewStockProps {
-  openModal: boolean
-  onClose: () => void,
-  id: string,
+  openModal: boolean;
+  onClose: () => void;
+  id: string;
 }
 
 const StockSkeleton = () => (
@@ -49,27 +60,34 @@ const StockSkeleton = () => (
   </Box>
 );
 
-
 const ViewStock: React.FC<ViewStockProps> = ({ openModal, onClose, id }) => {
+  const {
+    data: StockData,
+    isLoading: isStockLoading,
+    isFetching: isStockFetching,
+  } = useGetStockByIdQuery(id);
+  const stock = StockData?.data;
+  const stockLoading = isStockLoading || isStockFetching;
 
-  const { data: StockData, isLoading: isStockLoading, isFetching: isStockFetching } = useGetStockByIdQuery(id)
-  const stock = StockData?.data
-  const stockLoading = isStockLoading || isStockFetching
-
-  console.log("🚀 ~ stocks:", stock);
+  console.log('🚀 ~ stocks:', stock);
 
   return (
     <Dialog open={openModal} onClose={onClose} maxWidth="lg" fullWidth>
-      <DialogTitle color={"primary"}>Stock Details</DialogTitle>
+      <DialogTitle color={'primary'}>Stock Details</DialogTitle>
       <DialogContent>
-        {stockLoading || !stock ? <StockSkeleton /> : <StockDetails stock={stock} />}
+        {stockLoading || !stock ? (
+          <StockSkeleton />
+        ) : (
+          <StockDetails stock={stock} />
+        )}
       </DialogContent>
       <DialogActions>
-        <Button color="primary" onClick={onClose}>Close</Button>
+        <Button color="primary" onClick={onClose}>
+          Close
+        </Button>
       </DialogActions>
     </Dialog>
-  )
+  );
+};
 
-}
-
-export default ViewStock
+export default ViewStock;

@@ -1,15 +1,15 @@
-import React from 'react'
-import PatientInfo from './PatientInfo'
+import React from 'react';
+import PatientInfo from './PatientInfo';
 import Box from '@mui/material/Box';
 import Button from '@mui/material/Button';
 import Grid from '@mui/material/Grid';
 import MenuItem from '@mui/material/MenuItem';
 import TextField from '@mui/material/TextField';
 import Typography from '@mui/material/Typography';
-import TreatmentCyclesTable from './TreatmentCyclesTable'
+import TreatmentCyclesTable from './TreatmentCyclesTable';
 import CloudUploadIcon from '@mui/icons-material/CloudUpload';
-import { GridColDef } from '@mui/x-data-grid'
-import { VisuallyHiddenInput } from '../../components/Utils/VisuallyHiddenInput'
+import { GridColDef } from '@mui/x-data-grid';
+import { VisuallyHiddenInput } from '../../components/Utils/VisuallyHiddenInput';
 import SemenAnalysisTable from '../../components/SemenAnalysisTable/SemenAnalysisTable';
 import CustomDataGrid from '../../components/CustomDataGrid/CustomDataGrid';
 import CustomDatePicker from '../../components/CustomDatePicker/CustomDatePicker';
@@ -23,23 +23,32 @@ const columnsConfig: GridColDef[] = [
   { field: 'modifiedBy', headerName: 'Modified By', flex: 1 },
   { field: 'modifiedAt', headerName: 'Modified At', type: 'date', flex: 1 },
   { field: 'action', headerName: 'Action', flex: 1 },
-]
+];
 
 const AndrologySemenAnalysis: React.FC = () => {
-
   return (
-    <div className='main-container'>
+    <div className="main-container">
       <PatientInfo />
 
       <TreatmentCyclesTable />
 
-      <Typography variant='h6' sx={{ mt: 2, mb: 2 }}>Semen Analysis </Typography>
+      <Typography variant="h6" sx={{ mt: 2, mb: 2 }}>
+        Semen Analysis{' '}
+      </Typography>
 
-      <Box display={"flex"} gap={2} mb={2} >
-        <Button variant='outlined' color='primary' sx={{ width: 'fit-content' }}>
+      <Box display={'flex'} gap={2} mb={2}>
+        <Button
+          variant="outlined"
+          color="primary"
+          sx={{ width: 'fit-content' }}
+        >
           Add Semen
         </Button>
-        <Button variant='contained' color='secondary' sx={{ width: 'fit-content' }}>
+        <Button
+          variant="contained"
+          color="secondary"
+          sx={{ width: 'fit-content' }}
+        >
           Export
         </Button>
       </Box>
@@ -51,16 +60,21 @@ const AndrologySemenAnalysis: React.FC = () => {
         />
       </Box>
       {/* Add Semen Form */}
-      <Typography variant='h6' sx={{ mb: 2 }}>Add Semen</Typography>
+      <Typography variant="h6" sx={{ mb: 2 }}>
+        Add Semen
+      </Typography>
       <Grid container spacing={2} marginBottom={2}>
         <Grid item xs={12} sm={6} md={3}>
           <CustomDatePicker label="Date" value={new Date()} />
         </Grid>
         <Grid item xs={12} sm={6} md={3}>
-          <TextField label="Sperm DFI" name='sperm-dfi' />
+          <TextField label="Sperm DFI" name="sperm-dfi" />
         </Grid>
         <Grid item xs={12} sm={6} md={3}>
-          <CustomTimePicker label="Time of sample received at hospital" value={null} />
+          <CustomTimePicker
+            label="Time of sample received at hospital"
+            value={null}
+          />
         </Grid>
       </Grid>
 
@@ -104,7 +118,9 @@ const AndrologySemenAnalysis: React.FC = () => {
           </TextField>
         </Grid>
       </Grid>
-      <Typography variant="subtitle1" sx={{ mt: 2, mb: 2 }}>Physical Assessment</Typography>
+      <Typography variant="subtitle1" sx={{ mt: 2, mb: 2 }}>
+        Physical Assessment
+      </Typography>
       <Grid container spacing={2} marginBottom={2}>
         <Grid item xs={12} sm={6} md={3}>
           <TextField label="Sperm Conc.(millions / ml)" fullWidth />
@@ -144,7 +160,9 @@ const AndrologySemenAnalysis: React.FC = () => {
         </Grid>
       </Grid>
 
-      <Typography variant="subtitle1" sx={{ mt: 2, mb: 2 }}>Sperm Motility</Typography>
+      <Typography variant="subtitle1" sx={{ mt: 2, mb: 2 }}>
+        Sperm Motility
+      </Typography>
       <Grid container spacing={2} marginBottom={2}>
         <Grid item xs={12} sm={6} md={3}>
           <TextField label="Rapid Progressive Grade A" fullWidth />
@@ -168,7 +186,9 @@ const AndrologySemenAnalysis: React.FC = () => {
         </Grid>
       </Grid>
 
-      <Typography variant="subtitle1" sx={{ mt: 2, mb: 2 }}>Morphology Assessment</Typography>
+      <Typography variant="subtitle1" sx={{ mt: 2, mb: 2 }}>
+        Morphology Assessment
+      </Typography>
       <Grid container spacing={2} marginBottom={2}>
         <Grid item xs={12} sm={6} md={3}>
           <TextField label="Normal Forms" fullWidth />
@@ -201,7 +221,9 @@ const AndrologySemenAnalysis: React.FC = () => {
         </Grid>
       </Grid>
 
-      <Typography variant="subtitle1" sx={{ mt: 2, mb: 2 }}>Advanced Sperm Fertilization Parameter Assessment</Typography>
+      <Typography variant="subtitle1" sx={{ mt: 2, mb: 2 }}>
+        Advanced Sperm Fertilization Parameter Assessment
+      </Typography>
       <Grid container spacing={2} marginBottom={2}>
         <Grid item xs={12} sm={6} md={3}>
           <TextField label="HOS(Hypo-Osmotic Swelling)" fullWidth />
@@ -210,24 +232,40 @@ const AndrologySemenAnalysis: React.FC = () => {
           <TextField label="Acrosome Intactness(AI)" fullWidth />
         </Grid>
         <Grid item xs={12} sm={6} md={3}>
-          <TextField label="Zona Binding Potential Of Sperm As Per AI Testing" fullWidth />
+          <TextField
+            label="Zona Binding Potential Of Sperm As Per AI Testing"
+            fullWidth
+          />
         </Grid>
       </Grid>
 
-      <Typography variant="subtitle1" sx={{ mt: 2, mb: 2 }}>Final Semen Analysis & Advanced Sperm Assessment</Typography>
+      <Typography variant="subtitle1" sx={{ mt: 2, mb: 2 }}>
+        Final Semen Analysis & Advanced Sperm Assessment
+      </Typography>
       <Grid container spacing={2} marginBottom={2}>
         <Grid item xs={12} sm={6} md={6}>
           <TextField label="Analysis" multiline minRows={2} fullWidth />
         </Grid>
       </Grid>
 
-      <Typography variant="subtitle1" sx={{ mt: 2, mb: 2 }}>Upload Images & Description</Typography>
-      <Grid container spacing={2} marginBottom={2} >
+      <Typography variant="subtitle1" sx={{ mt: 2, mb: 2 }}>
+        Upload Images & Description
+      </Typography>
+      <Grid container spacing={2} marginBottom={2}>
         <Grid item xs={12}>
           {/* Upload image button */}
-          <Button component="label" variant="outlined" sx={{ width: 'fit-content' }} startIcon={<CloudUploadIcon />}>
+          <Button
+            component="label"
+            variant="outlined"
+            sx={{ width: 'fit-content' }}
+            startIcon={<CloudUploadIcon />}
+          >
             Upload Images
-            <VisuallyHiddenInput onChange={() => { }} type="file" accept="image/*" />
+            <VisuallyHiddenInput
+              onChange={() => {}}
+              type="file"
+              accept="image/*"
+            />
           </Button>
         </Grid>
         <Grid item xs={12} sm={6} md={6}>
@@ -235,26 +273,52 @@ const AndrologySemenAnalysis: React.FC = () => {
         </Grid>
       </Grid>
 
-      <Typography variant="subtitle1" sx={{ mt: 2, mb: 2 }}>Reference Values For Semen Analysis</Typography>
+      <Typography variant="subtitle1" sx={{ mt: 2, mb: 2 }}>
+        Reference Values For Semen Analysis
+      </Typography>
       <SemenAnalysisTable />
 
-      <Typography variant="subtitle1" sx={{ mt: 2, mb: 2 }}>Disclaimer</Typography>
+      <Typography variant="subtitle1" sx={{ mt: 2, mb: 2 }}>
+        Disclaimer
+      </Typography>
       <Grid container spacing={2} marginBottom={2}>
         <Grid item xs={12} sm={12} md={12}>
-          <TextField label="Disclaimer" value={"Basic Semen Analysis reveals sub fertile samples. To further to evaluate the cause of subfertile semen sample, DNA fragmentation index is recommended."} multiline minRows={2} fullWidth />
+          <TextField
+            label="Disclaimer"
+            value={
+              'Basic Semen Analysis reveals sub fertile samples. To further to evaluate the cause of subfertile semen sample, DNA fragmentation index is recommended.'
+            }
+            multiline
+            minRows={2}
+            fullWidth
+          />
         </Grid>
       </Grid>
 
-      <Box display={"flex"} justifyContent={"center"} alignItems={"center"} gap={2} mb={2} >
-        <Button variant='contained' color='primary' sx={{ width: 'fit-content' }}>
+      <Box
+        display={'flex'}
+        justifyContent={'center'}
+        alignItems={'center'}
+        gap={2}
+        mb={2}
+      >
+        <Button
+          variant="contained"
+          color="primary"
+          sx={{ width: 'fit-content' }}
+        >
           Save
         </Button>
-        <Button variant='contained' color='secondary' sx={{ width: 'fit-content' }}>
+        <Button
+          variant="contained"
+          color="secondary"
+          sx={{ width: 'fit-content' }}
+        >
           Cancel
         </Button>
       </Box>
     </div>
-  )
-}
+  );
+};
 
-export default AndrologySemenAnalysis
+export default AndrologySemenAnalysis;

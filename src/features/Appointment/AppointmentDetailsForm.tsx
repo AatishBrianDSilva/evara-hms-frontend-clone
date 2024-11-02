@@ -1,18 +1,18 @@
-import React from "react";
-import { useFormik } from "formik";
-import { Button, Grid, MenuItem, Stack, TextField } from "@mui/material";
-import { format } from "date-fns";
-import { AppointmentValidationSchema } from "../../yup/yup";
-import { useToast } from "../../context/ToastContext";
-import { useAddAppointmentMutation } from "../../services/appointmentApi";
-import { useSelector } from "react-redux";
-import { RootState } from "../../app/store";
-import { IAppointment } from "../../types/appointment";
-import { MuiTelInput } from "mui-tel-input";
-import { useGetPatientsQuery } from "../../services/patientsApi";
-import FieldAutocomplete from "../../components/FieldAutoComplete/FieldAutoComplete";
-import { useGetAppointmentReasonsQuery } from "../../services/masterDashboardService/local/appointmentReasonApi";
-import { useGetAppointmentSourcesQuery } from "../../services/masterDashboardService/local/appointmentSourceApi";
+import React from 'react';
+import { useFormik } from 'formik';
+import { Button, Grid, MenuItem, Stack, TextField } from '@mui/material';
+import { format } from 'date-fns';
+import { AppointmentValidationSchema } from '../../yup/yup';
+import { useToast } from '../../context/ToastContext';
+import { useAddAppointmentMutation } from '../../services/appointmentApi';
+import { useSelector } from 'react-redux';
+import { RootState } from '../../app/store';
+import { IAppointment } from '../../types/appointment';
+import { MuiTelInput } from 'mui-tel-input';
+import { useGetPatientsQuery } from '../../services/patientsApi';
+import FieldAutocomplete from '../../components/FieldAutoComplete/FieldAutoComplete';
+import { useGetAppointmentReasonsQuery } from '../../services/masterDashboardService/local/appointmentReasonApi';
+import { useGetAppointmentSourcesQuery } from '../../services/masterDashboardService/local/appointmentSourceApi';
 
 interface AppointmentDetailsFormProps {
   onBack: () => void;
@@ -28,9 +28,9 @@ const AppointmentDetailsForm: React.FC<AppointmentDetailsFormProps> = ({
   const { showPromiseToast } = useToast();
 
   const { selectedDate, selectedTimeslot, selectedDoctor } = useSelector(
-    (state: RootState) => state.appointments
+    (state: RootState) => state.appointments,
   );
-  const formatedDate = format(new Date(selectedDate), "MMM do y");
+  const formatedDate = format(new Date(selectedDate), 'MMM do y');
 
   const {
     data: patientsData,
@@ -44,7 +44,8 @@ const AppointmentDetailsForm: React.FC<AppointmentDetailsFormProps> = ({
   const patientsLoading = isPatientsLoading || isPatientsFetching;
 
   // Mutation to add an appointment
-  const [addAppointment, { isLoading: isSchedulingAppointment }] = useAddAppointmentMutation();
+  const [addAppointment, { isLoading: isSchedulingAppointment }] =
+    useAddAppointmentMutation();
 
   const handleSubmit = async (values: any) => {
     const appointmentData = {
@@ -64,9 +65,11 @@ const AppointmentDetailsForm: React.FC<AppointmentDetailsFormProps> = ({
     const promise = addAppointment(appointmentData).unwrap();
 
     showPromiseToast(promise, {
-      loading: "Scheduling Appointment",
-      success: (response) => response.message || "Appointment Scheduled Successfully",
-      error: (err) => `Error: ${err.response?.data?.message || "Failed to schedule appointment"}`,
+      loading: 'Scheduling Appointment',
+      success: response =>
+        response.message || 'Appointment Scheduled Successfully',
+      error: err =>
+        `Error: ${err.response?.data?.message || 'Failed to schedule appointment'}`,
     });
 
     try {
@@ -74,7 +77,7 @@ const AppointmentDetailsForm: React.FC<AppointmentDetailsFormProps> = ({
       formik.resetForm();
       onNext();
     } catch (error: any) {
-      console.error("Failed to schedule appointment", error);
+      console.error('Failed to schedule appointment', error);
     }
   };
 
@@ -83,7 +86,10 @@ const AppointmentDetailsForm: React.FC<AppointmentDetailsFormProps> = ({
     data: reasonsData,
     isLoading: isReasonsLoading,
     isFetching: isReasonsFetching,
-  } = useGetAppointmentReasonsQuery({ paginate: false, filters: { isAdmin: true } });
+  } = useGetAppointmentReasonsQuery({
+    paginate: false,
+    filters: { isAdmin: true },
+  });
   const reasons = reasonsData?.data || [];
   const reasonsLoading = isReasonsLoading || isReasonsFetching;
 
@@ -92,20 +98,23 @@ const AppointmentDetailsForm: React.FC<AppointmentDetailsFormProps> = ({
     data: sourcesData,
     isLoading: isSourcesLoading,
     isFetching: isSourcesFetching,
-  } = useGetAppointmentSourcesQuery({ paginate: false, filters: { isAdmin: true } });
+  } = useGetAppointmentSourcesQuery({
+    paginate: false,
+    filters: { isAdmin: true },
+  });
   const sources = sourcesData?.data || [];
   const sourcesLoading = isSourcesLoading || isSourcesFetching;
 
   // Formik form state and validation
   const formik = useFormik({
     initialValues: appointment || {
-      fullName: "",
-      phone: "",
-      city: "",
-      reason: "",
-      mode: "",
-      source: "",
-      notes: "",
+      fullName: '',
+      phone: '',
+      city: '',
+      reason: '',
+      mode: '',
+      source: '',
+      notes: '',
       patientId: null,
     },
     validationSchema: AppointmentValidationSchema, // Pass the validation schema to Formik
@@ -121,7 +130,11 @@ const AppointmentDetailsForm: React.FC<AppointmentDetailsFormProps> = ({
             label="Doctor"
             fullWidth
             disabled
-            value={selectedDoctor ? `${selectedDoctor?.firstName} ${selectedDoctor?.lastName}` : ""}
+            value={
+              selectedDoctor
+                ? `${selectedDoctor?.firstName} ${selectedDoctor?.lastName}`
+                : ''
+            }
           />
         </Grid>
         <Grid item xs={12} sm={3} lg={3}>
@@ -132,29 +145,32 @@ const AppointmentDetailsForm: React.FC<AppointmentDetailsFormProps> = ({
             label="Time"
             fullWidth
             disabled
-            value={selectedTimeslot ? selectedTimeslot : ""}
+            value={selectedTimeslot ? selectedTimeslot : ''}
           />
         </Grid>
         <Grid item xs={12}>
           <FieldAutocomplete
             options={patients}
-            getOptionLabel={(option) => `${option.firstName} ${option.lastName}`}
-            getOptionKey={(option) => option._id}
+            getOptionLabel={option => `${option.firstName} ${option.lastName}`}
+            getOptionKey={option => option._id}
             isOptionEqualToValue={(option, value) => option._id === value._id}
             label="Patient"
             loading={patientsLoading}
             value={formik.values.patientId}
-            onChange={(value) => {
+            onChange={value => {
               if (value) {
-                formik.setFieldValue("patientId", value);
-                formik.setFieldValue("fullName", `${value.firstName} ${value.lastName}`);
-                formik.setFieldValue("phone", `${value.mobile}`);
-                formik.setFieldValue("city", value.city);
+                formik.setFieldValue('patientId', value);
+                formik.setFieldValue(
+                  'fullName',
+                  `${value.firstName} ${value.lastName}`,
+                );
+                formik.setFieldValue('phone', `${value.mobile}`);
+                formik.setFieldValue('city', value.city);
               } else {
-                formik.setFieldValue("patientId", null);
-                formik.setFieldValue("fullName", "");
-                formik.setFieldValue("phone", "");
-                formik.setFieldValue("city", "");
+                formik.setFieldValue('patientId', null);
+                formik.setFieldValue('fullName', '');
+                formik.setFieldValue('phone', '');
+                formik.setFieldValue('city', '');
               }
             }}
             error={formik.touched.patientId && Boolean(formik.errors.patientId)}
@@ -177,12 +193,14 @@ const AppointmentDetailsForm: React.FC<AppointmentDetailsFormProps> = ({
             label="Phone"
             name="phone"
             value={formik.values.phone}
-            onChange={(value) => {
-              const countryCode = value.substring(0, value.indexOf(" "));
-              const phoneNumber = value.substring(value.indexOf(" ") + 1).replace(/\s/g, "");
-              formik.setFieldValue("phone", countryCode + " " + phoneNumber);
+            onChange={value => {
+              const countryCode = value.substring(0, value.indexOf(' '));
+              const phoneNumber = value
+                .substring(value.indexOf(' ') + 1)
+                .replace(/\s/g, '');
+              formik.setFieldValue('phone', countryCode + ' ' + phoneNumber);
             }}
-            defaultCountry={"IN"}
+            defaultCountry={'IN'}
             fullWidth
             error={formik.touched.phone && Boolean(formik.errors.phone)}
             helperText={formik.touched.phone && formik.errors.phone}
@@ -213,7 +231,7 @@ const AppointmentDetailsForm: React.FC<AppointmentDetailsFormProps> = ({
             {reasonsLoading ? (
               <MenuItem value="">Loading...</MenuItem>
             ) : (
-              reasons.map((reason) => (
+              reasons.map(reason => (
                 <MenuItem key={reason.name} value={reason.name}>
                   {reason.name}
                 </MenuItem>
@@ -250,7 +268,7 @@ const AppointmentDetailsForm: React.FC<AppointmentDetailsFormProps> = ({
             {sourcesLoading ? (
               <MenuItem value="">Loading...</MenuItem>
             ) : (
-              sources.map((source) => (
+              sources.map(source => (
                 <MenuItem key={source.name} value={source.name}>
                   {source.name}
                 </MenuItem>

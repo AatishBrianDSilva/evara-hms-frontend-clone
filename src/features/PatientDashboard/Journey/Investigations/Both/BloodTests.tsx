@@ -9,34 +9,39 @@ import {
   Switch,
   TextField,
   Typography,
-} from "@mui/material";
-import { useFormik } from "formik";
-import React, { useState } from "react";
-import { useToast } from "../../../../../context/ToastContext";
-import { useDispatch, useSelector } from "react-redux";
-import { RootState } from "../../../../../app/store";
+} from '@mui/material';
+import { useFormik } from 'formik';
+import React, { useState } from 'react';
+import { useToast } from '../../../../../context/ToastContext';
+import { useDispatch, useSelector } from 'react-redux';
+import { RootState } from '../../../../../app/store';
 import {
   useEditInvestigationMutation,
   useGetInvestigationByIdQuery,
-} from "../../../../../services/patientDashboardService/investigationApi";
-import Cancel from "@mui/icons-material/Cancel";
-import Add from "@mui/icons-material/Add";
-import _ from "lodash";
-import { closeEditInvestigation } from "../investigationSlice";
-import ReportModalHeader from "../../../../../components/ReportModalHeader/ReportModalHeader";
+} from '../../../../../services/patientDashboardService/investigationApi';
+import Cancel from '@mui/icons-material/Cancel';
+import Add from '@mui/icons-material/Add';
+import _ from 'lodash';
+import { closeEditInvestigation } from '../investigationSlice';
+import ReportModalHeader from '../../../../../components/ReportModalHeader/ReportModalHeader';
 import {
   IEditInvestigationForm,
   IEditInvestigationpayload,
-} from "../../../../../types/patientDashboard/investigation";
-import { ETestType, IBloodTestComponent } from "../../../../../types/master";
-import { getEditBloodTestReportValidationSchema } from "../../../../../yup/patientDashboard/investigation";
-import FileUploadButton from "../../../../../components/FileUploadAndPreview/FileUploadButton";
-import { EBuckets, EDocumentTypes } from "../../../../../types/global";
+} from '../../../../../types/patientDashboard/investigation';
+import { ETestType, IBloodTestComponent } from '../../../../../types/master';
+import { getEditBloodTestReportValidationSchema } from '../../../../../yup/patientDashboard/investigation';
+import FileUploadButton from '../../../../../components/FileUploadAndPreview/FileUploadButton';
+import { EBuckets, EDocumentTypes } from '../../../../../types/global';
 
 const renderSkeletonLoader = () => {
   return (
     <>
-      <Box display={"flex"} justifyContent={"space-between"} borderBottom={1} py={2}>
+      <Box
+        display={'flex'}
+        justifyContent={'space-between'}
+        borderBottom={1}
+        py={2}
+      >
         <Box>
           <Skeleton variant="text" width={100} height={20} />
           <Skeleton variant="text" width={100} height={20} />
@@ -48,7 +53,7 @@ const renderSkeletonLoader = () => {
       </Box>
       <Box pt={2} mt={2}>
         <Box>
-          <Grid container justifyContent={"space-between"}>
+          <Grid container justifyContent={'space-between'}>
             <Grid item md={6} lg={3}>
               <Skeleton variant="text" width={100} height={20} />
             </Grid>
@@ -77,7 +82,7 @@ const BloodTests: React.FC = () => {
   // const [fileUploadedUrl, setFileUploadedUrl] = React.useState<string[]>([""]);
 
   const openEditDialog = useSelector(
-    (state: RootState) => state.investigation.editInvestigationOpen
+    (state: RootState) => state.investigation.editInvestigationOpen,
   );
 
   const {
@@ -107,7 +112,8 @@ const BloodTests: React.FC = () => {
   const loading = investigationLoading || investigationFetching;
 
   const date = new Date(investigation?.date || new Date()).toLocaleDateString();
-  const doctor = investigation?.doctor?.firstName + " " + investigation?.doctor?.lastName;
+  const doctor =
+    investigation?.doctor?.firstName + ' ' + investigation?.doctor?.lastName;
   const investigationName = investigation?.investigation?.test?.testName;
   const components = investigation?.investigation?.test?.components;
   const actualProcedureName = investigation?.investigation?.name;
@@ -119,19 +125,23 @@ const BloodTests: React.FC = () => {
 
   const patient = useSelector((state: RootState) => state.patients.patient);
 
-  const [editInvestigation, { isLoading: editingInvestigation }] = useEditInvestigationMutation();
+  const [editInvestigation, { isLoading: editingInvestigation }] =
+    useEditInvestigationMutation();
 
-  const handleSubmit = async (values: IEditInvestigationForm<IBloodTestComponent[]>) => {
-    const details = values.result.map((detail) => ({
+  const handleSubmit = async (
+    values: IEditInvestigationForm<IBloodTestComponent[]>,
+  ) => {
+    const details = values.result.map(detail => ({
       component: detail.componentName,
       value: detail.value,
       unit: detail.unit,
-      refernceRange: components?.find((component) => component._id === detail._id)?.referenceRange,
+      refernceRange: components?.find(component => component._id === detail._id)
+        ?.referenceRange,
     }));
 
     //if value is empty remove all the details
-    const filteredDetails = details.filter((detail) => detail.value == "");
-    const actualName = actualProcedureName || "Default Investigation"; // Use a fallback if procedureName is null/undefined
+    const filteredDetails = details.filter(detail => detail.value == '');
+    const actualName = actualProcedureName || 'Default Investigation'; // Use a fallback if procedureName is null/undefined
 
     // const payload: IEditInvestigationpayload = {
     //   status: values.status,
@@ -175,21 +185,24 @@ const BloodTests: React.FC = () => {
       actualName: actualName, // New field added to the payload
     };
 
-    console.log("Payload", payload);
+    console.log('Payload', payload);
 
-    const promise = editInvestigation({ _id: openEditDialog.id, ...payload }).unwrap();
+    const promise = editInvestigation({
+      _id: openEditDialog.id,
+      ...payload,
+    }).unwrap();
 
     showPromiseToast(promise, {
-      loading: "Updating investigation...",
-      success: () => "Investigation updated successfully",
-      error: () => "An error occurred while updating investigation",
+      loading: 'Updating investigation...',
+      success: () => 'Investigation updated successfully',
+      error: () => 'An error occurred while updating investigation',
     });
 
     try {
       await promise;
       setAddReport(false);
     } catch (error) {
-      console.error("Failed to update investigation", error);
+      console.error('Failed to update investigation', error);
     }
   };
 
@@ -205,18 +218,18 @@ const BloodTests: React.FC = () => {
 
   // Initial values setup
   const initialValues: IEditInvestigationForm<IBloodTestComponent[]> = {
-    status: investigation?.status || "Scheduled",
+    status: investigation?.status || 'Scheduled',
     result:
-      components?.map((component) => ({
+      components?.map(component => ({
         _id: component._id,
         componentName: component?.componentName,
-        referenceRange: component?.referenceRange || "",
+        referenceRange: component?.referenceRange || '',
         componentType: component?.componentType,
         options: component?.options || [],
-        value: "",
-        unit: component?.unit || "",
+        value: '',
+        unit: component?.unit || '',
       })) || [],
-    notes: "",
+    notes: '',
     files: [],
   };
 
@@ -256,10 +269,14 @@ const BloodTests: React.FC = () => {
         renderSkeletonLoader()
       ) : (
         <form onSubmit={formik.handleSubmit}>
-          <ReportModalHeader date={date} doctor={doctor} reportName={investigationName} />
-          <Box display={"flex"} flexDirection={"column"} pt={2} mt={2} flex={1}>
+          <ReportModalHeader
+            date={date}
+            doctor={doctor}
+            reportName={investigationName}
+          />
+          <Box display={'flex'} flexDirection={'column'} pt={2} mt={2} flex={1}>
             <Box>
-              <Grid container justifyContent={"space-between"}>
+              <Grid container justifyContent={'space-between'}>
                 <Grid item md={6} lg={3}>
                   <TextField
                     select
@@ -269,7 +286,9 @@ const BloodTests: React.FC = () => {
                     label="Status"
                     variant="outlined"
                     onBlur={formik.handleBlur} // Add this to track field has been touched
-                    error={formik.touched.status && Boolean(formik.errors.status)}
+                    error={
+                      formik.touched.status && Boolean(formik.errors.status)
+                    }
                     helperText={formik.touched.status && formik.errors.status} // Display validation message
                     fullWidth
                   >
@@ -281,7 +300,10 @@ const BloodTests: React.FC = () => {
                   {investigation?.result ? (
                     <FormControlLabel
                       control={
-                        <Switch onClick={() => setShowReport(!showReport)} color="secondary" />
+                        <Switch
+                          onClick={() => setShowReport(!showReport)}
+                          color="secondary"
+                        />
                       }
                       label="Show Reports"
                     />
@@ -292,7 +314,7 @@ const BloodTests: React.FC = () => {
                       color="secondary"
                       onClick={handleAddReportButton}
                     >
-                      {" "}
+                      {' '}
                       Report
                     </Button>
                   )}
@@ -301,7 +323,7 @@ const BloodTests: React.FC = () => {
 
               {showReport && (
                 <Box mt={2}>
-                  <Typography variant="button" color={"primary"} gutterBottom>
+                  <Typography variant="button" color={'primary'} gutterBottom>
                     Report
                   </Typography>
                   <Grid mt={1} container gap={2}>
@@ -317,7 +339,9 @@ const BloodTests: React.FC = () => {
                             InputProps={{
                               endAdornment: detail.unit ? (
                                 <InputAdornment position="end">
-                                  <Typography fontSize={13}>{detail.unit}</Typography>
+                                  <Typography fontSize={13}>
+                                    {detail.unit}
+                                  </Typography>
                                 </InputAdornment>
                               ) : null,
                             }}
@@ -328,11 +352,11 @@ const BloodTests: React.FC = () => {
                       ))}
                   </Grid>
 
-                  <Box display={"flex"} mt={2} gap={2}>
+                  <Box display={'flex'} mt={2} gap={2}>
                     <TextField
                       name={`notes`}
                       disabled={true}
-                      value={investigation?.result?.notes || ""}
+                      value={investigation?.result?.notes || ''}
                       label={`Notes`}
                       variant="outlined"
                       multiline
@@ -362,7 +386,7 @@ const BloodTests: React.FC = () => {
 
               {addReport && (
                 <Box mt={2}>
-                  <Typography variant="button" color={"primary"} gutterBottom>
+                  <Typography variant="button" color={'primary'} gutterBottom>
                     Report
                   </Typography>
                   <Grid mt={1} container gap={2}>
@@ -372,13 +396,15 @@ const BloodTests: React.FC = () => {
                         formik.touched.result?.[index]?.value &&
                           formik.errors.result &&
                           Array.isArray(formik.errors.result) &&
-                          (formik.errors.result[index] as ReportDetailError)?.value
+                          (formik.errors.result[index] as ReportDetailError)
+                            ?.value,
                       );
                       const helperText = isError
-                        ? (formik.errors.result?.[index] as ReportDetailError)?.value
-                        : ""; // Type assertion here
+                        ? (formik.errors.result?.[index] as ReportDetailError)
+                            ?.value
+                        : ''; // Type assertion here
 
-                      if (detail.componentType === "text") {
+                      if (detail.componentType === 'text') {
                         return (
                           <Grid item lg={3} key={index}>
                             <TextField
@@ -392,7 +418,9 @@ const BloodTests: React.FC = () => {
                               InputProps={{
                                 endAdornment: detail.unit ? (
                                   <InputAdornment position="end">
-                                    <Typography fontSize={13}>{detail.unit}</Typography>
+                                    <Typography fontSize={13}>
+                                      {detail.unit}
+                                    </Typography>
                                   </InputAdornment>
                                 ) : null,
                               }}
@@ -401,7 +429,7 @@ const BloodTests: React.FC = () => {
                             />
                           </Grid>
                         );
-                      } else if (detail.componentType === "select") {
+                      } else if (detail.componentType === 'select') {
                         return (
                           <Grid item lg={3} key={index}>
                             <TextField
@@ -416,7 +444,9 @@ const BloodTests: React.FC = () => {
                               InputProps={{
                                 endAdornment: detail.unit ? (
                                   <InputAdornment position="end">
-                                    <Typography fontSize={13}>{detail.unit}</Typography>
+                                    <Typography fontSize={13}>
+                                      {detail.unit}
+                                    </Typography>
                                   </InputAdornment>
                                 ) : null,
                               }}
@@ -435,7 +465,7 @@ const BloodTests: React.FC = () => {
                     })}
                   </Grid>
 
-                  <Box display={"flex"} mt={2} gap={2}>
+                  <Box display={'flex'} mt={2} gap={2}>
                     <Grid container spacing={2} marginBottom={2}>
                       <Grid item xs={12}>
                         <TextField
@@ -447,13 +477,20 @@ const BloodTests: React.FC = () => {
                           variant="outlined"
                           multiline
                           fullWidth
-                          error={Boolean(formik.touched.notes && formik.errors.notes)}
+                          error={Boolean(
+                            formik.touched.notes && formik.errors.notes,
+                          )}
                           helperText={
-                            formik.touched.notes && formik.errors.notes ? formik.errors.notes : ""
+                            formik.touched.notes && formik.errors.notes
+                              ? formik.errors.notes
+                              : ''
                           }
                         />
                       </Grid>
-                      <Typography variant="subtitle1" sx={{ mt: 2, mb: 2, pl: 2 }}>
+                      <Typography
+                        variant="subtitle1"
+                        sx={{ mt: 2, mb: 2, pl: 2 }}
+                      >
                         Upload Images
                       </Typography>
                       {/* <Grid container spacing={2} marginBottom={2}> */}
@@ -478,12 +515,13 @@ const BloodTests: React.FC = () => {
             </Box>
           </Box>
 
-          <Box display={"flex"} justifyContent={"center"} gap={2} p={2}>
+          <Box display={'flex'} justifyContent={'center'} gap={2} p={2}>
             <Button
               variant="contained"
               disabled={
                 editingInvestigation ||
-                (_.isEqual(formik.values, formik.initialValues) && fileUploadedUrl.length === 0)
+                (_.isEqual(formik.values, formik.initialValues) &&
+                  fileUploadedUrl.length === 0)
               }
               color="primary"
               type="submit"

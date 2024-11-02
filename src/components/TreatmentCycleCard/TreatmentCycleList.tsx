@@ -1,5 +1,5 @@
-import React, { useState } from "react";
-import { ContentProps } from "../../types/patientDashboard/treatmentCycle";
+import React, { useState } from 'react';
+import { ContentProps } from '../../types/patientDashboard/treatmentCycle';
 import {
   Box,
   Dialog,
@@ -9,27 +9,31 @@ import {
   Tooltip,
   Typography,
   useTheme,
-} from "@mui/material"; // Import MUI components
-import Add from "@mui/icons-material/Add";
-import Print from "@mui/icons-material/Print";
-import ModalContext from "../../context/ModalContext";
-import useGenerateTreatmentCyclelistDetails from "../../hooks/useGenerateTreatmentCycleListDetails";
-import { usePrint } from "../../context/PrintPDFContext";
-import { Edit, Visibility } from "@mui/icons-material";
-import ViewReports from "../../features/PatientDashboard/Journey/ViewReports";
+} from '@mui/material'; // Import MUI components
+import Add from '@mui/icons-material/Add';
+import Print from '@mui/icons-material/Print';
+import ModalContext from '../../context/ModalContext';
+import useGenerateTreatmentCyclelistDetails from '../../hooks/useGenerateTreatmentCycleListDetails';
+import { usePrint } from '../../context/PrintPDFContext';
+import { Edit, Visibility } from '@mui/icons-material';
+import ViewReports from '../../features/PatientDashboard/Journey/ViewReports';
 
 interface TreatmentCycleListProps {
   content: React.ReactNode;
   contentProps: ContentProps;
 }
 
-const TreatmentCycleList: React.FC<TreatmentCycleListProps> = ({ content, contentProps }) => {
+const TreatmentCycleList: React.FC<TreatmentCycleListProps> = ({
+  content,
+  contentProps,
+}) => {
   const theme = useTheme();
   // const { showPromiseToast } = useToast();
   const { fetchAndPrintPdf } = usePrint();
 
   const [selectedFiles, setSelectedFiles] = useState<string[]>([]);
-  const [isViewReportsModalOpen, setIsViewReportsModalOpen] = useState<boolean>(false);
+  const [isViewReportsModalOpen, setIsViewReportsModalOpen] =
+    useState<boolean>(false);
 
   const { name, status, category, documentId, files } =
     useGenerateTreatmentCyclelistDetails(contentProps);
@@ -37,8 +41,8 @@ const TreatmentCycleList: React.FC<TreatmentCycleListProps> = ({ content, conten
   const [isAddModalOpen, setIsAddModalOpen] = useState(false);
   // const [isRestModalOpen, setIsResetModalOpen] = useState(false);
 
-  console.log("Category", category);
-  console.log("Document Ud", documentId);
+  console.log('Category', category);
+  console.log('Document Ud', documentId);
 
   // Functions to handle opening and closing the add modal
   const handleOpenModal = () => setIsAddModalOpen(true);
@@ -114,9 +118,9 @@ const TreatmentCycleList: React.FC<TreatmentCycleListProps> = ({ content, conten
           elevation={2}
           sx={{
             padding: theme.spacing(1),
-            display: "flex",
-            justifyContent: "space-between",
-            alignItems: "center",
+            display: 'flex',
+            justifyContent: 'space-between',
+            alignItems: 'center',
             gap: 1,
           }}
         >
@@ -124,18 +128,24 @@ const TreatmentCycleList: React.FC<TreatmentCycleListProps> = ({ content, conten
             {name}
           </Typography>
 
-          <Box sx={{ display: "flex", justifyContent: "space-between" }}>
-            {status === "Completed" ? (
+          <Box sx={{ display: 'flex', justifyContent: 'space-between' }}>
+            {status === 'Completed' ? (
               <>
                 <Tooltip title="Preview Report">
                   <IconButton color="primary">
-                    <Print fontSize="small" onClick={() => fetchAndPrintPdf(documentId)} />
+                    <Print
+                      fontSize="small"
+                      onClick={() => fetchAndPrintPdf(documentId)}
+                    />
                   </IconButton>
                 </Tooltip>
                 {files && files.length > 0 && (
                   <Tooltip title="View Uploaded Files">
                     <IconButton color="primary">
-                      <Visibility fontSize="small" onClick={() => handleViewReportsClick(files)} />
+                      <Visibility
+                        fontSize="small"
+                        onClick={() => handleViewReportsClick(files)}
+                      />
                     </IconButton>
                   </Tooltip>
                 )}
@@ -167,7 +177,12 @@ const TreatmentCycleList: React.FC<TreatmentCycleListProps> = ({ content, conten
           </Box>
         </Paper>
         {/* Add Protocol, Checklist, Report, Metrics */}
-        <Dialog open={isAddModalOpen} onClose={handleAddModalClose} maxWidth="md" fullWidth>
+        <Dialog
+          open={isAddModalOpen}
+          onClose={handleAddModalClose}
+          maxWidth="md"
+          fullWidth
+        >
           <DialogContent>{content}</DialogContent>
         </Dialog>
 

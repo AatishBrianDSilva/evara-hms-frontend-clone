@@ -1,18 +1,18 @@
-import { createSlice } from "@reduxjs/toolkit";
+import { createSlice } from '@reduxjs/toolkit';
 
 const initialState = {
-  editInvestigationOpen: { id: "", status: false },
+  editInvestigationOpen: { id: '', status: false },
 };
 
 export const investigationSlice = createSlice({
-  name: "investigation",
+  name: 'investigation',
   initialState,
   reducers: {
     openEditInvestigation: (state, action) => {
       state.editInvestigationOpen = action.payload;
     },
-    closeEditInvestigation: (state) => {
-      state.editInvestigationOpen = { id: "", status: false };
+    closeEditInvestigation: state => {
+      state.editInvestigationOpen = { id: '', status: false };
     },
   },
 });

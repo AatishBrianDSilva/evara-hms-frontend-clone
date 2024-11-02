@@ -8,35 +8,40 @@ import {
   Skeleton,
   TextField,
   Typography,
-} from "@mui/material";
-import React from "react";
-import FileUploadButton from "../../../../../components/FileUploadAndPreview/FileUploadButton";
-import { useDispatch, useSelector } from "react-redux";
-import { RootState } from "../../../../../app/store";
+} from '@mui/material';
+import React from 'react';
+import FileUploadButton from '../../../../../components/FileUploadAndPreview/FileUploadButton';
+import { useDispatch, useSelector } from 'react-redux';
+import { RootState } from '../../../../../app/store';
 import {
   useEditInvestigationMutation,
   useGetInvestigationByIdQuery,
-} from "../../../../../services/patientDashboardService/investigationApi";
-import { useToast } from "../../../../../context/ToastContext";
-import ReportModalHeader from "../../../../../components/ReportModalHeader/ReportModalHeader";
-import { closeEditInvestigation } from "../investigationSlice";
-import { useFormik } from "formik";
-import _ from "lodash";
+} from '../../../../../services/patientDashboardService/investigationApi';
+import { useToast } from '../../../../../context/ToastContext';
+import ReportModalHeader from '../../../../../components/ReportModalHeader/ReportModalHeader';
+import { closeEditInvestigation } from '../investigationSlice';
+import { useFormik } from 'formik';
+import _ from 'lodash';
 import {
   IEditInvestigationForm,
   IEditInvestigationpayload,
   IUltraSoundScanForm,
-} from "../../../../../types/patientDashboard/investigation";
-import { ETestType } from "../../../../../types/master";
-import { useGetDoctorsQuery } from "../../../../../services/doctorsApi";
-import FieldAutocomplete from "../../../../../components/FieldAutoComplete/FieldAutoComplete";
-import CustomDatePicker from "../../../../../components/CustomDatePicker/CustomDatePicker";
-import { EBuckets, EDocumentTypes } from "../../../../../types/global";
+} from '../../../../../types/patientDashboard/investigation';
+import { ETestType } from '../../../../../types/master';
+import { useGetDoctorsQuery } from '../../../../../services/doctorsApi';
+import FieldAutocomplete from '../../../../../components/FieldAutoComplete/FieldAutoComplete';
+import CustomDatePicker from '../../../../../components/CustomDatePicker/CustomDatePicker';
+import { EBuckets, EDocumentTypes } from '../../../../../types/global';
 
 const renderSkeletonLoader = () => {
   return (
     <>
-      <Box display={"flex"} justifyContent={"space-between"} borderBottom={1} py={2}>
+      <Box
+        display={'flex'}
+        justifyContent={'space-between'}
+        borderBottom={1}
+        py={2}
+      >
         <Box>
           <Skeleton variant="text" width={100} height={20} />
           <Skeleton variant="text" width={100} height={20} />
@@ -48,7 +53,7 @@ const renderSkeletonLoader = () => {
       </Box>
       <Box pt={2} mt={2}>
         <Box>
-          <Grid container justifyContent={"space-between"}>
+          <Grid container justifyContent={'space-between'}>
             <Grid item md={6} lg={3}>
               <Skeleton variant="text" width={100} height={20} />
             </Grid>
@@ -77,7 +82,7 @@ const UltraSoundScan: React.FC = () => {
 
   const patient = useSelector((state: RootState) => state.patients.patient);
   const openEditDialog = useSelector(
-    (state: RootState) => state.investigation.editInvestigationOpen
+    (state: RootState) => state.investigation.editInvestigationOpen,
   );
   // const [fileUploadedUrl, setFileUploadedUrl] = React.useState<string[]>([""]);
 
@@ -100,17 +105,20 @@ const UltraSoundScan: React.FC = () => {
   const investigation = investigationData?.data;
   const loading = investigationLoading || investigationFetching;
 
-  console.log("Edit ultrasound data fetch", investigation);
+  console.log('Edit ultrasound data fetch', investigation);
 
   const date = new Date(investigation?.date || new Date()).toLocaleDateString();
-  const doctor = investigation?.doctor?.firstName + " " + investigation?.doctor?.lastName;
+  const doctor =
+    investigation?.doctor?.firstName + ' ' + investigation?.doctor?.lastName;
   const investigationName = investigation?.investigation?.test?.testName;
   const actualProcedureName = investigation?.investigation?.name;
 
-  const investigationDetails = investigation?.result?.details as IUltraSoundScanForm;
-  console.log("Investigation details", investigationDetails);
+  const investigationDetails = investigation?.result
+    ?.details as IUltraSoundScanForm;
+  console.log('Investigation details', investigationDetails);
 
-  const [editInvestigation, { isLoading: editingInvestigation }] = useEditInvestigationMutation();
+  const [editInvestigation, { isLoading: editingInvestigation }] =
+    useEditInvestigationMutation();
 
   const [fileUploadedUrl, setFileUploadedUrl] = React.useState<string[]>(() => {
     // Initialize with an empty array by default
@@ -124,9 +132,11 @@ const UltraSoundScan: React.FC = () => {
     return initialUrl;
   });
 
-  const handleSubmit = async (values: IEditInvestigationForm<IUltraSoundScanForm>) => {
-    console.log("Formik values", values);
-    const actualName = actualProcedureName || "Default Investigation"; // Use a fallback if procedureName is null/undefined
+  const handleSubmit = async (
+    values: IEditInvestigationForm<IUltraSoundScanForm>,
+  ) => {
+    console.log('Formik values', values);
+    const actualName = actualProcedureName || 'Default Investigation'; // Use a fallback if procedureName is null/undefined
 
     const payload: IEditInvestigationpayload = {
       status: values.status,
@@ -140,72 +150,80 @@ const UltraSoundScan: React.FC = () => {
       actualName: actualName, // New field added to the payload
     };
 
-    console.log("Payload", payload);
+    console.log('Payload', payload);
 
-    const promise = editInvestigation({ _id: openEditDialog.id, ...payload }).unwrap();
+    const promise = editInvestigation({
+      _id: openEditDialog.id,
+      ...payload,
+    }).unwrap();
 
     showPromiseToast(promise, {
-      loading: "Updating investigation...",
-      success: () => "Investigation updated successfully",
-      error: () => "An error occurred while updating investigation",
+      loading: 'Updating investigation...',
+      success: () => 'Investigation updated successfully',
+      error: () => 'An error occurred while updating investigation',
     });
 
     try {
       await promise;
     } catch (error) {
-      console.error("Failed to update investigation", error);
+      console.error('Failed to update investigation', error);
     }
   };
 
   const initialVaules: IEditInvestigationForm<IUltraSoundScanForm> = {
-    status: investigation?.status || "",
+    status: investigation?.status || '',
     files: investigation?.result?.files || [],
-    notes: investigation?.result?.notes || "",
+    notes: investigation?.result?.notes || '',
     result: {
-      scanType: investigationDetails?.scanType || "baseline scan",
+      scanType: investigationDetails?.scanType || 'baseline scan',
       lmpDate: investigationDetails?.lmpDate || null,
       requestedDate: investigationDetails?.requestedDate || null,
       dateOfScan: investigationDetails?.dateOfScan || null,
-      dayOfCycle: investigationDetails?.dayOfCycle || "",
+      dayOfCycle: investigationDetails?.dayOfCycle || '',
       transAbdominal: investigationDetails?.transAbdominal || false,
-      transVaginalSonography: investigationDetails?.transVaginalSonography || false,
-      utreusAppeared: investigationDetails?.utreusAppeared || "a",
-      utreusAppearedDesc: investigationDetails?.utreusAppearedDesc || "",
-      uterusMeasurement: investigationDetails?.uterusMeasurement || "",
-      anteriorWall: investigationDetails?.anteriorWall || "",
-      posteriorWall: investigationDetails?.posteriorWall || "",
-      uterusVolume: investigationDetails?.uterusVolume || "",
-      uterocervicalLength: investigationDetails?.uterocervicalLength || "",
-      uterineLength: investigationDetails?.uterineLength || "",
-      cervicalLength: investigationDetails?.cervicalLength || "",
-      myometrium: investigationDetails?.myometrium || "",
-      cavityEchoAppeared: investigationDetails?.cavityEchoAppeared || "",
-      endometrialThickness: investigationDetails?.endometrialThickness || "",
-      anyOtherPathology: investigationDetails?.anyOtherPathology || "",
+      transVaginalSonography:
+        investigationDetails?.transVaginalSonography || false,
+      utreusAppeared: investigationDetails?.utreusAppeared || 'a',
+      utreusAppearedDesc: investigationDetails?.utreusAppearedDesc || '',
+      uterusMeasurement: investigationDetails?.uterusMeasurement || '',
+      anteriorWall: investigationDetails?.anteriorWall || '',
+      posteriorWall: investigationDetails?.posteriorWall || '',
+      uterusVolume: investigationDetails?.uterusVolume || '',
+      uterocervicalLength: investigationDetails?.uterocervicalLength || '',
+      uterineLength: investigationDetails?.uterineLength || '',
+      cervicalLength: investigationDetails?.cervicalLength || '',
+      myometrium: investigationDetails?.myometrium || '',
+      cavityEchoAppeared: investigationDetails?.cavityEchoAppeared || '',
+      endometrialThickness: investigationDetails?.endometrialThickness || '',
+      anyOtherPathology: investigationDetails?.anyOtherPathology || '',
       rightOvary: {
         notVisualzed: investigationDetails?.rightOvary?.notVisualzed || false,
-        volume: investigationDetails?.rightOvary?.volume || "",
-        ovaryMeasurement: investigationDetails?.rightOvary?.ovaryMeasurement || "",
-        smallFollicles: investigationDetails?.rightOvary?.smallFollicles || "",
-        ovaryAFC: investigationDetails?.rightOvary?.ovaryAFC || "",
-        dominantFollicleOrCyst: investigationDetails?.rightOvary?.dominantFollicleOrCyst || "",
-        accessibility: investigationDetails?.rightOvary?.accessibility || "",
-        adnexa: investigationDetails?.rightOvary?.adnexa || "",
+        volume: investigationDetails?.rightOvary?.volume || '',
+        ovaryMeasurement:
+          investigationDetails?.rightOvary?.ovaryMeasurement || '',
+        smallFollicles: investigationDetails?.rightOvary?.smallFollicles || '',
+        ovaryAFC: investigationDetails?.rightOvary?.ovaryAFC || '',
+        dominantFollicleOrCyst:
+          investigationDetails?.rightOvary?.dominantFollicleOrCyst || '',
+        accessibility: investigationDetails?.rightOvary?.accessibility || '',
+        adnexa: investigationDetails?.rightOvary?.adnexa || '',
       },
       leftOvary: {
         notVisualzed: investigationDetails?.leftOvary?.notVisualzed || false,
-        volume: investigationDetails?.leftOvary?.volume || "",
-        ovaryMeasurement: investigationDetails?.leftOvary?.ovaryMeasurement || "",
-        smallFollicles: investigationDetails?.leftOvary?.smallFollicles || "",
-        ovaryAFC: investigationDetails?.leftOvary?.ovaryAFC || "",
-        dominantFollicleOrCyst: investigationDetails?.leftOvary?.dominantFollicleOrCyst || "",
-        accessibility: investigationDetails?.leftOvary?.accessibility || "",
-        adnexa: investigationDetails?.leftOvary?.adnexa || "",
+        volume: investigationDetails?.leftOvary?.volume || '',
+        ovaryMeasurement:
+          investigationDetails?.leftOvary?.ovaryMeasurement || '',
+        smallFollicles: investigationDetails?.leftOvary?.smallFollicles || '',
+        ovaryAFC: investigationDetails?.leftOvary?.ovaryAFC || '',
+        dominantFollicleOrCyst:
+          investigationDetails?.leftOvary?.dominantFollicleOrCyst || '',
+        accessibility: investigationDetails?.leftOvary?.accessibility || '',
+        adnexa: investigationDetails?.leftOvary?.adnexa || '',
       },
-      impression: investigationDetails?.impression || "",
+      impression: investigationDetails?.impression || '',
       doctor: investigationDetails?.doctor || null,
-      doctorRemarks: investigationDetails?.doctorRemarks || "",
-      description: investigationDetails?.description || "",
+      doctorRemarks: investigationDetails?.doctorRemarks || '',
+      description: investigationDetails?.description || '',
     },
   };
 
@@ -224,8 +242,12 @@ const UltraSoundScan: React.FC = () => {
 
   return (
     <form onSubmit={formik.handleSubmit}>
-      <ReportModalHeader date={date} doctor={doctor} reportName={investigationName} />
-      <Box display={"flex"} flexDirection={"column"} mt={2} flex={1}>
+      <ReportModalHeader
+        date={date}
+        doctor={doctor}
+        reportName={investigationName}
+      />
+      <Box display={'flex'} flexDirection={'column'} mt={2} flex={1}>
         {/* {JSON.stringify(formik.initialValues, null, 2)} */}
         <Typography variant="subtitle1" mb={2} mt={2}>
           {_.startCase(formik.values.result.scanType)}
@@ -239,7 +261,10 @@ const UltraSoundScan: React.FC = () => {
               label="Scan Type"
               value={formik.values.result.scanType}
               onChange={formik.handleChange}
-              error={formik?.touched?.result?.scanType && Boolean(formik?.errors?.result?.scanType)}
+              error={
+                formik?.touched?.result?.scanType &&
+                Boolean(formik?.errors?.result?.scanType)
+              }
             >
               <MenuItem value="baseline scan">Baseline Scan</MenuItem>
               <MenuItem value="sono hysterogram">Sono Hysterogram</MenuItem>
@@ -254,7 +279,7 @@ const UltraSoundScan: React.FC = () => {
               name="result.lmpDate"
               value={formik?.values.result.lmpDate}
               label="LMP Date"
-              onChange={(date) => formik.setFieldValue("result.lmpDate", date)}
+              onChange={date => formik.setFieldValue('result.lmpDate', date)}
             />
           </Grid>
           <Grid item xs={12} md={6} lg={2}>
@@ -262,14 +287,16 @@ const UltraSoundScan: React.FC = () => {
               name="result.requestedDate"
               value={formik?.values.result.requestedDate}
               label="Requested Date"
-              onChange={(date) => formik.setFieldValue("result.requestedDate", date)}
+              onChange={date =>
+                formik.setFieldValue('result.requestedDate', date)
+              }
             />
           </Grid>
           <Grid item xs={12} md={6} lg={2}>
             <CustomDatePicker
               name="result.dateOfScan"
               value={formik?.values.result.dateOfScan}
-              onChange={(date) => formik.setFieldValue("result.dateOfScan", date)}
+              onChange={date => formik.setFieldValue('result.dateOfScan', date)}
               label="Date Of Scan"
             />
           </Grid>
@@ -288,7 +315,7 @@ const UltraSoundScan: React.FC = () => {
         <Typography variant="subtitle1" mt={2}>
           Pelvis
         </Typography>
-        <Grid container direction={"column"} mb={2}>
+        <Grid container direction={'column'} mb={2}>
           <Grid item xs={12} md={6} lg={6}>
             <FormControlLabel
               label="TransAbdominal"
@@ -641,12 +668,16 @@ const UltraSoundScan: React.FC = () => {
           <Grid item xs={12} md={6} lg={4}>
             <FieldAutocomplete
               options={doctors}
-              getOptionLabel={(option) => `${option.firstName} ${option.lastName}`}
+              getOptionLabel={option =>
+                `${option.firstName} ${option.lastName}`
+              }
               isOptionEqualToValue={(option, value) => {
                 return option._id === value._id;
               }}
               value={formik.values.result.doctor}
-              onChange={(newValue) => formik.setFieldValue("result.doctor", newValue)}
+              onChange={newValue =>
+                formik.setFieldValue('result.doctor', newValue)
+              }
               label="Doctor"
               loading={DoctorFetching || DoctorsLoading}
             />
@@ -695,14 +726,23 @@ const UltraSoundScan: React.FC = () => {
           </Grid>
         </Grid>
       </Box>
-      <Box display={"flex"} justifyContent={"center"} alignItems={"center"} gap={2} mb={2}>
+      <Box
+        display={'flex'}
+        justifyContent={'center'}
+        alignItems={'center'}
+        gap={2}
+        mb={2}
+      >
         <Grid item xs={12}>
           <FormControlLabel
             control={
               <Checkbox
-                checked={formik.values.status === "Completed"}
-                onChange={(e) =>
-                  formik.setFieldValue("status", e.target.checked ? "Completed" : "Scheduled")
+                checked={formik.values.status === 'Completed'}
+                onChange={e =>
+                  formik.setFieldValue(
+                    'status',
+                    e.target.checked ? 'Completed' : 'Scheduled',
+                  )
                 }
                 color="primary"
               />
@@ -712,12 +752,13 @@ const UltraSoundScan: React.FC = () => {
         </Grid>
       </Box>
 
-      <Box display={"flex"} justifyContent={"center"} gap={2} p={2}>
+      <Box display={'flex'} justifyContent={'center'} gap={2} p={2}>
         <Button
           variant="contained"
           disabled={
             editingInvestigation ||
-            (_.isEqual(formik.values, formik.initialValues) && fileUploadedUrl.length === 0)
+            (_.isEqual(formik.values, formik.initialValues) &&
+              fileUploadedUrl.length === 0)
           }
           color="primary"
           type="submit"

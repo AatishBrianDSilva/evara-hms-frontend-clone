@@ -1,6 +1,6 @@
-import { IDoctor } from "../doctor";
-import { IMasterService } from "../master";
-import { IPatient } from "../patient";
+import { IDoctor } from '../doctor';
+import { IMasterService } from '../master';
+import { IPatient } from '../patient';
 
 export interface IPatientService {
   _id: string;

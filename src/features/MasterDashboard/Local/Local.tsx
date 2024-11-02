@@ -1,56 +1,56 @@
-import { Box } from "@mui/material";
-import MasterSidebar from "../../../components/SideBar/MasterSidebar";
-import { Outlet } from "react-router-dom";
-import CorporateFareIcon from "@mui/icons-material/CorporateFare";
-import FiberManualRecordIcon from "@mui/icons-material/FiberManualRecord";
-import { NestedListItem } from "../../../components/SideBar/NestedList";
+import { Box } from '@mui/material';
+import MasterSidebar from '../../../components/SideBar/MasterSidebar';
+import { Outlet } from 'react-router-dom';
+import CorporateFareIcon from '@mui/icons-material/CorporateFare';
+import FiberManualRecordIcon from '@mui/icons-material/FiberManualRecord';
+import { NestedListItem } from '../../../components/SideBar/NestedList';
 
 const Local = () => {
   const menuItems: NestedListItem[] = [
     {
       icon: CorporateFareIcon,
-      primaryText: "Patients",
+      primaryText: 'Patients',
       children: [
         {
           icon: FiberManualRecordIcon,
-          primaryText: "Referral Doctor",
-          path: "/master/local/patient/referral-doctor",
+          primaryText: 'Referral Doctor',
+          path: '/master/local/patient/referral-doctor',
         },
         {
           icon: FiberManualRecordIcon,
-          primaryText: "ID Type",
-          path: "/master/local/patient/id-type",
+          primaryText: 'ID Type',
+          path: '/master/local/patient/id-type',
         },
         {
           icon: FiberManualRecordIcon,
-          primaryText: "Source",
-          path: "/master/local/patient/source",
+          primaryText: 'Source',
+          path: '/master/local/patient/source',
         },
       ],
     },
 
     {
       icon: CorporateFareIcon,
-      primaryText: "Appointments",
+      primaryText: 'Appointments',
 
       children: [
         {
           icon: FiberManualRecordIcon,
-          primaryText: " Reason ",
-          path: "/master/local/appointment/reason",
+          primaryText: ' Reason ',
+          path: '/master/local/appointment/reason',
         },
         {
           icon: FiberManualRecordIcon,
-          primaryText: " Source",
-          path: "/master/local/appointment/source",
+          primaryText: ' Source',
+          path: '/master/local/appointment/source',
         },
       ],
     },
     {
       icon: CorporateFareIcon,
-      primaryText: "Consents",
+      primaryText: 'Consents',
 
-      path: "/master/local/consents",
+      path: '/master/local/consents',
     },
     // {
     //   icon: CorporateFareIcon,
@@ -60,9 +60,9 @@ const Local = () => {
     // },
     {
       icon: CorporateFareIcon,
-      primaryText: "Consultant Doctors ",
+      primaryText: 'Consultant Doctors ',
 
-      path: "/master/local/consultant-doctors",
+      path: '/master/local/consultant-doctors',
     },
     // {
     //   icon: CorporateFareIcon,
@@ -84,37 +84,37 @@ const Local = () => {
 
     {
       icon: CorporateFareIcon,
-      primaryText: "Notes",
+      primaryText: 'Notes',
       children: [
         {
           icon: FiberManualRecordIcon,
-          primaryText: "Advice",
-          path: "/master/local/notes/advice",
+          primaryText: 'Advice',
+          path: '/master/local/notes/advice',
         },
         {
           icon: FiberManualRecordIcon,
-          primaryText: "Observation",
-          path: "/master/local/notes/observation",
+          primaryText: 'Observation',
+          path: '/master/local/notes/observation',
         },
       ],
     },
     {
       icon: CorporateFareIcon,
-      primaryText: "Donors",
+      primaryText: 'Donors',
 
-      path: "/master/local/donors",
+      path: '/master/local/donors',
     },
   ];
 
   return (
-    <Box display={"flex"} flex={1} overflow={"auto"}>
-      <MasterSidebar menuItems={menuItems} heading={"Local"} />
+    <Box display={'flex'} flex={1} overflow={'auto'}>
+      <MasterSidebar menuItems={menuItems} heading={'Local'} />
 
       <Box
-        display={"flex"}
-        flex={"1 1 auto"}
-        flexDirection={"column"}
-        overflow={"auto"}
+        display={'flex'}
+        flex={'1 1 auto'}
+        flexDirection={'column'}
+        overflow={'auto'}
       >
         <Outlet />
       </Box>

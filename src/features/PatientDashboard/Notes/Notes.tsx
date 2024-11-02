@@ -1,38 +1,38 @@
-import React, { useState } from "react";
-import Box from "@mui/material/Box";
-import Typography from "@mui/material/Typography";
-import Button from "@mui/material/Button";
-import Stepper from "@mui/material/Stepper";
-import Step from "@mui/material/Step";
-import StepLabel from "@mui/material/StepLabel";
-import StepContent from "@mui/material/StepContent";
-import List from "@mui/material/List";
-import Grid from "@mui/material/Grid";
-import Description from "@mui/icons-material/Description";
-import Edit from "@mui/icons-material/Edit";
-import Medication from "@mui/icons-material/Medication";
-import MonitorHeart from "@mui/icons-material/MonitorHeart";
-import Person from "@mui/icons-material/Person";
-import PersonSearch from "@mui/icons-material/PersonSearch";
-import Print from "@mui/icons-material/Print";
-import Troubleshoot from "@mui/icons-material/Troubleshoot";
-import Delete from "@mui/icons-material/Delete";
-import AddNotes from "./AddNotes";
-import EditNotes from "./EditNotes";
-import { useGetNotesQuery } from "../../../services/patientDashboardService/notesApi";
-import { useSelector } from "react-redux";
-import { RootState } from "../../../app/store";
-import { useGetDoctorsQuery } from "../../../services/doctorsApi";
-import { IDoctor } from "../../../types/doctor";
-import { Chip, CircularProgress } from "@mui/material";
-import DeleteConfirmationModal from "../../../components/DeleteConfirmationModal/DeleteConfirmationModal";
-import { useDeleteNotesMutation } from "../../../services/patientDashboardService/notesApi";
-import { useToast } from "../../../context/ToastContext";
-import { useGetNotesObservationsQuery } from "../../../services/masterDashboardService/local/notesObservationApi";
-import { useGetNotesTreatmentAdvicesQuery } from "../../../services/masterDashboardService/local/notesTreatmentAdviceApi";
-import { useGetMasterInvestigationsQuery } from "../../../services/masterDashboardService/serviceData/masterInvestigationApi";
-import { useGetMasterProceduresQuery } from "../../../services/masterDashboardService/serviceData/masterProceduresApi";
-import { useGetStocksQuery } from "../../../services/pharmacyDashboardService/stocksApi";
+import React, { useState } from 'react';
+import Box from '@mui/material/Box';
+import Typography from '@mui/material/Typography';
+import Button from '@mui/material/Button';
+import Stepper from '@mui/material/Stepper';
+import Step from '@mui/material/Step';
+import StepLabel from '@mui/material/StepLabel';
+import StepContent from '@mui/material/StepContent';
+import List from '@mui/material/List';
+import Grid from '@mui/material/Grid';
+import Description from '@mui/icons-material/Description';
+import Edit from '@mui/icons-material/Edit';
+import Medication from '@mui/icons-material/Medication';
+import MonitorHeart from '@mui/icons-material/MonitorHeart';
+import Person from '@mui/icons-material/Person';
+import PersonSearch from '@mui/icons-material/PersonSearch';
+import Print from '@mui/icons-material/Print';
+import Troubleshoot from '@mui/icons-material/Troubleshoot';
+import Delete from '@mui/icons-material/Delete';
+import AddNotes from './AddNotes';
+import EditNotes from './EditNotes';
+import { useGetNotesQuery } from '../../../services/patientDashboardService/notesApi';
+import { useSelector } from 'react-redux';
+import { RootState } from '../../../app/store';
+import { useGetDoctorsQuery } from '../../../services/doctorsApi';
+import { IDoctor } from '../../../types/doctor';
+import { Chip, CircularProgress } from '@mui/material';
+import DeleteConfirmationModal from '../../../components/DeleteConfirmationModal/DeleteConfirmationModal';
+import { useDeleteNotesMutation } from '../../../services/patientDashboardService/notesApi';
+import { useToast } from '../../../context/ToastContext';
+import { useGetNotesObservationsQuery } from '../../../services/masterDashboardService/local/notesObservationApi';
+import { useGetNotesTreatmentAdvicesQuery } from '../../../services/masterDashboardService/local/notesTreatmentAdviceApi';
+import { useGetMasterInvestigationsQuery } from '../../../services/masterDashboardService/serviceData/masterInvestigationApi';
+import { useGetMasterProceduresQuery } from '../../../services/masterDashboardService/serviceData/masterProceduresApi';
+import { useGetStocksQuery } from '../../../services/pharmacyDashboardService/stocksApi';
 
 export interface INote {
   _id: string;
@@ -87,7 +87,7 @@ const Notes: React.FC = () => {
         patient: patient?._id,
       },
     },
-    { skip: !patient?._id }
+    { skip: !patient?._id },
   );
 
   const Notes: INote[] = Array.isArray(NotesData?.data) ? NotesData?.data : [];
@@ -170,7 +170,7 @@ const Notes: React.FC = () => {
     medicationsFetching
   ) {
     return (
-      <Box sx={{ display: "flex", justifyContent: "center", mt: 2 }}>
+      <Box sx={{ display: 'flex', justifyContent: 'center', mt: 2 }}>
         <CircularProgress />
       </Box>
     );
@@ -210,16 +210,16 @@ const Notes: React.FC = () => {
       const noteId: string = selectedNoteId;
       const promise = deleteNotes(noteId).unwrap();
       showPromiseToast(promise, {
-        loading: "Deleting Note...",
-        success: () => "Note deleted successfully",
-        error: () => "Error Deleting Note",
+        loading: 'Deleting Note...',
+        success: () => 'Note deleted successfully',
+        error: () => 'Error Deleting Note',
       });
 
       try {
         await promise;
         closeDeleteDialog();
       } catch (error) {
-        console.error("Error deleting Note", error);
+        console.error('Error deleting Note', error);
       }
     }
   };
@@ -228,55 +228,55 @@ const Notes: React.FC = () => {
     key: string,
     items: string[],
     icon: React.ReactNode,
-    notes: string
+    notes: string,
   ) => {
     const cycleColors = (key: string) => {
       switch (key) {
-        case "Observations":
-          return "lightpink";
-        case "Medications":
-          return "lightgreen";
-        case "Investigations":
-          return "lightyellow";
-        case "Scans":
-          return "lightblue";
-        case "Treatment Advices":
-          return "lightgray";
+        case 'Observations':
+          return 'lightpink';
+        case 'Medications':
+          return 'lightgreen';
+        case 'Investigations':
+          return 'lightyellow';
+        case 'Scans':
+          return 'lightblue';
+        case 'Treatment Advices':
+          return 'lightgray';
         default:
-          return "lightgray";
+          return 'lightgray';
       }
     };
 
     return (
       <Box
         sx={{
-          display: "flex",
-          alignItems: "center",
-          justifyContent: "space-between",
-          borderBottom: "1px solid rgba(0,0,0,0.2)",
+          display: 'flex',
+          alignItems: 'center',
+          justifyContent: 'space-between',
+          borderBottom: '1px solid rgba(0,0,0,0.2)',
           px: 1,
           py: 0.2,
         }}
       >
-        <Box sx={{ flex: 1, display: "flex", gap: 1.5, alignItems: "center" }}>
+        <Box sx={{ flex: 1, display: 'flex', gap: 1.5, alignItems: 'center' }}>
           <Box
             sx={{
               backgroundColor: cycleColors(key),
               p: 1,
               borderRadius: 2,
-              display: "flex",
+              display: 'flex',
             }}
           >
             {icon}
           </Box>
           <Typography
             sx={{
-              fontSize: "0.9rem",
+              fontSize: '0.9rem',
               fontWeight: 600,
               maxWidth: 100,
-              overflow: "hidden",
-              textOverflow: "ellipsis",
-              whiteSpace: "wrap",
+              overflow: 'hidden',
+              textOverflow: 'ellipsis',
+              whiteSpace: 'wrap',
             }}
           >
             {key}
@@ -297,11 +297,11 @@ const Notes: React.FC = () => {
           </List>
         </Grid>
         <Grid container sx={{ flex: 1 }}>
-          <Typography sx={{ fontSize: "0.9rem", fontWeight: 600, mt: 2 }}>
+          <Typography sx={{ fontSize: '0.9rem', fontWeight: 600, mt: 2 }}>
             Notes:
             <Typography
-              component={"span"}
-              sx={{ fontSize: "0.9rem", fontWeight: 500, mt: 2, ml: 1 }}
+              component={'span'}
+              sx={{ fontSize: '0.9rem', fontWeight: 500, mt: 2, ml: 1 }}
             >
               {notes}
             </Typography>
@@ -322,14 +322,14 @@ const Notes: React.FC = () => {
               </Typography>
             </StepLabel>
             <StepContent sx={{ px: 4, py: 0 }}>
-              <Typography sx={{ fontSize: "1rem", mb: 1 }}>
+              <Typography sx={{ fontSize: '1rem', mb: 1 }}>
                 {/* Notes entered by {note.doctor} */}
-                Notes entered by Dr. {note.doctor?.firstName}{" "}
+                Notes entered by Dr. {note.doctor?.firstName}{' '}
                 {note.doctor?.lastName}
               </Typography>
               <Box
                 sx={{
-                  backgroundColor: "rgba(0,0,0,0.02)",
+                  backgroundColor: 'rgba(0,0,0,0.02)',
                   p: 2,
                   px: 3,
                   borderRadius: 2,
@@ -337,46 +337,46 @@ const Notes: React.FC = () => {
                 }}
               >
                 {renderBoxes(
-                  "Observations",
+                  'Observations',
                   note.observations,
                   <PersonSearch />,
-                  note.observationNotes
+                  note.observationNotes,
                 )}
                 {renderBoxes(
-                  "Medications",
+                  'Medications',
                   note.medications,
                   <Medication />,
-                  note.medicationsNotes
+                  note.medicationsNotes,
                 )}
                 {renderBoxes(
-                  "Investigations",
+                  'Investigations',
                   note.investigations,
                   <MonitorHeart />,
-                  note.investigationsNotes
+                  note.investigationsNotes,
                 )}
                 {renderBoxes(
-                  "Scans",
+                  'Scans',
                   note.scans,
                   <Troubleshoot />,
-                  note.scansNotes
+                  note.scansNotes,
                 )}
                 {renderBoxes(
-                  "Treatment Advices",
+                  'Treatment Advices',
                   note.treatmentAdvices,
                   <Description />,
-                  note.treatmentAdvicesNotes
+                  note.treatmentAdvicesNotes,
                 )}
-                <Typography sx={{ fontSize: "0.9rem", fontWeight: 600, mt: 2 }}>
+                <Typography sx={{ fontSize: '0.9rem', fontWeight: 600, mt: 2 }}>
                   Notes: {note.notes}
                 </Typography>
                 <Box
-                  sx={{ display: "flex", justifyContent: "flex-end", gap: 2 }}
+                  sx={{ display: 'flex', justifyContent: 'flex-end', gap: 2 }}
                 >
                   <Edit
                     onClick={() => handleEditModalOpen(note)}
-                    sx={{ cursor: "pointer" }}
+                    sx={{ cursor: 'pointer' }}
                   />
-                  <Print sx={{ cursor: "pointer" }} />
+                  <Print sx={{ cursor: 'pointer' }} />
                   <Delete onClick={() => handleNotesDelete(note)} />
                 </Box>
               </Box>
@@ -391,15 +391,15 @@ const Notes: React.FC = () => {
     return (
       <div
         style={{
-          backgroundColor: "gray",
-          color: "#fff",
+          backgroundColor: 'gray',
+          color: '#fff',
           width: 40,
           height: 40,
-          display: "flex",
-          borderRadius: "50%",
+          display: 'flex',
+          borderRadius: '50%',
           marginBottom: 7,
-          justifyContent: "center",
-          alignItems: "center",
+          justifyContent: 'center',
+          alignItems: 'center',
         }}
       >
         <Person />
@@ -410,25 +410,25 @@ const Notes: React.FC = () => {
   // Function to extract date part from a timestamp
   const getDatePart = (timestamp: string) => {
     const date = new Date(timestamp);
-    return date.toISOString().split("T")[0];
+    return date.toISOString().split('T')[0];
   };
 
   return (
     <Box>
       <Box
         sx={{
-          display: "flex",
-          justifyContent: "space-between",
-          alignItems: "center",
+          display: 'flex',
+          justifyContent: 'space-between',
+          alignItems: 'center',
           p: 2,
-          borderBottom: "1px solid rgba(0,0,0,0.1)",
+          borderBottom: '1px solid rgba(0,0,0,0.1)',
         }}
       >
         <Typography variant="h5">Patient Notes</Typography>
         <Button
           variant="contained"
           color="primary"
-          sx={{ px: 2, py: 1, textTransform: "uppercase" }}
+          sx={{ px: 2, py: 1, textTransform: 'uppercase' }}
           onClick={handleAddModalOpen}
         >
           Add Note
@@ -460,7 +460,7 @@ const Notes: React.FC = () => {
         open={isDeleteDialogOpen}
         onClose={closeDeleteDialog}
         onConfirm={handleNotesConfirm}
-        text={"Note"}
+        text={'Note'}
         loading={deletingNotes}
       />
     </Box>

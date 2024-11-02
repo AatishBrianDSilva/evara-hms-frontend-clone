@@ -1,4 +1,4 @@
-import React from "react";
+import React from 'react';
 import {
   Box,
   Button,
@@ -11,9 +11,9 @@ import {
   Skeleton,
   Typography,
   useTheme,
-} from "@mui/material";
-import { DataGrid } from "@mui/x-data-grid";
-import { useGetInternalOrderByIdQuery } from "../../../services/pharmacyDashboardService/internalOrderApi";
+} from '@mui/material';
+import { DataGrid } from '@mui/x-data-grid';
+import { useGetInternalOrderByIdQuery } from '../../../services/pharmacyDashboardService/internalOrderApi';
 
 interface ViewInternalOrderProps {
   openModal: boolean;
@@ -88,21 +88,29 @@ const InternalOrderSkeleton = () => {
   );
 };
 
-const ViewInternalOrder: React.FC<ViewInternalOrderProps> = ({ openModal, onClose, id }) => {
+const ViewInternalOrder: React.FC<ViewInternalOrderProps> = ({
+  openModal,
+  onClose,
+  id,
+}) => {
   const theme = useTheme();
 
-  const { data: internalOrderData, isLoading, isFetching } = useGetInternalOrderByIdQuery(id);
+  const {
+    data: internalOrderData,
+    isLoading,
+    isFetching,
+  } = useGetInternalOrderByIdQuery(id);
   const internalOrder = internalOrderData?.data;
   const isLoadingOrder = isLoading || isFetching;
 
   const columns = [
-    { field: "itemName", headerName: "Item", flex: 1 },
-    { field: "quantity", headerName: "Quantity", flex: 1 },
-    { field: "batchId", headerName: "Batch ID", flex: 1 },
-    { field: "deductedQuantity", headerName: "Deducted Quantity", flex: 1 },
-    { field: "transferFrom", headerName: "Transfer From", flex: 1 },
-    { field: "transferTo", headerName: "Transfer To", flex: 1 },
-    { field: "notes", headerName: "Notes", flex: 1 },
+    { field: 'itemName', headerName: 'Item', flex: 1 },
+    { field: 'quantity', headerName: 'Quantity', flex: 1 },
+    { field: 'batchId', headerName: 'Batch ID', flex: 1 },
+    { field: 'deductedQuantity', headerName: 'Deducted Quantity', flex: 1 },
+    { field: 'transferFrom', headerName: 'Transfer From', flex: 1 },
+    { field: 'transferTo', headerName: 'Transfer To', flex: 1 },
+    { field: 'notes', headerName: 'Notes', flex: 1 },
   ];
 
   const rows =
@@ -115,8 +123,8 @@ const ViewInternalOrder: React.FC<ViewInternalOrderProps> = ({ openModal, onClos
         deductedQuantity: batch?.deductedQuantity,
         transferFrom: item.transferFrom?.location?.location,
         transferTo: item.transferTo?.location,
-        notes: item?.notes || "No notes",
-      }))
+        notes: item?.notes || 'No notes',
+      })),
     ) || [];
 
   console.log(internalOrder);
@@ -136,7 +144,11 @@ const ViewInternalOrder: React.FC<ViewInternalOrderProps> = ({ openModal, onClos
           <InternalOrderSkeleton />
         ) : internalOrder ? (
           <Box pt={2}>
-            <Typography variant="h6" gutterBottom sx={{ color: theme.palette.secondary.main }}>
+            <Typography
+              variant="h6"
+              gutterBottom
+              sx={{ color: theme.palette.secondary.main }}
+            >
               Order Information
             </Typography>
             <Grid container spacing={2}>
@@ -144,7 +156,9 @@ const ViewInternalOrder: React.FC<ViewInternalOrderProps> = ({ openModal, onClos
                 <Typography>IO Number: {internalOrder.ioNumber}</Typography>
               </Grid>
               <Grid item xs={4}>
-                <Typography>Date: {new Date(internalOrder.date).toLocaleDateString()}</Typography>
+                <Typography>
+                  Date: {new Date(internalOrder.date).toLocaleDateString()}
+                </Typography>
               </Grid>
               <Grid item xs={4}>
                 <Typography>Status: {internalOrder.status}</Typography>
@@ -157,17 +171,28 @@ const ViewInternalOrder: React.FC<ViewInternalOrderProps> = ({ openModal, onClos
               </Grid>
               <Grid item xs={4}>
                 <Typography>
-                  Authorized By: {internalOrder.authorizedBy || "Not yet authorized"}
+                  Authorized By:{' '}
+                  {internalOrder.authorizedBy || 'Not yet authorized'}
                 </Typography>
               </Grid>
             </Grid>
             <Divider sx={{ my: 2 }} />
 
-            <Typography variant="h6" gutterBottom sx={{ color: theme.palette.secondary.main }}>
+            <Typography
+              variant="h6"
+              gutterBottom
+              sx={{ color: theme.palette.secondary.main }}
+            >
               Items Details
             </Typography>
-            <div style={{ width: "100%" }}>
-              <DataGrid rows={rows} columns={columns} disableColumnMenu hideFooter autoHeight />
+            <div style={{ width: '100%' }}>
+              <DataGrid
+                rows={rows}
+                columns={columns}
+                disableColumnMenu
+                hideFooter
+                autoHeight
+              />
             </div>
             {/*
             {internalOrder.items.map((item, index) => (

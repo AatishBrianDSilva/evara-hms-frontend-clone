@@ -1,16 +1,16 @@
-import React from "react";
+import React from 'react';
 import {
   DataGrid,
   GridColDef,
   GridRowsProp,
   GridToolbar,
   GridToolbarContainer,
-} from "@mui/x-data-grid";
-import { SxProps, useTheme, Theme } from "@mui/material/styles";
-import LinearProgress from "@mui/material/LinearProgress";
-import Button from "@mui/material/Button";
-import AddIcon from "@mui/icons-material/Add";
-import useResponsiveColumns from "../../hooks/useResponsiveColumn";
+} from '@mui/x-data-grid';
+import { SxProps, useTheme, Theme } from '@mui/material/styles';
+import LinearProgress from '@mui/material/LinearProgress';
+import Button from '@mui/material/Button';
+import AddIcon from '@mui/icons-material/Add';
+import useResponsiveColumns from '../../hooks/useResponsiveColumn';
 
 interface CustomDataGridProps {
   columns: GridColDef[];
@@ -35,7 +35,7 @@ interface CustomDataGridProps {
   getRowId?: (row: any) => string; // New prop to get row id
   onSelectionChange?: (selectedIds: (string | number)[]) => void; // New prop for handling selection changes
   extendedPageSizeOptions?: Array<number | { label: string; value: number }>; // Optional prop for extended page sizes
-  paginationMode?: "server" | "client"; // Optional pagination mode prop
+  paginationMode?: 'server' | 'client'; // Optional pagination mode prop
   pageCount?: number; // New prop for total pages
 }
 
@@ -89,7 +89,7 @@ const CustomDataGrid: React.FC<CustomDataGridProps> = ({
   onSelectionChange,
   getRowId,
   pageCount,
-  paginationMode = "server", // Default to client pagination
+  paginationMode = 'server', // Default to client pagination
   ...rest
 }) => {
   const responsiveColumns = useResponsiveColumns(columns);
@@ -119,27 +119,27 @@ const CustomDataGrid: React.FC<CustomDataGridProps> = ({
       getRowId={getRowId}
       sx={{
         ...sx,
-        "& .MuiDataGrid-columnHeaders": {
+        '& .MuiDataGrid-columnHeaders': {
           backgroundColor: theme.palette.secondary.main,
-          color: "#fff",
-          fontSize: "12px",
-          fontWeight: "bold",
+          color: '#fff',
+          fontSize: '12px',
+          fontWeight: 'bold',
         },
-        "& .MuiDataGrid-iconButtonContainer .MuiButtonBase-root": {
-          color: "white",
+        '& .MuiDataGrid-iconButtonContainer .MuiButtonBase-root': {
+          color: 'white',
         },
         ...(rowHover && {
-          "& .MuiDataGrid-row": {
-            cursor: "pointer",
-            "&:hover": {
-              backgroundColor: "rgba(0, 0, 0, 0.04)",
+          '& .MuiDataGrid-row': {
+            cursor: 'pointer',
+            '&:hover': {
+              backgroundColor: 'rgba(0, 0, 0, 0.04)',
             },
           },
         }),
-        fontSize: "12px",
+        fontSize: '12px',
         color: theme.palette.text.secondary,
-        fontWeight: "500",
-        minHeight: "200px",
+        fontWeight: '500',
+        minHeight: '200px',
       }}
       {...(enablePagination && {
         pagination: true,
@@ -149,13 +149,13 @@ const CustomDataGrid: React.FC<CustomDataGridProps> = ({
           page: page ? page - 1 : 0, // Adjust for zero-based index
           pageSize: pageSize || 25, // Default page size
         },
-        onPaginationModelChange: (model) => {
+        onPaginationModelChange: model => {
           if (onPageChange) onPageChange(model.page + 1); // Convert back to one-based index
           if (onPageSizeChange) onPageSizeChange(model.pageSize);
         },
       })}
       checkboxSelection={checkboxSelection}
-      onRowSelectionModelChange={(newSelection) => {
+      onRowSelectionModelChange={newSelection => {
         if (onSelectionChange) onSelectionChange(newSelection);
       }}
       {...rest}

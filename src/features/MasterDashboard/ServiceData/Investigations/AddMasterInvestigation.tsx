@@ -1,4 +1,4 @@
-import React from "react";
+import React from 'react';
 import {
   Box,
   Button,
@@ -9,17 +9,17 @@ import {
   FormControlLabel,
   Grid,
   TextField,
-} from "@mui/material";
-import { useFormik } from "formik";
-import _ from "lodash";
+} from '@mui/material';
+import { useFormik } from 'formik';
+import _ from 'lodash';
 
 import {
   useGetMasterDefaultInvestigationsQuery,
   useAddMasterInvestigationMutation,
-} from "../../../../services/masterDashboardService/serviceData/masterInvestigationApi";
-import { useToast } from "../../../../context/ToastContext";
-import CustomDatePicker from "../../../../components/CustomDatePicker/CustomDatePicker";
-import FieldAutocomplete from "../../../../components/FieldAutoComplete/FieldAutoComplete";
+} from '../../../../services/masterDashboardService/serviceData/masterInvestigationApi';
+import { useToast } from '../../../../context/ToastContext';
+import CustomDatePicker from '../../../../components/CustomDatePicker/CustomDatePicker';
+import FieldAutocomplete from '../../../../components/FieldAutoComplete/FieldAutoComplete';
 
 interface AddMasterInvestigationProps {
   openModal: boolean;
@@ -72,16 +72,16 @@ const AddMasterInvestigation: React.FC<AddMasterInvestigationProps> = ({
       validTill: values.validTill,
     };
 
-    console.log("Payload to be submitted:", payload); // Log the payload
+    console.log('Payload to be submitted:', payload); // Log the payload
 
     // Add your submission logic here, including tax
     // Extract tax from values
     const promise = addInvestigation(payload).unwrap();
 
     showPromiseToast(promise, {
-      loading: "Adding...",
-      success: (data) => data || "Added Successfully",
-      error: (data) => data || "Adding Failed",
+      loading: 'Adding...',
+      success: data => data || 'Added Successfully',
+      error: data => data || 'Adding Failed',
     });
 
     try {
@@ -95,8 +95,8 @@ const AddMasterInvestigation: React.FC<AddMasterInvestigationProps> = ({
 
   const initialValues: IFormValues = {
     default: null,
-    itemName: "",
-    itemId: "",
+    itemName: '',
+    itemId: '',
     price: 0,
     isActive: true,
     validTill: null,
@@ -110,9 +110,9 @@ const AddMasterInvestigation: React.FC<AddMasterInvestigationProps> = ({
 
   return (
     <Dialog open={openModal} onClose={onClose} maxWidth="md" fullWidth>
-      <DialogTitle color={"primary"}>Add Master Investigation</DialogTitle>
+      <DialogTitle color={'primary'}>Add Master Investigation</DialogTitle>
       <DialogContent>
-        <Box component={"form"} onSubmit={formik.handleSubmit} p={2}>
+        <Box component={'form'} onSubmit={formik.handleSubmit} p={2}>
           <Grid container spacing={2} mb={2} mt={2} alignItems="center">
             <Grid item xs={12} sm={6} lg={4}>
               <FieldAutocomplete
@@ -121,13 +121,13 @@ const AddMasterInvestigation: React.FC<AddMasterInvestigationProps> = ({
                 isOptionEqualToValue={(option, value) =>
                   option._id === value._id
                 }
-                getOptionLabel={(option) => option.testName}
+                getOptionLabel={option => option.testName}
                 loading={defaultInvestigationsLoading}
                 value={formik.values.default}
-                onChange={(value) => {
-                  formik.setFieldValue("default", value);
-                  formik.setFieldValue("itemName", value?.testName || "");
-                  formik.setFieldValue("itemId", value?.testId || "");
+                onChange={value => {
+                  formik.setFieldValue('default', value);
+                  formik.setFieldValue('itemName', value?.testName || '');
+                  formik.setFieldValue('itemId', value?.testId || '');
                 }}
               />
             </Grid>
@@ -139,7 +139,7 @@ const AddMasterInvestigation: React.FC<AddMasterInvestigationProps> = ({
                 id="itemName"
                 name="itemName"
                 label="Investigation Name"
-                helperText={"Investigation name must be unique"}
+                helperText={'Investigation name must be unique'}
                 value={formik.values.itemName}
                 onChange={formik.handleChange}
               />
@@ -170,7 +170,7 @@ const AddMasterInvestigation: React.FC<AddMasterInvestigationProps> = ({
                 name="validTill"
                 label="Valid Till"
                 value={formik.values.validTill}
-                onChange={(value) => formik.setFieldValue("validTill", value)}
+                onChange={value => formik.setFieldValue('validTill', value)}
               />
             </Grid>
             {/* <Grid item xs={6} sm={3} lg={2}>
@@ -197,9 +197,9 @@ const AddMasterInvestigation: React.FC<AddMasterInvestigationProps> = ({
             </Grid>
           </Grid>
           <Box
-            display={"flex"}
-            justifyContent={"flex-end"}
-            alignItems={"center"}
+            display={'flex'}
+            justifyContent={'flex-end'}
+            alignItems={'center'}
             gap={2}
             mb={2}
           >
@@ -208,14 +208,14 @@ const AddMasterInvestigation: React.FC<AddMasterInvestigationProps> = ({
               color="primary"
               type="submit"
               disabled={_.isEqual(initialValues, formik.values) || isLoading}
-              sx={{ width: "fit-content" }}
+              sx={{ width: 'fit-content' }}
             >
               Save
             </Button>
             <Button
               variant="contained"
               color="secondary"
-              sx={{ width: "fit-content" }}
+              sx={{ width: 'fit-content' }}
               onClick={onClose}
             >
               Cancel

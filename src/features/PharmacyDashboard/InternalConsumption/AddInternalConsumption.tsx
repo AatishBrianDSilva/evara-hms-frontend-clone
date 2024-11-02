@@ -1,4 +1,4 @@
-import React, { useCallback } from "react";
+import React, { useCallback } from 'react';
 import {
   Box,
   Button,
@@ -8,16 +8,16 @@ import {
   Grid,
   IconButton,
   TextField,
-} from "@mui/material";
-import { useFormik, FormikErrors, FormikTouched } from "formik";
-import Delete from "@mui/icons-material/Delete";
-import { Add } from "@mui/icons-material";
-import FieldAutocomplete from "../../../components/FieldAutoComplete/FieldAutoComplete";
-import { IPharmacyStock } from "../../../types/pharmacyDashboard/stocks";
-import { IDrugLocation } from "../../../types/pharmacyDashboard/master";
-import { useToast } from "../../../context/ToastContext";
-import { useAddInternalConsumptionMutation } from "../../../services/pharmacyDashboardService/internalConsumptionApi";
-import _ from "lodash";
+} from '@mui/material';
+import { useFormik, FormikErrors, FormikTouched } from 'formik';
+import Delete from '@mui/icons-material/Delete';
+import { Add } from '@mui/icons-material';
+import FieldAutocomplete from '../../../components/FieldAutoComplete/FieldAutoComplete';
+import { IPharmacyStock } from '../../../types/pharmacyDashboard/stocks';
+import { IDrugLocation } from '../../../types/pharmacyDashboard/master';
+import { useToast } from '../../../context/ToastContext';
+import { useAddInternalConsumptionMutation } from '../../../services/pharmacyDashboardService/internalConsumptionApi';
+import _ from 'lodash';
 
 interface AddInternalConsumptionProps {
   open: boolean;
@@ -47,7 +47,8 @@ const AddInternalConsumption: React.FC<AddInternalConsumptionProps> = ({
   pharmacyStock,
 }) => {
   const { showPromiseToast } = useToast();
-  const [addInternalConsumption, { isLoading }] = useAddInternalConsumptionMutation();
+  const [addInternalConsumption, { isLoading }] =
+    useAddInternalConsumptionMutation();
 
   const initialValues: IInternalConsumptionFormValues = {
     date: new Date(),
@@ -56,10 +57,10 @@ const AddInternalConsumption: React.FC<AddInternalConsumptionProps> = ({
 
   const formik = useFormik({
     initialValues,
-    onSubmit: async (values) => {
+    onSubmit: async values => {
       const payload = {
         date: values.date,
-        items: values.items.map((item) => ({
+        items: values.items.map(item => ({
           item: item.item?._id,
           quantity: item.quantity || 0,
           transferFrom: {
@@ -69,20 +70,20 @@ const AddInternalConsumption: React.FC<AddInternalConsumptionProps> = ({
         })),
       };
 
-      console.log("Payload", payload);
+      console.log('Payload', payload);
 
       const promise = addInternalConsumption(payload).unwrap();
 
       showPromiseToast(promise, {
-        loading: "Creating Internal Consumption",
-        success: (msg) => msg || "Internal Consumption Created Successfully",
-        error: (msg) => msg || "Error Creating Internal Consumption",
+        loading: 'Creating Internal Consumption',
+        success: msg => msg || 'Internal Consumption Created Successfully',
+        error: msg => msg || 'Error Creating Internal Consumption',
       });
 
       try {
         await promise;
       } catch (error) {
-        console.error("Error creating internal consumption", error);
+        console.error('Error creating internal consumption', error);
       }
 
       onClose();
@@ -90,7 +91,7 @@ const AddInternalConsumption: React.FC<AddInternalConsumptionProps> = ({
   });
 
   const handleAddFields = () => {
-    formik.setFieldValue("items", [
+    formik.setFieldValue('items', [
       ...formik.values.items,
       { item: null, transferFrom: null, quantity: null },
     ]);
@@ -98,23 +99,25 @@ const AddInternalConsumption: React.FC<AddInternalConsumptionProps> = ({
 
   const handleDeleteField = (index: number) => {
     const newFields = formik.values.items.filter((_, i) => i !== index);
-    formik.setFieldValue("items", newFields);
+    formik.setFieldValue('items', newFields);
   };
 
   const getFieldErrorAndTouched = useCallback(
-    (index: number, fieldName: "item" | "transferFrom" | "quantity") => {
-      const touched = formik?.touched?.items as FormikTouched<IInternalConsumptionItem>[];
-      const error = formik?.errors?.items as FormikErrors<IInternalConsumptionItem>[];
+    (index: number, fieldName: 'item' | 'transferFrom' | 'quantity') => {
+      const touched = formik?.touched
+        ?.items as FormikTouched<IInternalConsumptionItem>[];
+      const error = formik?.errors
+        ?.items as FormikErrors<IInternalConsumptionItem>[];
 
       const isFieldTouched = touched?.[index]?.[fieldName];
       const fieldError = error?.[index]?.[fieldName];
 
       return {
         isError: Boolean(isFieldTouched && fieldError),
-        errorMessage: typeof fieldError === "string" ? fieldError : undefined,
+        errorMessage: typeof fieldError === 'string' ? fieldError : undefined,
       };
     },
-    [formik.touched, formik.errors]
+    [formik.touched, formik.errors],
   );
 
   return (
@@ -125,11 +128,15 @@ const AddInternalConsumption: React.FC<AddInternalConsumptionProps> = ({
           <Grid container spacing={2}>
             {formik.values.items.map((item, index) => {
               const { isError: isItemError, errorMessage: itemErrorMessage } =
-                getFieldErrorAndTouched(index, "item");
-              const { isError: isTransferFromError, errorMessage: transferFromErrorMessage } =
-                getFieldErrorAndTouched(index, "transferFrom");
-              const { isError: isQuantityError, errorMessage: quantityErrorMessage } =
-                getFieldErrorAndTouched(index, "quantity");
+                getFieldErrorAndTouched(index, 'item');
+              const {
+                isError: isTransferFromError,
+                errorMessage: transferFromErrorMessage,
+              } = getFieldErrorAndTouched(index, 'transferFrom');
+              const {
+                isError: isQuantityError,
+                errorMessage: quantityErrorMessage,
+              } = getFieldErrorAndTouched(index, 'quantity');
 
               const currentItem = formik.values.items[index];
               const itemSelected = currentItem.item;
@@ -143,7 +150,8 @@ const AddInternalConsumption: React.FC<AddInternalConsumptionProps> = ({
                 formik.values.items.reduce((total, currentItem, idx) => {
                   if (
                     currentItem.item?._id === item.item?._id &&
-                    currentItem.transferFrom?.location._id === item.transferFrom?.location._id &&
+                    currentItem.transferFrom?.location._id ===
+                      item.transferFrom?.location._id &&
                     idx !== index
                   ) {
                     return total + (currentItem.quantity || 0);
@@ -153,54 +161,70 @@ const AddInternalConsumption: React.FC<AddInternalConsumptionProps> = ({
 
               const quantityLabel = itemSelected
                 ? `Quantity (${maxQuantity} available)`
-                : "Quantity";
+                : 'Quantity';
 
               return (
                 <Grid container gap={1} key={index} mt={2}>
                   <Grid item flex={2}>
                     <FieldAutocomplete
                       options={pharmacyStock}
-                      getOptionLabel={(option) => option?.item?.name}
-                      isOptionEqualToValue={(option, value) => option._id === value._id}
+                      getOptionLabel={option => option?.item?.name}
+                      isOptionEqualToValue={(option, value) =>
+                        option._id === value._id
+                      }
                       value={item.item}
-                      onChange={(newValue) => {
+                      onChange={newValue => {
                         formik.setFieldValue(`items[${index}].item`, newValue);
-                        formik.setFieldValue(`items[${index}].transferFrom`, null);
+                        formik.setFieldValue(
+                          `items[${index}].transferFrom`,
+                          null,
+                        );
                         formik.setFieldValue(`items[${index}].quantity`, null);
                       }}
                       label="Item"
                       error={isItemError}
-                      helperText={isItemError ? itemErrorMessage : ""}
+                      helperText={isItemError ? itemErrorMessage : ''}
                     />
                   </Grid>
                   <Grid item flex={1.5}>
                     <FieldAutocomplete
                       options={locationsFrom}
                       disabled={!itemSelected}
-                      getOptionLabel={(option) => {
+                      getOptionLabel={option => {
                         return option?.location?.location;
                       }}
-                      isOptionEqualToValue={(option, value) => option._id === value._id}
+                      isOptionEqualToValue={(option, value) =>
+                        option._id === value._id
+                      }
                       value={item.transferFrom}
-                      onChange={(newValue) =>
-                        formik.setFieldValue(`items[${index}].transferFrom`, newValue)
+                      onChange={newValue =>
+                        formik.setFieldValue(
+                          `items[${index}].transferFrom`,
+                          newValue,
+                        )
                       }
                       label="Location"
                       error={isTransferFromError}
-                      helperText={isTransferFromError ? transferFromErrorMessage : ""}
+                      helperText={
+                        isTransferFromError ? transferFromErrorMessage : ''
+                      }
                     />
                   </Grid>
                   <Grid item flex={1}>
                     <TextField
                       fullWidth
-                      disabled={!itemSelected || maxQuantity === 0 || !currentItem.transferFrom}
+                      disabled={
+                        !itemSelected ||
+                        maxQuantity === 0 ||
+                        !currentItem.transferFrom
+                      }
                       label={quantityLabel}
                       type="number"
                       name={`items[${index}].quantity`}
-                      value={currentItem.quantity ?? ""}
+                      value={currentItem.quantity ?? ''}
                       onChange={formik.handleChange}
                       error={isQuantityError}
-                      helperText={isQuantityError ? quantityErrorMessage : ""}
+                      helperText={isQuantityError ? quantityErrorMessage : ''}
                       InputProps={{
                         inputProps: {
                           min: 1,
@@ -217,12 +241,19 @@ const AddInternalConsumption: React.FC<AddInternalConsumptionProps> = ({
                     alignItems="flex-start"
                   >
                     {!onlyOneItem && (
-                      <IconButton size="small" onClick={() => handleDeleteField(index)}>
+                      <IconButton
+                        size="small"
+                        onClick={() => handleDeleteField(index)}
+                      >
                         <Delete fontSize="small" />
                       </IconButton>
                     )}
                     {isLastItem && (
-                      <IconButton size="small" color="primary" onClick={handleAddFields}>
+                      <IconButton
+                        size="small"
+                        color="primary"
+                        onClick={handleAddFields}
+                      >
                         <Add fontSize="small" />
                       </IconButton>
                     )}
@@ -230,11 +261,26 @@ const AddInternalConsumption: React.FC<AddInternalConsumptionProps> = ({
                 </Grid>
               );
             })}
-            <Box display={"flex"} justifyContent={"flex-end"} alignItems={"center"} mt={2}>
-              <Button color="primary" variant="contained" type="submit" disabled={isLoading}>
+            <Box
+              display={'flex'}
+              justifyContent={'flex-end'}
+              alignItems={'center'}
+              mt={2}
+            >
+              <Button
+                color="primary"
+                variant="contained"
+                type="submit"
+                disabled={isLoading}
+              >
                 Add Consumption
               </Button>
-              <Button color="secondary" variant="contained" onClick={onClose} sx={{ ml: 2 }}>
+              <Button
+                color="secondary"
+                variant="contained"
+                onClick={onClose}
+                sx={{ ml: 2 }}
+              >
                 Cancel
               </Button>
             </Box>

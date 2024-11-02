@@ -1,23 +1,23 @@
-import React, { useState } from "react";
-import Button from "@mui/material/Button";
-import Dialog from "@mui/material/Dialog";
-import DialogActions from "@mui/material/DialogActions";
-import DialogContent from "@mui/material/DialogContent";
-import DialogTitle from "@mui/material/DialogTitle";
-import Box from "@mui/material/Box";
-import TextField from "@mui/material/TextField";
-import Paper from "@mui/material/Paper";
-import { useFormik } from "formik";
-import { Grid, IconButton, Typography } from "@mui/material";
-import Add from "@mui/icons-material/Add";
-import Delete from "@mui/icons-material/Delete";
-import * as Yup from "yup";
-import { RootState } from "../../../../app/store";
-import { useSelector } from "react-redux";
-import { useAddTreatmentAdviceMutation } from "../../../../services/patientDashboardService/treatmentAdviceApi";
-import { useToast } from "../../../../context/ToastContext";
-import CustomDatePicker from "../../../../components/CustomDatePicker/CustomDatePicker";
-import CustomTimePicker from "../../../../components/CustomDatePicker/CustomTimePicker";
+import React, { useState } from 'react';
+import Button from '@mui/material/Button';
+import Dialog from '@mui/material/Dialog';
+import DialogActions from '@mui/material/DialogActions';
+import DialogContent from '@mui/material/DialogContent';
+import DialogTitle from '@mui/material/DialogTitle';
+import Box from '@mui/material/Box';
+import TextField from '@mui/material/TextField';
+import Paper from '@mui/material/Paper';
+import { useFormik } from 'formik';
+import { Grid, IconButton, Typography } from '@mui/material';
+import Add from '@mui/icons-material/Add';
+import Delete from '@mui/icons-material/Delete';
+import * as Yup from 'yup';
+import { RootState } from '../../../../app/store';
+import { useSelector } from 'react-redux';
+import { useAddTreatmentAdviceMutation } from '../../../../services/patientDashboardService/treatmentAdviceApi';
+import { useToast } from '../../../../context/ToastContext';
+import CustomDatePicker from '../../../../components/CustomDatePicker/CustomDatePicker';
+import CustomTimePicker from '../../../../components/CustomDatePicker/CustomTimePicker';
 
 interface AddTreatmentAdviceProps {
   open?: boolean;
@@ -30,18 +30,27 @@ interface CallDetail {
   comments: string;
 }
 
-const AddTreatmentAdvice: React.FC<AddTreatmentAdviceProps> = ({ open, onClose }) => {
-  const { patient, case: patientCase } = useSelector((state: RootState) => state.patients);
+const AddTreatmentAdvice: React.FC<AddTreatmentAdviceProps> = ({
+  open,
+  onClose,
+}) => {
+  const { patient, case: patientCase } = useSelector(
+    (state: RootState) => state.patients,
+  );
   const { showPromiseToast } = useToast();
 
-  const [addPatientTreatmentAdvice, { isLoading }] = useAddTreatmentAdviceMutation();
+  const [addPatientTreatmentAdvice, { isLoading }] =
+    useAddTreatmentAdviceMutation();
 
   const [callDetails, setCallDetails] = useState([
-    { callDate: new Date(), callTime: new Date(), comments: "" },
+    { callDate: new Date(), callTime: new Date(), comments: '' },
   ]);
 
   const handleAddCallDetail = () => {
-    setCallDetails([...callDetails, { callDate: new Date(), callTime: new Date(), comments: "" }]);
+    setCallDetails([
+      ...callDetails,
+      { callDate: new Date(), callTime: new Date(), comments: '' },
+    ]);
   };
 
   const handleDeleteCallDetail = (index: number) => {
@@ -61,7 +70,7 @@ const AddTreatmentAdvice: React.FC<AddTreatmentAdviceProps> = ({ open, onClose }
   const handleCallDetailChange = <K extends keyof CallDetail>(
     index: number,
     field: K,
-    value: CallDetail[K] | null
+    value: CallDetail[K] | null,
   ) => {
     const newCallDetails = [...callDetails];
     if (value !== null) {
@@ -81,7 +90,7 @@ const AddTreatmentAdvice: React.FC<AddTreatmentAdviceProps> = ({ open, onClose }
         tentativeDate: values.tentativeDate.toISOString(),
         status: values.status,
         comments: values.comments,
-        callDetails: callDetails.map((detail) => ({
+        callDetails: callDetails.map(detail => ({
           ...detail,
           callTime: detail.callTime.toISOString(),
           callDate: detail.callDate.toISOString(), // Convert callDate to string
@@ -91,9 +100,11 @@ const AddTreatmentAdvice: React.FC<AddTreatmentAdviceProps> = ({ open, onClose }
       const promise = addPatientTreatmentAdvice(payload).unwrap();
 
       showPromiseToast(promise, {
-        loading: "Adding Treatment Advice",
-        success: (response) => response.message || "Treatment advice added successfully",
-        error: (err) => `Error: ${err.response?.data?.message || "Failed to add treatment advice"}`,
+        loading: 'Adding Treatment Advice',
+        success: response =>
+          response.message || 'Treatment advice added successfully',
+        error: err =>
+          `Error: ${err.response?.data?.message || 'Failed to add treatment advice'}`,
       });
 
       try {
@@ -101,24 +112,24 @@ const AddTreatmentAdvice: React.FC<AddTreatmentAdviceProps> = ({ open, onClose }
         createForm.resetForm();
         onClose && onClose();
       } catch (error) {
-        console.log("error", error);
+        console.log('error', error);
       }
     }
   };
 
   const validationSchema = Yup.object({
-    treatmentAdvice: Yup.string().required("Treatment Advice is required"),
-    tentativeDate: Yup.date().required("Tentative Date is required"),
-    status: Yup.string().required("Status is required"),
+    treatmentAdvice: Yup.string().required('Treatment Advice is required'),
+    tentativeDate: Yup.date().required('Tentative Date is required'),
+    status: Yup.string().required('Status is required'),
     comments: Yup.string(),
   });
 
   const createForm = useFormik({
     initialValues: {
-      treatmentAdvice: "",
+      treatmentAdvice: '',
       tentativeDate: new Date(),
-      status: "",
-      comments: "",
+      status: '',
+      comments: '',
     },
     validationSchema,
     onSubmit: handleSubmit,
@@ -132,17 +143,21 @@ const AddTreatmentAdvice: React.FC<AddTreatmentAdviceProps> = ({ open, onClose }
       maxWidth="md"
       scroll="paper"
     >
-      <DialogTitle sx={{ textAlign: "center", pt: 4 }} color="primary" variant="h5">
+      <DialogTitle
+        sx={{ textAlign: 'center', pt: 4 }}
+        color="primary"
+        variant="h5"
+      >
         Add Treatment Advice
       </DialogTitle>
-      <Box component={"form"} onSubmit={createForm.handleSubmit}>
+      <Box component={'form'} onSubmit={createForm.handleSubmit}>
         <Paper elevation={0} sx={{ p: 2, mb: 2 }}>
           <DialogContent
             style={{
-              display: "flex",
-              flexDirection: "column",
+              display: 'flex',
+              flexDirection: 'column',
               gap: 10,
-              padding: "2rem",
+              padding: '2rem',
             }}
           >
             <Grid container spacing={2}>
@@ -150,12 +165,14 @@ const AddTreatmentAdvice: React.FC<AddTreatmentAdviceProps> = ({ open, onClose }
                 <TextField
                   fullWidth
                   label="Treatment Advice"
-                  {...createForm.getFieldProps("treatmentAdvice")}
+                  {...createForm.getFieldProps('treatmentAdvice')}
                   error={
-                    createForm.touched.treatmentAdvice && Boolean(createForm.errors.treatmentAdvice)
+                    createForm.touched.treatmentAdvice &&
+                    Boolean(createForm.errors.treatmentAdvice)
                   }
                   helperText={
-                    createForm.touched.treatmentAdvice && createForm.errors.treatmentAdvice
+                    createForm.touched.treatmentAdvice &&
+                    createForm.errors.treatmentAdvice
                   }
                 />
               </Grid>
@@ -165,16 +182,23 @@ const AddTreatmentAdvice: React.FC<AddTreatmentAdviceProps> = ({ open, onClose }
                   minDate={new Date()}
                   format="dd/MM/yyyy"
                   value={createForm.values.tentativeDate}
-                  onChange={(newValue) => createForm.setFieldValue("tentativeDate", newValue)}
+                  onChange={newValue =>
+                    createForm.setFieldValue('tentativeDate', newValue)
+                  }
                 />
               </Grid>
               <Grid item xs={6}>
                 <TextField
                   fullWidth
                   label="Status"
-                  {...createForm.getFieldProps("status")}
-                  error={createForm.touched.status && Boolean(createForm.errors.status)}
-                  helperText={createForm.touched.status && createForm.errors.status}
+                  {...createForm.getFieldProps('status')}
+                  error={
+                    createForm.touched.status &&
+                    Boolean(createForm.errors.status)
+                  }
+                  helperText={
+                    createForm.touched.status && createForm.errors.status
+                  }
                 />
               </Grid>
               <Grid item xs={12}>
@@ -183,9 +207,14 @@ const AddTreatmentAdvice: React.FC<AddTreatmentAdviceProps> = ({ open, onClose }
                   multiline
                   minRows={2}
                   label="Comments"
-                  {...createForm.getFieldProps("comments")}
-                  error={createForm.touched.comments && Boolean(createForm.errors.comments)}
-                  helperText={createForm.touched.comments && createForm.errors.comments}
+                  {...createForm.getFieldProps('comments')}
+                  error={
+                    createForm.touched.comments &&
+                    Boolean(createForm.errors.comments)
+                  }
+                  helperText={
+                    createForm.touched.comments && createForm.errors.comments
+                  }
                 />
               </Grid>
               <Grid item xs={12}>
@@ -196,14 +225,18 @@ const AddTreatmentAdvice: React.FC<AddTreatmentAdviceProps> = ({ open, onClose }
                       <CustomDatePicker
                         label="Call Date"
                         value={detail.callDate}
-                        onChange={(date) => handleCallDetailChange(index, "callDate", date)}
+                        onChange={date =>
+                          handleCallDetailChange(index, 'callDate', date)
+                        }
                       />
                     </Grid>
                     <Grid item xs={4}>
                       <CustomTimePicker
                         label="Call Time"
                         value={detail.callTime}
-                        onChange={(date) => handleCallDetailChange(index, "callTime", date)}
+                        onChange={date =>
+                          handleCallDetailChange(index, 'callTime', date)
+                        }
                       />
                     </Grid>
                     <Grid item xs={3}>
@@ -211,15 +244,29 @@ const AddTreatmentAdvice: React.FC<AddTreatmentAdviceProps> = ({ open, onClose }
                         fullWidth
                         label="Comments"
                         value={detail.comments}
-                        onChange={(e) => handleCallDetailChange(index, "comments", e.target.value)}
+                        onChange={e =>
+                          handleCallDetailChange(
+                            index,
+                            'comments',
+                            e.target.value,
+                          )
+                        }
                       />
                     </Grid>
-                    <Grid item xs={1} display="flex" justifyContent="center" alignItems="center">
+                    <Grid
+                      item
+                      xs={1}
+                      display="flex"
+                      justifyContent="center"
+                      alignItems="center"
+                    >
                       <IconButton onClick={handleAddCallDetail}>
                         <Add />
                       </IconButton>
                       {callDetails.length > 1 && (
-                        <IconButton onClick={() => handleDeleteCallDetail(index)}>
+                        <IconButton
+                          onClick={() => handleDeleteCallDetail(index)}
+                        >
                           <Delete />
                         </IconButton>
                       )}
@@ -230,7 +277,7 @@ const AddTreatmentAdvice: React.FC<AddTreatmentAdviceProps> = ({ open, onClose }
             </Grid>
           </DialogContent>
         </Paper>
-        <DialogActions sx={{ pb: 4, gap: 1, justifyContent: "center" }}>
+        <DialogActions sx={{ pb: 4, gap: 1, justifyContent: 'center' }}>
           <Button variant="contained" disabled={isLoading} type="submit">
             Save
           </Button>

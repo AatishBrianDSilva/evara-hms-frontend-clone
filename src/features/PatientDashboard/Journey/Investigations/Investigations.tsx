@@ -1,43 +1,50 @@
-import Button from "@mui/material/Button";
-import Grid from "@mui/material/Grid";
+import Button from '@mui/material/Button';
+import Grid from '@mui/material/Grid';
 
-import Box from "@mui/material/Box";
+import Box from '@mui/material/Box';
 
-import React, { useState } from "react";
-import Add from "@mui/icons-material/Add";
-import Delete from "@mui/icons-material/Delete";
-import CheckCircle from "@mui/icons-material/CheckCircle";
-import Circle from "@mui/icons-material/Circle";
-import Edit from "@mui/icons-material/Edit";
-import Print from "@mui/icons-material/Print";
-import CustomDataGrid from "../../../../components/CustomDataGrid/CustomDataGrid";
-import { GridColDef, GridActionsCellItem, GridRowParams } from "@mui/x-data-grid";
-import { useDispatch, useSelector } from "react-redux";
-import { RootState } from "../../../../app/store";
-import AddInvestigation from "./AddInvestigation";
-import { useGetDoctorsQuery } from "../../../../services/doctorsApi";
-import { useGetMasterInvestigationsQuery } from "../../../../services/masterDashboardService/serviceData/masterInvestigationApi";
-import { CircularProgress } from "@mui/material";
+import React, { useState } from 'react';
+import Add from '@mui/icons-material/Add';
+import Delete from '@mui/icons-material/Delete';
+import CheckCircle from '@mui/icons-material/CheckCircle';
+import Circle from '@mui/icons-material/Circle';
+import Edit from '@mui/icons-material/Edit';
+import Print from '@mui/icons-material/Print';
+import CustomDataGrid from '../../../../components/CustomDataGrid/CustomDataGrid';
+import {
+  GridColDef,
+  GridActionsCellItem,
+  GridRowParams,
+} from '@mui/x-data-grid';
+import { useDispatch, useSelector } from 'react-redux';
+import { RootState } from '../../../../app/store';
+import AddInvestigation from './AddInvestigation';
+import { useGetDoctorsQuery } from '../../../../services/doctorsApi';
+import { useGetMasterInvestigationsQuery } from '../../../../services/masterDashboardService/serviceData/masterInvestigationApi';
+import { CircularProgress } from '@mui/material';
 import {
   useDeleteInvestigationMutation,
   useGetInvestigationsQuery,
-} from "../../../../services/patientDashboardService/investigationApi";
-import ReportModal from "../../../../components/ReportModal/ReportModal";
-import DeleteConfirmationModal from "../../../../components/DeleteConfirmationModal/DeleteConfirmationModal";
-import { useToast } from "../../../../context/ToastContext";
-import PrintInvestigation from "./PrintInvestigation";
-import { closeEditInvestigation, openEditInvestigation } from "./investigationSlice";
-import BloodTests from "./Both/BloodTests";
-import SemenAnalysis from "./Male/SemenAnalysis";
-import UltraSoundScan from "./Female/UltraSoundScan";
-import { ETestType } from "../../../../types/master";
-import SpermDFI from "./Male/SpermDFI";
-import EndometrialAssessment from "./Female/EndometrialAssessment";
-import EarlyPregnancyScan from "./Female/EarlyPregnancyScan";
-import { usePrint } from "../../../../context/PrintPDFContext";
-import { Visibility } from "@mui/icons-material";
-import ViewReports from "../ViewReports";
-import { useNavigate, useParams } from "react-router-dom";
+} from '../../../../services/patientDashboardService/investigationApi';
+import ReportModal from '../../../../components/ReportModal/ReportModal';
+import DeleteConfirmationModal from '../../../../components/DeleteConfirmationModal/DeleteConfirmationModal';
+import { useToast } from '../../../../context/ToastContext';
+import PrintInvestigation from './PrintInvestigation';
+import {
+  closeEditInvestigation,
+  openEditInvestigation,
+} from './investigationSlice';
+import BloodTests from './Both/BloodTests';
+import SemenAnalysis from './Male/SemenAnalysis';
+import UltraSoundScan from './Female/UltraSoundScan';
+import { ETestType } from '../../../../types/master';
+import SpermDFI from './Male/SpermDFI';
+import EndometrialAssessment from './Female/EndometrialAssessment';
+import EarlyPregnancyScan from './Female/EarlyPregnancyScan';
+import { usePrint } from '../../../../context/PrintPDFContext';
+import { Visibility } from '@mui/icons-material';
+import ViewReports from '../ViewReports';
+import { useNavigate, useParams } from 'react-router-dom';
 
 const Investigations: React.FC = () => {
   const dispatch = useDispatch();
@@ -54,7 +61,8 @@ const Investigations: React.FC = () => {
   const [pageSize, setPageSize] = useState<number>(25);
 
   const [selectedFiles, setSelectedFiles] = useState<string[]>([]);
-  const [isViewReportsModalOpen, setIsViewReportsModalOpen] = useState<boolean>(false);
+  const [isViewReportsModalOpen, setIsViewReportsModalOpen] =
+    useState<boolean>(false);
 
   // Get doctors
   const {
@@ -79,7 +87,7 @@ const Investigations: React.FC = () => {
     },
     {
       skip: !patient?.patientId,
-    }
+    },
   );
   const masterInvestigations = MasterInvestigationsData?.data || [];
 
@@ -100,11 +108,12 @@ const Investigations: React.FC = () => {
     },
     {
       skip: !patient?.patientId,
-    }
+    },
   );
   const patientInvestigations = investgationsData?.data?.records || [];
   const patientInvestigationsPagination = investgationsData?.data?.pagination;
-  const patientInvestigationsLoading = investigationLoading || investigationFetching;
+  const patientInvestigationsLoading =
+    investigationLoading || investigationFetching;
 
   // console.log("Patient Investigations", patientInvestigations);
 
@@ -113,62 +122,69 @@ const Investigations: React.FC = () => {
     useDeleteInvestigationMutation();
 
   const loading =
-    DoctorsLoading || MasterInvestigationsLoading || DoctorFetching || MasterInvestigationFetching;
+    DoctorsLoading ||
+    MasterInvestigationsLoading ||
+    DoctorFetching ||
+    MasterInvestigationFetching;
 
   // Get the state of the edit investigation dialog
-  const { editInvestigationOpen } = useSelector((state: RootState) => state.investigation);
+  const { editInvestigationOpen } = useSelector(
+    (state: RootState) => state.investigation,
+  );
 
   // State variables for controlling various dialogs
-  const [addInvestigationOpen, setAddInvestigationOpen] = useState<boolean>(false);
+  const [addInvestigationOpen, setAddInvestigationOpen] =
+    useState<boolean>(false);
   const [printInvestigationOpen, setPrintInvestigationOpen] = useState<{
     id: string;
     status: boolean;
-  }>({ id: "", status: false });
+  }>({ id: '', status: false });
   const [deleteInvestigationOpen, setDeleteInvestigationOpen] = useState<{
     id: string;
     name: string;
     status: boolean;
-  }>({ id: "", name: "", status: false });
+  }>({ id: '', name: '', status: false });
 
   // Columns configuration for the data grid
   const columns: GridColDef[] = [
     {
-      field: "date",
-      headerName: "Date",
+      field: 'date',
+      headerName: 'Date',
       flex: 1,
-      type: "date",
-      valueFormatter: (params) => new Date(params.value as string).toLocaleDateString(),
+      type: 'date',
+      valueFormatter: params =>
+        new Date(params.value as string).toLocaleDateString(),
     },
     {
-      field: "investigation",
-      headerName: "Investigation",
+      field: 'investigation',
+      headerName: 'Investigation',
       flex: 1,
       valueGetter(params) {
         return params.row?.investigation?.name;
       },
     },
     {
-      field: "doctor",
-      headerName: "Doctor",
+      field: 'doctor',
+      headerName: 'Doctor',
       flex: 1,
       valueGetter(params) {
-        return params.row.doctor?.firstName + " " + params.row.doctor?.lastName;
+        return params.row.doctor?.firstName + ' ' + params.row.doctor?.lastName;
       },
     },
-    { field: "status", headerName: "Status", flex: 1 },
+    { field: 'status', headerName: 'Status', flex: 1 },
     // { field: "notes", headerName: "Notes", flex: 0.5 },
     {
-      field: "actions",
-      type: "actions",
-      headerName: "Actions",
-      align: "right",
+      field: 'actions',
+      type: 'actions',
+      headerName: 'Actions',
+      align: 'right',
       flex: 1,
-      cellClassName: "actions",
+      cellClassName: 'actions',
       // custom actions for the actions column
       getActions: (params: GridRowParams) => {
         const row = params.row;
 
-        if (row.status === "Completed") {
+        if (row.status === 'Completed') {
           return [
             <GridActionsCellItem
               icon={<Visibility />}
@@ -207,12 +223,12 @@ const Investigations: React.FC = () => {
       },
     },
     {
-      field: "stage",
-      headerName: "Stage",
+      field: 'stage',
+      headerName: 'Stage',
       renderCell(params) {
         return (
           <Grid container>
-            {params.row.status === "Completed" ? (
+            {params.row.status === 'Completed' ? (
               <CheckCircle color="success" />
             ) : (
               <Circle color="warning" />
@@ -250,23 +266,23 @@ const Investigations: React.FC = () => {
   };
 
   const closeDeleteDialog = () => {
-    setDeleteInvestigationOpen({ id: "", name: "", status: false });
+    setDeleteInvestigationOpen({ id: '', name: '', status: false });
   };
 
   const handleInvestigationDelete = async () => {
     const id = deleteInvestigationOpen.id;
     const promise = deleteInvestigation(id).unwrap();
     showPromiseToast(promise, {
-      loading: "Deleting investigation...",
-      success: () => "Investigation deleted successfully",
-      error: () => "Error deleting investigation",
+      loading: 'Deleting investigation...',
+      success: () => 'Investigation deleted successfully',
+      error: () => 'Error deleting investigation',
     });
 
     try {
       await promise;
       closeDeleteDialog();
     } catch (error) {
-      console.error("Error deleting investigation", error);
+      console.error('Error deleting investigation', error);
     }
   };
 
@@ -283,7 +299,9 @@ const Investigations: React.FC = () => {
   };
 
   const renderEditInvestigationComponent = () => {
-    const investigation = patientInvestigations.find((inv) => inv._id === editInvestigationOpen.id);
+    const investigation = patientInvestigations.find(
+      inv => inv._id === editInvestigationOpen.id,
+    );
 
     switch (investigation?.investigation.test.testType) {
       case ETestType.BloodTest:
@@ -317,15 +335,27 @@ const Investigations: React.FC = () => {
 
   // Main return statement
   return (
-    <Box p={2} display={"flex"} flexDirection={"column"} flex={1}>
-      <Box display={"flex"} justifyContent="flex-end" alignItems="center" mb={3}>
+    <Box p={2} display={'flex'} flexDirection={'column'} flex={1}>
+      <Box
+        display={'flex'}
+        justifyContent="flex-end"
+        alignItems="center"
+        mb={3}
+      >
         {hasFilters && (
-          <Button variant="contained" color="primary" onClick={handleResetFilters} sx={{ mr: 2 }}>
+          <Button
+            variant="contained"
+            color="primary"
+            onClick={handleResetFilters}
+            sx={{ mr: 2 }}
+          >
             Remove Filter
           </Button>
         )}
         <Button
-          startIcon={loading ? <CircularProgress size={16} color="secondary" /> : <Add />}
+          startIcon={
+            loading ? <CircularProgress size={16} color="secondary" /> : <Add />
+          }
           variant="contained"
           color="primary"
           onClick={() => setAddInvestigationOpen(true)}
@@ -343,7 +373,7 @@ const Investigations: React.FC = () => {
         onPageChange={handlePageChange}
         onPageSizeChange={handlePageSizeChange}
         loading={patientInvestigationsLoading}
-        sx={{ height: "100%" }}
+        sx={{ height: '100%' }}
         enablePagination={true}
       />
 
@@ -375,7 +405,7 @@ const Investigations: React.FC = () => {
       {printInvestigationOpen.status && (
         <PrintInvestigation
           open={printInvestigationOpen}
-          onClose={() => setPrintInvestigationOpen({ id: "", status: false })}
+          onClose={() => setPrintInvestigationOpen({ id: '', status: false })}
         />
       )}
       {isViewReportsModalOpen && (

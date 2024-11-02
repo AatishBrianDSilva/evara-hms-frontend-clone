@@ -7,37 +7,42 @@ import {
   Skeleton,
   TextField,
   Typography,
-} from "@mui/material";
-import React from "react";
-import ReportModalHeader from "../../../../../components/ReportModalHeader/ReportModalHeader";
-import { useDispatch, useSelector } from "react-redux";
-import { useToast } from "../../../../../context/ToastContext";
-import { RootState } from "../../../../../app/store";
+} from '@mui/material';
+import React from 'react';
+import ReportModalHeader from '../../../../../components/ReportModalHeader/ReportModalHeader';
+import { useDispatch, useSelector } from 'react-redux';
+import { useToast } from '../../../../../context/ToastContext';
+import { RootState } from '../../../../../app/store';
 import {
   useEditProcedureMutation,
   useGetProcedureByIdQuery,
-} from "../../../../../services/patientDashboardService/procedureApi";
-import { IDoctor } from "../../../../../types/doctor";
+} from '../../../../../services/patientDashboardService/procedureApi';
+import { IDoctor } from '../../../../../types/doctor';
 import {
   IEditProcedureForm,
   IEditProcedurePayload,
-} from "../../../../../types/patientDashboard/procedures";
-import { IHysteroscopyForm } from "../../../../../types/patientDashboard/investigation";
-import { useFormik } from "formik";
-import { EProcedureType } from "../../../../../types/master";
-import _ from "lodash";
-import { closeEditProcedure } from "../procedureSlice";
-import CustomDatePicker from "../../../../../components/CustomDatePicker/CustomDatePicker";
-import FileUploadButton from "../../../../../components/FileUploadAndPreview/FileUploadButton";
-import { EBuckets, EDocumentTypes } from "../../../../../types/global";
-import FieldAutocomplete from "../../../../../components/FieldAutoComplete/FieldAutoComplete";
-import { DoctorSpeciality } from "../../../../../types/masterDashboard/global";
-import { useGetDoctorsQuery } from "../../../../../services/doctorsApi";
+} from '../../../../../types/patientDashboard/procedures';
+import { IHysteroscopyForm } from '../../../../../types/patientDashboard/investigation';
+import { useFormik } from 'formik';
+import { EProcedureType } from '../../../../../types/master';
+import _ from 'lodash';
+import { closeEditProcedure } from '../procedureSlice';
+import CustomDatePicker from '../../../../../components/CustomDatePicker/CustomDatePicker';
+import FileUploadButton from '../../../../../components/FileUploadAndPreview/FileUploadButton';
+import { EBuckets, EDocumentTypes } from '../../../../../types/global';
+import FieldAutocomplete from '../../../../../components/FieldAutoComplete/FieldAutoComplete';
+import { DoctorSpeciality } from '../../../../../types/masterDashboard/global';
+import { useGetDoctorsQuery } from '../../../../../services/doctorsApi';
 
 const renderSkeletonLoader = () => {
   return (
     <>
-      <Box display={"flex"} justifyContent={"space-between"} borderBottom={1} py={2}>
+      <Box
+        display={'flex'}
+        justifyContent={'space-between'}
+        borderBottom={1}
+        py={2}
+      >
         <Box>
           <Skeleton variant="text" width={100} height={20} />
           <Skeleton variant="text" width={100} height={20} />
@@ -49,7 +54,7 @@ const renderSkeletonLoader = () => {
       </Box>
       <Box pt={2} mt={2}>
         <Box>
-          <Grid container justifyContent={"space-between"}>
+          <Grid container justifyContent={'space-between'}>
             <Grid item md={6} lg={3}>
               <Skeleton variant="text" width={100} height={20} />
             </Grid>
@@ -80,7 +85,9 @@ const Hysteroscopy: React.FC<HysteroscopyProps> = () => {
   const dispatch = useDispatch();
   const { showPromiseToast } = useToast();
 
-  const openEditDialog = useSelector((state: RootState) => state.procedure.editProcedureOpen);
+  const openEditDialog = useSelector(
+    (state: RootState) => state.procedure.editProcedureOpen,
+  );
 
   const { data: doctorData } = useGetDoctorsQuery({});
   const doctors = doctorData?.data?.records || [];
@@ -100,51 +107,56 @@ const Hysteroscopy: React.FC<HysteroscopyProps> = () => {
 
   const patient = useSelector((state: RootState) => state.patients.patient);
 
-  const [fileUploadedUrl, setFileUploadedUrl] = React.useState<string[]>([""]);
+  const [fileUploadedUrl, setFileUploadedUrl] = React.useState<string[]>(['']);
 
   const date = new Date(procedure?.date || new Date()).toLocaleDateString();
-  const doctor = procedure?.doctor?.firstName + " " + procedure?.doctor?.lastName;
+  const doctor =
+    procedure?.doctor?.firstName + ' ' + procedure?.doctor?.lastName;
   const procedureName = procedure?.procedure?.procedure?.procedureName;
   const actualProcedureName = procedure?.procedure?.name;
 
-  const [editProcedure, { isLoading: editingProcedure }] = useEditProcedureMutation();
+  const [editProcedure, { isLoading: editingProcedure }] =
+    useEditProcedureMutation();
 
   const initialVaules: IEditProcedureForm<IHysteroscopyForm> = {
-    status: procedure?.status || "",
+    status: procedure?.status || '',
     result: {
-      clinicalDiagnosis: procedure?.result?.details?.clinicalDiagnosis || "",
+      clinicalDiagnosis: procedure?.result?.details?.clinicalDiagnosis || '',
       lmp: procedure?.result?.details?.lmp || null,
       dayOfCycle: procedure?.result?.details?.dayOfCycle || 0,
       dateOfAdmission: procedure?.result?.details?.dateOfAdmission || null,
       dateOfProcedure: procedure?.result?.details?.dateOfProcedure || null,
       dateOfDischarge: procedure?.result?.details?.dateOfDischarge || null,
-      operation: procedure?.result?.details?.operation || "",
-      finalDiagnosisAfterOperation: procedure?.result?.details?.finalDiagnosisAfterOperation || "",
-      hospital: procedure?.result?.details?.hospital || "",
+      operation: procedure?.result?.details?.operation || '',
+      finalDiagnosisAfterOperation:
+        procedure?.result?.details?.finalDiagnosisAfterOperation || '',
+      hospital: procedure?.result?.details?.hospital || '',
       gynaecologist: procedure?.result?.details?.gynaecologist || null,
-      assistant: procedure?.result?.details?.assistant || "",
-      typeOfAnesthesia: procedure?.result?.details?.typeOfAnesthesia || "",
+      assistant: procedure?.result?.details?.assistant || '',
+      typeOfAnesthesia: procedure?.result?.details?.typeOfAnesthesia || '',
       anaesthetist: procedure?.result?.details?.anaesthetist || null,
-      description: procedure?.result?.details?.description || "",
-      spouseName: procedure?.result?.details?.spouseName || "",
-      complaintHistory: procedure?.result?.details?.complaintHistory || "",
-      indication: procedure?.result?.details?.indication || "",
+      description: procedure?.result?.details?.description || '',
+      spouseName: procedure?.result?.details?.spouseName || '',
+      complaintHistory: procedure?.result?.details?.complaintHistory || '',
+      indication: procedure?.result?.details?.indication || '',
       surgeon: procedure?.result?.details?.surgeon || null,
-      procedureDone: procedure?.result?.details?.procedureDone || "",
-      findings: procedure?.result?.details?.findings || "",
-      impressionSummary: procedure?.result?.details?.impressionSummary || "",
-      postOP: procedure?.result?.details?.postOP || "",
-      investigationsSent: procedure?.result?.details?.investigationsSent || "",
-      reviewDate: procedure?.result?.details?.reviewDate || "",
+      procedureDone: procedure?.result?.details?.procedureDone || '',
+      findings: procedure?.result?.details?.findings || '',
+      impressionSummary: procedure?.result?.details?.impressionSummary || '',
+      postOP: procedure?.result?.details?.postOP || '',
+      investigationsSent: procedure?.result?.details?.investigationsSent || '',
+      reviewDate: procedure?.result?.details?.reviewDate || '',
     },
     files: [],
-    notes: procedure?.result?.notes || "",
+    notes: procedure?.result?.notes || '',
   };
 
-  const handleSubmit = async (values: IEditProcedureForm<IHysteroscopyForm>) => {
-    console.log("Formik values", values);
+  const handleSubmit = async (
+    values: IEditProcedureForm<IHysteroscopyForm>,
+  ) => {
+    console.log('Formik values', values);
 
-    const actualName = actualProcedureName || "Default Procedure Name"; // Use a fallback if procedureName is null/undefined
+    const actualName = actualProcedureName || 'Default Procedure Name'; // Use a fallback if procedureName is null/undefined
 
     const payload: IEditProcedurePayload = {
       status: values.status,
@@ -158,20 +170,23 @@ const Hysteroscopy: React.FC<HysteroscopyProps> = () => {
       actualName: actualName, // New field added to the payload
     };
 
-    console.log("Payload", payload);
+    console.log('Payload', payload);
 
-    const promise = editProcedure({ _id: openEditDialog.id, ...payload }).unwrap();
+    const promise = editProcedure({
+      _id: openEditDialog.id,
+      ...payload,
+    }).unwrap();
 
     showPromiseToast(promise, {
-      loading: "Updating procedure...",
-      success: () => "Procedure updated successfully",
-      error: () => "An error occurred while updating procedure",
+      loading: 'Updating procedure...',
+      success: () => 'Procedure updated successfully',
+      error: () => 'An error occurred while updating procedure',
     });
 
     try {
       await promise;
     } catch (error) {
-      console.error("Failed to update procedure", error);
+      console.error('Failed to update procedure', error);
     }
   };
 
@@ -190,7 +205,11 @@ const Hysteroscopy: React.FC<HysteroscopyProps> = () => {
 
   return (
     <form onSubmit={formik.handleSubmit}>
-      <ReportModalHeader date={date} doctor={doctor} reportName={procedureName} />
+      <ReportModalHeader
+        date={date}
+        doctor={doctor}
+        reportName={procedureName}
+      />
       {/* <Grid container spacing={2} direction="column" mt={2}> */}
       <Grid container spacing={2} marginBottom={2} mt={2} flex={1}>
         {/* Clinical Diagnosis */}
@@ -206,7 +225,8 @@ const Hysteroscopy: React.FC<HysteroscopyProps> = () => {
               Boolean(formik.errors.result?.clinicalDiagnosis)
             }
             helperText={
-              formik.touched.result?.clinicalDiagnosis && formik.errors.result?.clinicalDiagnosis
+              formik.touched.result?.clinicalDiagnosis &&
+              formik.errors.result?.clinicalDiagnosis
             }
           />
         </Grid>
@@ -216,7 +236,9 @@ const Hysteroscopy: React.FC<HysteroscopyProps> = () => {
           <CustomDatePicker
             label="Date of Admission"
             value={formik.values.result.dateOfAdmission}
-            onChange={(date) => formik.setFieldValue("result.dateOfAdmission", date)}
+            onChange={date =>
+              formik.setFieldValue('result.dateOfAdmission', date)
+            }
           />
         </Grid>
 
@@ -225,7 +247,9 @@ const Hysteroscopy: React.FC<HysteroscopyProps> = () => {
           <CustomDatePicker
             label="Date of Procedure"
             value={formik.values.result.dateOfProcedure}
-            onChange={(date) => formik.setFieldValue("result.dateOfProcedure", date)}
+            onChange={date =>
+              formik.setFieldValue('result.dateOfProcedure', date)
+            }
           />
         </Grid>
 
@@ -234,7 +258,9 @@ const Hysteroscopy: React.FC<HysteroscopyProps> = () => {
           <CustomDatePicker
             label="Date of Discharge"
             value={formik.values.result.dateOfDischarge}
-            onChange={(date) => formik.setFieldValue("result.dateOfDischarge", date)}
+            onChange={date =>
+              formik.setFieldValue('result.dateOfDischarge', date)
+            }
           />
         </Grid>
 
@@ -254,7 +280,7 @@ const Hysteroscopy: React.FC<HysteroscopyProps> = () => {
           <CustomDatePicker
             label="LMP"
             value={formik.values.result.lmp}
-            onChange={(date) => formik.setFieldValue("result.lmp", date)}
+            onChange={date => formik.setFieldValue('result.lmp', date)}
           />
         </Grid>
 
@@ -351,10 +377,14 @@ const Hysteroscopy: React.FC<HysteroscopyProps> = () => {
         <Grid item xs={12} md={6} lg={4}>
           <FieldAutocomplete
             options={doctors}
-            getOptionLabel={(option) => `${option.firstName || ""} ${option.lastName || ""}`}
+            getOptionLabel={option =>
+              `${option.firstName || ''} ${option.lastName || ''}`
+            }
             isOptionEqualToValue={(option, value) => option._id === value._id}
             value={formik.values.result.surgeon}
-            onChange={(newValue) => formik.setFieldValue(`result.surgeon`, newValue)}
+            onChange={newValue =>
+              formik.setFieldValue(`result.surgeon`, newValue)
+            }
             label="Surgeon"
           />
         </Grid>
@@ -363,15 +393,19 @@ const Hysteroscopy: React.FC<HysteroscopyProps> = () => {
         <Grid item xs={12} md={6} lg={4}>
           <FieldAutocomplete
             options={doctors}
-            getOptionLabel={(option) => `${option.firstName || ""} ${option.lastName || ""}`}
+            getOptionLabel={option =>
+              `${option.firstName || ''} ${option.lastName || ''}`
+            }
             filterOptions={(options, _state) => {
               return options.filter(
-                (option) => option.speciality === DoctorSpeciality.Gynecologist
+                option => option.speciality === DoctorSpeciality.Gynecologist,
               );
             }}
             isOptionEqualToValue={(option, value) => option._id === value._id}
             value={formik.values.result.gynaecologist}
-            onChange={(newValue) => formik.setFieldValue(`result.gynaecologist`, newValue)}
+            onChange={newValue =>
+              formik.setFieldValue(`result.gynaecologist`, newValue)
+            }
             label="Gynaecologist"
           />
         </Grid>
@@ -415,15 +449,19 @@ const Hysteroscopy: React.FC<HysteroscopyProps> = () => {
         <Grid item xs={12} md={6} lg={4}>
           <FieldAutocomplete
             options={doctors}
-            getOptionLabel={(option) => `${option.firstName || ""} ${option.lastName || ""}`}
+            getOptionLabel={option =>
+              `${option.firstName || ''} ${option.lastName || ''}`
+            }
             filterOptions={(options, _state) => {
               return options.filter(
-                (option) => option.speciality === DoctorSpeciality.Anaesthetist
+                option => option.speciality === DoctorSpeciality.Anaesthetist,
               );
             }}
             isOptionEqualToValue={(option, value) => option._id === value._id}
             value={formik.values.result.anaesthetist}
-            onChange={(newValue) => formik.setFieldValue(`result.anaesthetist`, newValue)}
+            onChange={newValue =>
+              formik.setFieldValue(`result.anaesthetist`, newValue)
+            }
             label="Anaesthetist"
           />
         </Grid>
@@ -489,7 +527,7 @@ const Hysteroscopy: React.FC<HysteroscopyProps> = () => {
           <CustomDatePicker
             label="Review Date"
             value={formik.values.result.reviewDate}
-            onChange={(date) => formik.setFieldValue("result.reviewDate", date)}
+            onChange={date => formik.setFieldValue('result.reviewDate', date)}
           />
         </Grid>
 
@@ -529,15 +567,24 @@ const Hysteroscopy: React.FC<HysteroscopyProps> = () => {
           </Grid>
         </Grid>
 
-        <Grid container pl={2} justifyContent={"center"} alignItems={"center"}>
-          <Box display={"flex"} justifyContent={"center"} alignItems={"center"} gap={2} mb={2}>
+        <Grid container pl={2} justifyContent={'center'} alignItems={'center'}>
+          <Box
+            display={'flex'}
+            justifyContent={'center'}
+            alignItems={'center'}
+            gap={2}
+            mb={2}
+          >
             <Grid item xs={12}>
               <FormControlLabel
                 control={
                   <Checkbox
-                    checked={formik.values.status === "Completed"}
-                    onChange={(e) =>
-                      formik.setFieldValue("status", e.target.checked ? "Completed" : "Scheduled")
+                    checked={formik.values.status === 'Completed'}
+                    onChange={e =>
+                      formik.setFieldValue(
+                        'status',
+                        e.target.checked ? 'Completed' : 'Scheduled',
+                      )
                     }
                     color="primary"
                   />
@@ -550,12 +597,13 @@ const Hysteroscopy: React.FC<HysteroscopyProps> = () => {
 
         {/* Action Buttons */}
         <Grid container spacing={2} direction="column" mt={2}>
-          <Box display={"flex"} justifyContent={"center"} gap={2} p={2}>
+          <Box display={'flex'} justifyContent={'center'} gap={2} p={2}>
             <Button
               variant="contained"
               disabled={
                 editingProcedure ||
-                (_.isEqual(formik.values, formik.initialValues) && fileUploadedUrl.length === 0)
+                (_.isEqual(formik.values, formik.initialValues) &&
+                  fileUploadedUrl.length === 0)
               }
               color="primary"
               type="submit"

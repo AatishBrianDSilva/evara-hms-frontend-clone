@@ -1,4 +1,4 @@
-import React from "react";
+import React from 'react';
 import {
   Box,
   Button,
@@ -10,12 +10,12 @@ import {
   Grid,
   MenuItem,
   TextField,
-} from "@mui/material";
-import { useFormik } from "formik";
-import { useToast } from "../../../../context/ToastContext";
-import { useAddDrugLocationMutation } from "../../../../services/pharmacyDashboardService/master/drugLocationApi";
-import _ from "lodash";
-import { AddDrugLocationValidationSchema } from "../../../../yup/pharmacyDashboard";
+} from '@mui/material';
+import { useFormik } from 'formik';
+import { useToast } from '../../../../context/ToastContext';
+import { useAddDrugLocationMutation } from '../../../../services/pharmacyDashboardService/master/drugLocationApi';
+import _ from 'lodash';
+import { AddDrugLocationValidationSchema } from '../../../../yup/pharmacyDashboard';
 
 interface AddDrugLocationProps {
   openModal: boolean;
@@ -28,7 +28,10 @@ interface IFormValues {
   notes?: string;
 }
 
-const AddDrugLocation: React.FC<AddDrugLocationProps> = ({ openModal, onClose }) => {
+const AddDrugLocation: React.FC<AddDrugLocationProps> = ({
+  openModal,
+  onClose,
+}) => {
   const { showPromiseToast } = useToast();
 
   const [addDrugLocation, { isLoading }] = useAddDrugLocationMutation();
@@ -43,9 +46,9 @@ const AddDrugLocation: React.FC<AddDrugLocationProps> = ({ openModal, onClose })
     const promise = addDrugLocation(payload).unwrap();
 
     showPromiseToast(promise, {
-      loading: "Adding...",
-      success: (data) => data || "Added Successfully",
-      error: (data) => data || "Adding Failed",
+      loading: 'Adding...',
+      success: data => data || 'Added Successfully',
+      error: data => data || 'Adding Failed',
     });
 
     try {
@@ -58,8 +61,8 @@ const AddDrugLocation: React.FC<AddDrugLocationProps> = ({ openModal, onClose })
   };
 
   const initialValues: IFormValues = {
-    location: "",
-    notes: "",
+    location: '',
+    notes: '',
     main: false,
   };
 
@@ -72,9 +75,9 @@ const AddDrugLocation: React.FC<AddDrugLocationProps> = ({ openModal, onClose })
 
   return (
     <Dialog open={openModal} onClose={onClose} maxWidth="md" fullWidth>
-      <DialogTitle color={"primary"}>Add Drug Location</DialogTitle>
+      <DialogTitle color={'primary'}>Add Drug Location</DialogTitle>
       <DialogContent>
-        <Box component={"form"} onSubmit={formik.handleSubmit} p={2}>
+        <Box component={'form'} onSubmit={formik.handleSubmit} p={2}>
           <Grid container spacing={2} mb={2} mt={2}>
             <Grid item lg={4}>
               <TextField
@@ -84,11 +87,15 @@ const AddDrugLocation: React.FC<AddDrugLocationProps> = ({ openModal, onClose })
                 label="Location"
                 value={formik.values.location}
                 onChange={formik.handleChange}
-                error={formik.touched.location && Boolean(formik.errors.location)}
+                error={
+                  formik.touched.location && Boolean(formik.errors.location)
+                }
                 helperText={formik.touched.location && formik.errors.location}
               >
                 <MenuItem value="Central Pharmacy">Central Pharmacy</MenuItem>
-                <MenuItem value="Emergency Pharmacy">Emergency Pharmacy</MenuItem>
+                <MenuItem value="Emergency Pharmacy">
+                  Emergency Pharmacy
+                </MenuItem>
                 <MenuItem value="IVF Pharmacy">IVF Pharmacy</MenuItem>
                 <MenuItem value="Internal Stock">Internal Stock</MenuItem>
                 <MenuItem value="OPD Pharmacy">OPD Pharmacy</MenuItem>
@@ -121,20 +128,26 @@ const AddDrugLocation: React.FC<AddDrugLocationProps> = ({ openModal, onClose })
               />
             </Grid>
           </Grid>
-          <Box display={"flex"} justifyContent={"flex-end"} alignItems={"center"} gap={2} mb={2}>
+          <Box
+            display={'flex'}
+            justifyContent={'flex-end'}
+            alignItems={'center'}
+            gap={2}
+            mb={2}
+          >
             <Button
               variant="contained"
               color="primary"
               type="submit"
               disabled={isLoading || _.isEqual(initialValues, formik.values)}
-              sx={{ width: "fit-content" }}
+              sx={{ width: 'fit-content' }}
             >
               Save
             </Button>
             <Button
               variant="contained"
               color="secondary"
-              sx={{ width: "fit-content" }}
+              sx={{ width: 'fit-content' }}
               onClick={onClose}
             >
               Cancel

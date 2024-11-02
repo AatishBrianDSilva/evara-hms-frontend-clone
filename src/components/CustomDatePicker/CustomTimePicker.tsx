@@ -18,38 +18,43 @@ interface TimePickerProps {
   views?: readonly TimeView[] | undefined;
 }
 
-const CustomTimePicker = forwardRef<any, TimePickerProps>(({
-  name,
-  label,
-  disabled = false,
-  format = 'HH:mm',
-  value,
-  onChange,
-  error = false,
-  helperText = '',
-  fullWidth = true,
-  sx,
-  views
-}, ref) => (
-  <TimePicker
-    ref={ref}
-    name={name}
-    label={label}
-    value={value}
-    views={views}
-    disabled={disabled}
-    onChange={onChange}
-    format={format}
-    slots={{ textField: TextField }}
-    sx={sx}
-    slotProps={{
-      textField: {
-        fullWidth: fullWidth,
-        error,
-        helperText,
-      }
-    }}
-  />
-));
+const CustomTimePicker = forwardRef<any, TimePickerProps>(
+  (
+    {
+      name,
+      label,
+      disabled = false,
+      format = 'HH:mm',
+      value,
+      onChange,
+      error = false,
+      helperText = '',
+      fullWidth = true,
+      sx,
+      views,
+    },
+    ref,
+  ) => (
+    <TimePicker
+      ref={ref}
+      name={name}
+      label={label}
+      value={value}
+      views={views}
+      disabled={disabled}
+      onChange={onChange}
+      format={format}
+      slots={{ textField: TextField }}
+      sx={sx}
+      slotProps={{
+        textField: {
+          fullWidth: fullWidth,
+          error,
+          helperText,
+        },
+      }}
+    />
+  ),
+);
 
 export default CustomTimePicker;

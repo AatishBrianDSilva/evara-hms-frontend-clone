@@ -1,4 +1,4 @@
-import React, { RefObject, useEffect, useState } from "react";
+import React, { RefObject, useEffect, useState } from 'react';
 import {
   Box,
   Button,
@@ -13,16 +13,19 @@ import {
   Skeleton,
   TextField,
   Typography,
-} from "@mui/material";
-import { useFormik } from "formik";
-import _ from "lodash";
-import { useGetDonorByIdQuery, useUpdateDonorMutation } from "../../../../services/donorApi";
-import { useToast } from "../../../../context/ToastContext";
-import CloudUploadIcon from "@mui/icons-material/CloudUpload";
-import { DonorRegistrationfrombankValidationSchema } from "../../../../yup/patient";
-import { DatePicker } from "@mui/x-date-pickers";
-import { VisuallyHiddenInput } from "../../../../components/Utils/VisuallyHiddenInput";
-import FieldAutocomplete from "../../../../components/FieldAutoComplete/FieldAutoComplete";
+} from '@mui/material';
+import { useFormik } from 'formik';
+import _ from 'lodash';
+import {
+  useGetDonorByIdQuery,
+  useUpdateDonorMutation,
+} from '../../../../services/donorApi';
+import { useToast } from '../../../../context/ToastContext';
+import CloudUploadIcon from '@mui/icons-material/CloudUpload';
+import { DonorRegistrationfrombankValidationSchema } from '../../../../yup/patient';
+import { DatePicker } from '@mui/x-date-pickers';
+import { VisuallyHiddenInput } from '../../../../components/Utils/VisuallyHiddenInput';
+import FieldAutocomplete from '../../../../components/FieldAutoComplete/FieldAutoComplete';
 
 interface EditDonorProps {
   openModal: boolean;
@@ -99,7 +102,13 @@ const skeletonLoader = () => {
             <Skeleton variant="rectangular" width="100%" height={56} />
           </Grid>
         </Grid>
-        <Box display={"flex"} justifyContent={"flex-end"} alignItems={"center"} gap={2} mb={2}>
+        <Box
+          display={'flex'}
+          justifyContent={'flex-end'}
+          alignItems={'center'}
+          gap={2}
+          mb={2}
+        >
           <Skeleton variant="rectangular" width={90} height={36} />
           <Skeleton variant="rectangular" width={90} height={36} />
         </Box>
@@ -119,118 +128,120 @@ const EditDonor: React.FC<EditDonorProps> = ({ openModal, onClose, id }) => {
     isFetching: DonorFetching,
   } = useGetDonorByIdQuery(id);
 
-  console.log("Id prop", id);
+  console.log('Id prop', id);
 
-  console.log("Donor Data", DonorData);
+  console.log('Donor Data', DonorData);
 
   const indianStates = [
-    "Andhra Pradesh",
-    "Arunachal Pradesh",
-    "Assam",
-    "Bihar",
-    "Chhattisgarh",
-    "Goa",
-    "Gujarat",
-    "Haryana",
-    "Himachal Pradesh",
-    "Jharkhand",
-    "Karnataka",
-    "Kerala",
-    "Madhya Pradesh",
-    "Maharashtra",
-    "Manipur",
-    "Meghalaya",
-    "Mizoram",
-    "Nagaland",
-    "Odisha",
-    "Punjab",
-    "Rajasthan",
-    "Sikkim",
-    "Tamil Nadu",
-    "Telangana",
-    "Tripura",
-    "Uttar Pradesh",
-    "Uttarakhand",
-    "West Bengal",
-    "Andaman and Nicobar Islands",
-    "Chandigarh",
-    "Dadra and Nagar Haveli and Daman and Diu",
-    "Lakshadweep",
-    "Delhi",
-    "Puducherry",
-    "Ladakh",
-    "Jammu and Kashmir",
+    'Andhra Pradesh',
+    'Arunachal Pradesh',
+    'Assam',
+    'Bihar',
+    'Chhattisgarh',
+    'Goa',
+    'Gujarat',
+    'Haryana',
+    'Himachal Pradesh',
+    'Jharkhand',
+    'Karnataka',
+    'Kerala',
+    'Madhya Pradesh',
+    'Maharashtra',
+    'Manipur',
+    'Meghalaya',
+    'Mizoram',
+    'Nagaland',
+    'Odisha',
+    'Punjab',
+    'Rajasthan',
+    'Sikkim',
+    'Tamil Nadu',
+    'Telangana',
+    'Tripura',
+    'Uttar Pradesh',
+    'Uttarakhand',
+    'West Bengal',
+    'Andaman and Nicobar Islands',
+    'Chandigarh',
+    'Dadra and Nagar Haveli and Daman and Diu',
+    'Lakshadweep',
+    'Delhi',
+    'Puducherry',
+    'Ladakh',
+    'Jammu and Kashmir',
   ];
 
   const data = DonorData ? DonorData.data : null;
 
   const isDonorLoading = DonorLoading || DonorFetching;
 
-  console.log("Data at edit Donors", data);
+  console.log('Data at edit Donors', data);
 
   const initialValues: IFormValues = {
-    title: data?.title || "",
-    firstName: data?.firstName || "",
-    lastName: data?.lastName || "",
-    gender: data?.gender || "",
+    title: data?.title || '',
+    firstName: data?.firstName || '',
+    lastName: data?.lastName || '',
+    gender: data?.gender || '',
     dob: (data?.dob || null) as Date | null,
-    education: data?.education || "",
-    maritalStatus: data?.maritalStatus || "",
-    bloodGroup: data?.bloodGroup || "",
-    countryBirth: data?.countryBirth || "",
-    nationality: data?.nationality || "",
-    motherTounge: data?.motherTounge || "",
-    occupation: data?.occupation || "",
-    religion: data?.religion || "",
-    mobile: data?.mobile || "",
-    alernativeMobile: data?.alernativeMobile || "",
-    email: data?.email || "",
-    dependentType: data?.dependentType || "",
-    dependentName: data?.dependentName || "",
-    dependentRelation: data?.dependentRelation || "",
-    dependentMobile: data?.dependentMobile || "",
-    dependentEmail: data?.dependentEmail || "",
-    addressLine1: data?.addressLine1 || "",
-    addressLine2: data?.addressLine2 || "",
-    state: data?.state || "",
-    city: data?.city || "",
-    pincode: data?.pincode || "",
-    idProofType: data?.idProofType || "",
-    idProofNumber: data?.idProofNumber || "",
-    idProofIssuedCountry: data?.idProofIssuedCountry || "",
-    ABHANumber: data?.ABHANumber || "",
+    education: data?.education || '',
+    maritalStatus: data?.maritalStatus || '',
+    bloodGroup: data?.bloodGroup || '',
+    countryBirth: data?.countryBirth || '',
+    nationality: data?.nationality || '',
+    motherTounge: data?.motherTounge || '',
+    occupation: data?.occupation || '',
+    religion: data?.religion || '',
+    mobile: data?.mobile || '',
+    alernativeMobile: data?.alernativeMobile || '',
+    email: data?.email || '',
+    dependentType: data?.dependentType || '',
+    dependentName: data?.dependentName || '',
+    dependentRelation: data?.dependentRelation || '',
+    dependentMobile: data?.dependentMobile || '',
+    dependentEmail: data?.dependentEmail || '',
+    addressLine1: data?.addressLine1 || '',
+    addressLine2: data?.addressLine2 || '',
+    state: data?.state || '',
+    city: data?.city || '',
+    pincode: data?.pincode || '',
+    idProofType: data?.idProofType || '',
+    idProofNumber: data?.idProofNumber || '',
+    idProofIssuedCountry: data?.idProofIssuedCountry || '',
+    ABHANumber: data?.ABHANumber || '',
     interpreter: data?.interpreter || false,
-    hiv: data?.hiv || "",
-    height: data?.height || "",
-    Build: data?.Build || "",
-    Ethnicity: data?.Ethnicity || "",
-    HealthLooks: data?.HealthLooks || "",
-    faceColour: data?.faceColour || "",
-    eyeColour: data?.eyeColour || "",
-    haircolour: data?.haircolour || "",
-    RHantibody: data?.RHantibody || "",
-    skinTone: data?.skinTone || "",
-    complexion: data?.complexion || "",
-    referrerName: data?.referrerName || "",
-    marketingSource: data?.marketingSource || "",
+    hiv: data?.hiv || '',
+    height: data?.height || '',
+    Build: data?.Build || '',
+    Ethnicity: data?.Ethnicity || '',
+    HealthLooks: data?.HealthLooks || '',
+    faceColour: data?.faceColour || '',
+    eyeColour: data?.eyeColour || '',
+    haircolour: data?.haircolour || '',
+    RHantibody: data?.RHantibody || '',
+    skinTone: data?.skinTone || '',
+    complexion: data?.complexion || '',
+    referrerName: data?.referrerName || '',
+    marketingSource: data?.marketingSource || '',
     congenitaldeformities: !!data?.congenitaldeformities,
-    geneticAcquiredDisease: data?.geneticAcquiredDisease || "",
-    historyOfChronicIllness: data?.historyOfChronicIllness || "",
-    seriousDisease: data?.seriousDisease || "",
-    seriousDiseaserelative: data?.seriousDiseaserelative || "",
+    geneticAcquiredDisease: data?.geneticAcquiredDisease || '',
+    historyOfChronicIllness: data?.historyOfChronicIllness || '',
+    seriousDisease: data?.seriousDisease || '',
+    seriousDiseaserelative: data?.seriousDiseaserelative || '',
     isPatientInsured: data?.isPatientInsured || false,
-    remarks: data?.remarks || "",
+    remarks: data?.remarks || '',
   };
 
-  const [editDonorMutation, { isLoading: isEditing }] = useUpdateDonorMutation();
+  const [editDonorMutation, { isLoading: isEditing }] =
+    useUpdateDonorMutation();
 
   const handleSubmit = async (values: any) => {
     const promise = editDonorMutation({ id, ...values }).unwrap();
 
     showPromiseToast(promise, {
-      loading: "Editing Donor...",
-      success: (response) => response.message || "Donor Edited successfully",
-      error: (err) => `Error: ${err.response?.data?.message || "Failed to Edit donor"}`,
+      loading: 'Editing Donor...',
+      success: response => response.message || 'Donor Edited successfully',
+      error: err =>
+        `Error: ${err.response?.data?.message || 'Failed to Edit donor'}`,
     });
 
     try {
@@ -238,7 +249,7 @@ const EditDonor: React.FC<EditDonorProps> = ({ openModal, onClose, id }) => {
       formik.resetForm();
       onClose();
     } catch (error: any) {
-      console.error("Failed to add patient", error);
+      console.error('Failed to add patient', error);
     }
   };
 
@@ -249,7 +260,7 @@ const EditDonor: React.FC<EditDonorProps> = ({ openModal, onClose, id }) => {
     enableReinitialize: true,
   });
 
-  Object.keys(formik.initialValues).forEach((key) => {
+  Object.keys(formik.initialValues).forEach(key => {
     inputRefs[key] = React.createRef();
   });
 
@@ -258,7 +269,7 @@ const EditDonor: React.FC<EditDonorProps> = ({ openModal, onClose, id }) => {
     if (files && files.length > 0) {
       setSelectedImage(files[0]);
       // console.log(selectedImage);
-      formik.setFieldValue("image", files[0].name);
+      formik.setFieldValue('image', files[0].name);
     }
   };
 
@@ -267,21 +278,29 @@ const EditDonor: React.FC<EditDonorProps> = ({ openModal, onClose, id }) => {
       const firstErrorKey = Object.keys(formik.errors)[0];
       const errorRef = inputRefs[firstErrorKey];
       if (errorRef?.current) {
-        errorRef.current.scrollIntoView({ behavior: "smooth", block: "center" });
+        errorRef.current.scrollIntoView({
+          behavior: 'smooth',
+          block: 'center',
+        });
       }
     }
   }, [formik.errors, formik.isSubmitting]);
 
   return (
     <Dialog open={openModal} onClose={onClose} maxWidth="md" fullWidth>
-      <DialogTitle color={"primary"}>Edit Patient Donor</DialogTitle>
+      <DialogTitle color={'primary'}>Edit Patient Donor</DialogTitle>
       {DonorLoading ? (
         skeletonLoader()
       ) : (
         <DialogContent>
-          <Box component={"form"} onSubmit={formik.handleSubmit} p={2}>
+          <Box component={'form'} onSubmit={formik.handleSubmit} p={2}>
             <Typography variant="h6">Donor Information</Typography>
-            <Grid container rowSpacing={rowSpacing} columnSpacing={columnSpacing} mt={1}>
+            <Grid
+              container
+              rowSpacing={rowSpacing}
+              columnSpacing={columnSpacing}
+              mt={1}
+            >
               <Grid item xs={4} sm={6} md={2}>
                 <TextField
                   ref={inputRefs.title}
@@ -310,8 +329,12 @@ const EditDonor: React.FC<EditDonorProps> = ({ openModal, onClose, id }) => {
                   placeholder="First Name"
                   value={formik.values.firstName}
                   onChange={formik.handleChange}
-                  error={formik.touched.firstName && Boolean(formik.errors.firstName)}
-                  helperText={formik.touched.firstName && formik.errors.firstName}
+                  error={
+                    formik.touched.firstName && Boolean(formik.errors.firstName)
+                  }
+                  helperText={
+                    formik.touched.firstName && formik.errors.firstName
+                  }
                 />
               </Grid>
               <Grid item xs={12} sm={6} md={4}>
@@ -324,7 +347,9 @@ const EditDonor: React.FC<EditDonorProps> = ({ openModal, onClose, id }) => {
                   placeholder="Last Name"
                   value={formik.values.lastName}
                   onChange={formik.handleChange}
-                  error={formik.touched.lastName && Boolean(formik.errors.lastName)}
+                  error={
+                    formik.touched.lastName && Boolean(formik.errors.lastName)
+                  }
                   helperText={formik.touched.lastName && formik.errors.lastName}
                 />
               </Grid>
@@ -349,13 +374,13 @@ const EditDonor: React.FC<EditDonorProps> = ({ openModal, onClose, id }) => {
               <Grid item xs={12} sm={6} md={2}>
                 <DatePicker
                   ref={inputRefs.dob}
-                  sx={{ width: "100%" }}
+                  sx={{ width: '100%' }}
                   timezone="Asia/Kolkata"
                   label="Date of Birth"
                   name="dob"
                   format="dd/MM/yyyy"
                   value={formik.values.dob}
-                  onChange={(value) => formik.setFieldValue("dob", value)}
+                  onChange={value => formik.setFieldValue('dob', value)}
                   slots={TextField}
                   slotProps={{
                     textField: {
@@ -376,8 +401,12 @@ const EditDonor: React.FC<EditDonorProps> = ({ openModal, onClose, id }) => {
                   placeholder="Education"
                   value={formik.values.education}
                   onChange={formik.handleChange}
-                  error={formik.touched.education && Boolean(formik.errors.education)}
-                  helperText={formik.touched.education && formik.errors.education}
+                  error={
+                    formik.touched.education && Boolean(formik.errors.education)
+                  }
+                  helperText={
+                    formik.touched.education && formik.errors.education
+                  }
                 />
               </Grid>
               <Grid item xs={12} sm={6} md={2}>
@@ -390,8 +419,13 @@ const EditDonor: React.FC<EditDonorProps> = ({ openModal, onClose, id }) => {
                   label="Marital Status"
                   value={formik.values.maritalStatus}
                   onChange={formik.handleChange}
-                  error={formik.touched.maritalStatus && Boolean(formik.errors.maritalStatus)}
-                  helperText={formik.touched.maritalStatus && formik.errors.maritalStatus}
+                  error={
+                    formik.touched.maritalStatus &&
+                    Boolean(formik.errors.maritalStatus)
+                  }
+                  helperText={
+                    formik.touched.maritalStatus && formik.errors.maritalStatus
+                  }
                 >
                   <MenuItem value="Married">Married</MenuItem>
                   <MenuItem value="Unmarried">Unmarried</MenuItem>
@@ -407,8 +441,13 @@ const EditDonor: React.FC<EditDonorProps> = ({ openModal, onClose, id }) => {
                   label="Blood Group"
                   value={formik.values.bloodGroup}
                   onChange={formik.handleChange}
-                  error={formik.touched.bloodGroup && Boolean(formik.errors.bloodGroup)}
-                  helperText={formik.touched.bloodGroup && formik.errors.bloodGroup}
+                  error={
+                    formik.touched.bloodGroup &&
+                    Boolean(formik.errors.bloodGroup)
+                  }
+                  helperText={
+                    formik.touched.bloodGroup && formik.errors.bloodGroup
+                  }
                 >
                   <MenuItem value="A+">A+</MenuItem>
                   <MenuItem value="A-">A-</MenuItem>
@@ -430,8 +469,13 @@ const EditDonor: React.FC<EditDonorProps> = ({ openModal, onClose, id }) => {
                   placeholder="Country of Birth"
                   value={formik.values.countryBirth}
                   onChange={formik.handleChange}
-                  error={formik.touched.countryBirth && Boolean(formik.errors.countryBirth)}
-                  helperText={formik.touched.countryBirth && formik.errors.countryBirth}
+                  error={
+                    formik.touched.countryBirth &&
+                    Boolean(formik.errors.countryBirth)
+                  }
+                  helperText={
+                    formik.touched.countryBirth && formik.errors.countryBirth
+                  }
                 />
               </Grid>
               <Grid item xs={12} sm={6} md={2}>
@@ -444,8 +488,13 @@ const EditDonor: React.FC<EditDonorProps> = ({ openModal, onClose, id }) => {
                   placeholder="Nationality"
                   value={formik.values.nationality}
                   onChange={formik.handleChange}
-                  error={formik.touched.nationality && Boolean(formik.errors.nationality)}
-                  helperText={formik.touched.nationality && formik.errors.nationality}
+                  error={
+                    formik.touched.nationality &&
+                    Boolean(formik.errors.nationality)
+                  }
+                  helperText={
+                    formik.touched.nationality && formik.errors.nationality
+                  }
                 />
               </Grid>
               <Grid item xs={12} sm={6} md={2}>
@@ -458,8 +507,13 @@ const EditDonor: React.FC<EditDonorProps> = ({ openModal, onClose, id }) => {
                   placeholder="Mother Tounge"
                   value={formik.values.motherTounge}
                   onChange={formik.handleChange}
-                  error={formik.touched.motherTounge && Boolean(formik.errors.motherTounge)}
-                  helperText={formik.touched.motherTounge && formik.errors.motherTounge}
+                  error={
+                    formik.touched.motherTounge &&
+                    Boolean(formik.errors.motherTounge)
+                  }
+                  helperText={
+                    formik.touched.motherTounge && formik.errors.motherTounge
+                  }
                 />
               </Grid>
               <Grid item xs={12} sm={6} md={4}>
@@ -472,8 +526,13 @@ const EditDonor: React.FC<EditDonorProps> = ({ openModal, onClose, id }) => {
                   placeholder="Occupation"
                   value={formik.values.occupation}
                   onChange={formik.handleChange}
-                  error={formik.touched.occupation && Boolean(formik.errors.occupation)}
-                  helperText={formik.touched.occupation && formik.errors.occupation}
+                  error={
+                    formik.touched.occupation &&
+                    Boolean(formik.errors.occupation)
+                  }
+                  helperText={
+                    formik.touched.occupation && formik.errors.occupation
+                  }
                 />
               </Grid>
               <Grid item xs={12} sm={6} md={2}>
@@ -486,7 +545,9 @@ const EditDonor: React.FC<EditDonorProps> = ({ openModal, onClose, id }) => {
                   placeholder="Religion"
                   value={formik.values.religion}
                   onChange={formik.handleChange}
-                  error={formik.touched.religion && Boolean(formik.errors.religion)}
+                  error={
+                    formik.touched.religion && Boolean(formik.errors.religion)
+                  }
                   helperText={formik.touched.religion && formik.errors.religion}
                 />
               </Grid>
@@ -494,7 +555,12 @@ const EditDonor: React.FC<EditDonorProps> = ({ openModal, onClose, id }) => {
             <Divider sx={{ marginY: 6 }} />
             {/* Contact Details */}
             <Typography variant="h6">Contact Information</Typography>
-            <Grid container rowSpacing={rowSpacing} columnSpacing={columnSpacing} mt={1}>
+            <Grid
+              container
+              rowSpacing={rowSpacing}
+              columnSpacing={columnSpacing}
+              mt={1}
+            >
               <Grid item xs={12} sm={6} md={4}>
                 <TextField
                   ref={inputRefs.mobile}
@@ -505,7 +571,7 @@ const EditDonor: React.FC<EditDonorProps> = ({ openModal, onClose, id }) => {
                   placeholder="Mobile"
                   inputMode="numeric"
                   value={formik.values.mobile}
-                  onChange={(e) => {
+                  onChange={e => {
                     const { value } = e.target;
                     if (/^\d*$/.test(value)) {
                       formik.handleChange(e);
@@ -527,8 +593,14 @@ const EditDonor: React.FC<EditDonorProps> = ({ openModal, onClose, id }) => {
                   inputMode="numeric"
                   value={formik.values.alernativeMobile}
                   onChange={formik.handleChange}
-                  error={formik.touched.alernativeMobile && Boolean(formik.errors.alernativeMobile)}
-                  helperText={formik.touched.alernativeMobile && formik.errors.alernativeMobile}
+                  error={
+                    formik.touched.alernativeMobile &&
+                    Boolean(formik.errors.alernativeMobile)
+                  }
+                  helperText={
+                    formik.touched.alernativeMobile &&
+                    formik.errors.alernativeMobile
+                  }
                   inputProps={{ maxLength: 10 }}
                 />
               </Grid>
@@ -551,7 +623,12 @@ const EditDonor: React.FC<EditDonorProps> = ({ openModal, onClose, id }) => {
             <Divider sx={{ marginY: 6 }} />
             {/* Dependent Details */}
             <Typography variant="h6">Gaurdian Information</Typography>
-            <Grid container rowSpacing={rowSpacing} columnSpacing={columnSpacing} mt={1}>
+            <Grid
+              container
+              rowSpacing={rowSpacing}
+              columnSpacing={columnSpacing}
+              mt={1}
+            >
               <Grid item xs={12} sm={12} md={12}>
                 <FormControlLabel
                   label="Gaurdian"
@@ -577,8 +654,14 @@ const EditDonor: React.FC<EditDonorProps> = ({ openModal, onClose, id }) => {
                       placeholder="Dependent Name"
                       value={formik.values.dependentName}
                       onChange={formik.handleChange}
-                      error={formik.touched.dependentName && Boolean(formik.errors.dependentName)}
-                      helperText={formik.touched.dependentName && formik.errors.dependentName}
+                      error={
+                        formik.touched.dependentName &&
+                        Boolean(formik.errors.dependentName)
+                      }
+                      helperText={
+                        formik.touched.dependentName &&
+                        formik.errors.dependentName
+                      }
                     />
                   </Grid>
                   <Grid item xs={12} sm={6} md={3}>
@@ -592,10 +675,12 @@ const EditDonor: React.FC<EditDonorProps> = ({ openModal, onClose, id }) => {
                       value={formik.values.dependentRelation}
                       onChange={formik.handleChange}
                       error={
-                        formik.touched.dependentRelation && Boolean(formik.errors.dependentRelation)
+                        formik.touched.dependentRelation &&
+                        Boolean(formik.errors.dependentRelation)
                       }
                       helperText={
-                        formik.touched.dependentRelation && formik.errors.dependentRelation
+                        formik.touched.dependentRelation &&
+                        formik.errors.dependentRelation
                       }
                     />
                   </Grid>
@@ -610,9 +695,13 @@ const EditDonor: React.FC<EditDonorProps> = ({ openModal, onClose, id }) => {
                       value={formik.values.dependentMobile}
                       onChange={formik.handleChange}
                       error={
-                        formik.touched.dependentMobile && Boolean(formik.errors.dependentMobile)
+                        formik.touched.dependentMobile &&
+                        Boolean(formik.errors.dependentMobile)
                       }
-                      helperText={formik.touched.dependentMobile && formik.errors.dependentMobile}
+                      helperText={
+                        formik.touched.dependentMobile &&
+                        formik.errors.dependentMobile
+                      }
                     />
                   </Grid>
                   <Grid item xs={12} sm={6} md={3}>
@@ -625,8 +714,14 @@ const EditDonor: React.FC<EditDonorProps> = ({ openModal, onClose, id }) => {
                       placeholder="Dependent Email"
                       value={formik.values.dependentEmail}
                       onChange={formik.handleChange}
-                      error={formik.touched.dependentEmail && Boolean(formik.errors.dependentEmail)}
-                      helperText={formik.touched.dependentEmail && formik.errors.dependentEmail}
+                      error={
+                        formik.touched.dependentEmail &&
+                        Boolean(formik.errors.dependentEmail)
+                      }
+                      helperText={
+                        formik.touched.dependentEmail &&
+                        formik.errors.dependentEmail
+                      }
                     />
                   </Grid>
                 </>
@@ -635,7 +730,12 @@ const EditDonor: React.FC<EditDonorProps> = ({ openModal, onClose, id }) => {
             <Divider sx={{ marginY: 6 }} />
             {/* Address Details */}
             <Typography variant="h6">Address</Typography>
-            <Grid container rowSpacing={rowSpacing} columnSpacing={columnSpacing} mt={1}>
+            <Grid
+              container
+              rowSpacing={rowSpacing}
+              columnSpacing={columnSpacing}
+              mt={1}
+            >
               <Grid item xs={12} sm={6} md={6}>
                 <TextField
                   ref={inputRefs.addressLine1}
@@ -646,8 +746,13 @@ const EditDonor: React.FC<EditDonorProps> = ({ openModal, onClose, id }) => {
                   placeholder="Address Line 1"
                   value={formik.values.addressLine1}
                   onChange={formik.handleChange}
-                  error={formik.touched.addressLine1 && Boolean(formik.errors.addressLine1)}
-                  helperText={formik.touched.addressLine1 && formik.errors.addressLine1}
+                  error={
+                    formik.touched.addressLine1 &&
+                    Boolean(formik.errors.addressLine1)
+                  }
+                  helperText={
+                    formik.touched.addressLine1 && formik.errors.addressLine1
+                  }
                 />
               </Grid>
               <Grid item xs={12} sm={6} md={6}>
@@ -660,8 +765,13 @@ const EditDonor: React.FC<EditDonorProps> = ({ openModal, onClose, id }) => {
                   placeholder="Address Line 2"
                   value={formik.values.addressLine2}
                   onChange={formik.handleChange}
-                  error={formik.touched.addressLine2 && Boolean(formik.errors.addressLine2)}
-                  helperText={formik.touched.addressLine2 && formik.errors.addressLine2}
+                  error={
+                    formik.touched.addressLine2 &&
+                    Boolean(formik.errors.addressLine2)
+                  }
+                  helperText={
+                    formik.touched.addressLine2 && formik.errors.addressLine2
+                  }
                 />
               </Grid>
               <Grid item xs={12} sm={6} md={4}>
@@ -669,10 +779,10 @@ const EditDonor: React.FC<EditDonorProps> = ({ openModal, onClose, id }) => {
                   label="State"
                   options={indianStates}
                   isOptionEqualToValue={(option, value) => option === value}
-                  getOptionLabel={(option) => option}
+                  getOptionLabel={option => option}
                   value={formik.values.state}
-                  onChange={(value) => {
-                    formik.setFieldValue("state", value);
+                  onChange={value => {
+                    formik.setFieldValue('state', value);
                   }}
                 />
               </Grid>
@@ -701,7 +811,9 @@ const EditDonor: React.FC<EditDonorProps> = ({ openModal, onClose, id }) => {
                   type="number"
                   value={formik.values.pincode}
                   onChange={formik.handleChange}
-                  error={formik.touched.pincode && Boolean(formik.errors.pincode)}
+                  error={
+                    formik.touched.pincode && Boolean(formik.errors.pincode)
+                  }
                   helperText={formik.touched.pincode && formik.errors.pincode}
                   inputProps={{ maxLength: 6 }}
                 />
@@ -727,7 +839,12 @@ const EditDonor: React.FC<EditDonorProps> = ({ openModal, onClose, id }) => {
             <Divider sx={{ marginY: 6 }} />
             {/* ID Proof Details */}
             <Typography variant="h6">Identity Information</Typography>
-            <Grid container rowSpacing={rowSpacing} columnSpacing={columnSpacing} mt={1}>
+            <Grid
+              container
+              rowSpacing={rowSpacing}
+              columnSpacing={columnSpacing}
+              mt={1}
+            >
               <Grid item xs={12} sm={6} md={3}>
                 <TextField
                   ref={inputRefs.idProofType}
@@ -738,8 +855,13 @@ const EditDonor: React.FC<EditDonorProps> = ({ openModal, onClose, id }) => {
                   label="ID Proof"
                   value={formik.values.idProofType}
                   onChange={formik.handleChange}
-                  error={formik.touched.idProofType && Boolean(formik.errors.idProofType)}
-                  helperText={formik.touched.idProofType && formik.errors.idProofType}
+                  error={
+                    formik.touched.idProofType &&
+                    Boolean(formik.errors.idProofType)
+                  }
+                  helperText={
+                    formik.touched.idProofType && formik.errors.idProofType
+                  }
                 >
                   <MenuItem value="Aadhar Card">Aadhar Card</MenuItem>
                   <MenuItem value="Passport">Passport</MenuItem>
@@ -758,8 +880,13 @@ const EditDonor: React.FC<EditDonorProps> = ({ openModal, onClose, id }) => {
                   placeholder="ID Proof Number"
                   value={formik.values.idProofNumber}
                   onChange={formik.handleChange}
-                  error={formik.touched.idProofNumber && Boolean(formik.errors.idProofNumber)}
-                  helperText={formik.touched.idProofNumber && formik.errors.idProofNumber}
+                  error={
+                    formik.touched.idProofNumber &&
+                    Boolean(formik.errors.idProofNumber)
+                  }
+                  helperText={
+                    formik.touched.idProofNumber && formik.errors.idProofNumber
+                  }
                 />
               </Grid>
               <Grid item xs={12} sm={6} md={3}>
@@ -777,7 +904,8 @@ const EditDonor: React.FC<EditDonorProps> = ({ openModal, onClose, id }) => {
                     Boolean(formik.errors.idProofIssuedCountry)
                   }
                   helperText={
-                    formik.touched.idProofIssuedCountry && formik.errors.idProofIssuedCountry
+                    formik.touched.idProofIssuedCountry &&
+                    formik.errors.idProofIssuedCountry
                   }
                 >
                   <MenuItem value="India">India</MenuItem>
@@ -794,8 +922,13 @@ const EditDonor: React.FC<EditDonorProps> = ({ openModal, onClose, id }) => {
                   placeholder="ABHA Number"
                   value={formik.values.ABHANumber}
                   onChange={formik.handleChange}
-                  error={formik.touched.ABHANumber && Boolean(formik.errors.ABHANumber)}
-                  helperText={formik.touched.ABHANumber && formik.errors.ABHANumber}
+                  error={
+                    formik.touched.ABHANumber &&
+                    Boolean(formik.errors.ABHANumber)
+                  }
+                  helperText={
+                    formik.touched.ABHANumber && formik.errors.ABHANumber
+                  }
                 />
               </Grid>
 
@@ -816,7 +949,12 @@ const EditDonor: React.FC<EditDonorProps> = ({ openModal, onClose, id }) => {
             <Divider sx={{ marginY: 6 }} />
             {/* ID Proof Details */}
 
-            <Grid container rowSpacing={rowSpacing} columnSpacing={columnSpacing} mt={1}>
+            <Grid
+              container
+              rowSpacing={rowSpacing}
+              columnSpacing={columnSpacing}
+              mt={1}
+            >
               <Grid item xs={12} sm={6} md={3}>
                 <TextField
                   ref={inputRefs.idProofType}
@@ -826,7 +964,9 @@ const EditDonor: React.FC<EditDonorProps> = ({ openModal, onClose, id }) => {
                   label="HIV & HbAg(OutSide /Own Lab)"
                   value={formik.values.hiv}
                   onChange={formik.handleChange}
-                  error={formik.touched.idProofType && Boolean(formik.errors.hiv)}
+                  error={
+                    formik.touched.idProofType && Boolean(formik.errors.hiv)
+                  }
                   helperText={formik.touched.idProofType && formik.errors.hiv}
                 />
               </Grid>
@@ -867,15 +1007,24 @@ const EditDonor: React.FC<EditDonorProps> = ({ openModal, onClose, id }) => {
                   placeholder="Ethnicity"
                   value={formik.values.Ethnicity}
                   onChange={formik.handleChange}
-                  error={formik.touched.Ethnicity && Boolean(formik.errors.Ethnicity)}
-                  helperText={formik.touched.Ethnicity && formik.errors.Ethnicity}
+                  error={
+                    formik.touched.Ethnicity && Boolean(formik.errors.Ethnicity)
+                  }
+                  helperText={
+                    formik.touched.Ethnicity && formik.errors.Ethnicity
+                  }
                 />
               </Grid>
             </Grid>
             <Divider sx={{ marginY: 6 }} />
             {/* Additional Details */}
             <Typography variant="h6">Additional Information</Typography>
-            <Grid container rowSpacing={rowSpacing} columnSpacing={columnSpacing} mt={1}>
+            <Grid
+              container
+              rowSpacing={rowSpacing}
+              columnSpacing={columnSpacing}
+              mt={1}
+            >
               <Grid item lg={2}>
                 <TextField
                   ref={inputRefs.HeathLooks}
@@ -886,8 +1035,13 @@ const EditDonor: React.FC<EditDonorProps> = ({ openModal, onClose, id }) => {
                   label="Health Looks"
                   value={formik.values.HealthLooks}
                   onChange={formik.handleChange}
-                  error={formik.touched.HealthLooks && Boolean(formik.errors.HealthLooks)}
-                  helperText={formik.touched.HealthLooks && formik.errors.HealthLooks}
+                  error={
+                    formik.touched.HealthLooks &&
+                    Boolean(formik.errors.HealthLooks)
+                  }
+                  helperText={
+                    formik.touched.HealthLooks && formik.errors.HealthLooks
+                  }
                 >
                   <MenuItem value="">None</MenuItem>
                   <MenuItem value="Fair">Fair</MenuItem>
@@ -907,8 +1061,13 @@ const EditDonor: React.FC<EditDonorProps> = ({ openModal, onClose, id }) => {
                   label="Face Colour"
                   value={formik.values.faceColour}
                   onChange={formik.handleChange}
-                  error={formik.touched.faceColour && Boolean(formik.errors.faceColour)}
-                  helperText={formik.touched.faceColour && formik.errors.faceColour}
+                  error={
+                    formik.touched.faceColour &&
+                    Boolean(formik.errors.faceColour)
+                  }
+                  helperText={
+                    formik.touched.faceColour && formik.errors.faceColour
+                  }
                 >
                   <MenuItem value="">None</MenuItem>
                   <MenuItem value="Fair">Fair</MenuItem>
@@ -928,8 +1087,12 @@ const EditDonor: React.FC<EditDonorProps> = ({ openModal, onClose, id }) => {
                   label="Eye Colour"
                   value={formik.values.eyeColour}
                   onChange={formik.handleChange}
-                  error={formik.touched.eyeColour && Boolean(formik.errors.eyeColour)}
-                  helperText={formik.touched.eyeColour && formik.errors.eyeColour}
+                  error={
+                    formik.touched.eyeColour && Boolean(formik.errors.eyeColour)
+                  }
+                  helperText={
+                    formik.touched.eyeColour && formik.errors.eyeColour
+                  }
                 >
                   <MenuItem value="">None</MenuItem>
                   <MenuItem value="Fair">Fair</MenuItem>
@@ -949,8 +1112,13 @@ const EditDonor: React.FC<EditDonorProps> = ({ openModal, onClose, id }) => {
                   label="Hair Colour"
                   value={formik.values.haircolour}
                   onChange={formik.handleChange}
-                  error={formik.touched.haircolour && Boolean(formik.errors.haircolour)}
-                  helperText={formik.touched.haircolour && formik.errors.haircolour}
+                  error={
+                    formik.touched.haircolour &&
+                    Boolean(formik.errors.haircolour)
+                  }
+                  helperText={
+                    formik.touched.haircolour && formik.errors.haircolour
+                  }
                 >
                   <MenuItem value="">None</MenuItem>
                   <MenuItem value="Fair">Fair</MenuItem>
@@ -969,8 +1137,13 @@ const EditDonor: React.FC<EditDonorProps> = ({ openModal, onClose, id }) => {
                   placeholder="RH antibody"
                   value={formik.values.RHantibody}
                   onChange={formik.handleChange}
-                  error={formik.touched.RHantibody && Boolean(formik.errors.RHantibody)}
-                  helperText={formik.touched.RHantibody && formik.errors.RHantibody}
+                  error={
+                    formik.touched.RHantibody &&
+                    Boolean(formik.errors.RHantibody)
+                  }
+                  helperText={
+                    formik.touched.RHantibody && formik.errors.RHantibody
+                  }
                 />
               </Grid>
 
@@ -984,7 +1157,9 @@ const EditDonor: React.FC<EditDonorProps> = ({ openModal, onClose, id }) => {
                   label="Skin Tone"
                   value={formik.values.skinTone}
                   onChange={formik.handleChange}
-                  error={formik.touched.skinTone && Boolean(formik.errors.skinTone)}
+                  error={
+                    formik.touched.skinTone && Boolean(formik.errors.skinTone)
+                  }
                   helperText={formik.touched.skinTone && formik.errors.skinTone}
                 >
                   <MenuItem value="">None</MenuItem>
@@ -1005,8 +1180,13 @@ const EditDonor: React.FC<EditDonorProps> = ({ openModal, onClose, id }) => {
                   label="Complexion"
                   value={formik.values.complexion}
                   onChange={formik.handleChange}
-                  error={formik.touched.complexion && Boolean(formik.errors.complexion)}
-                  helperText={formik.touched.complexion && formik.errors.complexion}
+                  error={
+                    formik.touched.complexion &&
+                    Boolean(formik.errors.complexion)
+                  }
+                  helperText={
+                    formik.touched.complexion && formik.errors.complexion
+                  }
                 >
                   <MenuItem value="">None</MenuItem>
                   <MenuItem value="Fair">Fair</MenuItem>
@@ -1025,8 +1205,13 @@ const EditDonor: React.FC<EditDonorProps> = ({ openModal, onClose, id }) => {
                   placeholder="Referred Name"
                   value={formik.values.referrerName}
                   onChange={formik.handleChange}
-                  error={formik.touched.referrerName && Boolean(formik.errors.referrerName)}
-                  helperText={formik.touched.referrerName && formik.errors.referrerName}
+                  error={
+                    formik.touched.referrerName &&
+                    Boolean(formik.errors.referrerName)
+                  }
+                  helperText={
+                    formik.touched.referrerName && formik.errors.referrerName
+                  }
                 />
               </Grid>
               <Grid item xs={12} sm={6} md={3}>
@@ -1039,8 +1224,14 @@ const EditDonor: React.FC<EditDonorProps> = ({ openModal, onClose, id }) => {
                   placeholder="Marketing Source"
                   value={formik.values.marketingSource}
                   onChange={formik.handleChange}
-                  error={formik.touched.marketingSource && Boolean(formik.errors.marketingSource)}
-                  helperText={formik.touched.marketingSource && formik.errors.marketingSource}
+                  error={
+                    formik.touched.marketingSource &&
+                    Boolean(formik.errors.marketingSource)
+                  }
+                  helperText={
+                    formik.touched.marketingSource &&
+                    formik.errors.marketingSource
+                  }
                 />
               </Grid>
               <Grid item xs={12} sm={6} md={3}>
@@ -1087,7 +1278,8 @@ const EditDonor: React.FC<EditDonorProps> = ({ openModal, onClose, id }) => {
                     Boolean(formik.errors.geneticAcquiredDisease)
                   }
                   helperText={
-                    formik.touched.geneticAcquiredDisease && formik.errors.geneticAcquiredDisease
+                    formik.touched.geneticAcquiredDisease &&
+                    formik.errors.geneticAcquiredDisease
                   }
                 >
                   <MenuItem value="">None</MenuItem>
@@ -1120,7 +1312,8 @@ const EditDonor: React.FC<EditDonorProps> = ({ openModal, onClose, id }) => {
                     Boolean(formik.errors.historyOfChronicIllness)
                   }
                   helperText={
-                    formik.touched.historyOfChronicIllness && formik.errors.historyOfChronicIllness
+                    formik.touched.historyOfChronicIllness &&
+                    formik.errors.historyOfChronicIllness
                   }
                 >
                   <MenuItem value="">None</MenuItem>
@@ -1153,7 +1346,8 @@ const EditDonor: React.FC<EditDonorProps> = ({ openModal, onClose, id }) => {
                     Boolean(formik.errors.seriousDiseaserelative)
                   }
                   helperText={
-                    formik.touched.seriousDiseaserelative && formik.errors.seriousDiseaserelative
+                    formik.touched.seriousDiseaserelative &&
+                    formik.errors.seriousDiseaserelative
                   }
                 >
                   <MenuItem value="">None</MenuItem>
@@ -1164,7 +1358,9 @@ const EditDonor: React.FC<EditDonorProps> = ({ openModal, onClose, id }) => {
                   <MenuItem value="Kidney Disease">Kidney Disease</MenuItem>
                   <MenuItem value="Liver Disease">Liver Disease</MenuItem>
                   <MenuItem value="Lung Disease">Lung Disease</MenuItem>
-                  <MenuItem value="Alzheimer's Disease">Alzheimer's Disease</MenuItem>
+                  <MenuItem value="Alzheimer's Disease">
+                    Alzheimer's Disease
+                  </MenuItem>
                   <MenuItem value="Other">Other</MenuItem>
                 </TextField>
               </Grid>
@@ -1178,8 +1374,14 @@ const EditDonor: React.FC<EditDonorProps> = ({ openModal, onClose, id }) => {
                   label="Serious Disease in Family"
                   value={formik.values.seriousDisease}
                   onChange={formik.handleChange}
-                  error={formik.touched.seriousDisease && Boolean(formik.errors.seriousDisease)}
-                  helperText={formik.touched.seriousDisease && formik.errors.seriousDisease}
+                  error={
+                    formik.touched.seriousDisease &&
+                    Boolean(formik.errors.seriousDisease)
+                  }
+                  helperText={
+                    formik.touched.seriousDisease &&
+                    formik.errors.seriousDisease
+                  }
                 >
                   <MenuItem value="">None</MenuItem>
                   <MenuItem value="Cancer">Cancer</MenuItem>
@@ -1189,7 +1391,9 @@ const EditDonor: React.FC<EditDonorProps> = ({ openModal, onClose, id }) => {
                   <MenuItem value="Kidney Disease">Kidney Disease</MenuItem>
                   <MenuItem value="Liver Disease">Liver Disease</MenuItem>
                   <MenuItem value="Lung Disease">Lung Disease</MenuItem>
-                  <MenuItem value="Alzheimer's Disease">Alzheimer's Disease</MenuItem>
+                  <MenuItem value="Alzheimer's Disease">
+                    Alzheimer's Disease
+                  </MenuItem>
                   <MenuItem value="Other">Other</MenuItem>
                 </TextField>
               </Grid>
@@ -1197,7 +1401,12 @@ const EditDonor: React.FC<EditDonorProps> = ({ openModal, onClose, id }) => {
             <Divider sx={{ marginY: 6 }} />
             {/* Insurance Details */}
             <Typography variant="h6">Insurance Information</Typography>
-            <Grid container rowSpacing={rowSpacing} columnSpacing={columnSpacing} mt={1}>
+            <Grid
+              container
+              rowSpacing={rowSpacing}
+              columnSpacing={columnSpacing}
+              mt={1}
+            >
               <Grid item xs={12} sm={6} md={4}>
                 <FormControlLabel
                   label="Is Patient Insured"
@@ -1215,11 +1424,24 @@ const EditDonor: React.FC<EditDonorProps> = ({ openModal, onClose, id }) => {
             <Divider sx={{ marginY: 6 }} />
             {/* Image */}
             <Typography variant="h6">Image</Typography>
-            <Grid container rowSpacing={rowSpacing} columnSpacing={columnSpacing} mt={1}>
+            <Grid
+              container
+              rowSpacing={rowSpacing}
+              columnSpacing={columnSpacing}
+              mt={1}
+            >
               <Grid item xs={12} sm={6} md={2}>
-                <Button component="label" variant="outlined" startIcon={<CloudUploadIcon />}>
+                <Button
+                  component="label"
+                  variant="outlined"
+                  startIcon={<CloudUploadIcon />}
+                >
                   Upload
-                  <VisuallyHiddenInput onChange={handleImageChange} type="file" accept="image/*" />
+                  <VisuallyHiddenInput
+                    onChange={handleImageChange}
+                    type="file"
+                    accept="image/*"
+                  />
                 </Button>
               </Grid>
               <Grid item xs={12} sm={6} md={10}>
@@ -1234,15 +1456,17 @@ const EditDonor: React.FC<EditDonorProps> = ({ openModal, onClose, id }) => {
                   placeholder="Remarks"
                   value={formik.values.remarks}
                   onChange={formik.handleChange}
-                  error={formik.touched.remarks && Boolean(formik.errors.remarks)}
+                  error={
+                    formik.touched.remarks && Boolean(formik.errors.remarks)
+                  }
                   helperText={formik.touched.remarks && formik.errors.remarks}
                 />
               </Grid>
             </Grid>
             <Box
-              display={"flex"}
-              justifyContent={"flex-end"}
-              alignItems={"center"}
+              display={'flex'}
+              justifyContent={'flex-end'}
+              alignItems={'center'}
               gap={2}
               mb={2}
               pt={2}
@@ -1253,7 +1477,7 @@ const EditDonor: React.FC<EditDonorProps> = ({ openModal, onClose, id }) => {
                 type="submit"
                 disabled={isEditing || isDonorLoading}
               >
-                {isEditing ? "Saving..." : "Save"}
+                {isEditing ? 'Saving...' : 'Save'}
               </Button>
               <Button variant="contained" color="secondary" onClick={onClose}>
                 Cancel

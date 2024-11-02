@@ -1,27 +1,33 @@
-import React, { useState } from "react";
-import { Box, Button } from "@mui/material";
-import { Add, Edit } from "@mui/icons-material";
-import { GridActionsCellItem, GridColDef, GridRowParams } from "@mui/x-data-grid";
-import _ from "lodash";
+import React, { useState } from 'react';
+import { Box, Button } from '@mui/material';
+import { Add, Edit } from '@mui/icons-material';
+import {
+  GridActionsCellItem,
+  GridColDef,
+  GridRowParams,
+} from '@mui/x-data-grid';
+import _ from 'lodash';
 
-import EditMasterCycleStage from "./EditMasterCycleStage";
-import AddMasterCycleStage from "./AddMasterCycleStage";
-import ContentSection from "../../../../../components/ContentSection/ContentSection";
-import CustomDataGrid from "../../../../../components/CustomDataGrid/CustomDataGrid";
-import { useGetServiceCycleStagesQuery } from "../../../../../services/masterDashboardService/serviceData/cycles/masterCyclesStagesApi";
+import EditMasterCycleStage from './EditMasterCycleStage';
+import AddMasterCycleStage from './AddMasterCycleStage';
+import ContentSection from '../../../../../components/ContentSection/ContentSection';
+import CustomDataGrid from '../../../../../components/CustomDataGrid/CustomDataGrid';
+import { useGetServiceCycleStagesQuery } from '../../../../../services/masterDashboardService/serviceData/cycles/masterCyclesStagesApi';
 
 interface RowType {
   _id: string;
 }
 
 const MasterCycleStages: React.FC = () => {
-
   const [selectedRow, setSelectedRow] = useState<any>(null);
   const [isAddModalOpen, setIsAddModalOpen] = useState<boolean>(false);
   const [isEditModalOpen, setIsEditModalOpen] = useState<boolean>(false);
 
   const { data: stageData, isLoading: stageLoading } =
-    useGetServiceCycleStagesQuery({ paginate: false, filters: { isAdmin: true } });
+    useGetServiceCycleStagesQuery({
+      paginate: false,
+      filters: { isAdmin: true },
+    });
 
   const stages = stageData?.data || [];
 
@@ -29,18 +35,18 @@ const MasterCycleStages: React.FC = () => {
 
   const columnsConfig: GridColDef[] = [
     {
-      field: "name",
-      headerName: "Stage Name",
+      field: 'name',
+      headerName: 'Stage Name',
       flex: 1,
       // valueGetter(params) {
       //   return `${params.row?.name}`;
       // },
     },
     {
-      field: "actions",
-      headerName: "Actions",
+      field: 'actions',
+      headerName: 'Actions',
       flex: 1,
-      type: "actions",
+      type: 'actions',
       getActions: (params: GridRowParams) => {
         const row = params.row;
         return [
@@ -88,13 +94,17 @@ const MasterCycleStages: React.FC = () => {
         </Button>
       </Box>
 
-      <Box mt={2} flex={"1 1 auto"} style={{ maxWidth: "100%", overflowX: "auto" }}>
+      <Box
+        mt={2}
+        flex={'1 1 auto'}
+        style={{ maxWidth: '100%', overflowX: 'auto' }}
+      >
         <CustomDataGrid
           autoHeight={false}
           columns={columnsConfig}
           rows={stages}
           loading={stageLoading}
-          sx={{ height: "100%" }}
+          sx={{ height: '100%' }}
           getRowId={getRowId}
         />
       </Box>

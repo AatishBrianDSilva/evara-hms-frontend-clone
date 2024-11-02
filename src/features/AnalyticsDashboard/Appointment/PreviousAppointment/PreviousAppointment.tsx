@@ -10,23 +10,33 @@ const PreviousAppointments: React.FC = () => {
   const [filterClinic, setFilterClinic] = useState<string>('');
   const [filterDoctor, setFilterDoctor] = useState<string>('');
 
-  const handleSearchDateChange = (event: React.ChangeEvent<HTMLInputElement>) => {
+  const handleSearchDateChange = (
+    event: React.ChangeEvent<HTMLInputElement>,
+  ) => {
     setSearchDate(event.target.value);
   };
 
-  const handleSearchPatientIdChange = (event: React.ChangeEvent<HTMLInputElement>) => {
+  const handleSearchPatientIdChange = (
+    event: React.ChangeEvent<HTMLInputElement>,
+  ) => {
     setSearchPatientId(event.target.value);
   };
 
-  const handleFilterCityChange = (event: React.ChangeEvent<{ value: unknown }>) => {
+  const handleFilterCityChange = (
+    event: React.ChangeEvent<{ value: unknown }>,
+  ) => {
     setFilterCity(event.target.value as string);
   };
 
-  const handleFilterClinicChange = (event: React.ChangeEvent<{ value: unknown }>) => {
+  const handleFilterClinicChange = (
+    event: React.ChangeEvent<{ value: unknown }>,
+  ) => {
     setFilterClinic(event.target.value as string);
   };
 
-  const handleFilterDoctorChange = (event: React.ChangeEvent<{ value: unknown }>) => {
+  const handleFilterDoctorChange = (
+    event: React.ChangeEvent<{ value: unknown }>,
+  ) => {
     setFilterDoctor(event.target.value as string);
   };
 

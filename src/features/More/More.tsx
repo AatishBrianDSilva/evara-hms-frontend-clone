@@ -1,13 +1,13 @@
-import React from 'react'
-import { navList, patientNavList } from '../../utils/constants'
-import clinicLogo from '../../assets/clinic-logo.png'
-import SideBarNavTab from '../../components/SideBarNavTab/SideBarNavTab'
-import { useNavigate } from 'react-router-dom'
+import React from 'react';
+import { navList, patientNavList } from '../../utils/constants';
+import clinicLogo from '../../assets/clinic-logo.png';
+import SideBarNavTab from '../../components/SideBarNavTab/SideBarNavTab';
+import { useNavigate } from 'react-router-dom';
 import Box from '@mui/material/Box';
 import Modal from '@mui/material/Modal';
-import { useDispatch, useSelector } from 'react-redux'
-import { closeMoreModal } from './moreSlice'
-import { RootState } from '../../app/store'
+import { useDispatch, useSelector } from 'react-redux';
+import { closeMoreModal } from './moreSlice';
+import { RootState } from '../../app/store';
 
 const More: React.FC = () => {
   const navigate = useNavigate();
@@ -16,10 +16,13 @@ const More: React.FC = () => {
   const modalType = 'patient';
 
   const patientId = useSelector((state: RootState) => state.patients.patientId);
-  const currentNavList = modalType === "patient" ? patientNavList : navList;
+  const currentNavList = modalType === 'patient' ? patientNavList : navList;
 
-  const updatedNavList = currentNavList.map((navItem) => {
-    const updatedPath = modalType === "patient" ? `/patients/dashboard/${patientId}${navItem.path}` : navItem.path;
+  const updatedNavList = currentNavList.map(navItem => {
+    const updatedPath =
+      modalType === 'patient'
+        ? `/patients/dashboard/${patientId}${navItem.path}`
+        : navItem.path;
     return {
       ...navItem,
       path: updatedPath,
@@ -35,8 +38,8 @@ const More: React.FC = () => {
         onSelect: () => {
           navigate(`/patients/dashboard/${patientId}${accItem.path}`);
           dispatch(closeMoreModal());
-        }
-      }))
+        },
+      })),
     };
   });
 
@@ -49,7 +52,7 @@ const More: React.FC = () => {
       sx={{
         display: 'flex',
         justifyContent: 'center',
-        alignItems: 'center'
+        alignItems: 'center',
       }}
     >
       <Box
@@ -63,13 +66,13 @@ const More: React.FC = () => {
           boxShadow: 24, // Shadow depth
           p: 3, // Padding around the content
           marginLeft: 3,
-          marginRight: 3
+          marginRight: 3,
         }}
       >
-        <Box className='clinic-logo'>
+        <Box className="clinic-logo">
           <img src={clinicLogo} alt="logo" />
         </Box>
-        <Box className='sidebar-nav-list'>
+        <Box className="sidebar-nav-list">
           {updatedNavList.map((navItem, index) => (
             <SideBarNavTab key={index} {...navItem} />
           ))}
@@ -77,6 +80,6 @@ const More: React.FC = () => {
       </Box>
     </Modal>
   );
-}
+};
 
 export default More;

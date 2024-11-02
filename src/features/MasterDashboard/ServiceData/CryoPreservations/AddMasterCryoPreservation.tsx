@@ -1,4 +1,4 @@
-import React from "react";
+import React from 'react';
 import {
   Box,
   Button,
@@ -9,17 +9,17 @@ import {
   FormControlLabel,
   Grid,
   TextField,
-} from "@mui/material";
-import { useFormik } from "formik";
-import _ from "lodash";
+} from '@mui/material';
+import { useFormik } from 'formik';
+import _ from 'lodash';
 
-import { useToast } from "../../../../context/ToastContext";
-import CustomDatePicker from "../../../../components/CustomDatePicker/CustomDatePicker";
-import FieldAutocomplete from "../../../../components/FieldAutoComplete/FieldAutoComplete";
+import { useToast } from '../../../../context/ToastContext';
+import CustomDatePicker from '../../../../components/CustomDatePicker/CustomDatePicker';
+import FieldAutocomplete from '../../../../components/FieldAutoComplete/FieldAutoComplete';
 import {
   useAddMasterCryoPreservationMutation,
   useGetMasterDefaultCryoPreservationQuery,
-} from "../../../../services/masterDashboardService/serviceData/masterCryoPreservationApi";
+} from '../../../../services/masterDashboardService/serviceData/masterCryoPreservationApi';
 
 interface AddMasterCryoPreservationProps {
   openModal: boolean;
@@ -73,16 +73,16 @@ const AddMasterCryoPreservation: React.FC<AddMasterCryoPreservationProps> = ({
       validTill: values.validTill,
     };
 
-    console.log("Payload to be submitted:", payload); // Log the payload
+    console.log('Payload to be submitted:', payload); // Log the payload
 
     // Add your submission logic here, including tax
     // Extract tax from values
     const promise = addCryoPreservation(payload).unwrap();
 
     showPromiseToast(promise, {
-      loading: "Adding...",
-      success: (data) => data || "Added Successfully",
-      error: (data) => data || "Adding Failed",
+      loading: 'Adding...',
+      success: data => data || 'Added Successfully',
+      error: data => data || 'Adding Failed',
     });
 
     try {
@@ -96,8 +96,8 @@ const AddMasterCryoPreservation: React.FC<AddMasterCryoPreservationProps> = ({
 
   const initialValues: IFormValues = {
     default: null,
-    cryoPreservationName: "",
-    cryoPreservationId: "",
+    cryoPreservationName: '',
+    cryoPreservationId: '',
     price: 0,
     isActive: true,
     validTill: null,
@@ -111,9 +111,9 @@ const AddMasterCryoPreservation: React.FC<AddMasterCryoPreservationProps> = ({
 
   return (
     <Dialog open={openModal} onClose={onClose} maxWidth="md" fullWidth>
-      <DialogTitle color={"primary"}>Add Master Cryo-Preservation</DialogTitle>
+      <DialogTitle color={'primary'}>Add Master Cryo-Preservation</DialogTitle>
       <DialogContent>
-        <Box component={"form"} onSubmit={formik.handleSubmit} p={2}>
+        <Box component={'form'} onSubmit={formik.handleSubmit} p={2}>
           <Grid container spacing={2} mb={2} mt={2} alignItems="center">
             <Grid item xs={12} sm={6} lg={4}>
               <FieldAutocomplete
@@ -122,18 +122,18 @@ const AddMasterCryoPreservation: React.FC<AddMasterCryoPreservationProps> = ({
                 isOptionEqualToValue={(option, value) =>
                   option._id === value._id
                 }
-                getOptionLabel={(option) => option.cryoPreservationName}
+                getOptionLabel={option => option.cryoPreservationName}
                 loading={defaultCryoPreservationsLoading}
                 value={formik.values.default}
-                onChange={(value) => {
-                  formik.setFieldValue("default", value);
+                onChange={value => {
+                  formik.setFieldValue('default', value);
                   formik.setFieldValue(
-                    "cryoPreservationName",
-                    value?.cryoPreservationName || ""
+                    'cryoPreservationName',
+                    value?.cryoPreservationName || '',
                   );
                   formik.setFieldValue(
-                    "cryoPreservationId",
-                    value?.cryoPreservationId || ""
+                    'cryoPreservationId',
+                    value?.cryoPreservationId || '',
                   );
                 }}
               />
@@ -146,7 +146,7 @@ const AddMasterCryoPreservation: React.FC<AddMasterCryoPreservationProps> = ({
                 id="cryoPreservationName"
                 name="cryoPreservationName"
                 label="Cryo-Preservation Name"
-                helperText={"Cryo-Preservation name must be unique"}
+                helperText={'Cryo-Preservation name must be unique'}
                 value={formik.values.cryoPreservationName}
                 onChange={formik.handleChange}
               />
@@ -177,7 +177,7 @@ const AddMasterCryoPreservation: React.FC<AddMasterCryoPreservationProps> = ({
                 name="validTill"
                 label="Valid Till"
                 value={formik.values.validTill}
-                onChange={(value) => formik.setFieldValue("validTill", value)}
+                onChange={value => formik.setFieldValue('validTill', value)}
               />
             </Grid>
             {/* <Grid item xs={6} sm={3} lg={2}>
@@ -204,9 +204,9 @@ const AddMasterCryoPreservation: React.FC<AddMasterCryoPreservationProps> = ({
             </Grid>
           </Grid>
           <Box
-            display={"flex"}
-            justifyContent={"flex-end"}
-            alignItems={"center"}
+            display={'flex'}
+            justifyContent={'flex-end'}
+            alignItems={'center'}
             gap={2}
             mb={2}
           >
@@ -215,14 +215,14 @@ const AddMasterCryoPreservation: React.FC<AddMasterCryoPreservationProps> = ({
               color="primary"
               type="submit"
               disabled={_.isEqual(initialValues, formik.values) || isLoading}
-              sx={{ width: "fit-content" }}
+              sx={{ width: 'fit-content' }}
             >
               Save
             </Button>
             <Button
               variant="contained"
               color="secondary"
-              sx={{ width: "fit-content" }}
+              sx={{ width: 'fit-content' }}
               onClick={onClose}
             >
               Cancel

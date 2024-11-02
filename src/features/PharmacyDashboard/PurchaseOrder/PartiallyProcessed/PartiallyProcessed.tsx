@@ -1,15 +1,19 @@
-import { Visibility, Edit, Print } from "@mui/icons-material";
-import { Box, Tooltip } from "@mui/material";
-import React, { useState } from "react";
-import CustomDataGrid from "../../../../components/CustomDataGrid/CustomDataGrid";
-import { GridActionsCellItem, GridColDef, GridRowParams } from "@mui/x-data-grid";
-import { useGetPurchaseOrdersQuery } from "../../../../services/pharmacyDashboardService/purchaseOrderApi";
-import { EPurchaseOrderStatus } from "../../../../types/pharmacyDashboard/purchaseOrder";
-import ViewPartiallyProcessedPurchaseOrder from "./ViewPartiallyProcessedPurchaseOrder";
-import EditPartiallyProcessed from "./EditPartiallyProcessed";
-import { useGetDrugVendorsQuery } from "../../../../services/pharmacyDashboardService/master/drugVendorApi";
-import { useGetDrugItemsQuery } from "../../../../services/pharmacyDashboardService/master/drugItemApi";
-import { usePrint } from "../../../../context/PrintPDFContext";
+import { Visibility, Edit, Print } from '@mui/icons-material';
+import { Box, Tooltip } from '@mui/material';
+import React, { useState } from 'react';
+import CustomDataGrid from '../../../../components/CustomDataGrid/CustomDataGrid';
+import {
+  GridActionsCellItem,
+  GridColDef,
+  GridRowParams,
+} from '@mui/x-data-grid';
+import { useGetPurchaseOrdersQuery } from '../../../../services/pharmacyDashboardService/purchaseOrderApi';
+import { EPurchaseOrderStatus } from '../../../../types/pharmacyDashboard/purchaseOrder';
+import ViewPartiallyProcessedPurchaseOrder from './ViewPartiallyProcessedPurchaseOrder';
+import EditPartiallyProcessed from './EditPartiallyProcessed';
+import { useGetDrugVendorsQuery } from '../../../../services/pharmacyDashboardService/master/drugVendorApi';
+import { useGetDrugItemsQuery } from '../../../../services/pharmacyDashboardService/master/drugItemApi';
+import { usePrint } from '../../../../context/PrintPDFContext';
 
 const PartiallyProcessed: React.FC = () => {
   const [page, setPage] = useState<number>(1);
@@ -17,7 +21,8 @@ const PartiallyProcessed: React.FC = () => {
 
   const [pageSize, setPageSize] = useState<number>(25);
   const handlePageChange = (newPage: number) => setPage(newPage);
-  const handlePageSizeChange = (newPageSize: number) => setPageSize(newPageSize);
+  const handlePageSizeChange = (newPageSize: number) =>
+    setPageSize(newPageSize);
 
   const {
     data: purchaseOrdersData,
@@ -28,15 +33,19 @@ const PartiallyProcessed: React.FC = () => {
     page,
     limit: pageSize,
     sort: { createdAt: -1 },
-    filters: { status: EPurchaseOrderStatus.Processed, itemStatus: "Pending" }, // Use the itemStatus filter
+    filters: { status: EPurchaseOrderStatus.Processed, itemStatus: 'Pending' }, // Use the itemStatus filter
   });
 
   const purchaseOrders = purchaseOrdersData?.data?.records || [];
   const purchaseOrdersPagination = purchaseOrdersData?.data?.pagination;
   const purchaseOrderLoading = purchaseOrdersLoading || purchaseOrdersFetching;
 
-  const partiallyProcessedItems = purchaseOrders.flatMap((order) =>
-    order.request.items.map((item) => ({ ...item, poNumber: order.poNumber, poId: order._id }))
+  const partiallyProcessedItems = purchaseOrders.flatMap(order =>
+    order.request.items.map(item => ({
+      ...item,
+      poNumber: order.poNumber,
+      poId: order._id,
+    })),
   );
 
   // Drug Items
@@ -77,28 +86,28 @@ const PartiallyProcessed: React.FC = () => {
   };
 
   const columnsConfig: GridColDef[] = [
-    { field: "poNumber", headerName: "PO Number", flex: 1 },
+    { field: 'poNumber', headerName: 'PO Number', flex: 1 },
     {
-      field: "itemName",
-      headerName: "Item",
+      field: 'itemName',
+      headerName: 'Item',
       flex: 1,
-      valueGetter: (params) => params.row.item.name,
+      valueGetter: params => params.row.item.name,
     },
     {
-      field: "noOfPacks",
-      headerName: "No of Packs",
-      flex: 1,
-    },
-    {
-      field: "status",
-      headerName: "Status",
+      field: 'noOfPacks',
+      headerName: 'No of Packs',
       flex: 1,
     },
     {
-      field: "actions",
-      headerName: "Actions",
+      field: 'status',
+      headerName: 'Status',
       flex: 1,
-      type: "actions",
+    },
+    {
+      field: 'actions',
+      headerName: 'Actions',
+      flex: 1,
+      type: 'actions',
       getActions: (params: GridRowParams) => {
         const actions = [
           <Tooltip title="View" key="view">
@@ -124,9 +133,11 @@ const PartiallyProcessed: React.FC = () => {
               <GridActionsCellItem
                 icon={<Print />}
                 label="Print"
-                onClick={() => fetchAndPrintPdf(params.row._id, "POInvoice", "pharmacy")}
+                onClick={() =>
+                  fetchAndPrintPdf(params.row._id, 'POInvoice', 'pharmacy')
+                }
               />
-            </Tooltip>
+            </Tooltip>,
           );
         }
 
@@ -136,18 +147,18 @@ const PartiallyProcessed: React.FC = () => {
   ];
 
   return (
-    <Box height={"100%"} display={"flex"} flexDirection={"column"}>
-      <Box mt={2} flex={"1 1 auto"}>
+    <Box height={'100%'} display={'flex'} flexDirection={'column'}>
+      <Box mt={2} flex={'1 1 auto'}>
         <CustomDataGrid
           autoHeight={false}
           columns={columnsConfig}
           rows={partiallyProcessedItems}
-          getRowId={(row) => `${row.poNumber}-${row.item._id}`}
+          getRowId={row => `${row.poNumber}-${row.item._id}`}
           page={page}
           pageSize={pageSize}
           totalRows={purchaseOrdersPagination?.totalDocs || 0}
           loading={purchaseOrderLoading}
-          sx={{ height: "100%" }}
+          sx={{ height: '100%' }}
           enablePagination={true}
           onPageChange={handlePageChange}
           onPageSizeChange={handlePageSizeChange}

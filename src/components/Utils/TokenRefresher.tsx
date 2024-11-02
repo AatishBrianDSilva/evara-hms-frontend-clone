@@ -10,7 +10,8 @@ const TokenRefresher: React.FC = () => {
   useEffect(() => {
     const checkTokenExpiry = () => {
       const now = Date.now();
-      if (tokens && tokens.expiresAt - now < 5 * 60 * 1000) { // Check if the token expires in less than 5 minutes
+      if (tokens && tokens.expiresAt - now < 5 * 60 * 1000) {
+        // Check if the token expires in less than 5 minutes
         refreshToken({ refreshToken: tokens.refreshToken });
       }
     };

@@ -1,4 +1,4 @@
-import React from "react";
+import React from 'react';
 import {
   Button,
   Dialog,
@@ -8,17 +8,17 @@ import {
   Skeleton,
   TextField,
   MenuItem,
-} from "@mui/material";
+} from '@mui/material';
 import {
   useEditBillingMutation,
   useGetBillingByIdQuery,
-} from "../../../../services/patientDashboardService/billings/billingApi";
-import { useFormik } from "formik";
-import { useToast } from "../../../../context/ToastContext";
-import FileUploadButton from "../../../../components/FileUploadAndPreview/FileUploadButton";
-import { EBuckets, EDocumentTypes } from "../../../../types/global";
-import { useSelector } from "react-redux";
-import { RootState } from "../../../../app/store";
+} from '../../../../services/patientDashboardService/billings/billingApi';
+import { useFormik } from 'formik';
+import { useToast } from '../../../../context/ToastContext';
+import FileUploadButton from '../../../../components/FileUploadAndPreview/FileUploadButton';
+import { EBuckets, EDocumentTypes } from '../../../../types/global';
+import { useSelector } from 'react-redux';
+import { RootState } from '../../../../app/store';
 
 interface EditPendingProps {
   openModal: boolean;
@@ -26,11 +26,15 @@ interface EditPendingProps {
   id: string;
 }
 
-const EditPending: React.FC<EditPendingProps> = ({ openModal, onClose, id }) => {
+const EditPending: React.FC<EditPendingProps> = ({
+  openModal,
+  onClose,
+  id,
+}) => {
   const { showPromiseToast } = useToast();
 
   const patient = useSelector((state: RootState) => state.patients.patient);
-  const [fileUploadedUrl, setFileUploadedUrl] = React.useState<string[]>([""]);
+  const [fileUploadedUrl, setFileUploadedUrl] = React.useState<string[]>(['']);
 
   const { data, isLoading } = useGetBillingByIdQuery(id);
 
@@ -39,10 +43,10 @@ const EditPending: React.FC<EditPendingProps> = ({ openModal, onClose, id }) => 
   const [updateBilling, { isLoading: isEditing }] = useEditBillingMutation();
 
   const handleUpdate = async (values: any) => {
-    console.log("Values", values);
+    console.log('Values', values);
 
     const payload = {
-      _id: billing?._id || "",
+      _id: billing?._id || '',
       updates: {
         discount: values.discount,
         discountType: values.discountType,
@@ -54,20 +58,20 @@ const EditPending: React.FC<EditPendingProps> = ({ openModal, onClose, id }) => 
     const promise = updateBilling(payload).unwrap();
 
     showPromiseToast(promise, {
-      loading: "Adding Discount",
+      loading: 'Adding Discount',
       success(response) {
-        return response || "Discount Added Successfully";
+        return response || 'Discount Added Successfully';
       },
       error(error) {
-        console.log("Error");
-        return error || "Error adding discount";
+        console.log('Error');
+        return error || 'Error adding discount';
       },
     });
 
     try {
       await promise;
     } catch (error) {
-      console.log("Error", error);
+      console.log('Error', error);
     }
 
     onClose();
@@ -76,8 +80,8 @@ const EditPending: React.FC<EditPendingProps> = ({ openModal, onClose, id }) => 
   const formik = useFormik({
     initialValues: {
       discount: billing?.discount || 0,
-      discountReason: billing?.discountReason || "",
-      discountType: "amount",
+      discountReason: billing?.discountReason || '',
+      discountType: 'amount',
     },
     onSubmit: handleUpdate,
     enableReinitialize: true,
@@ -111,10 +115,10 @@ const EditPending: React.FC<EditPendingProps> = ({ openModal, onClose, id }) => 
                   fullWidth
                   name="discountType"
                   value={formik.values.discountType}
-                  onChange={(e) => {
+                  onChange={e => {
                     formik.handleChange(e);
-                    formik.setFieldValue("discountType", e.target.value);
-                    formik.setFieldValue("discount", 0);
+                    formik.setFieldValue('discountType', e.target.value);
+                    formik.setFieldValue('discount', 0);
                   }}
                   select
                 >
@@ -122,7 +126,7 @@ const EditPending: React.FC<EditPendingProps> = ({ openModal, onClose, id }) => 
                   <MenuItem value="amount">Amount</MenuItem>
                 </TextField>
               </Grid>
-              {formik.values.discountType === "percentage" ? (
+              {formik.values.discountType === 'percentage' ? (
                 <>
                   <Grid item xs={4}>
                     <TextField
@@ -134,7 +138,7 @@ const EditPending: React.FC<EditPendingProps> = ({ openModal, onClose, id }) => 
                         inputProps: {
                           min: 0, // Minimum value is 0
                           max: 100, // Maximum value is 100
-                          step: "any", // Allow any decimal places
+                          step: 'any', // Allow any decimal places
                         },
                       }}
                       value={formik.values.discount}
@@ -160,7 +164,7 @@ const EditPending: React.FC<EditPendingProps> = ({ openModal, onClose, id }) => 
                     InputProps={{
                       inputProps: {
                         min: 0,
-                        step: "any", // Allow any decimal places
+                        step: 'any', // Allow any decimal places
                       },
                     }}
                     value={formik.values.discount}
@@ -187,19 +191,28 @@ const EditPending: React.FC<EditPendingProps> = ({ openModal, onClose, id }) => 
                   maxFileSizeinMB={5}
                   onUploadFiles={setFileUploadedUrl}
                   bucket={EBuckets.UserReports}
-                  user={patient?._id || ""}
-                  reportId={billing?._id || ""}
+                  user={patient?._id || ''}
+                  reportId={billing?._id || ''}
                 />
               </Grid>
-              <Grid item xs={12} style={{ display: "flex", justifyContent: "flex-end" }}>
-                <Button type="submit" variant="contained" color="primary" disabled={isEditing}>
+              <Grid
+                item
+                xs={12}
+                style={{ display: 'flex', justifyContent: 'flex-end' }}
+              >
+                <Button
+                  type="submit"
+                  variant="contained"
+                  color="primary"
+                  disabled={isEditing}
+                >
                   Save
                 </Button>
                 <Button
                   onClick={onClose}
                   variant="contained"
                   color="secondary"
-                  style={{ marginLeft: "8px" }}
+                  style={{ marginLeft: '8px' }}
                 >
                   Cancel
                 </Button>

@@ -1,4 +1,4 @@
-import React from "react";
+import React from 'react';
 import {
   Box,
   Button,
@@ -7,20 +7,20 @@ import {
   DialogTitle,
   Grid,
   TextField,
-} from "@mui/material";
-import Autocomplete from "@mui/material/Autocomplete";
-import { useFormik } from "formik";
-import { useSelector } from "react-redux";
-import { RootState } from "../../../app/store";
-import { useToast } from "../../../context/ToastContext";
-import { useEditNotesMutation } from "../../../services/patientDashboardService/notesApi";
+} from '@mui/material';
+import Autocomplete from '@mui/material/Autocomplete';
+import { useFormik } from 'formik';
+import { useSelector } from 'react-redux';
+import { RootState } from '../../../app/store';
+import { useToast } from '../../../context/ToastContext';
+import { useEditNotesMutation } from '../../../services/patientDashboardService/notesApi';
 import {
   INotesObservation,
   INotesTreatmentAdvice,
-} from "../../../types/masterDashboard/local";
-import { IMasterInvestigation, IMasterProcedures } from "../../../types/master";
-import { IPharmacyStock } from "../../../types/pharmacyDashboard/stocks";
-import { INote } from "./Notes";
+} from '../../../types/masterDashboard/local';
+import { IMasterInvestigation, IMasterProcedures } from '../../../types/master';
+import { IPharmacyStock } from '../../../types/pharmacyDashboard/stocks';
+import { INote } from './Notes';
 
 interface IFormValues {
   doctor: {
@@ -61,30 +61,30 @@ const EditNotes: React.FC<{
   if (!notesData) return null;
 
   const observationOptions = observations
-    .map((observations) => observations?.name) // Map to get the names
-    .filter((name) => name !== undefined); // Filter out the undefined values
+    .map(observations => observations?.name) // Map to get the names
+    .filter(name => name !== undefined); // Filter out the undefined values
 
   const adviceOptions = treatmentAdvices
-    .map((treatmentAdvices) => treatmentAdvices?.name) // Map to get the names
-    .filter((name) => name !== undefined); // Filter out the undefined values
+    .map(treatmentAdvices => treatmentAdvices?.name) // Map to get the names
+    .filter(name => name !== undefined); // Filter out the undefined values
 
   const investigationNames = investigations
-    .map((investigations) => investigations?.test?.testName) // Map to get the names
-    .filter((name) => name !== undefined); // Filter out the undefined values
+    .map(investigations => investigations?.test?.testName) // Map to get the names
+    .filter(name => name !== undefined); // Filter out the undefined values
 
   const scanNames = scans
-    .map((scans) => scans?.procedure?.procedureName) // Map to get the names
-    .filter((name) => name !== undefined); // Filter out the undefined values
+    .map(scans => scans?.procedure?.procedureName) // Map to get the names
+    .filter(name => name !== undefined); // Filter out the undefined values
 
   const medicationNames = medications
-    .map((medication) => medication?.item?.name) // Map to get the names
-    .filter((name) => name !== undefined); // Filter out the undefined values
+    .map(medication => medication?.item?.name) // Map to get the names
+    .filter(name => name !== undefined); // Filter out the undefined values
 
   const { showPromiseToast } = useToast();
 
   const { patient } = useSelector((state: RootState) => state.patients);
 
-  console.log("Notes Data at Edit:", notesData);
+  console.log('Notes Data at Edit:', notesData);
 
   //Adding notes
 
@@ -108,14 +108,14 @@ const EditNotes: React.FC<{
       notes: values.notes,
     };
 
-    console.log("Payload to be submitted:", payload);
+    console.log('Payload to be submitted:', payload);
 
     const promise = editNotes(payload).unwrap();
 
     showPromiseToast(promise, {
-      loading: "Editing...",
-      success: (data) => data || "Edited Successfully",
-      error: (data) => data || "Edit Failed",
+      loading: 'Editing...',
+      success: data => data || 'Edited Successfully',
+      error: data => data || 'Edit Failed',
     });
 
     try {
@@ -131,16 +131,16 @@ const EditNotes: React.FC<{
     initialValues: {
       doctor: null,
       observations: notesData?.observations || [],
-      observationNotes: notesData?.observationNotes || "",
+      observationNotes: notesData?.observationNotes || '',
       treatmentAdvices: notesData?.treatmentAdvices || [],
-      treatmentAdvicesNotes: notesData?.treatmentAdvicesNotes || "",
+      treatmentAdvicesNotes: notesData?.treatmentAdvicesNotes || '',
       investigations: notesData?.investigations || [],
-      investigationsNotes: notesData?.investigationsNotes || "",
+      investigationsNotes: notesData?.investigationsNotes || '',
       scans: notesData?.scans || [],
-      scansNotes: notesData?.scansNotes || "",
+      scansNotes: notesData?.scansNotes || '',
       medications: notesData?.medications || [],
-      medicationsNotes: notesData?.medicationsNotes || "",
-      notes: notesData?.notes || "",
+      medicationsNotes: notesData?.medicationsNotes || '',
+      notes: notesData?.notes || '',
     },
     onSubmit: handleFormSubmit,
     enableReinitialize: true,
@@ -148,30 +148,30 @@ const EditNotes: React.FC<{
 
   return (
     <Dialog open={addModal} onClose={closeModal} fullWidth maxWidth={false}>
-      <DialogTitle sx={{ textAlign: "center" }}>
+      <DialogTitle sx={{ textAlign: 'center' }}>
         Edit Consultation Note
       </DialogTitle>
       <DialogContent
         sx={{
-          backgroundColor: "white",
+          backgroundColor: 'white',
           p: 2,
           borderRadius: 2,
           maxHeight: 600,
-          overflowY: "auto",
+          overflowY: 'auto',
         }}
-        style={{ paddingTop: "1rem" }}
+        style={{ paddingTop: '1rem' }}
       >
         <Box
-          component={"form"}
+          component={'form'}
           onSubmit={formik.handleSubmit}
           sx={{
-            display: "flex",
-            flexDirection: "column",
-            justifyContent: "center",
-            alignItems: "center",
+            display: 'flex',
+            flexDirection: 'column',
+            justifyContent: 'center',
+            alignItems: 'center',
             gap: 2,
-            color: "black",
-            width: "100%",
+            color: 'black',
+            width: '100%',
           }}
         >
           <Grid container spacing={2} mt={2} justifyContent="center">
@@ -184,16 +184,16 @@ const EditNotes: React.FC<{
               />
             </Grid>
           </Grid>
-          <Box sx={{ display: "flex", gap: 2, pb: 2, width: "100%" }}>
+          <Box sx={{ display: 'flex', gap: 2, pb: 2, width: '100%' }}>
             <Box width="calc(20% - 8px)" px={1}>
               <Grid item xs={6} sm={3} lg={3}>
                 <Autocomplete
                   options={observationOptions}
                   value={formik.values.observations}
                   onChange={(_, newValue) => {
-                    formik.setFieldValue("observations", newValue);
+                    formik.setFieldValue('observations', newValue);
                   }}
-                  renderInput={(params) => (
+                  renderInput={params => (
                     <TextField {...params} label="Observations" />
                   )}
                   multiple
@@ -206,9 +206,9 @@ const EditNotes: React.FC<{
                   options={adviceOptions}
                   value={formik.values.treatmentAdvices}
                   onChange={(_, newValue) => {
-                    formik.setFieldValue("treatmentAdvices", newValue);
+                    formik.setFieldValue('treatmentAdvices', newValue);
                   }}
-                  renderInput={(params) => (
+                  renderInput={params => (
                     <TextField {...params} label="Advices" />
                   )}
                   multiple
@@ -221,9 +221,9 @@ const EditNotes: React.FC<{
                   options={investigationNames}
                   value={formik.values.investigations}
                   onChange={(_, newValue) => {
-                    formik.setFieldValue("investigations", newValue);
+                    formik.setFieldValue('investigations', newValue);
                   }}
-                  renderInput={(params) => (
+                  renderInput={params => (
                     <TextField {...params} label="Investigations" />
                   )}
                   multiple
@@ -236,9 +236,9 @@ const EditNotes: React.FC<{
                   options={scanNames}
                   value={formik.values.scans}
                   onChange={(_, newValue) => {
-                    formik.setFieldValue("scans", newValue);
+                    formik.setFieldValue('scans', newValue);
                   }}
-                  renderInput={(params) => (
+                  renderInput={params => (
                     <TextField {...params} label="Scans" />
                   )}
                   multiple
@@ -252,9 +252,9 @@ const EditNotes: React.FC<{
                   options={medicationNames}
                   value={formik.values.medications}
                   onChange={(_, newValue) => {
-                    formik.setFieldValue("medications", newValue);
+                    formik.setFieldValue('medications', newValue);
                   }}
-                  renderInput={(params) => (
+                  renderInput={params => (
                     <TextField {...params} label="Medications" />
                   )}
                   multiple
@@ -262,18 +262,18 @@ const EditNotes: React.FC<{
               </Grid>
             </Box>
           </Box>
-          <Box sx={{ display: "flex", gap: 2, pb: 2, width: "100%" }}>
+          <Box sx={{ display: 'flex', gap: 2, pb: 2, width: '100%' }}>
             <Box width="calc(20% - 8px)" px={1}>
               <TextField
                 multiline
                 rows={4}
                 variant="outlined"
                 fullWidth
-                sx={{ width: "100%" }}
+                sx={{ width: '100%' }}
                 label="Observation Notes"
                 value={formik.values.observationNotes}
-                onChange={(event) =>
-                  formik.setFieldValue("observationNotes", event.target.value)
+                onChange={event =>
+                  formik.setFieldValue('observationNotes', event.target.value)
                 }
               />
             </Box>
@@ -283,13 +283,13 @@ const EditNotes: React.FC<{
                 rows={4}
                 variant="outlined"
                 fullWidth
-                sx={{ width: "100%" }}
+                sx={{ width: '100%' }}
                 label="Advice Notes"
                 value={formik.values.treatmentAdvicesNotes}
-                onChange={(event) =>
+                onChange={event =>
                   formik.setFieldValue(
-                    "treatmentAdvicesNotes",
-                    event.target.value
+                    'treatmentAdvicesNotes',
+                    event.target.value,
                   )
                 }
               />
@@ -300,13 +300,13 @@ const EditNotes: React.FC<{
                 rows={4}
                 variant="outlined"
                 fullWidth
-                sx={{ width: "100%" }}
+                sx={{ width: '100%' }}
                 label="Investigation Notes"
                 value={formik.values.investigationsNotes}
-                onChange={(event) =>
+                onChange={event =>
                   formik.setFieldValue(
-                    "investigationsNotes",
-                    event.target.value
+                    'investigationsNotes',
+                    event.target.value,
                   )
                 }
               />
@@ -317,11 +317,11 @@ const EditNotes: React.FC<{
                 rows={4}
                 variant="outlined"
                 fullWidth
-                sx={{ width: "100%" }}
+                sx={{ width: '100%' }}
                 label="Scans Notes"
                 value={formik.values.scansNotes}
-                onChange={(event) =>
-                  formik.setFieldValue("scansNotes", event.target.value)
+                onChange={event =>
+                  formik.setFieldValue('scansNotes', event.target.value)
                 }
               />
             </Box>
@@ -331,11 +331,11 @@ const EditNotes: React.FC<{
                 rows={4}
                 variant="outlined"
                 fullWidth
-                sx={{ width: "100%" }}
+                sx={{ width: '100%' }}
                 label="Medications Notes"
                 value={formik.values.medicationsNotes}
-                onChange={(event) =>
-                  formik.setFieldValue("medicationsNotes", event.target.value)
+                onChange={event =>
+                  formik.setFieldValue('medicationsNotes', event.target.value)
                 }
               />
             </Box>
@@ -347,25 +347,25 @@ const EditNotes: React.FC<{
             label="Notes"
             value={formik.values.notes}
             // onChange={formik.handleChange}
-            onChange={(event) =>
-              formik.setFieldValue("notes", event.target.value)
+            onChange={event =>
+              formik.setFieldValue('notes', event.target.value)
             }
             fullWidth
           />
           <Box
-            sx={{ display: "flex", justifyContent: "center", py: 2, gap: 2 }}
+            sx={{ display: 'flex', justifyContent: 'center', py: 2, gap: 2 }}
           >
             <Button
               variant="contained"
               color="primary"
               type="submit"
-              sx={{ px: 2, textTransform: "uppercase" }}
+              sx={{ px: 2, textTransform: 'uppercase' }}
             >
               Save
             </Button>
             <Button
               variant="outlined"
-              sx={{ px: 2, textTransform: "uppercase" }}
+              sx={{ px: 2, textTransform: 'uppercase' }}
               onClick={closeModal}
             >
               Cancel

@@ -1,4 +1,4 @@
-import { Box, Skeleton } from "@mui/material";
+import { Box, Skeleton } from '@mui/material';
 
 const SkeletonAnalyticsCard: React.FC = () => {
   return (
@@ -42,9 +42,20 @@ const SkeletonAnalyticsCard: React.FC = () => {
         </Box>
 
         {/* Badges Skeleton */}
-        <Box display="flex" flexDirection="column" justifyContent="flex-start" flex={1} gap={1}>
+        <Box
+          display="flex"
+          flexDirection="column"
+          justifyContent="flex-start"
+          flex={1}
+          gap={1}
+        >
           {[1, 2].map((_, index) => (
-            <Skeleton key={index} variant="rectangular" height={32} width="100%" />
+            <Skeleton
+              key={index}
+              variant="rectangular"
+              height={32}
+              width="100%"
+            />
           ))}
         </Box>
       </Box>

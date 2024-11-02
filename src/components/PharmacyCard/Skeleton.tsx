@@ -15,7 +15,12 @@ const SkeletonPharmacyCard: React.FC = () => {
       p={2}
       overflow={'hidden'}
     >
-      <Box display="flex" flexDirection="column" flex={1} justifyContent="space-between">
+      <Box
+        display="flex"
+        flexDirection="column"
+        flex={1}
+        justifyContent="space-between"
+      >
         <Skeleton variant="text" width="60%" height={30} />
         <Skeleton variant="text" width="80%" height={40} />
         <Skeleton variant="text" width="50%" height={30} />

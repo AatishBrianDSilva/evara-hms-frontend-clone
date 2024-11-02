@@ -1,9 +1,17 @@
-import React from "react";
-import { Box, Button, Dialog, DialogContent, DialogTitle, Grid, TextField } from "@mui/material";
-import { useFormik } from "formik";
-import _ from "lodash";
-import { useToast } from "../../../../../context/ToastContext";
-import { useAddAppointmentSourceMutation } from "../../../../../services/masterDashboardService/local/appointmentSourceApi";
+import React from 'react';
+import {
+  Box,
+  Button,
+  Dialog,
+  DialogContent,
+  DialogTitle,
+  Grid,
+  TextField,
+} from '@mui/material';
+import { useFormik } from 'formik';
+import _ from 'lodash';
+import { useToast } from '../../../../../context/ToastContext';
+import { useAddAppointmentSourceMutation } from '../../../../../services/masterDashboardService/local/appointmentSourceApi';
 
 interface AddAppointmentSourceProps {
   openModal: boolean;
@@ -13,7 +21,10 @@ interface IFormValues {
   name: string;
 }
 
-const AddAppointmentSource: React.FC<AddAppointmentSourceProps> = ({ openModal, onClose }) => {
+const AddAppointmentSource: React.FC<AddAppointmentSourceProps> = ({
+  openModal,
+  onClose,
+}) => {
   const { showPromiseToast } = useToast();
 
   const [addAppointmentSource, { isLoading: AppointmentSourceLoading }] =
@@ -29,9 +40,9 @@ const AddAppointmentSource: React.FC<AddAppointmentSourceProps> = ({ openModal, 
     const promise = addAppointmentSource(payload).unwrap();
 
     showPromiseToast(promise, {
-      loading: "Adding...",
-      success: (data) => data || "Added Successfully",
-      error: (data) => data || "Adding Failed",
+      loading: 'Adding...',
+      success: data => data || 'Added Successfully',
+      error: data => data || 'Adding Failed',
     });
 
     try {
@@ -44,7 +55,7 @@ const AddAppointmentSource: React.FC<AddAppointmentSourceProps> = ({ openModal, 
   };
 
   const initialValues: IFormValues = {
-    name: "",
+    name: '',
   };
 
   const formik = useFormik({
@@ -56,9 +67,9 @@ const AddAppointmentSource: React.FC<AddAppointmentSourceProps> = ({ openModal, 
 
   return (
     <Dialog open={openModal} onClose={onClose} maxWidth="md" fullWidth>
-      <DialogTitle color={"primary"}>Add Appointment Source</DialogTitle>
+      <DialogTitle color={'primary'}>Add Appointment Source</DialogTitle>
       <DialogContent>
-        <Box component={"form"} onSubmit={formik.handleSubmit} p={2}>
+        <Box component={'form'} onSubmit={formik.handleSubmit} p={2}>
           <Grid container spacing={1} mb={2} mt={2}>
             <Grid item xs={8} sm={4} lg={3}>
               <TextField
@@ -72,20 +83,29 @@ const AddAppointmentSource: React.FC<AddAppointmentSourceProps> = ({ openModal, 
             </Grid>
           </Grid>
 
-          <Box display={"flex"} justifyContent={"flex-end"} alignItems={"center"} gap={2} mb={2}>
+          <Box
+            display={'flex'}
+            justifyContent={'flex-end'}
+            alignItems={'center'}
+            gap={2}
+            mb={2}
+          >
             <Button
               variant="contained"
               color="primary"
               type="submit"
-              disabled={AppointmentSourceLoading || _.isEqual(initialValues, formik.values)}
-              sx={{ width: "fit-content" }}
+              disabled={
+                AppointmentSourceLoading ||
+                _.isEqual(initialValues, formik.values)
+              }
+              sx={{ width: 'fit-content' }}
             >
               Save
             </Button>
             <Button
               variant="contained"
               color="secondary"
-              sx={{ width: "fit-content" }}
+              sx={{ width: 'fit-content' }}
               onClick={onClose}
             >
               Cancel

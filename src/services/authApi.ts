@@ -1,9 +1,9 @@
-import { createApi } from "@reduxjs/toolkit/query/react";
-import { ApiResponse } from "../types/global";
-import { IAuthResponse } from "../types/auth";
-import { clearCredentials, setCredentials } from "../features/Auth/authSlice"; // import setCredentials action
-import { baseQuery } from "./baseQuery";
-import { handlePersistorPurge } from "../app/store";
+import { createApi } from '@reduxjs/toolkit/query/react';
+import { ApiResponse } from '../types/global';
+import { IAuthResponse } from '../types/auth';
+import { clearCredentials, setCredentials } from '../features/Auth/authSlice'; // import setCredentials action
+import { baseQuery } from './baseQuery';
+import { handlePersistorPurge } from '../app/store';
 
 interface ILoginCredentials {
   email: string;
@@ -17,13 +17,13 @@ interface IRefreshToken {
 }
 
 export const authApi = createApi({
-  reducerPath: "authApi",
+  reducerPath: 'authApi',
   baseQuery: baseQuery,
-  endpoints: (builder) => ({
+  endpoints: builder => ({
     loginUser: builder.mutation<ApiResponse<IAuthResponse>, ILoginCredentials>({
-      query: (credentials) => ({
-        url: "auth/login",
-        method: "POST",
+      query: credentials => ({
+        url: 'auth/login',
+        method: 'POST',
         body: credentials,
       }),
       // Additional transform or onQueryStarted can be utilized here
@@ -36,36 +36,36 @@ export const authApi = createApi({
               setCredentials({
                 authToken: tokens.token,
                 refreshToken: tokens.refreshToken,
-              })
+              }),
             );
           }
         } catch (error) {
-          console.error("Error handling login:", error);
+          console.error('Error handling login:', error);
         }
       },
     }),
     refreshToken: builder.mutation<ApiResponse<IAuthResponse>, IRefreshToken>({
       query: ({ refreshToken }) => ({
-        url: "auth/refresh-token",
-        method: "POST",
+        url: 'auth/refresh-token',
+        method: 'POST',
         body: { refreshToken },
       }),
       onQueryStarted: async (_arg, { dispatch, queryFulfilled }) => {
-        console.log("Refreshing token...");
+        console.log('Refreshing token...');
         try {
           const { data } = await queryFulfilled;
           const tokens: any = data.data;
           if (tokens) {
-            console.log("Token refreshed successfully");
+            console.log('Token refreshed successfully');
             dispatch(
               setCredentials({
                 authToken: tokens.token,
                 refreshToken: tokens.refreshToken,
-              })
+              }),
             );
           }
         } catch (error) {
-          console.error("Error refreshing token:", error);
+          console.error('Error refreshing token:', error);
           dispatch(clearCredentials()); // Clear tokens if refresh fails
           handlePersistorPurge();
         }

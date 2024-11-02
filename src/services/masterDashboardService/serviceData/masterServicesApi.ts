@@ -1,66 +1,66 @@
-import { createApi } from "@reduxjs/toolkit/query/react";
-import { ApiResponse, IQueryOptions } from "../../../types/global";
-import generateQueryParams from "../../../utils/generateQueryParams";
-import { baseQuery } from "../../baseQuery";
-import { IDefaultService, IMasterService } from "../../../types/master";
+import { createApi } from '@reduxjs/toolkit/query/react';
+import { ApiResponse, IQueryOptions } from '../../../types/global';
+import generateQueryParams from '../../../utils/generateQueryParams';
+import { baseQuery } from '../../baseQuery';
+import { IDefaultService, IMasterService } from '../../../types/master';
 
 export const masterServicesApi = createApi({
-  reducerPath: "masterServicesApi",
+  reducerPath: 'masterServicesApi',
   baseQuery: baseQuery,
-  tagTypes: ["MasterService"],
-  endpoints: (builder) => ({
+  tagTypes: ['MasterService'],
+  endpoints: builder => ({
     addMasterService: builder.mutation<ApiResponse<any>, any>({
-      query: (masterData) => ({
-        url: "master/services/add",
-        method: "POST",
+      query: masterData => ({
+        url: 'master/services/add',
+        method: 'POST',
         body: masterData,
       }),
-      invalidatesTags: ["MasterService"],
+      invalidatesTags: ['MasterService'],
     }),
     editMasterService: builder.mutation<ApiResponse<any>, any>({
       query: ({ id, ...masterData }) => ({
         url: `master/services/${id}`,
-        method: "PUT",
+        method: 'PUT',
         body: masterData,
       }),
-      invalidatesTags: ["MasterService"],
+      invalidatesTags: ['MasterService'],
     }),
     deleteMasterService: builder.mutation<ApiResponse<null>, string>({
       query: (id: string) => ({
         url: `master/services/${id}`,
-        method: "DELETE",
+        method: 'DELETE',
       }),
-      invalidatesTags: ["MasterService"],
+      invalidatesTags: ['MasterService'],
     }),
     getMasterServices: builder.query<
       ApiResponse<IMasterService[]>,
       IQueryOptions
     >({
-      query: (options) => {
+      query: options => {
         const queryParams = generateQueryParams(options);
         return {
           url: `master/services?${queryParams}`,
-          method: "GET",
+          method: 'GET',
         };
       },
-      providesTags: (_result, _error, _args) => ["MasterService"],
+      providesTags: (_result, _error, _args) => ['MasterService'],
     }),
     getMasterServiceById: builder.query<ApiResponse<IMasterService>, string>({
       query: (id: string) => `master/services/${id}`,
-      providesTags: (_result, _error, id) => [{ type: "MasterService", id }],
+      providesTags: (_result, _error, id) => [{ type: 'MasterService', id }],
     }),
     getMasterDefaultServices: builder.query<
       ApiResponse<IDefaultService[]>,
       IQueryOptions
     >({
-      query: (options) => {
+      query: options => {
         const queryParams = generateQueryParams(options);
         return {
           url: `master/services/default?${queryParams}`,
-          method: "GET",
+          method: 'GET',
         };
       },
-      providesTags: (_result, _error, _args) => ["MasterService"],
+      providesTags: (_result, _error, _args) => ['MasterService'],
     }),
   }),
 });

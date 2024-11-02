@@ -1,13 +1,13 @@
-import { createApi } from "@reduxjs/toolkit/query/react";
+import { createApi } from '@reduxjs/toolkit/query/react';
 
-import generateQueryParams from "../../utils/generateQueryParams";
+import generateQueryParams from '../../utils/generateQueryParams';
 import {
   ApiResponse,
   IQueryOptions,
   PaginatedResponse,
-} from "../../types/global";
-import { IPatientPharmacy } from "../../types/patientDashboard/patientPharmacy";
-import { baseQuery } from "../baseQuery";
+} from '../../types/global';
+import { IPatientPharmacy } from '../../types/patientDashboard/patientPharmacy';
+import { baseQuery } from '../baseQuery';
 
 interface AddPatientPharmacyPayload {
   doctor: string | null | undefined;
@@ -24,53 +24,53 @@ interface AddPatientPharmacyPayload {
 }
 
 export const patientPharmacyApi = createApi({
-  reducerPath: "patientPharmacyApi",
+  reducerPath: 'patientPharmacyApi',
   baseQuery: baseQuery,
-  tagTypes: ["PatientPharmacy"],
-  endpoints: (builder) => ({
+  tagTypes: ['PatientPharmacy'],
+  endpoints: builder => ({
     getPatientPharmacys: builder.query<
       ApiResponse<PaginatedResponse<IPatientPharmacy>>,
       { options?: IQueryOptions; id: string }
     >({
       query: ({ options, id }) => {
         const queryParams = generateQueryParams(options);
-        return { url: `pharmacy/${id}?${queryParams}`, method: "GET" };
+        return { url: `pharmacy/${id}?${queryParams}`, method: 'GET' };
       },
-      providesTags: (_result, _error, _args) => ["PatientPharmacy"],
+      providesTags: (_result, _error, _args) => ['PatientPharmacy'],
     }),
     getPatientPharmacyById: builder.query<
       ApiResponse<IPatientPharmacy>,
       string
     >({
       query: (id: string) => {
-        return { url: `pharmacy/patient/${id}`, method: "GET" };
+        return { url: `pharmacy/patient/${id}`, method: 'GET' };
       },
-      providesTags: (_result, _error, id) => [{ type: "PatientPharmacy", id }],
+      providesTags: (_result, _error, id) => [{ type: 'PatientPharmacy', id }],
     }),
     addPatientPharmacy: builder.mutation<
       ApiResponse<IPatientPharmacy>,
       AddPatientPharmacyPayload
     >({
-      query: (patientPharmacyData) => ({
-        url: "pharmacy/add",
-        method: "POST",
+      query: patientPharmacyData => ({
+        url: 'pharmacy/add',
+        method: 'POST',
         body: patientPharmacyData,
       }),
-      invalidatesTags: ["PatientPharmacy"],
+      invalidatesTags: ['PatientPharmacy'],
     }),
     deletePatientPharmacy: builder.mutation<ApiResponse<null>, string>({
-      query: (id) => ({
+      query: id => ({
         url: `pharmacy/${id}`,
-        method: "DELETE",
+        method: 'DELETE',
       }),
-      invalidatesTags: ["PatientPharmacy"],
+      invalidatesTags: ['PatientPharmacy'],
     }),
 
     getAllPharmacy: builder.query<any, void>({
       query: () => {
-        return { url: `pharmacy/all`, method: "GET" };
+        return { url: `pharmacy/all`, method: 'GET' };
       },
-      providesTags: (_result, _error, _args) => ["PatientPharmacy"],
+      providesTags: (_result, _error, _args) => ['PatientPharmacy'],
     }),
   }),
 });

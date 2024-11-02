@@ -1,19 +1,23 @@
-import { Visibility } from "@mui/icons-material";
-import { Box, Tooltip } from "@mui/material";
-import React, { useState } from "react";
-import CustomDataGrid from "../../../../components/CustomDataGrid/CustomDataGrid";
-import { GridActionsCellItem, GridColDef, GridRowParams } from "@mui/x-data-grid";
+import { Visibility } from '@mui/icons-material';
+import { Box, Tooltip } from '@mui/material';
+import React, { useState } from 'react';
+import CustomDataGrid from '../../../../components/CustomDataGrid/CustomDataGrid';
+import {
+  GridActionsCellItem,
+  GridColDef,
+  GridRowParams,
+} from '@mui/x-data-grid';
 // import CheckCircle from '@mui/icons-material/CheckCircle'
 // import Cancel from '@mui/icons-material/Cancel'
 // import { useGetDrugItemsQuery } from '../../../../services/pharmacyDashboardService/master/drugItemApi'
 // import { useGetDrugVendorsQuery } from '../../../../services/pharmacyDashboardService/master/drugVendorApi'
-import { useGetPurchaseOrdersQuery } from "../../../../services/pharmacyDashboardService/purchaseOrderApi";
+import { useGetPurchaseOrdersQuery } from '../../../../services/pharmacyDashboardService/purchaseOrderApi';
 // import { useToast } from '../../../../context/ToastContext'
 import {
   EPurchaseOrderStatus,
   IPurchaseOrder,
-} from "../../../../types/pharmacyDashboard/purchaseOrder";
-import ViewPurchaseOrder from "../ViewPurchaseOrder";
+} from '../../../../types/pharmacyDashboard/purchaseOrder';
+import ViewPurchaseOrder from '../ViewPurchaseOrder';
 
 const Rejected: React.FC = () => {
   // const { showPromiseToast } = useToast()
@@ -139,40 +143,40 @@ const Rejected: React.FC = () => {
   // }
 
   const columnsConfig: GridColDef[] = [
-    { field: "poNumber", headerName: "PO Number", flex: 1 },
+    { field: 'poNumber', headerName: 'PO Number', flex: 1 },
     {
-      field: "date",
-      type: "date",
-      headerName: "PO Date",
+      field: 'date',
+      type: 'date',
+      headerName: 'PO Date',
       flex: 1,
       valueFormatter(params) {
         const date = new Date(params.value);
-        const day = String(date.getDate()).padStart(2, "0");
-        const month = String(date.getMonth() + 1).padStart(2, "0"); // Months are 0-based
+        const day = String(date.getDate()).padStart(2, '0');
+        const month = String(date.getMonth() + 1).padStart(2, '0'); // Months are 0-based
         const year = String(date.getFullYear()).slice(-2); // Get last two digits of the year
         return `${day}/${month}/${year}`;
       },
     },
     {
-      field: "vendor",
-      headerName: "Vendor Name",
+      field: 'vendor',
+      headerName: 'Vendor Name',
       flex: 1,
-      valueGetter: (params) => params.value.name,
+      valueGetter: params => params.value.name,
     },
 
     {
-      field: "netAmount",
-      headerName: "Amount",
+      field: 'netAmount',
+      headerName: 'Amount',
       flex: 1,
-      valueGetter: (params) => `₹ ${params.row.request.netAmount}`,
+      valueGetter: params => `₹ ${params.row.request.netAmount}`,
     },
-    { field: "createdBy", headerName: "Created By", flex: 1 },
-    { field: "authorizedBy", headerName: "Rejected By", flex: 1 },
+    { field: 'createdBy', headerName: 'Created By', flex: 1 },
+    { field: 'authorizedBy', headerName: 'Rejected By', flex: 1 },
     {
-      field: "actions",
-      headerName: "Actions",
+      field: 'actions',
+      headerName: 'Actions',
       flex: 1,
-      type: "actions",
+      type: 'actions',
       getActions: (params: GridRowParams) => {
         const row = params.row;
         return [
@@ -210,7 +214,7 @@ const Rejected: React.FC = () => {
   ];
 
   return (
-    <Box height={"100%"} display={"flex"} flexDirection={"column"}>
+    <Box height={'100%'} display={'flex'} flexDirection={'column'}>
       {/* <Box display="flex" justifyContent="flex-end" gap={2}>
         <TextField label="Search" size="small" variant="outlined" />
         <Button disabled={addButtonLoading} variant="contained" startIcon={<Add />} color="secondary" onClick={openAddModal}>
@@ -220,7 +224,7 @@ const Rejected: React.FC = () => {
 
       {/* Render the CustomDataGrid only if there's no error */}
 
-      <Box mt={2} flex={"1 1 auto"}>
+      <Box mt={2} flex={'1 1 auto'}>
         <CustomDataGrid
           autoHeight={false}
           columns={columnsConfig}
@@ -229,7 +233,7 @@ const Rejected: React.FC = () => {
           pageSize={pageSize}
           totalRows={purchaseOrdersPagination?.totalDocs || 0}
           loading={purchaseOrderLoading}
-          sx={{ height: "100%" }}
+          sx={{ height: '100%' }}
           enablePagination={true}
           onPageChange={handlePageChange}
           onPageSizeChange={handlePageSizeChange}
@@ -269,7 +273,7 @@ const Rejected: React.FC = () => {
         <ViewPurchaseOrder
           openModal={isViewModalOpen}
           onClose={closeViewModal}
-          id={selectedRow?._id || ""}
+          id={selectedRow?._id || ''}
         />
       )}
     </Box>

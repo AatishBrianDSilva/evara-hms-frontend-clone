@@ -1,6 +1,6 @@
-import { createApi } from "@reduxjs/toolkit/query/react";
-import { ApiResponse, EBuckets, EDocumentTypes } from "../types/global";
-import { baseQuery } from "./baseQuery";
+import { createApi } from '@reduxjs/toolkit/query/react';
+import { ApiResponse, EBuckets, EDocumentTypes } from '../types/global';
+import { baseQuery } from './baseQuery';
 
 interface GetSignedUrlResponse {
   url: string;
@@ -13,7 +13,7 @@ interface GetSignedUrlRequest {
   userId: string;
   bucket: EBuckets;
   documentType?: EDocumentTypes;
-  operation: "putObject" | "getObject";
+  operation: 'putObject' | 'getObject';
   fileName: string;
   expires?: number; // Seconds
   isImage: boolean;
@@ -26,20 +26,23 @@ interface DeleteFileRequest {
 }
 
 export const fileApi = createApi({
-  reducerPath: "fileApi",
+  reducerPath: 'fileApi',
   baseQuery: baseQuery,
-  endpoints: (builder) => ({
-    getSignedUrl: builder.mutation<ApiResponse<GetSignedUrlResponse>, GetSignedUrlRequest>({
-      query: (body) => ({
-        url: "files/get-signed-url",
-        method: "POST",
+  endpoints: builder => ({
+    getSignedUrl: builder.mutation<
+      ApiResponse<GetSignedUrlResponse>,
+      GetSignedUrlRequest
+    >({
+      query: body => ({
+        url: 'files/get-signed-url',
+        method: 'POST',
         body,
       }),
     }),
     deleteFile: builder.mutation<void, DeleteFileRequest>({
-      query: (body) => ({
-        url: "files/delete",
-        method: "DELETE",
+      query: body => ({
+        url: 'files/delete',
+        method: 'DELETE',
         body,
       }),
     }),

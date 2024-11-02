@@ -1,17 +1,17 @@
-import { IDoctor } from "./doctor";
-import { IPatient } from "./patient";
+import { IDoctor } from './doctor';
+import { IPatient } from './patient';
 
 export enum EGender {
-  Male = "male",
-  Female = "female",
-  Both = "both",
+  Male = 'male',
+  Female = 'female',
+  Both = 'both',
 }
 
 // Services
 export enum EServiceTypes {
-  Appointment = "Appointment",
-  FirstConsultation = "First Consultation",
-  FollowUp = "Follow Up",
+  Appointment = 'Appointment',
+  FirstConsultation = 'First Consultation',
+  FollowUp = 'Follow Up',
   DoctorsReview = "Doctor's Review",
 }
 
@@ -64,13 +64,13 @@ export interface IMasterPackages {
 // Investigations
 
 export enum ETestType {
-  BloodTest = "BloodTest",
-  UltrasoundScan = "UltrasoundScan",
-  BaseLineFollicularMonitoring = "BaseLineFollicularMonitoring",
-  EndometrialAssessment = "EndometrialAssessment",
-  EarlyPregnancyScan = "EarlyPregnancyScan",
-  SemenAnalysis = "SemenAnalysis",
-  SpermDFI = "SpermDFI",
+  BloodTest = 'BloodTest',
+  UltrasoundScan = 'UltrasoundScan',
+  BaseLineFollicularMonitoring = 'BaseLineFollicularMonitoring',
+  EndometrialAssessment = 'EndometrialAssessment',
+  EarlyPregnancyScan = 'EarlyPregnancyScan',
+  SemenAnalysis = 'SemenAnalysis',
+  SpermDFI = 'SpermDFI',
 }
 
 export interface IMasterInvestigation {
@@ -135,8 +135,8 @@ export interface IBloodTestComponent {
 }
 
 export enum IBloodTestComponentType {
-  Text = "text",
-  Select = "select",
+  Text = 'text',
+  Select = 'select',
 }
 
 export interface IServiceInvestigation {
@@ -159,13 +159,13 @@ export interface IServiceInvestigation {
 // Procedures
 
 export enum EProcedureType {
-  Hysteroscopy = "Hysteroscopy",
-  Laparoscopy = "Laparoscopy",
-  TESA = "TESA",
-  TESE = "TESE",
-  PGT = "PGT",
-  ERA = "ERA",
-  Embryo = "Embryo",
+  Hysteroscopy = 'Hysteroscopy',
+  Laparoscopy = 'Laparoscopy',
+  TESA = 'TESA',
+  TESE = 'TESE',
+  PGT = 'PGT',
+  ERA = 'ERA',
+  Embryo = 'Embryo',
 }
 
 export interface IMasterProcedures {
@@ -204,8 +204,8 @@ export interface IServiceProcedure {
 
 // CryoPreservations
 export enum ECryoPreservationType {
-  Embryo = "Embryo",
-  Sperm = "Sperm",
+  Embryo = 'Embryo',
+  Sperm = 'Sperm',
 }
 
 export interface ICryoPreservations {
@@ -230,33 +230,33 @@ export interface IMasterCryoPreservations {
 
 // Treatment Cycles
 export enum ETreatmentCycleType {
-  IUI = "IUI",
-  OITI = "OITI",
-  IVFPlusFET = "IVFPlusFET",
-  IVFWithDonorEgg = "IVFWithDonorEgg",
-  ICSIWithDonorEgg = "ICSIWithDonorEgg",
-  IVFPlusFETNoGrowthHormone = "IVFPlusFETNoGrowthHormone",
+  IUI = 'IUI',
+  OITI = 'OITI',
+  IVFPlusFET = 'IVFPlusFET',
+  IVFWithDonorEgg = 'IVFWithDonorEgg',
+  ICSIWithDonorEgg = 'ICSIWithDonorEgg',
+  IVFPlusFETNoGrowthHormone = 'IVFPlusFETNoGrowthHormone',
 }
 
 export enum ETreatmentCycleReport {
-  IUIHReport = "IUIHReport",
-  IUIDReport = "IUIDReport",
-  OITIReport = "OITIReport",
-  OPUReport = "OPUReport",
-  EmbryoTransferReport = "EmbryoTransferReport",
-  IVFSummaryReport = "IVFSummaryReport",
+  IUIHReport = 'IUIHReport',
+  IUIDReport = 'IUIDReport',
+  OITIReport = 'OITIReport',
+  OPUReport = 'OPUReport',
+  EmbryoTransferReport = 'EmbryoTransferReport',
+  IVFSummaryReport = 'IVFSummaryReport',
 }
 
 export enum ETreatmentCycleMetric {
-  PregnancyOutcomeBetaHCGMetric = "PregnancyOutcomeBetaHCGMetric",
-  EmbryologyWorksheetMetric = "EmbryologyWorksheetMetric",
+  PregnancyOutcomeBetaHCGMetric = 'PregnancyOutcomeBetaHCGMetric',
+  EmbryologyWorksheetMetric = 'EmbryologyWorksheetMetric',
 }
 
 export enum ETreatmentCycleCategoryKey {
-  protocols = "protocols",
-  checklists = "checklists",
-  reports = "reports",
-  metrics = "metrics",
+  protocols = 'protocols',
+  checklists = 'checklists',
+  reports = 'reports',
+  metrics = 'metrics',
 }
 
 export interface IMasterTreatmentCycle {
@@ -281,24 +281,24 @@ export interface IDefaultTreatmentCycle {
   protocols: [
     {
       name: string;
-    }
+    },
   ];
   checklists: [
     {
       name: string;
-    }
+    },
   ];
   reports: [
     {
       name: string;
       reportType: ETreatmentCycleReport;
-    }
+    },
   ];
   metrics: [
     {
       name: string;
       metricType: ETreatmentCycleMetric;
-    }
+    },
   ];
 }
 

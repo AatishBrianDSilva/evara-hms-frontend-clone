@@ -1,11 +1,15 @@
-import React, { useState } from "react";
-import { Box } from "@mui/material";
-import CustomDataGrid from "../../../components/CustomDataGrid/CustomDataGrid";
-import { GridActionsCellItem, GridColDef, GridRowParams } from "@mui/x-data-grid";
-import { Visibility } from "@mui/icons-material";
-import { useGetInvoicesQuery } from "../../../services/pharmacyDashboardService/invoiceApi";
-import { usePrint } from "../../../context/PrintPDFContext";
-import ContentSection from "../../../components/ContentSection/ContentSection";
+import React, { useState } from 'react';
+import { Box } from '@mui/material';
+import CustomDataGrid from '../../../components/CustomDataGrid/CustomDataGrid';
+import {
+  GridActionsCellItem,
+  GridColDef,
+  GridRowParams,
+} from '@mui/x-data-grid';
+import { Visibility } from '@mui/icons-material';
+import { useGetInvoicesQuery } from '../../../services/pharmacyDashboardService/invoiceApi';
+import { usePrint } from '../../../context/PrintPDFContext';
+import ContentSection from '../../../components/ContentSection/ContentSection';
 
 interface RowType {
   _id: string;
@@ -34,9 +38,10 @@ const Invoices: React.FC = () => {
   } = useGetInvoicesQuery();
 
   // const purchaseOrdersPagination = purchaseOrdersData?.data?.pagination;
-  const pharmacyInvoiceLoading = pharmacyInvoicesLoading || pharmacyInvoicesFetching;
+  const pharmacyInvoiceLoading =
+    pharmacyInvoicesLoading || pharmacyInvoicesFetching;
 
-  console.log("Orders", pharmacyInvoicesData);
+  console.log('Orders', pharmacyInvoicesData);
 
   const data = pharmacyInvoicesData?.data;
 
@@ -47,45 +52,45 @@ const Invoices: React.FC = () => {
   // Columns configuration for the data grid
   const columns: GridColDef[] = [
     {
-      field: "purchaseOrderId",
-      headerName: "Purchase Order No",
+      field: 'purchaseOrderId',
+      headerName: 'Purchase Order No',
       flex: 1,
     },
     {
-      field: "invoiceNumber",
-      headerName: "Invoice Number",
+      field: 'invoiceNumber',
+      headerName: 'Invoice Number',
       flex: 1,
     },
 
     {
-      field: "createdAt",
-      headerName: "Date",
+      field: 'createdAt',
+      headerName: 'Date',
       flex: 1,
       valueFormatter(params) {
         const date = new Date(params.value);
-        const day = String(date.getDate()).padStart(2, "0");
-        const month = String(date.getMonth() + 1).padStart(2, "0"); // Months are 0-based
+        const day = String(date.getDate()).padStart(2, '0');
+        const month = String(date.getMonth() + 1).padStart(2, '0'); // Months are 0-based
         const year = String(date.getFullYear()).slice(-2); // Get last two digits of the year
         return `${day}/${month}/${year}`;
       },
     },
 
     {
-      field: "actions",
-      type: "actions",
-      headerName: "Actions",
+      field: 'actions',
+      type: 'actions',
+      headerName: 'Actions',
       flex: 1,
-      cellClassName: "actions",
+      cellClassName: 'actions',
       // custom actions for the actions column
       getActions: (params: GridRowParams) => {
         const row = params.row;
-        console.log("row", row);
+        console.log('row', row);
 
         return [
           <GridActionsCellItem
             icon={<Visibility />}
             label="Print"
-            onClick={() => fetchAndPrintPdf(row?._id, "invoice", "pharmacy")}
+            onClick={() => fetchAndPrintPdf(row?._id, 'invoice', 'pharmacy')}
             // onClick={() => handlePrint(row?.response?.invoice[0])}
           />,
         ];
@@ -97,7 +102,7 @@ const Invoices: React.FC = () => {
     <ContentSection title="Invoices">
       <Box display="flex" justifyContent="flex-end" gap={2}></Box>
 
-      <Box mt={2} flex={"1 1 auto"}>
+      <Box mt={2} flex={'1 1 auto'}>
         <CustomDataGrid
           autoHeight={false}
           columns={columns}
@@ -109,7 +114,7 @@ const Invoices: React.FC = () => {
           enablePagination={true}
           onPageChange={handlePageChange}
           onPageSizeChange={handlePageSizeChange}
-          sx={{ height: "100%" }}
+          sx={{ height: '100%' }}
         />
       </Box>
     </ContentSection>

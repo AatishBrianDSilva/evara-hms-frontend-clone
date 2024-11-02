@@ -1,4 +1,4 @@
-import React from "react";
+import React from 'react';
 import {
   Box,
   Button,
@@ -17,10 +17,10 @@ import {
   TableHead,
   TableRow,
   Typography,
-} from "@mui/material";
-import { useGetPatientPharmacyByIdQuery } from "../../../services/patientDashboardService/patientPharmacyApi";
-import { IPatientPharmacy } from "../../../types/patientDashboard/patientPharmacy";
-import { useToast } from "../../../context/ToastContext";
+} from '@mui/material';
+import { useGetPatientPharmacyByIdQuery } from '../../../services/patientDashboardService/patientPharmacyApi';
+import { IPatientPharmacy } from '../../../types/patientDashboard/patientPharmacy';
+import { useToast } from '../../../context/ToastContext';
 
 interface ViewPatientPharmacyProps {
   openModal: boolean;
@@ -80,7 +80,11 @@ const PharmacyDetailsLoader = () => (
   </Grid>
 );
 
-const PharmacyDetails = ({ patientPharmacy }: { patientPharmacy: IPatientPharmacy }) => (
+const PharmacyDetails = ({
+  patientPharmacy,
+}: {
+  patientPharmacy: IPatientPharmacy;
+}) => (
   <Box mt={2}>
     <Typography variant="subtitle1" gutterBottom>
       Pharmacy Details
@@ -89,15 +93,20 @@ const PharmacyDetails = ({ patientPharmacy }: { patientPharmacy: IPatientPharmac
     <Grid container spacing={2} marginTop={2}>
       <Grid item xs={12} md={6}>
         <Typography variant="subtitle1">
-          Doctor: {patientPharmacy.doctor.firstName} {patientPharmacy.doctor.lastName}
+          Doctor: {patientPharmacy.doctor.firstName}{' '}
+          {patientPharmacy.doctor.lastName}
         </Typography>
         <Typography variant="subtitle1">
           Date: {new Date(patientPharmacy.date).toLocaleDateString()}
         </Typography>
-        <Typography variant="subtitle1">Allocated By: {patientPharmacy.allocatedBy}</Typography>
+        <Typography variant="subtitle1">
+          Allocated By: {patientPharmacy.allocatedBy}
+        </Typography>
       </Grid>
       <Grid item xs={12} md={6}>
-        <Typography variant="subtitle1">Patient ID: {patientPharmacy.patient}</Typography>
+        <Typography variant="subtitle1">
+          Patient ID: {patientPharmacy.patient}
+        </Typography>
       </Grid>
     </Grid>
     <Typography mt={2} variant="body1">
@@ -126,7 +135,11 @@ const PharmacyDetails = ({ patientPharmacy }: { patientPharmacy: IPatientPharmac
   </Box>
 );
 
-const ViewPatientPharmacy: React.FC<ViewPatientPharmacyProps> = ({ openModal, onClose, id }) => {
+const ViewPatientPharmacy: React.FC<ViewPatientPharmacyProps> = ({
+  openModal,
+  onClose,
+  id,
+}) => {
   const {
     data: patientPharmacyData,
     isLoading,
@@ -137,10 +150,13 @@ const ViewPatientPharmacy: React.FC<ViewPatientPharmacyProps> = ({ openModal, on
   const loading = isLoading || isFetching;
   const { showToast } = useToast();
 
-  console.log("View Pateint Pharmacy Data", patientPharmacy);
+  console.log('View Pateint Pharmacy Data', patientPharmacy);
 
   if (isError) {
-    showToast("An error occurred while fetching patient pharmacy details", "error");
+    showToast(
+      'An error occurred while fetching patient pharmacy details',
+      'error',
+    );
     onClose();
     return null;
   }

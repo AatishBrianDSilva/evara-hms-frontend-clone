@@ -1,18 +1,21 @@
-import React from "react";
-import Box from "@mui/material/Box";
-import Typography from "@mui/material/Typography";
-import AppointmentDetailCard from "../../components/AppointmentDetailCard/AppointmentDetailCard";
-import { AssignmentLate, ArrowForward } from "@mui/icons-material";
-import SkeletonAppointmentDetailCard from "../../components/AppointmentDetailCard/Skeleton";
-import { useGetAppointmentSummaryQuery } from "../../services/homeApi";
-import { IconButton } from "@mui/material";
+import React from 'react';
+import Box from '@mui/material/Box';
+import Typography from '@mui/material/Typography';
+import AppointmentDetailCard from '../../components/AppointmentDetailCard/AppointmentDetailCard';
+import { AssignmentLate, ArrowForward } from '@mui/icons-material';
+import SkeletonAppointmentDetailCard from '../../components/AppointmentDetailCard/Skeleton';
+import { useGetAppointmentSummaryQuery } from '../../services/homeApi';
+import { IconButton } from '@mui/material';
 
 interface AppointmentsSectionProps {
   startDate: Date | null;
   endDate: Date | null;
 }
 
-const AppointmentsSection: React.FC<AppointmentsSectionProps> = ({ startDate, endDate }) => {
+const AppointmentsSection: React.FC<AppointmentsSectionProps> = ({
+  startDate,
+  endDate,
+}) => {
   const {
     data: appointmentsDataInRange,
     isLoading: isAppointmentLoading,
@@ -20,20 +23,20 @@ const AppointmentsSection: React.FC<AppointmentsSectionProps> = ({ startDate, en
   } = useGetAppointmentSummaryQuery(
     {
       dateRange: {
-        startDate: startDate?.toISOString() || "",
-        endDate: endDate?.toISOString() || "",
+        startDate: startDate?.toISOString() || '',
+        endDate: endDate?.toISOString() || '',
       },
     },
     {
       skip: !startDate || !endDate,
-    }
+    },
   );
 
   const loading = isAppointmentLoading || isAppointmentFetching;
   const appointments = appointmentsDataInRange?.data || [];
 
   const handleArrowClick = () => {
-    window.location.href = "/appointments"; // Redirect to the provided link URL
+    window.location.href = '/appointments'; // Redirect to the provided link URL
   };
 
   return (
@@ -57,7 +60,8 @@ const AppointmentsSection: React.FC<AppointmentsSectionProps> = ({ startDate, en
       >
         {/* Title with Icon */}
         <Box display="flex" alignItems="center" gap={1}>
-          <AssignmentLate fontSize="small" /> {/* Small icon next to the title */}
+          <AssignmentLate fontSize="small" />{' '}
+          {/* Small icon next to the title */}
           <Typography variant="h6">Upcoming Appointments</Typography>
         </Box>
 
@@ -78,9 +82,11 @@ const AppointmentsSection: React.FC<AppointmentsSectionProps> = ({ startDate, en
         bgcolor="white"
       >
         {loading ? (
-          [1, 2, 3].map((_, index) => <SkeletonAppointmentDetailCard key={index} />)
+          [1, 2, 3].map((_, index) => (
+            <SkeletonAppointmentDetailCard key={index} />
+          ))
         ) : appointments && appointments.length > 0 ? (
-          appointments.map((appointment) => (
+          appointments.map(appointment => (
             <Box
               display="flex"
               key={appointment._id}
@@ -88,7 +94,11 @@ const AppointmentsSection: React.FC<AppointmentsSectionProps> = ({ startDate, en
               alignItems="center"
             >
               <AppointmentDetailCard
-                doctorName={appointment.doctorId.firstName + " " + appointment.doctorId.lastName}
+                doctorName={
+                  appointment.doctorId.firstName +
+                  ' ' +
+                  appointment.doctorId.lastName
+                }
                 doctorPhotoUrl={appointment.doctorId.image}
                 patientName={appointment.fullName}
                 patientPhoneNumber={appointment.phone}

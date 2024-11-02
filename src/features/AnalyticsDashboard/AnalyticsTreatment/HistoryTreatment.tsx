@@ -10,23 +10,33 @@ const TreatmentHistory: React.FC = () => {
   const [filterDoctor, setFilterDoctor] = useState<string>('');
   const [filterTreatment, setFilterTreatment] = useState<string>('');
 
-  const handleSearchTextChange = (event: React.ChangeEvent<HTMLInputElement>) => {
+  const handleSearchTextChange = (
+    event: React.ChangeEvent<HTMLInputElement>,
+  ) => {
     setSearchText(event.target.value);
   };
 
-  const handleSearchDateChange = (event: React.ChangeEvent<HTMLInputElement>) => {
+  const handleSearchDateChange = (
+    event: React.ChangeEvent<HTMLInputElement>,
+  ) => {
     setSearchDate(event.target.value);
   };
 
-  const handleFilterClinicChange = (event: React.ChangeEvent<{ value: unknown }>) => {
+  const handleFilterClinicChange = (
+    event: React.ChangeEvent<{ value: unknown }>,
+  ) => {
     setFilterClinic(event.target.value as string);
   };
 
-  const handleFilterDoctorChange = (event: React.ChangeEvent<{ value: unknown }>) => {
+  const handleFilterDoctorChange = (
+    event: React.ChangeEvent<{ value: unknown }>,
+  ) => {
     setFilterDoctor(event.target.value as string);
   };
 
-  const handleFilterTreatmentChange = (event: React.ChangeEvent<{ value: unknown }>) => {
+  const handleFilterTreatmentChange = (
+    event: React.ChangeEvent<{ value: unknown }>,
+  ) => {
     setFilterTreatment(event.target.value as string);
   };
 
@@ -70,10 +80,12 @@ const TreatmentHistory: React.FC = () => {
     { field: 'status', headerName: 'Status', flex: 1 },
   ];
 
-  const filteredAppointments = appointmentsData.filter((appointment) => {
+  const filteredAppointments = appointmentsData.filter(appointment => {
     return (
       (searchText === '' ||
-        appointment.patientId.toLowerCase().includes(searchText.toLowerCase())) &&
+        appointment.patientId
+          .toLowerCase()
+          .includes(searchText.toLowerCase())) &&
       (searchDate === '' || appointment.date === searchDate) &&
       (filterClinic === '' || appointment.clinicName === filterClinic) &&
       (filterDoctor === '' || appointment.doctor === filterDoctor) &&

@@ -1,29 +1,29 @@
-import React, { useCallback } from "react";
-import Button from "@mui/material/Button";
-import Dialog from "@mui/material/Dialog";
-import DialogActions from "@mui/material/DialogActions";
-import DialogContent from "@mui/material/DialogContent";
-import DialogTitle from "@mui/material/DialogTitle";
-import Box from "@mui/material/Box";
+import React, { useCallback } from 'react';
+import Button from '@mui/material/Button';
+import Dialog from '@mui/material/Dialog';
+import DialogActions from '@mui/material/DialogActions';
+import DialogContent from '@mui/material/DialogContent';
+import DialogTitle from '@mui/material/DialogTitle';
+import Box from '@mui/material/Box';
 
-import Paper from "@mui/material/Paper";
+import Paper from '@mui/material/Paper';
 
-import Add from "@mui/icons-material/Add";
+import Add from '@mui/icons-material/Add';
 
-import { FormikErrors, FormikTouched, useFormik } from "formik";
-import { Grid, IconButton } from "@mui/material";
-import { AddInvestigationValidationSchema } from "../../../../yup/patientDashboard/investigation";
-import FieldAutocomplete from "../../../../components/FieldAutoComplete/FieldAutoComplete";
-import Delete from "@mui/icons-material/Delete";
-import getFilteredOptions from "../../../../utils/getFilteredOptions";
-import { RootState } from "../../../../app/store";
-import { useSelector } from "react-redux";
-import { useAddInvestigationMutation } from "../../../../services/patientDashboardService/investigationApi";
-import { useToast } from "../../../../context/ToastContext";
-import { ETestType, IMasterInvestigation } from "../../../../types/master";
-import { IDoctor } from "../../../../types/doctor";
-import { FilterOptionType } from "../../../../types/global";
-import CustomDatePicker from "../../../../components/CustomDatePicker/CustomDatePicker";
+import { FormikErrors, FormikTouched, useFormik } from 'formik';
+import { Grid, IconButton } from '@mui/material';
+import { AddInvestigationValidationSchema } from '../../../../yup/patientDashboard/investigation';
+import FieldAutocomplete from '../../../../components/FieldAutoComplete/FieldAutoComplete';
+import Delete from '@mui/icons-material/Delete';
+import getFilteredOptions from '../../../../utils/getFilteredOptions';
+import { RootState } from '../../../../app/store';
+import { useSelector } from 'react-redux';
+import { useAddInvestigationMutation } from '../../../../services/patientDashboardService/investigationApi';
+import { useToast } from '../../../../context/ToastContext';
+import { ETestType, IMasterInvestigation } from '../../../../types/master';
+import { IDoctor } from '../../../../types/doctor';
+import { FilterOptionType } from '../../../../types/global';
+import CustomDatePicker from '../../../../components/CustomDatePicker/CustomDatePicker';
 
 interface AddInvestigationProps {
   open?: boolean;
@@ -38,10 +38,13 @@ const AddInvestigation: React.FC<AddInvestigationProps> = ({
   doctors,
   masterInvestigations,
 }) => {
-  const { patient, case: patientCase } = useSelector((state: RootState) => state.patients);
+  const { patient, case: patientCase } = useSelector(
+    (state: RootState) => state.patients,
+  );
   const { showPromiseToast } = useToast();
 
-  const [addPatientInvestigation, { isLoading }] = useAddInvestigationMutation();
+  const [addPatientInvestigation, { isLoading }] =
+    useAddInvestigationMutation();
 
   const handleSubmit = async (values: any) => {
     const payload = [];
@@ -59,14 +62,16 @@ const AddInvestigation: React.FC<AddInvestigationProps> = ({
       }
     }
 
-    console.log("payload", payload);
+    console.log('payload', payload);
 
     const promise = addPatientInvestigation(payload).unwrap();
 
     showPromiseToast(promise, {
-      loading: "Adding Investigation",
-      success: (response) => response.message || "Investigation added successfully",
-      error: (err) => `Error: ${err.response?.data?.message || "Failed to add Investigation"}`,
+      loading: 'Adding Investigation',
+      success: response =>
+        response.message || 'Investigation added successfully',
+      error: err =>
+        `Error: ${err.response?.data?.message || 'Failed to add Investigation'}`,
     });
 
     try {
@@ -74,7 +79,7 @@ const AddInvestigation: React.FC<AddInvestigationProps> = ({
       createForm.resetForm();
       onClose && onClose();
     } catch (error) {
-      console.log("error", error);
+      console.log('error', error);
     }
   };
 
@@ -87,18 +92,23 @@ const AddInvestigation: React.FC<AddInvestigationProps> = ({
   });
 
   const memoizedGetFilteredOptions = useCallback(
-    (currentIndex: number, selectedKey: "investigation") => {
+    (currentIndex: number, selectedKey: 'investigation') => {
       // Assuming options are stored in the component's state or props
       const options: FilterOptionType[] =
-        selectedKey === "investigation" ? masterInvestigations : [];
+        selectedKey === 'investigation' ? masterInvestigations : [];
 
-      return getFilteredOptions(currentIndex, options, selectedKey, createForm.values.fields);
+      return getFilteredOptions(
+        currentIndex,
+        options,
+        selectedKey,
+        createForm.values.fields,
+      );
     },
-    [createForm.values.fields, doctors, masterInvestigations]
+    [createForm.values.fields, doctors, masterInvestigations],
   );
 
   const getFieldErrorAndTouched = useCallback(
-    (index: number, fieldName: "investigation" | "doctor" | "date") => {
+    (index: number, fieldName: 'investigation' | 'doctor' | 'date') => {
       // Ensure that we're working with the correct structure
       const touched = createForm?.touched?.fields as FormikTouched<{
         investigation: null;
@@ -116,14 +126,14 @@ const AddInvestigation: React.FC<AddInvestigationProps> = ({
 
       return {
         isError: Boolean(isFieldTouched && fieldError),
-        errorMessage: typeof fieldError === "string" ? fieldError : undefined,
+        errorMessage: typeof fieldError === 'string' ? fieldError : undefined,
       };
     },
-    [createForm.touched.fields, createForm.errors.fields]
+    [createForm.touched.fields, createForm.errors.fields],
   );
 
   const handleAddFields = () => {
-    createForm.setFieldValue("fields", [
+    createForm.setFieldValue('fields', [
       ...createForm.values.fields,
       { investigation: null, doctor: null, date: new Date() },
     ]);
@@ -132,7 +142,7 @@ const AddInvestigation: React.FC<AddInvestigationProps> = ({
   const handleDeleteField = (index: number) => {
     const newFields = [...createForm.values.fields];
     newFields.splice(index, 1);
-    createForm.setFieldValue("fields", newFields);
+    createForm.setFieldValue('fields', newFields);
   };
 
   return (
@@ -143,75 +153,96 @@ const AddInvestigation: React.FC<AddInvestigationProps> = ({
       maxWidth="md"
       scroll="paper"
     >
-      <DialogTitle sx={{ textAlign: "center", pt: 4 }} variant="h5">
+      <DialogTitle sx={{ textAlign: 'center', pt: 4 }} variant="h5">
         Add Investigations
       </DialogTitle>
-      <Box component={"form"} onSubmit={createForm.handleSubmit}>
+      <Box component={'form'} onSubmit={createForm.handleSubmit}>
         <Paper elevation={0} sx={{ p: 2, mb: 2 }}>
           <DialogContent
             style={{
-              display: "flex",
-              flexDirection: "row",
+              display: 'flex',
+              flexDirection: 'row',
               gap: 10,
-              justifyContent: "space-between",
-              alignItems: "end",
-              padding: "2rem",
+              justifyContent: 'space-between',
+              alignItems: 'end',
+              padding: '2rem',
             }}
           >
             <Box
               sx={{
-                width: "100%",
-                display: "flex",
-                flexDirection: "column",
-                justifyContent: "space-between",
+                width: '100%',
+                display: 'flex',
+                flexDirection: 'column',
+                justifyContent: 'space-between',
                 gap: 2,
               }}
             >
               {createForm.values.fields.map((_field: any, index: number) => {
-                const { isError: isInvestigationError, errorMessage: investigationErrorMessage } =
-                  getFieldErrorAndTouched(index, "investigation");
-                const { isError: isDoctorError, errorMessage: doctorErrorMessage } =
-                  getFieldErrorAndTouched(index, "doctor");
+                const {
+                  isError: isInvestigationError,
+                  errorMessage: investigationErrorMessage,
+                } = getFieldErrorAndTouched(index, 'investigation');
+                const {
+                  isError: isDoctorError,
+                  errorMessage: doctorErrorMessage,
+                } = getFieldErrorAndTouched(index, 'doctor');
                 const { isError: isDateError, errorMessage: dateErrorMessage } =
-                  getFieldErrorAndTouched(index, "date");
+                  getFieldErrorAndTouched(index, 'date');
                 return (
                   <Grid container gap={2} key={index}>
                     {/* Abstracted Autocomplete for Investigations */}
                     <Grid item flex={3}>
                       <FieldAutocomplete
-                        options={memoizedGetFilteredOptions(index, "investigation")}
-                        groupBy={(option) => {
+                        options={memoizedGetFilteredOptions(
+                          index,
+                          'investigation',
+                        )}
+                        groupBy={option => {
                           const group =
                             option?.test?.testType === ETestType.BloodTest
-                              ? "Blood Tests"
-                              : "Others";
+                              ? 'Blood Tests'
+                              : 'Others';
                           return group;
                         }}
-                        getOptionLabel={(option) => option?.name}
-                        getOptionKey={(option) => option._id}
-                        isOptionEqualToValue={(option, value) => option._id === value._id}
+                        getOptionLabel={option => option?.name}
+                        getOptionKey={option => option._id}
+                        isOptionEqualToValue={(option, value) =>
+                          option._id === value._id
+                        }
                         value={createForm.values.fields[index].investigation}
-                        onChange={(newValue) =>
-                          createForm.setFieldValue(`fields.${index}.investigation`, newValue)
+                        onChange={newValue =>
+                          createForm.setFieldValue(
+                            `fields.${index}.investigation`,
+                            newValue,
+                          )
                         }
                         label="Investigations"
                         error={isInvestigationError}
-                        helperText={isInvestigationError ? investigationErrorMessage : ""}
+                        helperText={
+                          isInvestigationError ? investigationErrorMessage : ''
+                        }
                       />
                     </Grid>
                     {/* Abstracted Autocomplete for Doctors */}
                     <Grid item flex={3}>
                       <FieldAutocomplete
                         options={doctors}
-                        getOptionLabel={(option) => `${option.firstName} ${option.lastName}`}
-                        isOptionEqualToValue={(option, value) => option._id === value._id}
+                        getOptionLabel={option =>
+                          `${option.firstName} ${option.lastName}`
+                        }
+                        isOptionEqualToValue={(option, value) =>
+                          option._id === value._id
+                        }
                         value={createForm.values.fields[index].doctor}
-                        onChange={(newValue) =>
-                          createForm.setFieldValue(`fields.${index}.doctor`, newValue)
+                        onChange={newValue =>
+                          createForm.setFieldValue(
+                            `fields.${index}.doctor`,
+                            newValue,
+                          )
                         }
                         label="Doctor"
                         error={isDoctorError}
-                        helperText={isDoctorError ? doctorErrorMessage : ""}
+                        helperText={isDoctorError ? doctorErrorMessage : ''}
                       />
                     </Grid>
                     {/* Date Picker */}
@@ -221,28 +252,41 @@ const AddInvestigation: React.FC<AddInvestigationProps> = ({
                         minDate={new Date()}
                         format="dd/MM/yyyy"
                         value={createForm.values.fields[index].date}
-                        onChange={(newValue) =>
-                          createForm.setFieldValue(`fields.${index}.date`, newValue)
+                        onChange={newValue =>
+                          createForm.setFieldValue(
+                            `fields.${index}.date`,
+                            newValue,
+                          )
                         }
                         error={isDateError}
-                        helperText={isDateError ? dateErrorMessage : ""}
+                        helperText={isDateError ? dateErrorMessage : ''}
                       />
                     </Grid>
                     {/* Dynamic Add/Delete Buttons */}
                     <Grid item flex={0.5}>
-                      {createForm.values.fields.length > 1 && index != 0 && handleDeleteField && (
-                        <IconButton onClick={() => handleDeleteField(index)}>
-                          <Delete />
-                        </IconButton>
-                      )}
+                      {createForm.values.fields.length > 1 &&
+                        index != 0 &&
+                        handleDeleteField && (
+                          <IconButton onClick={() => handleDeleteField(index)}>
+                            <Delete />
+                          </IconButton>
+                        )}
                     </Grid>
                   </Grid>
                 );
               })}
-              <Box sx={{ display: "flex", justifyContent: "center", alignItems: "center", mt: 2 }}>
+              <Box
+                sx={{
+                  display: 'flex',
+                  justifyContent: 'center',
+                  alignItems: 'center',
+                  mt: 2,
+                }}
+              >
                 <IconButton
                   disabled={createForm.values.fields.some(
-                    (field) => !field.investigation || !field.doctor || !field.date
+                    field =>
+                      !field.investigation || !field.doctor || !field.date,
                   )}
                   color="primary"
                   onClick={handleAddFields}
@@ -253,7 +297,7 @@ const AddInvestigation: React.FC<AddInvestigationProps> = ({
             </Box>
           </DialogContent>
         </Paper>
-        <DialogActions sx={{ pb: 4, gap: 1, justifyContent: "center" }}>
+        <DialogActions sx={{ pb: 4, gap: 1, justifyContent: 'center' }}>
           <Button variant="contained" disabled={isLoading} type="submit">
             Save
           </Button>

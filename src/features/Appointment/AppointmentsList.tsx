@@ -1,65 +1,65 @@
-import Box from "@mui/material/Box";
-import React, { useCallback, useState } from "react";
-import CustomDataGrid from "../../components/CustomDataGrid/CustomDataGrid";
-import Button from "@mui/material/Button";
-import TextField from "@mui/material/TextField";
-import IconButton from "@mui/material/IconButton";
-import Grid from "@mui/material/Grid";
-import CircularProgress from "@mui/material/CircularProgress";
-import Autocomplete from "@mui/material/Autocomplete";
-import { Add, Edit, Delete, TaskAlt, } from "@mui/icons-material";
+import Box from '@mui/material/Box';
+import React, { useCallback, useState } from 'react';
+import CustomDataGrid from '../../components/CustomDataGrid/CustomDataGrid';
+import Button from '@mui/material/Button';
+import TextField from '@mui/material/TextField';
+import IconButton from '@mui/material/IconButton';
+import Grid from '@mui/material/Grid';
+import CircularProgress from '@mui/material/CircularProgress';
+import Autocomplete from '@mui/material/Autocomplete';
+import { Add, Edit, Delete, TaskAlt } from '@mui/icons-material';
 
-import { GridColDef } from "@mui/x-data-grid";
+import { GridColDef } from '@mui/x-data-grid';
 
-import ErrorAlertWithRetry from "../../components/ErrorAlertWithRetry/ErrorAlertWithRetry";
-import BookAppointment from "../Appointment/BookAppointment";
-import { useGetDoctorsQuery } from "../../services/doctorsApi";
+import ErrorAlertWithRetry from '../../components/ErrorAlertWithRetry/ErrorAlertWithRetry';
+import BookAppointment from '../Appointment/BookAppointment';
+import { useGetDoctorsQuery } from '../../services/doctorsApi';
 import {
   useDeleteAppointmentMutation,
   useGetAppointmentsQuery,
-} from "../../services/appointmentApi";
-import { useDispatch } from "react-redux";
-import { resetAppointment } from "./appointmentSlice";
-import { IAppointment } from "../../types/appointment";
-import { IDoctor } from "../../types/doctor";
-import CustomDatePicker from "../../components/CustomDatePicker/CustomDatePicker";
-import DeleteConfirmationModal from "../../components/DeleteConfirmationModal/DeleteConfirmationModal";
-import { useToast } from "../../context/ToastContext";
-import EditAppointment from "./EditAppointment";
-import EditAppointmentStatus from "./EditAppointmentStatus";
-import { format } from "date-fns";
-import { Typography } from "@mui/material";
-import { Link } from "react-router-dom";
-import _ from "lodash";
+} from '../../services/appointmentApi';
+import { useDispatch } from 'react-redux';
+import { resetAppointment } from './appointmentSlice';
+import { IAppointment } from '../../types/appointment';
+import { IDoctor } from '../../types/doctor';
+import CustomDatePicker from '../../components/CustomDatePicker/CustomDatePicker';
+import DeleteConfirmationModal from '../../components/DeleteConfirmationModal/DeleteConfirmationModal';
+import { useToast } from '../../context/ToastContext';
+import EditAppointment from './EditAppointment';
+import EditAppointmentStatus from './EditAppointmentStatus';
+import { format } from 'date-fns';
+import { Typography } from '@mui/material';
+import { Link } from 'react-router-dom';
+import _ from 'lodash';
 
 const AppointmentsList: React.FC = () => {
   const dispatch = useDispatch();
 
   const [searchQuery, setSearchQuery] = useState('');
-  const [page, setPage] = useState<number>(1)
+  const [page, setPage] = useState<number>(1);
   const [pageSize, setPageSize] = React.useState(25);
 
-
   const handleSearchChange = useCallback((query: string) => {
-    setPage(1);  // Reset the page
+    setPage(1); // Reset the page
     setSearchQuery(query);
   }, []);
 
   // Debounce the search handling
   const debouncedSearchChange = useCallback(
     _.debounce(handleSearchChange, 500),
-    [handleSearchChange] // Ensure that handleSearchChange is stable
+    [handleSearchChange], // Ensure that handleSearchChange is stable
   );
 
   const [isModalOpen, setIsModalOpen] = useState<boolean>(false);
   const [isEditModalOpen, setIsEditModalOpen] = useState<boolean>(false);
-  const [isEditStatusModalOpen, setIsEditStatusModalOpen] = useState<boolean>(false);
+  const [isEditStatusModalOpen, setIsEditStatusModalOpen] =
+    useState<boolean>(false);
 
   const [isDeleteModalOpen, setIsDeleteModalOpen] = useState<boolean>(false);
-  const [selectedAppointment, setSelectedAppointment] = useState<IAppointment | null>(null);
+  const [selectedAppointment, setSelectedAppointment] =
+    useState<IAppointment | null>(null);
   const [selectedDate, setSelectedDate] = useState<Date>(new Date());
   const [selectedDoctor, setSelectedDoctor] = useState<IDoctor | null>(null);
-
 
   // Fetch all the doctors
   const {
@@ -88,7 +88,7 @@ const AppointmentsList: React.FC = () => {
     },
     {
       skip: !selectedDate,
-    }
+    },
   );
   const appointments = appointmentData?.data?.records || [];
 
@@ -97,14 +97,15 @@ const AppointmentsList: React.FC = () => {
 
   const error = appointmentError || doctorError;
 
-  const [deleteAppointment, { isLoading: isDeleteLoading }] = useDeleteAppointmentMutation();
+  const [deleteAppointment, { isLoading: isDeleteLoading }] =
+    useDeleteAppointmentMutation();
 
   const handleDelete = async () => {
     const promise = deleteAppointment(selectedRow).unwrap();
     showPromiseToast(promise, {
-      loading: "Deleting...",
-      success: (data) => data || "Deleted Successfully",
-      error: (data) => data || "Failed to Delete",
+      loading: 'Deleting...',
+      success: data => data || 'Deleted Successfully',
+      error: data => data || 'Failed to Delete',
     });
 
     try {
@@ -131,9 +132,12 @@ const AppointmentsList: React.FC = () => {
 
   const columnsConfig: GridColDef[] = [
     // { field: 'date', headerName: 'Date', flex: 1, type: 'date', valueFormatter: (params) => new Date(params.value as string).toLocaleDateString() },
-    { field: "time", headerName: "Time", flex: 1 },
+    { field: 'time', headerName: 'Time', flex: 1 },
     {
-      field: "fullName", headerName: "Patient", flex: 1, renderCell: (params) => {
+      field: 'fullName',
+      headerName: 'Patient',
+      flex: 1,
+      renderCell: params => {
         const hasPatientId = !!params.row.patientId; // Check if patientId exists
         return (
           <Typography
@@ -146,25 +150,32 @@ const AppointmentsList: React.FC = () => {
             {params.value}
           </Typography>
         );
-      }
+      },
     },
-    { field: "phone", headerName: "Phone", flex: 1 },
+    { field: 'phone', headerName: 'Phone', flex: 1 },
     {
-      field: "doctor",
-      headerName: "Doctor",
+      field: 'doctor',
+      headerName: 'Doctor',
       flex: 1,
-      valueGetter: (params) => params.row.doctorId?.firstName + " " + params.row.doctorId?.lastName,
+      valueGetter: params =>
+        params.row.doctorId?.firstName + ' ' + params.row.doctorId?.lastName,
     },
-    { field: "reason", headerName: "Reason", flex: 1 },
-    { field: "notes", headerName: "Notes", flex: 1 },
-    { field: "reportedTime", headerName: "Reported Time", flex: 1, valueFormatter: (params) => params.value ? format(params.value, "hh:mm aa") : "" },
-    { field: "status", headerName: "Status", flex: 1 },
+    { field: 'reason', headerName: 'Reason', flex: 1 },
+    { field: 'notes', headerName: 'Notes', flex: 1 },
     {
-      field: "actions",
-      headerName: "Actions",
+      field: 'reportedTime',
+      headerName: 'Reported Time',
       flex: 1,
-      type: "actions",
-      getActions: (params) => {
+      valueFormatter: params =>
+        params.value ? format(params.value, 'hh:mm aa') : '',
+    },
+    { field: 'status', headerName: 'Status', flex: 1 },
+    {
+      field: 'actions',
+      headerName: 'Actions',
+      flex: 1,
+      type: 'actions',
+      getActions: params => {
         return [
           <IconButton
             size="small"
@@ -182,28 +193,31 @@ const AppointmentsList: React.FC = () => {
             onClick={() => {
               setSelectedAppointment(params.row);
               setIsEditStatusModalOpen(true);
-            }}>
+            }}
+          >
             <TaskAlt sx={{ fontSize: 16 }} />
           </IconButton>,
-          <IconButton size="small" key="delete" onClick={() => handleDeleteClick(params.row.id)}>
+          <IconButton
+            size="small"
+            key="delete"
+            onClick={() => handleDeleteClick(params.row.id)}
+          >
             <Delete sx={{ fontSize: 16 }} />
           </IconButton>,
-
         ];
       },
     },
     {
-      field: 'stage', headerName: 'Stage', align: "center", renderCell(params) {
-        return (
-          <Grid container >
-            {renderStatusCircle(params.row.status)}
-          </Grid>
-        )
+      field: 'stage',
+      headerName: 'Stage',
+      align: 'center',
+      renderCell(params) {
+        return <Grid container>{renderStatusCircle(params.row.status)}</Grid>;
       },
-    }
+    },
   ];
 
-  const handleRowClick = (_: any) => { };
+  const handleRowClick = (_: any) => {};
 
   // Function to open the modal
   const openModal = () => {
@@ -221,7 +235,7 @@ const AppointmentsList: React.FC = () => {
   // Delete Modal
 
   const { showPromiseToast } = useToast();
-  const [selectedRow, setSelectedRow] = useState<string>("");
+  const [selectedRow, setSelectedRow] = useState<string>('');
 
   const openDeleteModal = () => {
     setIsDeleteModalOpen(true);
@@ -229,7 +243,6 @@ const AppointmentsList: React.FC = () => {
   const closeDeleteModal = () => {
     setIsDeleteModalOpen(false);
   };
-
 
   const closeStatusModal = () => {
     setIsEditStatusModalOpen(false);
@@ -244,20 +257,20 @@ const AppointmentsList: React.FC = () => {
     let color: string;
 
     switch (status) {
-      case "Scheduled":
-        color = "#EF988D";
+      case 'Scheduled':
+        color = '#EF988D';
         break;
-      case "Reported":
-        color = "#CAC891";
+      case 'Reported':
+        color = '#CAC891';
         break;
-      case "Completed":
-        color = "#3DA02C";
+      case 'Completed':
+        color = '#3DA02C';
         break;
-      case "Cancelled":
-        color = "#FF0000";
+      case 'Cancelled':
+        color = '#FF0000';
         break;
       default:
-        color = "#fff"; // Default color
+        color = '#fff'; // Default color
     }
 
     return (
@@ -265,7 +278,7 @@ const AppointmentsList: React.FC = () => {
         style={{
           width: 15,
           height: 15,
-          borderRadius: "50%",
+          borderRadius: '50%',
           backgroundColor: color,
           // margin: "auto",
         }}
@@ -280,19 +293,19 @@ const AppointmentsList: React.FC = () => {
           <CustomDatePicker
             label="Date"
             value={selectedDate}
-            onChange={(newValue) => newValue && setSelectedDate(newValue)}
+            onChange={newValue => newValue && setSelectedDate(newValue)}
           />
         </Grid>
         <Grid item xs={12} md={2}>
           <Autocomplete
             options={doctors}
-            getOptionLabel={(option) => `${option.firstName} ${option.lastName}`}
+            getOptionLabel={option => `${option.firstName} ${option.lastName}`}
             isOptionEqualToValue={(option, value) => option._id === value._id}
             value={selectedDoctor}
             onChange={(_, newValue) => {
               setSelectedDoctor(newValue);
             }}
-            renderInput={(params) => (
+            renderInput={params => (
               <TextField
                 {...params}
                 fullWidth
@@ -317,15 +330,26 @@ const AppointmentsList: React.FC = () => {
       </Grid>
 
       <Box display="flex" justifyContent="flex-end" gap={2}>
-        <TextField label="Search" placeholder="Patient/Phone" size="small" variant="outlined" onChange={(e) => debouncedSearchChange(e.target.value)} />
-        <Button variant="contained" startIcon={<Add />} color="secondary" onClick={openModal}>
+        <TextField
+          label="Search"
+          placeholder="Patient/Phone"
+          size="small"
+          variant="outlined"
+          onChange={e => debouncedSearchChange(e.target.value)}
+        />
+        <Button
+          variant="contained"
+          startIcon={<Add />}
+          color="secondary"
+          onClick={openModal}
+        >
           Appointment
         </Button>
       </Box>
       {error && <ErrorAlertWithRetry onRetry={() => retry()} />}
       {/* Render the CustomDataGrid only if there's no error */}
       {!error && (
-        <Box mt={2} flex={"1 1 auto"}>
+        <Box mt={2} flex={'1 1 auto'}>
           <CustomDataGrid
             autoHeight={false}
             columns={columnsConfig}
@@ -337,13 +361,15 @@ const AppointmentsList: React.FC = () => {
             onPageSizeChange={handlePageSizeChange}
             loading={appointmentLoading}
             onRowClick={handleRowClick}
-            sx={{ height: "100%" }}
+            sx={{ height: '100%' }}
             enablePagination={true}
           />
         </Box>
       )}
 
-      {isModalOpen && <BookAppointment openModal={isModalOpen} onClose={closeModal} />}
+      {isModalOpen && (
+        <BookAppointment openModal={isModalOpen} onClose={closeModal} />
+      )}
 
       {isEditModalOpen && selectedAppointment && (
         <EditAppointment

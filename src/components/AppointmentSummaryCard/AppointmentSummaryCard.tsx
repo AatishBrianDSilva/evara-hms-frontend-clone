@@ -27,16 +27,45 @@ const AppointmentSummaryCard: React.FC<AppointmentSummaryCardProps> = ({
       height={150}
     >
       <Box display="flex" flexDirection="column" flex={1}>
-        <Typography variant="h6" color="secondary">Summary</Typography>
-        <Box display="flex" flexDirection="column" flex={1} justifyContent={"center"}>
-          <Typography variant="h4" color={"primary"}>{noOfAppointments}</Typography>
+        <Typography variant="h6" color="secondary">
+          Summary
+        </Typography>
+        <Box
+          display="flex"
+          flexDirection="column"
+          flex={1}
+          justifyContent={'center'}
+        >
+          <Typography variant="h4" color={'primary'}>
+            {noOfAppointments}
+          </Typography>
         </Box>
       </Box>
-      <Box display="flex" flexDirection="column" gap={1} flex={1} >
-        <Chip size='small' variant='outlined' label={`Scheduled: ${scheduledAppointments}`} color="primary" />
-        <Chip size='small' variant='outlined' label={`Reported: ${reportedAppointments}`} color="secondary" />
-        <Chip size='small' variant='outlined' label={`Completed: ${completedAppointments}`} color="success" />
-        <Chip size='small' variant='outlined' label={`Cancelled: ${cancelledAppointments}`} color="error" />
+      <Box display="flex" flexDirection="column" gap={1} flex={1}>
+        <Chip
+          size="small"
+          variant="outlined"
+          label={`Scheduled: ${scheduledAppointments}`}
+          color="primary"
+        />
+        <Chip
+          size="small"
+          variant="outlined"
+          label={`Reported: ${reportedAppointments}`}
+          color="secondary"
+        />
+        <Chip
+          size="small"
+          variant="outlined"
+          label={`Completed: ${completedAppointments}`}
+          color="success"
+        />
+        <Chip
+          size="small"
+          variant="outlined"
+          label={`Cancelled: ${cancelledAppointments}`}
+          color="error"
+        />
       </Box>
     </Box>
   );

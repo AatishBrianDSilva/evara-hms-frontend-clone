@@ -1,6 +1,6 @@
-import { IDoctor } from "../doctor";
-import { EProcedureType, IMasterProcedures } from "../master";
-import { IPatient } from "../patient";
+import { IDoctor } from '../doctor';
+import { EProcedureType, IMasterProcedures } from '../master';
+import { IPatient } from '../patient';
 
 export interface IEditProcedureForm<T> {
   result: T;
@@ -54,9 +54,9 @@ export interface IEmbryoBiopsyDetails {
   embryo_id: string;
   no_of_cells: number;
   cell_stage: number;
-  embryo_grade: "Low" | "High";
-  nucleus_seen: "Yes" | "No";
-  cell_integrity: "Intact" | "Lysed";
+  embryo_grade: 'Low' | 'High';
+  nucleus_seen: 'Yes' | 'No';
+  cell_integrity: 'Intact' | 'Lysed';
   remarks: string;
   isNew?: boolean;
 }

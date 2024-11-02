@@ -1,4 +1,4 @@
-import { Box, Button, Container, Typography } from "@mui/material";
+import { Box, Button, Container, Typography } from '@mui/material';
 
 export const ErrorBoundaryFallback = () => {
   const handleReload = () => {
@@ -8,7 +8,7 @@ export const ErrorBoundaryFallback = () => {
   return (
     <Container
       maxWidth="sm"
-      style={{ textAlign: "center", paddingTop: "50px" }}
+      style={{ textAlign: 'center', paddingTop: '50px' }}
     >
       <Box>
         <Typography variant="h4" gutterBottom>

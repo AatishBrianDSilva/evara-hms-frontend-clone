@@ -1,46 +1,46 @@
-import React, { useState } from 'react'
-import ContentSection from '../../../../components/ContentSection/ContentSection'
-import { Box, Button, TextField } from '@mui/material'
-import { Add, Edit } from '@mui/icons-material'
-import CustomDataGrid from '../../../../components/CustomDataGrid/CustomDataGrid'
+import React, { useState } from 'react';
+import ContentSection from '../../../../components/ContentSection/ContentSection';
+import { Box, Button, TextField } from '@mui/material';
+import { Add, Edit } from '@mui/icons-material';
+import CustomDataGrid from '../../../../components/CustomDataGrid/CustomDataGrid';
 import {
   GridActionsCellItem,
   GridColDef,
   GridRowParams,
-} from '@mui/x-data-grid'
-import AddDrugItem from '../../../PharmacyDashboard/Masters/DrugItem/AddDrugItem'
-import Delete from '@mui/icons-material/Delete'
-import EditDrugItem from '../../../PharmacyDashboard/Masters/DrugItem/EditDrugItem'
-import DeleteConfirmationModal from '../../../../components/DeleteConfirmationModal/DeleteConfirmationModal'
+} from '@mui/x-data-grid';
+import AddDrugItem from '../../../PharmacyDashboard/Masters/DrugItem/AddDrugItem';
+import Delete from '@mui/icons-material/Delete';
+import EditDrugItem from '../../../PharmacyDashboard/Masters/DrugItem/EditDrugItem';
+import DeleteConfirmationModal from '../../../../components/DeleteConfirmationModal/DeleteConfirmationModal';
 import {
   useDeleteDrugItemMutation,
   useGetDrugItemsQuery,
-} from '../../../../services/pharmacyDashboardService/master/drugItemApi'
-import { useToast } from '../../../../context/ToastContext'
-import _ from 'lodash'
-import { useGetTaxBracketsQuery } from '../../../../services/pharmacyDashboardService/master/taxBracketApi'
-import { useGetDrugCategoriesQuery } from '../../../../services/pharmacyDashboardService/master/drugCategoryApi'
-import { useGetDrugTypesQuery } from '../../../../services/pharmacyDashboardService/master/drugTypeApi'
-import { useGetDrugManufacturersQuery } from '../../../../services/pharmacyDashboardService/master/drugManufacturerApi'
+} from '../../../../services/pharmacyDashboardService/master/drugItemApi';
+import { useToast } from '../../../../context/ToastContext';
+import _ from 'lodash';
+import { useGetTaxBracketsQuery } from '../../../../services/pharmacyDashboardService/master/taxBracketApi';
+import { useGetDrugCategoriesQuery } from '../../../../services/pharmacyDashboardService/master/drugCategoryApi';
+import { useGetDrugTypesQuery } from '../../../../services/pharmacyDashboardService/master/drugTypeApi';
+import { useGetDrugManufacturersQuery } from '../../../../services/pharmacyDashboardService/master/drugManufacturerApi';
 
 const Investigations: React.FC = () => {
-  const { showPromiseToast } = useToast()
+  const { showPromiseToast } = useToast();
 
-  const [page, setPage] = useState<number>(1)
-  const [pageSize, setPageSize] = useState<number>(25)
+  const [page, setPage] = useState<number>(1);
+  const [pageSize, setPageSize] = useState<number>(25);
 
-  const [selectedRow, setSelectedRow] = useState<string>('')
-  const [isAddModalOpen, setIsAddModalOpen] = useState<boolean>(false)
-  const [isEditModalOpen, setIsEditModalOpen] = useState<boolean>(false)
-  const [isDeleteModalOpen, setIsDeleteModalOpen] = useState<boolean>(false)
+  const [selectedRow, setSelectedRow] = useState<string>('');
+  const [isAddModalOpen, setIsAddModalOpen] = useState<boolean>(false);
+  const [isEditModalOpen, setIsEditModalOpen] = useState<boolean>(false);
+  const [isDeleteModalOpen, setIsDeleteModalOpen] = useState<boolean>(false);
 
   const handlePageChange = (newPage: number) => {
-    setPage(newPage)
-  }
+    setPage(newPage);
+  };
 
   const handlePageSizeChange = (newPageSize: number) => {
-    setPageSize(newPageSize)
-  }
+    setPageSize(newPageSize);
+  };
 
   const {
     data: drugCategoriesData,
@@ -49,8 +49,8 @@ const Investigations: React.FC = () => {
   } = useGetDrugCategoriesQuery({
     paginate: false,
     sort: { name: 1 },
-  })
-  const drugCategories = drugCategoriesData?.data?.records || []
+  });
+  const drugCategories = drugCategoriesData?.data?.records || [];
 
   const {
     data: drugTypesData,
@@ -59,8 +59,8 @@ const Investigations: React.FC = () => {
   } = useGetDrugTypesQuery({
     paginate: false,
     sort: { name: 1 },
-  })
-  const drugTypes = drugTypesData?.data?.records || []
+  });
+  const drugTypes = drugTypesData?.data?.records || [];
 
   const {
     data: drugManufacturersData,
@@ -69,8 +69,8 @@ const Investigations: React.FC = () => {
   } = useGetDrugManufacturersQuery({
     paginate: false,
     sort: { name: 1 },
-  })
-  const drugManufacturers = drugManufacturersData?.data?.records || []
+  });
+  const drugManufacturers = drugManufacturersData?.data?.records || [];
 
   const {
     data: taxRatesData,
@@ -79,8 +79,8 @@ const Investigations: React.FC = () => {
   } = useGetTaxBracketsQuery({
     paginate: false,
     sort: { taxRate: 1 },
-  })
-  const taxRates = taxRatesData?.data?.records || []
+  });
+  const taxRates = taxRatesData?.data?.records || [];
   const addDrugItemLoading =
     drugCategoriesLoading ||
     drugCategoriesFetching ||
@@ -89,7 +89,7 @@ const Investigations: React.FC = () => {
     drugTypesloading ||
     drugTypesFetching ||
     drugManufacturersLoading ||
-    drugManufacturersFetching
+    drugManufacturersFetching;
 
   const {
     data: drugItemData,
@@ -99,66 +99,66 @@ const Investigations: React.FC = () => {
     paginate: true,
     page: page,
     limit: pageSize,
-  })
-  const drugItems = drugItemData?.data?.records || []
-  const drugItemsPagination = drugItemData?.data?.pagination
-  const drugItemsLoading = drugItemLoading || drugItemFetching
+  });
+  const drugItems = drugItemData?.data?.records || [];
+  const drugItemsPagination = drugItemData?.data?.pagination;
+  const drugItemsLoading = drugItemLoading || drugItemFetching;
 
-  const [deleteDrugItem, { isLoading }] = useDeleteDrugItemMutation()
+  const [deleteDrugItem, { isLoading }] = useDeleteDrugItemMutation();
   const handleDelete = async () => {
-    const promise = deleteDrugItem(selectedRow).unwrap()
+    const promise = deleteDrugItem(selectedRow).unwrap();
 
     showPromiseToast(promise, {
       loading: 'Deleting...',
-      success: (data) => data || 'Deleted Successfully',
-      error: (data) => data || 'Failed to Delete',
-    })
+      success: data => data || 'Deleted Successfully',
+      error: data => data || 'Failed to Delete',
+    });
 
     try {
-      await promise
+      await promise;
     } catch (error) {
-      console.log(error)
+      console.log(error);
     }
 
-    closeDeleteModal()
-  }
+    closeDeleteModal();
+  };
 
   const columnsConfig: GridColDef[] = [
     {
       field: 'name',
       headerName: 'Drug Item',
       flex: 1,
-      valueFormatter: (params) => _.upperFirst(params.value),
+      valueFormatter: params => _.upperFirst(params.value),
     },
     { field: 'code', headerName: 'Drug Code', flex: 1 },
     {
       field: 'category',
       headerName: 'Category',
       flex: 1,
-      valueGetter: (params) => params.row.category.name,
+      valueGetter: params => params.row.category.name,
     },
     {
       field: 'type',
       headerName: 'Type',
       flex: 1,
-      valueGetter: (params) => params.row.type?.name,
-      valueFormatter: (params) => _.upperFirst(params.value),
+      valueGetter: params => params.row.type?.name,
+      valueFormatter: params => _.upperFirst(params.value),
     },
     { field: 'packSize', headerName: 'Pack Size', flex: 1 },
     {
       field: 'taxRate',
       headerName: 'Tax Rate',
       flex: 1,
-      valueGetter: (params) => {
-        return params.row.taxRate.taxRate
+      valueGetter: params => {
+        return params.row.taxRate.taxRate;
       },
     },
     {
       field: 'manufacturer',
       headerName: 'Manufacturer',
       flex: 1,
-      valueGetter: (params) => {
-        return params.row.manufacturer.name
+      valueGetter: params => {
+        return params.row.manufacturer.name;
       },
     },
     { field: 'status', headerName: 'Status', flex: 1 },
@@ -169,7 +169,7 @@ const Investigations: React.FC = () => {
       flex: 1,
       type: 'actions',
       getActions: (params: GridRowParams) => {
-        const row = params.row
+        const row = params.row;
         return [
           <GridActionsCellItem
             disabled={addDrugItemLoading}
@@ -182,44 +182,44 @@ const Investigations: React.FC = () => {
             label="Delete"
             onClick={() => handleDeleteClick(row.id)}
           />,
-        ]
+        ];
       },
     },
-  ]
+  ];
 
   // Add Modal
   const openAddModal = () => {
-    setIsAddModalOpen(true)
-  }
+    setIsAddModalOpen(true);
+  };
   const closeAddModal = () => {
-    setIsAddModalOpen(false)
-  }
+    setIsAddModalOpen(false);
+  };
 
   // Edit Modal
   const openEditModal = () => {
-    setIsEditModalOpen(true)
-  }
+    setIsEditModalOpen(true);
+  };
   const closeEditModal = () => {
-    setIsEditModalOpen(false)
-  }
+    setIsEditModalOpen(false);
+  };
 
   // Delete Modal
   const openDeleteModal = () => {
-    setIsDeleteModalOpen(true)
-  }
+    setIsDeleteModalOpen(true);
+  };
   const closeDeleteModal = () => {
-    setIsDeleteModalOpen(false)
-  }
+    setIsDeleteModalOpen(false);
+  };
 
   const handleEditClick = (id: string) => {
-    setSelectedRow(id)
-    openEditModal()
-  }
+    setSelectedRow(id);
+    openEditModal();
+  };
 
   const handleDeleteClick = (id: string) => {
-    setSelectedRow(id)
-    openDeleteModal()
-  }
+    setSelectedRow(id);
+    openDeleteModal();
+  };
 
   return (
     <ContentSection title="Drug Item">
@@ -285,7 +285,7 @@ const Investigations: React.FC = () => {
         />
       )}
     </ContentSection>
-  )
-}
+  );
+};
 
-export default Investigations
+export default Investigations;

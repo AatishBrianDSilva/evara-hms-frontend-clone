@@ -1,25 +1,29 @@
-import React, { useState } from "react";
-import Button from "@mui/material/Button";
+import React, { useState } from 'react';
+import Button from '@mui/material/Button';
 
-import Box from "@mui/material/Box";
-import Add from "@mui/icons-material/Add";
-import CustomDataGrid from "../../../../components/CustomDataGrid/CustomDataGrid";
-import { GridActionsCellItem, GridColDef, GridRowParams } from "@mui/x-data-grid";
-import { useSelector } from "react-redux";
-import { RootState } from "../../../../app/store";
-import AddTreatmentAdvice from "./AddTreatmentAdvice";
-import { useGetDoctorsQuery } from "../../../../services/doctorsApi";
-import { CircularProgress, Tooltip } from "@mui/material";
+import Box from '@mui/material/Box';
+import Add from '@mui/icons-material/Add';
+import CustomDataGrid from '../../../../components/CustomDataGrid/CustomDataGrid';
+import {
+  GridActionsCellItem,
+  GridColDef,
+  GridRowParams,
+} from '@mui/x-data-grid';
+import { useSelector } from 'react-redux';
+import { RootState } from '../../../../app/store';
+import AddTreatmentAdvice from './AddTreatmentAdvice';
+import { useGetDoctorsQuery } from '../../../../services/doctorsApi';
+import { CircularProgress, Tooltip } from '@mui/material';
 
 import {
   useGetTreatmentAdvicesQuery,
   useDeleteTreatmentAdviceMutation,
-} from "../../../../services/patientDashboardService/treatmentAdviceApi";
-import DeleteConfirmationModal from "../../../../components/DeleteConfirmationModal/DeleteConfirmationModal";
-import { useToast } from "../../../../context/ToastContext";
-import { useNavigate, useParams } from "react-router-dom";
-import { Visibility } from "@mui/icons-material";
-import ViewTreatmentAdvice from "./ViewTreatmentAdvice";
+} from '../../../../services/patientDashboardService/treatmentAdviceApi';
+import DeleteConfirmationModal from '../../../../components/DeleteConfirmationModal/DeleteConfirmationModal';
+import { useToast } from '../../../../context/ToastContext';
+import { useNavigate, useParams } from 'react-router-dom';
+import { Visibility } from '@mui/icons-material';
+import ViewTreatmentAdvice from './ViewTreatmentAdvice';
 
 const TreatmentAdvice: React.FC = () => {
   const { id, itemId } = useParams<{ id: string; itemId?: string }>();
@@ -41,9 +45,9 @@ const TreatmentAdvice: React.FC = () => {
   } = useGetDoctorsQuery({});
   const doctors = DoctorsData?.data?.records || [];
 
-  console.log("Doctor Data", doctors);
+  console.log('Doctor Data', doctors);
 
-  console.log("Patient Code", patient?.patientId);
+  console.log('Patient Code', patient?.patientId);
 
   // Get patient treatment advice
   const {
@@ -61,17 +65,19 @@ const TreatmentAdvice: React.FC = () => {
     },
     {
       skip: !patient?.patientId,
-    }
+    },
   );
 
-  console.log("Filters being applied:", {
+  console.log('Filters being applied:', {
     patientCode: patient?.patientId,
   });
-  console.log("Fetched Treatment Advices Data:", treatmentAdvicesData);
+  console.log('Fetched Treatment Advices Data:', treatmentAdvicesData);
 
   const patientTreatmentAdvices = treatmentAdvicesData?.data?.records || [];
-  const patientTreatmentAdvicesPagination = treatmentAdvicesData?.data?.pagination;
-  const patientTreatmentAdvicesLoading = treatmentAdviceLoading || treatmentAdviceFetching;
+  const patientTreatmentAdvicesPagination =
+    treatmentAdvicesData?.data?.pagination;
+  const patientTreatmentAdvicesLoading =
+    treatmentAdviceLoading || treatmentAdviceFetching;
 
   // Delete treatment advice
   const [deleteTreatmentAdvice, { isLoading: deletingTreatmentAdvice }] =
@@ -80,14 +86,17 @@ const TreatmentAdvice: React.FC = () => {
   const loading = DoctorsLoading || DoctorFetching;
 
   // State variables for controlling various dialogs
-  const [addTreatmentAdviceOpen, setAddTreatmentAdviceOpen] = useState<boolean>(false);
+  const [addTreatmentAdviceOpen, setAddTreatmentAdviceOpen] =
+    useState<boolean>(false);
   const [deleteTreatmentAdviceOpen, setDeleteTreatmentAdviceOpen] = useState<{
     id: string;
     name: string;
     status: boolean;
-  }>({ id: "", name: "", status: false });
+  }>({ id: '', name: '', status: false });
 
-  const [selectedTreatmentAdvice, setSelectedTreatmentAdvice] = useState<any | null>(null);
+  const [selectedTreatmentAdvice, setSelectedTreatmentAdvice] = useState<
+    any | null
+  >(null);
   const [isViewModalOpen, setIsViewModalOpen] = useState<boolean>(false);
 
   const handleViewClick = (row: any) => {
@@ -103,31 +112,32 @@ const TreatmentAdvice: React.FC = () => {
   // Columns configuration for the data grid
   const columns: GridColDef[] = [
     {
-      field: "treatmentAdvice",
-      headerName: "Treatment Advice",
+      field: 'treatmentAdvice',
+      headerName: 'Treatment Advice',
       flex: 1,
     },
     {
-      field: "tentativeDate",
-      headerName: "Tentative Date",
+      field: 'tentativeDate',
+      headerName: 'Tentative Date',
       flex: 1,
-      valueGetter: (params) => new Date(params.row.tentativeDate).toLocaleDateString(),
+      valueGetter: params =>
+        new Date(params.row.tentativeDate).toLocaleDateString(),
     },
     {
-      field: "comments",
-      headerName: "Comments",
-      flex: 1,
-    },
-    {
-      field: "status",
-      headerName: "Status",
+      field: 'comments',
+      headerName: 'Comments',
       flex: 1,
     },
     {
-      field: "actions",
-      headerName: "Actions",
+      field: 'status',
+      headerName: 'Status',
       flex: 1,
-      type: "actions",
+    },
+    {
+      field: 'actions',
+      headerName: 'Actions',
+      flex: 1,
+      type: 'actions',
       getActions: (params: GridRowParams) => {
         return [
           <Tooltip title="View">
@@ -143,23 +153,23 @@ const TreatmentAdvice: React.FC = () => {
   ];
 
   const closeDeleteDialog = () => {
-    setDeleteTreatmentAdviceOpen({ id: "", name: "", status: false });
+    setDeleteTreatmentAdviceOpen({ id: '', name: '', status: false });
   };
 
   const handleTreatmentAdviceDelete = async () => {
     const id = deleteTreatmentAdviceOpen.id;
     const promise = deleteTreatmentAdvice(id).unwrap();
     showPromiseToast(promise, {
-      loading: "Deleting treatment advice...",
-      success: () => "Treatment advice deleted successfully",
-      error: () => "Error deleting treatment advice",
+      loading: 'Deleting treatment advice...',
+      success: () => 'Treatment advice deleted successfully',
+      error: () => 'Error deleting treatment advice',
     });
 
     try {
       await promise;
       closeDeleteDialog();
     } catch (error) {
-      console.error("Error deleting treatment advice", error);
+      console.error('Error deleting treatment advice', error);
     }
   };
 
@@ -185,15 +195,27 @@ const TreatmentAdvice: React.FC = () => {
 
   // Main return statement
   return (
-    <Box p={2} display={"flex"} flexDirection={"column"} flex={1}>
-      <Box display={"flex"} justifyContent="flex-end" alignItems="center" mb={3}>
+    <Box p={2} display={'flex'} flexDirection={'column'} flex={1}>
+      <Box
+        display={'flex'}
+        justifyContent="flex-end"
+        alignItems="center"
+        mb={3}
+      >
         {hasFilters && (
-          <Button variant="contained" color="primary" onClick={handleResetFilters} sx={{ mr: 2 }}>
+          <Button
+            variant="contained"
+            color="primary"
+            onClick={handleResetFilters}
+            sx={{ mr: 2 }}
+          >
             Remove Filter
           </Button>
         )}
         <Button
-          startIcon={loading ? <CircularProgress size={16} color="secondary" /> : <Add />}
+          startIcon={
+            loading ? <CircularProgress size={16} color="secondary" /> : <Add />
+          }
           variant="contained"
           color="primary"
           onClick={() => setAddTreatmentAdviceOpen(true)}
@@ -211,7 +233,7 @@ const TreatmentAdvice: React.FC = () => {
         onPageChange={handlePageChange}
         onPageSizeChange={handlePageSizeChange}
         loading={patientTreatmentAdvicesLoading}
-        sx={{ height: "100%" }}
+        sx={{ height: '100%' }}
         enablePagination={true}
       />
 

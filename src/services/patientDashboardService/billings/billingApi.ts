@@ -1,12 +1,12 @@
-import { createApi } from "@reduxjs/toolkit/query/react";
+import { createApi } from '@reduxjs/toolkit/query/react';
 import {
   ApiResponse,
   IQueryOptions,
   PaginatedResponse,
-} from "../../../types/global";
-import { IPatientBilling } from "../../../types/patientDashboard/billings";
-import generateQueryParams from "../../../utils/generateQueryParams";
-import { baseQuery } from "../../baseQuery";
+} from '../../../types/global';
+import { IPatientBilling } from '../../../types/patientDashboard/billings';
+import generateQueryParams from '../../../utils/generateQueryParams';
+import { baseQuery } from '../../baseQuery';
 
 interface AddBillingPayload {
   estimations: string[];
@@ -53,105 +53,105 @@ interface AddRefundPayload {
 }
 
 export const billingApi = createApi({
-  reducerPath: "billingApi",
+  reducerPath: 'billingApi',
   baseQuery: baseQuery,
-  tagTypes: ["Billing", "Estimations", "Refund", "Stocks"],
-  endpoints: (builder) => ({
+  tagTypes: ['Billing', 'Estimations', 'Refund', 'Stocks'],
+  endpoints: builder => ({
     getBillings: builder.query<
       ApiResponse<PaginatedResponse<IPatientBilling>>,
       IQueryOptions
     >({
-      query: (options) => {
+      query: options => {
         const queryParams = generateQueryParams(options);
-        return { url: `billings?${queryParams}`, method: "GET" };
+        return { url: `billings?${queryParams}`, method: 'GET' };
       },
-      providesTags: (_result, _error, _args) => ["Billing"],
+      providesTags: (_result, _error, _args) => ['Billing'],
     }),
     getBillingById: builder.query<ApiResponse<IPatientBilling>, string>({
       query: (id: string) => {
-        return { url: `billings/${id}`, method: "GET" };
+        return { url: `billings/${id}`, method: 'GET' };
       },
-      providesTags: (_result, _error, id) => [{ type: "Billing", id }],
+      providesTags: (_result, _error, id) => [{ type: 'Billing', id }],
     }),
     addBilling: builder.mutation<
       ApiResponse<IPatientBilling>,
       AddBillingPayload
     >({
-      query: (billingData) => ({
-        url: "billings/add",
-        method: "POST",
+      query: billingData => ({
+        url: 'billings/add',
+        method: 'POST',
         body: billingData,
       }),
-      invalidatesTags: ["Billing", "Estimations"],
+      invalidatesTags: ['Billing', 'Estimations'],
     }),
     editBilling: builder.mutation<
       ApiResponse<IPatientBilling>,
       EditBillingPayload
     >({
-      query: (billingData) => ({
+      query: billingData => ({
         url: `billings/${billingData._id}`,
-        method: "PUT",
+        method: 'PUT',
         body: billingData,
       }),
-      invalidatesTags: ["Billing"],
+      invalidatesTags: ['Billing'],
     }),
     editPaidBillingMode: builder.mutation<
       ApiResponse<IPatientBilling>,
       EditBillingPaymentModePayload
     >({
-      query: (billingData) => ({
+      query: billingData => ({
         url: `billings/payment-mode/${billingData._id}`,
-        method: "PUT",
+        method: 'PUT',
         body: billingData.payments,
       }),
-      invalidatesTags: ["Billing"],
+      invalidatesTags: ['Billing'],
     }),
     deleteBilling: builder.mutation<ApiResponse<null>, string>({
-      query: (id) => ({
+      query: id => ({
         url: `billings/${id}`,
-        method: "DELETE",
+        method: 'DELETE',
       }),
-      invalidatesTags: ["Billing"],
+      invalidatesTags: ['Billing'],
     }),
     processBilling: builder.mutation<ApiResponse<null>, ProcessBillingPayload>({
-      query: (data) => ({
+      query: data => ({
         url: `billings/process`,
-        method: "POST",
+        method: 'POST',
         body: data,
       }),
-      invalidatesTags: ["Billing"],
+      invalidatesTags: ['Billing'],
     }),
     getAllServices: builder.query<ApiResponse<any>, IQueryOptions>({
-      query: (options) => {
+      query: options => {
         const queryParams = generateQueryParams(options);
-        return { url: `master/services/all?${queryParams}`, method: "GET" };
+        return { url: `master/services/all?${queryParams}`, method: 'GET' };
       },
     }),
     addRefund: builder.mutation<ApiResponse<IPatientBilling>, AddRefundPayload>(
       {
-        query: (refundData) => ({
-          url: "billings/refund",
-          method: "POST",
+        query: refundData => ({
+          url: 'billings/refund',
+          method: 'POST',
           body: refundData,
         }),
-        invalidatesTags: ["Billing", "Stocks"],
-      }
+        invalidatesTags: ['Billing', 'Stocks'],
+      },
     ),
     getRefunds: builder.query<
       ApiResponse<PaginatedResponse<any>>,
       IQueryOptions
     >({
-      query: (options) => {
+      query: options => {
         const queryParams = generateQueryParams(options);
-        return { url: `billings/refunds?${queryParams}`, method: "GET" };
+        return { url: `billings/refunds?${queryParams}`, method: 'GET' };
       },
-      providesTags: (_result, _error, _args) => ["Refund"],
+      providesTags: (_result, _error, _args) => ['Refund'],
     }),
     getRefundById: builder.query<ApiResponse<any>, string>({
       query: (id: string) => {
-        return { url: `billings/refunds/${id}`, method: "GET" };
+        return { url: `billings/refunds/${id}`, method: 'GET' };
       },
-      providesTags: (_result, _error, id) => [{ type: "Refund", id }],
+      providesTags: (_result, _error, id) => [{ type: 'Refund', id }],
     }),
   }),
 });

@@ -1,7 +1,7 @@
-import Box from "@mui/material/Box";
-import React, { useState, useEffect, useCallback } from "react";
-import CustomDataGrid from "../../../components/CustomDataGrid/CustomDataGrid";
-import { GridColDef } from "@mui/x-data-grid";
+import Box from '@mui/material/Box';
+import React, { useState, useEffect, useCallback } from 'react';
+import CustomDataGrid from '../../../components/CustomDataGrid/CustomDataGrid';
+import { GridColDef } from '@mui/x-data-grid';
 import {
   TextField,
   MenuItem,
@@ -11,49 +11,49 @@ import {
   SelectChangeEvent,
   Typography,
   Button,
-} from "@mui/material";
-import { formatToIndianCurrencyFormat } from "../../../utils/formatToIndianCurrencyFormat";
-import { EPatientBillingStatus } from "../../../types/patientDashboard/billings";
-import ContentSection from "../../../components/ContentSection/ContentSection";
-import { useGetAnalyticsPatientBillingsQuery } from "../../../services/analyticsDashboardService/billings/analyticsPatientBillingsApi";
-import { debounce } from "lodash";
-import CustomeDateRangePicker from "../../../components/CustomDateRangePicker/CustomDateRangePicker";
-import { exportToCSV } from "../../../utils/exportCSV"; // Import the CSV utility
+} from '@mui/material';
+import { formatToIndianCurrencyFormat } from '../../../utils/formatToIndianCurrencyFormat';
+import { EPatientBillingStatus } from '../../../types/patientDashboard/billings';
+import ContentSection from '../../../components/ContentSection/ContentSection';
+import { useGetAnalyticsPatientBillingsQuery } from '../../../services/analyticsDashboardService/billings/analyticsPatientBillingsApi';
+import { debounce } from 'lodash';
+import CustomeDateRangePicker from '../../../components/CustomDateRangePicker/CustomDateRangePicker';
+import { exportToCSV } from '../../../utils/exportCSV'; // Import the CSV utility
 
 interface RowType {
   _id: string;
 }
 
 enum EPaymentMethod {
-  Cash = "Cash",
-  CreditCard = "CreditCard",
-  BankTransfer = "BankTransfer",
-  Online = "Online",
-  UPI = "UPI",
+  Cash = 'Cash',
+  CreditCard = 'CreditCard',
+  BankTransfer = 'BankTransfer',
+  Online = 'Online',
+  UPI = 'UPI',
 }
 
 enum EBillType {
-  Investigation = "Investigation",
-  Procedure = "Procedure",
-  Pharmacy = "Pharmacy",
-  Service = "Service",
-  CryoPreservation = "Cryo Preservation",
-  TreatmentCycle = "Treatment Cycle",
-  Package = "Package",
+  Investigation = 'Investigation',
+  Procedure = 'Procedure',
+  Pharmacy = 'Pharmacy',
+  Service = 'Service',
+  CryoPreservation = 'Cryo Preservation',
+  TreatmentCycle = 'Treatment Cycle',
+  Package = 'Package',
 }
 
 const PatientBillings: React.FC = () => {
   const [page, setPage] = useState<number>(1); // Ensure the page is set correctly
   const [pageSize, setPageSize] = useState<number>(25); // Default to 25 rows per page
-  const [selectedStatus, setSelectedStatus] = useState<EPatientBillingStatus | "">(
-    ""
-  );
-  const [patientIdQuery, setPatientIdQuery] = useState<string>("");
-  const [patientNameQuery, setPatientNameQuery] = useState<string>("");
-  const [searchQuery, setSearchQuery] = useState<string>("");
+  const [selectedStatus, setSelectedStatus] = useState<
+    EPatientBillingStatus | ''
+  >('');
+  const [patientIdQuery, setPatientIdQuery] = useState<string>('');
+  const [patientNameQuery, setPatientNameQuery] = useState<string>('');
+  const [searchQuery, setSearchQuery] = useState<string>('');
 
-  const [selectedMethod, setSelectedMethod] = useState<EPaymentMethod | "">("");
-  const [selectedBillType, setSelectedBillType] = useState<EBillType | "">("");
+  const [selectedMethod, setSelectedMethod] = useState<EPaymentMethod | ''>('');
+  const [selectedBillType, setSelectedBillType] = useState<EBillType | ''>('');
 
   const [startDate, setStartDate] = useState<Date | null>(null);
   const [endDate, setEndDate] = useState<Date | null>(null);
@@ -68,13 +68,13 @@ const PatientBillings: React.FC = () => {
 
   // Convert start and end dates to UTC date-only format for the API
   const startDateUTC = startDate;
-  const endDateUTC = endDate
+  const endDateUTC = endDate;
 
   const debounceSetSearchQuery = useCallback(
     debounce((query: string) => {
       setSearchQuery(query);
     }, 500),
-    []
+    [],
   );
 
   useEffect(() => {
@@ -84,7 +84,7 @@ const PatientBillings: React.FC = () => {
     if (selectedMethod) queryParts.push(`paymentMethod:${selectedMethod}`);
     if (selectedBillType) queryParts.push(`billType:${selectedBillType}`);
 
-    const combinedQuery = queryParts.join(" ");
+    const combinedQuery = queryParts.join(' ');
 
     debounceSetSearchQuery(combinedQuery);
     setPage(1); // Reset page to 1 on query change
@@ -92,7 +92,13 @@ const PatientBillings: React.FC = () => {
     return () => {
       debounceSetSearchQuery.cancel();
     };
-  }, [patientIdQuery, patientNameQuery, selectedMethod, selectedBillType, debounceSetSearchQuery]);
+  }, [
+    patientIdQuery,
+    patientNameQuery,
+    selectedMethod,
+    selectedBillType,
+    debounceSetSearchQuery,
+  ]);
 
   const handlePageChange = (newPage: number) => {
     setPage(newPage);
@@ -103,19 +109,27 @@ const PatientBillings: React.FC = () => {
     setPage(1); // Reset to first page when page size changes
   };
 
-  const handleStatusChange = (event: SelectChangeEvent<EPatientBillingStatus>) => {
+  const handleStatusChange = (
+    event: SelectChangeEvent<EPatientBillingStatus>,
+  ) => {
     setSelectedStatus(event.target.value as EPatientBillingStatus);
   };
 
-  const handlePatientIdChange = (event: React.ChangeEvent<HTMLInputElement>) => {
+  const handlePatientIdChange = (
+    event: React.ChangeEvent<HTMLInputElement>,
+  ) => {
     setPatientIdQuery(event.target.value);
   };
 
-  const handlePatientNameChange = (event: React.ChangeEvent<HTMLInputElement>) => {
+  const handlePatientNameChange = (
+    event: React.ChangeEvent<HTMLInputElement>,
+  ) => {
     setPatientNameQuery(event.target.value);
   };
 
-  const handleMethodChange = (event: SelectChangeEvent<EPaymentMethod | "">) => {
+  const handleMethodChange = (
+    event: SelectChangeEvent<EPaymentMethod | ''>,
+  ) => {
     setSelectedMethod(event.target.value as EPaymentMethod);
   };
 
@@ -136,7 +150,7 @@ const PatientBillings: React.FC = () => {
     {
       refetchOnFocus: true,
       refetchOnMountOrArgChange: true,
-    }
+    },
   );
 
   const patientBillingsData = data?.data?.records || [];
@@ -148,12 +162,12 @@ const PatientBillings: React.FC = () => {
   // Update the calculation of totalPaid and totalDues with rounding
   const totalPaid = patientBillingsData.reduce(
     (sum, row) => roundToTwo(sum + roundToTwo((row as any).paymentAmount)),
-    0
+    0,
   );
 
   const totalDues = patientBillingsData.reduce(
     (sum, row) => roundToTwo(sum + roundToTwo((row as any).totalDues)),
-    0
+    0,
   );
 
   // Calculate the total discount
@@ -172,18 +186,18 @@ const PatientBillings: React.FC = () => {
   const handleDownloadCSV = () => {
     if (patientBillingsData.length > 0) {
       const headers = [
-        "Bill No",
-        "Patient ID",
-        "Patient Name",
-        "Service",
-        "Tax",
-        "Total",
-        "Discount",
-        "Paid",
-        "Due",
-        "Payment Method",
-        "Payment Amount",
-        "Created At",
+        'Bill No',
+        'Patient ID',
+        'Patient Name',
+        'Service',
+        'Tax',
+        'Total',
+        'Discount',
+        'Paid',
+        'Due',
+        'Payment Method',
+        'Payment Amount',
+        'Created At',
       ];
 
       const formattedData = patientBillingsData.map((record: any) => [
@@ -198,76 +212,77 @@ const PatientBillings: React.FC = () => {
         formatToIndianCurrencyFormat(record.totalDues),
         record.paymentMethod,
         formatToIndianCurrencyFormat(record.paymentAmount),
-        new Date(record.createdAt).toLocaleDateString("en-GB", {
-          day: "2-digit",
-          month: "2-digit",
-          year: "numeric",
+        new Date(record.createdAt).toLocaleDateString('en-GB', {
+          day: '2-digit',
+          month: '2-digit',
+          year: 'numeric',
         }),
       ]);
 
-      exportToCSV([headers, ...formattedData], "PatientBillings_Report");
+      exportToCSV([headers, ...formattedData], 'PatientBillings_Report');
     } else {
-      console.log("No data to export");
+      console.log('No data to export');
     }
   };
 
   const columnsConfig: GridColDef[] = [
     {
-      field: "createdAt",
-      headerName: "Created At",
-      type: "date",
+      field: 'createdAt',
+      headerName: 'Created At',
+      type: 'date',
       flex: 1,
-      valueFormatter: (params) =>
-        new Date(params.value).toLocaleDateString("en-GB", {
-          day: "2-digit",
-          month: "2-digit",
-          year: "numeric",
+      valueFormatter: params =>
+        new Date(params.value).toLocaleDateString('en-GB', {
+          day: '2-digit',
+          month: '2-digit',
+          year: 'numeric',
         }),
     },
-    { field: "patientCode", headerName: "Patient ID", flex: 1 },
-    { field: "patientName", headerName: "Patient Name", flex: 1 },
-    { field: "billingId", headerName: "Bill No.", flex: 1 },
-    { field: "billType", headerName: "Service", flex: 1 },
+    { field: 'patientCode', headerName: 'Patient ID', flex: 1 },
+    { field: 'patientName', headerName: 'Patient Name', flex: 1 },
+    { field: 'billingId', headerName: 'Bill No.', flex: 1 },
+    { field: 'billType', headerName: 'Service', flex: 1 },
     {
-      field: "tax",
-      headerName: "Tax",
+      field: 'tax',
+      headerName: 'Tax',
       flex: 1,
-      valueFormatter: (params) => formatToIndianCurrencyFormat(params.value),
+      valueFormatter: params => formatToIndianCurrencyFormat(params.value),
     },
     {
-      field: "subTotal",
-      headerName: "Total",
+      field: 'subTotal',
+      headerName: 'Total',
       flex: 1,
-      valueGetter: (params) => formatToIndianCurrencyFormat(params.value),
+      valueGetter: params => formatToIndianCurrencyFormat(params.value),
     },
     {
-      field: "discount",
-      headerName: "Discount",
+      field: 'discount',
+      headerName: 'Discount',
       flex: 1,
-      valueFormatter: (params) => formatToIndianCurrencyFormat(params.value),
+      valueFormatter: params => formatToIndianCurrencyFormat(params.value),
     },
     {
-      field: "totalPaid",
-      headerName: "Paid",
+      field: 'totalPaid',
+      headerName: 'Paid',
       flex: 1,
-      valueFormatter: (params) => formatToIndianCurrencyFormat(params.value),
+      valueFormatter: params => formatToIndianCurrencyFormat(params.value),
     },
     {
-      field: "totalDues",
-      headerName: "Due",
+      field: 'totalDues',
+      headerName: 'Due',
       flex: 1,
-      valueFormatter: (params) => formatToIndianCurrencyFormat(params.value),
+      valueFormatter: params => formatToIndianCurrencyFormat(params.value),
     },
-    { field: "paymentMethod", headerName: "Method", flex: 1 },
+    { field: 'paymentMethod', headerName: 'Method', flex: 1 },
     {
-      field: "paymentAmount",
-      headerName: "Payment Amount",
+      field: 'paymentAmount',
+      headerName: 'Payment Amount',
       flex: 1,
-      valueFormatter: (params) => formatToIndianCurrencyFormat(params.value),
+      valueFormatter: params => formatToIndianCurrencyFormat(params.value),
     },
   ];
 
-  const getRowId = (row: RowType & { paymentMethod: string }) => `${row._id}-${row.paymentMethod}`;
+  const getRowId = (row: RowType & { paymentMethod: string }) =>
+    `${row._id}-${row.paymentMethod}`;
 
   return (
     <ContentSection title="Patient Billings">
@@ -277,12 +292,12 @@ const PatientBillings: React.FC = () => {
           <Select
             label="Bill Type"
             value={selectedBillType}
-            onChange={(event: SelectChangeEvent<EBillType | "">) => {
+            onChange={(event: SelectChangeEvent<EBillType | ''>) => {
               setSelectedBillType(event.target.value as EBillType);
             }}
             style={{ minWidth: 150 }}
           >
-            {Object.values(EBillType).map((type) => (
+            {Object.values(EBillType).map(type => (
               <MenuItem key={type} value={type}>
                 {type}
               </MenuItem>
@@ -297,7 +312,7 @@ const PatientBillings: React.FC = () => {
             onChange={handleMethodChange}
             style={{ minWidth: 150 }}
           >
-            {Object.values(EPaymentMethod).map((method) => (
+            {Object.values(EPaymentMethod).map(method => (
               <MenuItem key={method} value={method}>
                 {method}
               </MenuItem>
@@ -312,7 +327,7 @@ const PatientBillings: React.FC = () => {
             onChange={handleMethodChange}
             style={{ minWidth: 150 }}
           >
-            {Object.values(EPaymentMethod).map((method) => (
+            {Object.values(EPaymentMethod).map(method => (
               <MenuItem key={method} value={method}>
                 {method}
               </MenuItem>
@@ -328,7 +343,7 @@ const PatientBillings: React.FC = () => {
             style={{ minWidth: 150 }}
           >
             <MenuItem value="">All</MenuItem>
-            {Object.values(EPatientBillingStatus).map((status) => (
+            {Object.values(EPatientBillingStatus).map(status => (
               <MenuItem key={status} value={status}>
                 {status}
               </MenuItem>
@@ -368,13 +383,20 @@ const PatientBillings: React.FC = () => {
         onPageChange={handlePageChange}
         onPageSizeChange={handlePageSizeChange}
         loading={patientBillingsLoading}
-        sx={{ height: "100%" }}
+        sx={{ height: '100%' }}
         enablePagination={pageSize !== -1} // Disable pagination when "All" is selected
-        extendedPageSizeOptions={[25, 50, 100, { label: "All", value: -1 }]} // Add the "All" option
+        extendedPageSizeOptions={[25, 50, 100, { label: 'All', value: -1 }]} // Add the "All" option
       />
 
       {/* Summary Section */}
-      <Box mt={4} p={2} width="40%" display="flex" flexDirection="column" ml="auto">
+      <Box
+        mt={4}
+        p={2}
+        width="40%"
+        display="flex"
+        flexDirection="column"
+        ml="auto"
+      >
         <Typography variant="h5" gutterBottom color="primary" fontWeight="bold">
           Summary
         </Typography>

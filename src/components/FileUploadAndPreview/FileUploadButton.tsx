@@ -1,26 +1,26 @@
-import React, { useState } from "react";
-import Box from "@mui/material/Box";
-import Typography from "@mui/material/Typography";
-import Button from "@mui/material/Button";
-import CloudUploadIcon from "@mui/icons-material/CloudUpload";
-import SendIcon from "@mui/icons-material/Send";
-import { styled } from "@mui/material/styles";
-import Delete from "@mui/icons-material/Delete";
-import axios from "axios";
-import { useGetSignedUrlMutation } from "../../services/filesApi";
-import { EBuckets, EDocumentTypes } from "../../types/global";
-import { useToast } from "../../context/ToastContext";
-import { CircularProgress } from "@mui/material";
+import React, { useState } from 'react';
+import Box from '@mui/material/Box';
+import Typography from '@mui/material/Typography';
+import Button from '@mui/material/Button';
+import CloudUploadIcon from '@mui/icons-material/CloudUpload';
+import SendIcon from '@mui/icons-material/Send';
+import { styled } from '@mui/material/styles';
+import Delete from '@mui/icons-material/Delete';
+import axios from 'axios';
+import { useGetSignedUrlMutation } from '../../services/filesApi';
+import { EBuckets, EDocumentTypes } from '../../types/global';
+import { useToast } from '../../context/ToastContext';
+import { CircularProgress } from '@mui/material';
 
-const Input = styled("input")({
-  display: "none",
+const Input = styled('input')({
+  display: 'none',
 });
 
 interface FileUploadButtonProps {
   acceptTypes?: string;
   labelName?: string;
-  color?: "primary" | "secondary";
-  variant?: "text" | "outlined" | "contained";
+  color?: 'primary' | 'secondary';
+  variant?: 'text' | 'outlined' | 'contained';
   buttonStyle?: React.CSSProperties;
   onUploadFiles: (files: string[]) => void;
   maxFiles?: number;
@@ -33,12 +33,12 @@ interface FileUploadButtonProps {
 }
 
 const FileUploadButton: React.FC<FileUploadButtonProps> = ({
-  acceptTypes = "image/*, application/pdf, .doc, .txt",
-  labelName = "Select files",
+  acceptTypes = 'image/*, application/pdf, .doc, .txt',
+  labelName = 'Select files',
   onUploadFiles,
   buttonStyle,
-  color = "primary",
-  variant = "outlined",
+  color = 'primary',
+  variant = 'outlined',
   maxFiles = 1,
   maxFileSizeinMB = 5, // 5MB
   uploadedFiles = 0,
@@ -71,7 +71,7 @@ const FileUploadButton: React.FC<FileUploadButtonProps> = ({
       }
 
       let fileSizeError = false;
-      newFiles.forEach((file) => {
+      newFiles.forEach(file => {
         if (file.size > maxFileSizeInBytes) {
           fileSizeError = true;
         }
@@ -98,7 +98,7 @@ const FileUploadButton: React.FC<FileUploadButtonProps> = ({
 
         // Initialize the persistent toast with the initial message
         toastId = showProgressToast(`Uploading files...`, 0, toastId, {
-          position: "top-right",
+          position: 'top-right',
           autoClose: false, // Make the toast persistent
         });
 
@@ -111,15 +111,15 @@ const FileUploadButton: React.FC<FileUploadButtonProps> = ({
             userId: user,
             bucket: bucket,
             documentType: documentType,
-            operation: "putObject",
+            operation: 'putObject',
             expires: 600,
             fileName: file.name,
-            isImage: file.type.startsWith("image/"),
+            isImage: file.type.startsWith('image/'),
             reportId,
           }).unwrap();
 
           if (
-            signedUrlResponse?.status === "success" &&
+            signedUrlResponse?.status === 'success' &&
             signedUrlResponse.data
           ) {
             const { url, key, bucketName, region } = signedUrlResponse.data;
@@ -132,24 +132,24 @@ const FileUploadButton: React.FC<FileUploadButtonProps> = ({
               0,
               toastId,
               {
-                position: "top-right",
+                position: 'top-right',
                 autoClose: false, // Keep the toast persistent
-              }
+              },
             );
 
             // Upload the file to S3
             const res = await axios.put(url, file, {
               headers: {
-                "Content-Type": file.type,
+                'Content-Type': file.type,
               },
-              onUploadProgress: (progressEvent) => {
+              onUploadProgress: progressEvent => {
                 if (progressEvent.progress) {
                   // Calculate the overall progress across all files
                   const currentFileProgress = Math.round(
-                    progressEvent.progress * 100
+                    progressEvent.progress * 100,
                   );
                   const overallProgress = Math.round(
-                    ((i + progressEvent.progress) / selectedFiles.length) * 100
+                    ((i + progressEvent.progress) / selectedFiles.length) * 100,
                   );
 
                   // Update the persistent toast with the current progress and file number
@@ -160,9 +160,9 @@ const FileUploadButton: React.FC<FileUploadButtonProps> = ({
                     overallProgress,
                     toastId,
                     {
-                      position: "top-right",
+                      position: 'top-right',
                       autoClose: false, // Keep the toast persistent
-                    }
+                    },
                   );
                 }
               },
@@ -172,22 +172,22 @@ const FileUploadButton: React.FC<FileUploadButtonProps> = ({
               const uploadedUrl = `https://${bucketName}.s3.${region}.amazonaws.com/${key}`;
               uploadedFileUrls.push(uploadedUrl);
             } else {
-              setError("Error uploading file to S3.");
+              setError('Error uploading file to S3.');
               // Update the toast to indicate error
-              showProgressToast("Error uploading file to S3.", 0, toastId, {
-                position: "top-right",
+              showProgressToast('Error uploading file to S3.', 0, toastId, {
+                position: 'top-right',
                 autoClose: 3000, // Auto close after 3 seconds
-                type: "error",
+                type: 'error',
               });
               break;
             }
           } else {
-            setError("Error getting signed URL.");
+            setError('Error getting signed URL.');
             // Update the toast to indicate error
-            showProgressToast("Error getting signed URL.", 0, toastId, {
-              position: "top-right",
+            showProgressToast('Error getting signed URL.', 0, toastId, {
+              position: 'top-right',
               autoClose: 3000, // Auto close after 3 seconds
-              type: "error",
+              type: 'error',
             });
             break;
           }
@@ -198,28 +198,28 @@ const FileUploadButton: React.FC<FileUploadButtonProps> = ({
           setUploadSuccess(true);
           setSelectedFiles([]); // Clear selected files
           // Update the toast to indicate success
-          showProgressToast("All files uploaded successfully!", 100, toastId, {
-            position: "top-right",
+          showProgressToast('All files uploaded successfully!', 100, toastId, {
+            position: 'top-right',
             autoClose: 3000, // Auto close after 3 seconds
-            type: "success",
+            type: 'success',
           });
         }
       } catch (err) {
-        setError("Error uploading files.");
+        setError('Error uploading files.');
         console.error(err);
         // Update the toast to indicate error
-        showProgressToast("Error uploading files.", 0, toastId, {
-          position: "top-right",
+        showProgressToast('Error uploading files.', 0, toastId, {
+          position: 'top-right',
           autoClose: 3000, // Auto close after 3 seconds
-          type: "error",
+          type: 'error',
         });
       } finally {
         setLoading(false); // Set loading to false when the upload ends
       }
     } else if (!user) {
-      setError("User is required.");
+      setError('User is required.');
     } else {
-      setError("No files selected for upload.");
+      setError('No files selected for upload.');
     }
   };
 
@@ -272,7 +272,7 @@ const FileUploadButton: React.FC<FileUploadButtonProps> = ({
         style={{ marginLeft: 8 }}
         disabled={selectedFiles.length <= 0 || loading}
       >
-        {loading ? "Uploading..." : "Upload"}
+        {loading ? 'Uploading...' : 'Upload'}
       </Button>
 
       {selectedFiles.length > 0 && (
@@ -282,7 +282,7 @@ const FileUploadButton: React.FC<FileUploadButtonProps> = ({
             {selectedFiles.map((file, index) => (
               <li
                 key={index}
-                style={{ color: uploadSuccess ? "green" : "inherit" }}
+                style={{ color: uploadSuccess ? 'green' : 'inherit' }}
               >
                 {file.name} ({(file.size / 1024 / 1024).toFixed(2)} MB)
               </li>
@@ -291,7 +291,7 @@ const FileUploadButton: React.FC<FileUploadButtonProps> = ({
         </Box>
       )}
       {uploadSuccess && (
-        <Typography variant="subtitle1" style={{ color: "green" }}>
+        <Typography variant="subtitle1" style={{ color: 'green' }}>
           Files uploaded successfully!
         </Typography>
       )}

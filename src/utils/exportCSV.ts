@@ -4,23 +4,23 @@ export const exportToCSV = (rows: any[], fileName: string) => {
 
   // Create the CSV content with UTF-8 BOM to handle special characters
   const csvContent =
-    "\uFEFF" + // Add BOM for UTF-8
-    headers.join(",") +
-    "\n" + // Join headers
+    '\uFEFF' + // Add BOM for UTF-8
+    headers.join(',') +
+    '\n' + // Join headers
     rows
       .slice(1)
-      .map((row) =>
+      .map(row =>
         Object.values(row)
-          .map((value) => (typeof value === "string" ? `"${value}"` : value)) // Ensure string values are wrapped in quotes
-          .join(",")
+          .map(value => (typeof value === 'string' ? `"${value}"` : value)) // Ensure string values are wrapped in quotes
+          .join(','),
       )
-      .join("\n"); // Join rows after headers
+      .join('\n'); // Join rows after headers
 
-  const blob = new Blob([csvContent], { type: "text/csv;charset=utf-8;" });
-  const link = document.createElement("a");
+  const blob = new Blob([csvContent], { type: 'text/csv;charset=utf-8;' });
+  const link = document.createElement('a');
   const url = URL.createObjectURL(blob);
-  link.setAttribute("href", url);
-  link.setAttribute("download", `${fileName}.csv`);
+  link.setAttribute('href', url);
+  link.setAttribute('download', `${fileName}.csv`);
   document.body.appendChild(link);
   link.click();
   document.body.removeChild(link); // Cleanup after download

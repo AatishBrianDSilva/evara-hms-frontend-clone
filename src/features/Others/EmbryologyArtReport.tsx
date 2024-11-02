@@ -5,13 +5,13 @@ import Grid from '@mui/material/Grid';
 import MenuItem from '@mui/material/MenuItem';
 import TextField from '@mui/material/TextField';
 import Typography from '@mui/material/Typography';
-import React from 'react'
-import CustomDataGrid from '../../components/CustomDataGrid/CustomDataGrid'
-import PatientInfo from './PatientInfo'
-import TreatmentCyclesTable from './TreatmentCyclesTable'
+import React from 'react';
+import CustomDataGrid from '../../components/CustomDataGrid/CustomDataGrid';
+import PatientInfo from './PatientInfo';
+import TreatmentCyclesTable from './TreatmentCyclesTable';
 import CloudUploadIcon from '@mui/icons-material/CloudUpload';
-import { VisuallyHiddenInput } from '../../components/Utils/VisuallyHiddenInput'
-import { GridColDef } from '@mui/x-data-grid'
+import { VisuallyHiddenInput } from '../../components/Utils/VisuallyHiddenInput';
+import { GridColDef } from '@mui/x-data-grid';
 import CustomDatePicker from '../../components/CustomDatePicker/CustomDatePicker';
 import CustomTimePicker from '../../components/CustomDatePicker/CustomTimePicker';
 
@@ -19,25 +19,35 @@ const columns: GridColDef[] = [
   { field: 'patientName', headerName: 'Patient Name', flex: 1 },
   { field: 'createdAt', headerName: 'Created At', flex: 1 },
   { field: 'createdBy', headerName: 'Created By', flex: 1 },
-]
+];
 
 const EmbryologyArtReport: React.FC = () => {
   return (
-    <div className='main-container'>
+    <div className="main-container">
       <PatientInfo />
 
       <TreatmentCyclesTable />
 
-      <Typography variant='h6' mt={2}>
+      <Typography variant="h6" mt={2}>
         ART Report
       </Typography>
 
-      <Box display={"flex"} justifyContent={"space-between"} alignItems={"center"} mb={2} mt={2}>
-        <Box display={"flex"} alignItems={"center"} gap={2}>
-          <Button variant='outlined' sx={{ width: 'fit-content' }}>
+      <Box
+        display={'flex'}
+        justifyContent={'space-between'}
+        alignItems={'center'}
+        mb={2}
+        mt={2}
+      >
+        <Box display={'flex'} alignItems={'center'} gap={2}>
+          <Button variant="outlined" sx={{ width: 'fit-content' }}>
             Add New
           </Button>
-          <Button variant='outlined' color='secondary' sx={{ width: 'fit-content' }}>
+          <Button
+            variant="outlined"
+            color="secondary"
+            sx={{ width: 'fit-content' }}
+          >
             Export
           </Button>
         </Box>
@@ -45,11 +55,7 @@ const EmbryologyArtReport: React.FC = () => {
       </Box>
 
       <Box>
-        <CustomDataGrid
-          rows={[]}
-          columns={columns}
-          pageSizeOptions={[5, 10]}
-        />
+        <CustomDataGrid rows={[]} columns={columns} pageSizeOptions={[5, 10]} />
       </Box>
 
       <Grid container spacing={2} mt={2} mb={2}>
@@ -57,25 +63,25 @@ const EmbryologyArtReport: React.FC = () => {
           <TextField label="Consultant Doctor" fullWidth />
         </Grid>
         <Grid item xs={12} md={4} lg={2}>
-          <TextField label="Embryologist-1" fullWidth select >
+          <TextField label="Embryologist-1" fullWidth select>
             <MenuItem value="1">Embryologist-1</MenuItem>
             <MenuItem value="2">Embryologist-2</MenuItem>
           </TextField>
         </Grid>
         <Grid item xs={12} md={4} lg={2}>
-          <TextField label="Embryologist-2" fullWidth select >
+          <TextField label="Embryologist-2" fullWidth select>
             <MenuItem value="1">Embryologist-1</MenuItem>
             <MenuItem value="2">Embryologist-2</MenuItem>
           </TextField>
         </Grid>
         <Grid item xs={12} md={4} lg={2}>
-          <TextField label="Gynaecologist-1" fullWidth select >
+          <TextField label="Gynaecologist-1" fullWidth select>
             <MenuItem value="1">Embryologist-1</MenuItem>
             <MenuItem value="2">Embryologist-2</MenuItem>
           </TextField>
         </Grid>
         <Grid item xs={12} md={4} lg={2}>
-          <TextField label="Gynaecologist-2" fullWidth select >
+          <TextField label="Gynaecologist-2" fullWidth select>
             <MenuItem value="1">Embryologist-1</MenuItem>
             <MenuItem value="2">Embryologist-2</MenuItem>
           </TextField>
@@ -142,7 +148,7 @@ const EmbryologyArtReport: React.FC = () => {
           <TextField label="No.of Embryos Transferred" fullWidth />
         </Grid>
         <Grid item xs={12} md={4} lg={2}>
-          <TextField label="Quality of Embryos Transferred" fullWidth select >
+          <TextField label="Quality of Embryos Transferred" fullWidth select>
             <MenuItem value="1">Embryologist-1</MenuItem>
             <MenuItem value="2">Embryologist-2</MenuItem>
           </TextField>
@@ -160,7 +166,10 @@ const EmbryologyArtReport: React.FC = () => {
           <CustomDatePicker value={null} label="Embryo Freezing Done On" />
         </Grid>
         <Grid item xs={12} md={4} lg={2}>
-          <CustomDatePicker value={null} label="Vitrification of Maintenance of embryos will expire on" />
+          <CustomDatePicker
+            value={null}
+            label="Vitrification of Maintenance of embryos will expire on"
+          />
         </Grid>
         <Grid item xs={12} md={4} lg={2}>
           <TextField label="No Of Embryos" fullWidth />
@@ -169,16 +178,19 @@ const EmbryologyArtReport: React.FC = () => {
           <TextField label="No Of Cryoleafs" fullWidth />
         </Grid>
         <Grid item xs={12} md={4} lg={2}>
-          <CustomDatePicker value={null} label="Vitrification of Maintenance of embryos will expire on" />
+          <CustomDatePicker
+            value={null}
+            label="Vitrification of Maintenance of embryos will expire on"
+          />
         </Grid>
         <Grid item xs={12} md={4} lg={2}>
-          <TextField label="Laser Hatching" fullWidth select >
+          <TextField label="Laser Hatching" fullWidth select>
             <MenuItem value="1">Embryologist-1</MenuItem>
             <MenuItem value="2">Embryologist-2</MenuItem>
           </TextField>
         </Grid>
         <Grid item xs={12} md={4} lg={2}>
-          <TextField label="Procedure Done" fullWidth select >
+          <TextField label="Procedure Done" fullWidth select>
             <MenuItem value="1">Embryologist-1</MenuItem>
             <MenuItem value="2">Embryologist-2</MenuItem>
           </TextField>
@@ -187,14 +199,24 @@ const EmbryologyArtReport: React.FC = () => {
           <TextField label="Renewal Before" fullWidth />
         </Grid>
         <Grid item xs={12} md={12} lg={12}>
-          <Typography variant='subtitle1' color={"GrayText"} mt={2}>
-            If you fail to communicate Regarding extension of freezing, your embryos will be discarded within 1 week , without any further communication written Email  or Telephonic.
+          <Typography variant="subtitle1" color={'GrayText'} mt={2}>
+            If you fail to communicate Regarding extension of freezing, your
+            embryos will be discarded within 1 week , without any further
+            communication written Email or Telephonic.
           </Typography>
         </Grid>
         <Grid item xs={12} md={6} lg={2}>
-          <Button component="label" variant="outlined" startIcon={<CloudUploadIcon />}>
+          <Button
+            component="label"
+            variant="outlined"
+            startIcon={<CloudUploadIcon />}
+          >
             Upload
-            <VisuallyHiddenInput onChange={() => { }} type="file" accept="image/*" />
+            <VisuallyHiddenInput
+              onChange={() => {}}
+              type="file"
+              accept="image/*"
+            />
           </Button>
         </Grid>
 
@@ -203,20 +225,28 @@ const EmbryologyArtReport: React.FC = () => {
         </Grid>
       </Grid>
 
-      <Box>
-
-      </Box>
+      <Box></Box>
       <Divider />
-      <Box display={"flex"} justifyContent={"flex-end"} alignItems={"center"} gap={2} mt={2}>
-        <Button variant='outlined' sx={{ width: 'fit-content' }}>
+      <Box
+        display={'flex'}
+        justifyContent={'flex-end'}
+        alignItems={'center'}
+        gap={2}
+        mt={2}
+      >
+        <Button variant="outlined" sx={{ width: 'fit-content' }}>
           Submit
         </Button>
-        <Button variant='outlined' color='secondary' sx={{ width: 'fit-content' }}>
+        <Button
+          variant="outlined"
+          color="secondary"
+          sx={{ width: 'fit-content' }}
+        >
           Cancel
         </Button>
       </Box>
     </div>
-  )
-}
+  );
+};
 
-export default EmbryologyArtReport
+export default EmbryologyArtReport;

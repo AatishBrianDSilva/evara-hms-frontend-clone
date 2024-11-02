@@ -1,5 +1,5 @@
-import React from "react";
-import { IDoctor } from "../../../../../types/doctor";
+import React from 'react';
+import { IDoctor } from '../../../../../types/doctor';
 import {
   Box,
   Skeleton,
@@ -9,29 +9,29 @@ import {
   Typography,
   FormControlLabel,
   Checkbox,
-} from "@mui/material";
-import { DatePicker } from "@mui/x-date-pickers";
-import ReportModalHeader from "../../../../../components/ReportModalHeader/ReportModalHeader";
-import { useFormik } from "formik";
-import { RootState } from "../../../../../app/store";
-import { useDispatch, useSelector } from "react-redux";
-import { useToast } from "../../../../../context/ToastContext";
-import { closeEditCryoPreservation } from "../cryoPreservationSlice";
+} from '@mui/material';
+import { DatePicker } from '@mui/x-date-pickers';
+import ReportModalHeader from '../../../../../components/ReportModalHeader/ReportModalHeader';
+import { useFormik } from 'formik';
+import { RootState } from '../../../../../app/store';
+import { useDispatch, useSelector } from 'react-redux';
+import { useToast } from '../../../../../context/ToastContext';
+import { closeEditCryoPreservation } from '../cryoPreservationSlice';
 import {
   useEditCryoPreservationMutation,
   useGetCryoPreservationByIdQuery,
-} from "../../../../../services/patientDashboardService/cryoPreservationApi";
+} from '../../../../../services/patientDashboardService/cryoPreservationApi';
 import {
   IEditCryoPreservationForm,
   IEditCryoPreservationPayload,
-} from "../../../../../types/patientDashboard/cryoPreservations";
-import { ICryoPreservationEmbryoForm } from "../../../../../types/patientDashboard/investigation";
-import { ECryoPreservationType } from "../../../../../types/master";
-import FileUploadButton from "../../../../../components/FileUploadAndPreview/FileUploadButton";
-import { EBuckets, EDocumentTypes } from "../../../../../types/global";
-import FieldAutocomplete from "../../../../../components/FieldAutoComplete/FieldAutoComplete";
-import CustomTimePicker from "../../../../../components/CustomDatePicker/CustomTimePicker";
-import { DoctorSpeciality } from "../../../../../types/masterDashboard/global";
+} from '../../../../../types/patientDashboard/cryoPreservations';
+import { ICryoPreservationEmbryoForm } from '../../../../../types/patientDashboard/investigation';
+import { ECryoPreservationType } from '../../../../../types/master';
+import FileUploadButton from '../../../../../components/FileUploadAndPreview/FileUploadButton';
+import { EBuckets, EDocumentTypes } from '../../../../../types/global';
+import FieldAutocomplete from '../../../../../components/FieldAutoComplete/FieldAutoComplete';
+import CustomTimePicker from '../../../../../components/CustomDatePicker/CustomTimePicker';
+import { DoctorSpeciality } from '../../../../../types/masterDashboard/global';
 
 interface EmbryoProps {
   doctors: IDoctor[];
@@ -39,7 +39,12 @@ interface EmbryoProps {
 const renderSkeletonLoader = () => {
   return (
     <>
-      <Box display={"flex"} justifyContent={"space-between"} borderBottom={1} py={2}>
+      <Box
+        display={'flex'}
+        justifyContent={'space-between'}
+        borderBottom={1}
+        py={2}
+      >
         <Box>
           <Skeleton variant="text" width={100} height={20} />
           <Skeleton variant="text" width={100} height={20} />
@@ -51,7 +56,7 @@ const renderSkeletonLoader = () => {
       </Box>
       <Box pt={2} mt={2}>
         <Box>
-          <Grid container justifyContent={"space-between"}>
+          <Grid container justifyContent={'space-between'}>
             <Grid item md={6} lg={3}>
               <Skeleton variant="text" width={100} height={20} />
             </Grid>
@@ -78,12 +83,13 @@ const Embryo: React.FC<EmbryoProps> = ({ doctors }) => {
   const dispatch = useDispatch();
   const { showPromiseToast } = useToast();
   const patient = useSelector(
-    (state: RootState) => state.patients.patient as RootState["patients"]["patient"]
+    (state: RootState) =>
+      state.patients.patient as RootState['patients']['patient'],
   );
 
   const [editCryopreservation] = useEditCryoPreservationMutation();
   const openEditDialog = useSelector(
-    (state: RootState) => state.cryoPreservation.editCryoPreservationOpen
+    (state: RootState) => state.cryoPreservation.editCryoPreservationOpen,
   );
 
   // Log all doctors passed as props
@@ -117,8 +123,13 @@ const Embryo: React.FC<EmbryoProps> = ({ doctors }) => {
     return initialUrl;
   });
 
-  const date = new Date(Cryopreservation?.date || new Date()).toLocaleDateString();
-  const doctor = Cryopreservation?.doctor?.firstName + " " + Cryopreservation?.doctor?.lastName;
+  const date = new Date(
+    Cryopreservation?.date || new Date(),
+  ).toLocaleDateString();
+  const doctor =
+    Cryopreservation?.doctor?.firstName +
+    ' ' +
+    Cryopreservation?.doctor?.lastName;
   const cryopreservationName = Cryopreservation?.details?.cryoPreservationName;
   const actualProcedureName = Cryopreservation?.cryo?.name;
 
@@ -126,8 +137,10 @@ const Embryo: React.FC<EmbryoProps> = ({ doctors }) => {
     formik.resetForm();
     dispatch(closeEditCryoPreservation());
   };
-  const handleSubmit = async (values: IEditCryoPreservationForm<ICryoPreservationEmbryoForm>) => {
-    const actualName = actualProcedureName || "Default CryoPreservation Name"; // Use a fallback if procedureName is null/undefined
+  const handleSubmit = async (
+    values: IEditCryoPreservationForm<ICryoPreservationEmbryoForm>,
+  ) => {
+    const actualName = actualProcedureName || 'Default CryoPreservation Name'; // Use a fallback if procedureName is null/undefined
 
     const payload: IEditCryoPreservationPayload = {
       details: {
@@ -146,60 +159,73 @@ const Embryo: React.FC<EmbryoProps> = ({ doctors }) => {
       ...payload,
     }).unwrap();
 
-    console.log("Payload", payload);
+    console.log('Payload', payload);
 
     showPromiseToast(promise, {
-      loading: "Updating cryopreservation...",
-      success: () => " cryopreservation updated successfully",
-      error: () => "An error occurred while updating  cryopreservation",
+      loading: 'Updating cryopreservation...',
+      success: () => ' cryopreservation updated successfully',
+      error: () => 'An error occurred while updating  cryopreservation',
     });
 
     try {
       await promise;
     } catch (error) {
-      console.error("Failed to update  cryopreservation", error);
+      console.error('Failed to update  cryopreservation', error);
     }
     formik.resetForm();
   };
 
-  const initialValues: IEditCryoPreservationForm<ICryoPreservationEmbryoForm> = {
-    status: Cryopreservation?.status || "",
-    details: {
-      doctor: Cryopreservation?.details?.details?.doctor || "",
-      date: Cryopreservation?.details?.details?.date || null,
-      timeOfFreezing: Cryopreservation?.details?.details?.timeOfFreezing || null,
-      ivf: Cryopreservation?.details?.details?.ivf || "",
-      embryologistA: Cryopreservation?.details?.details?.embryologistA || "",
-      embryologistB: Cryopreservation?.details?.details?.embryologistB || "",
-      numberOfOocytes: Cryopreservation?.details?.details?.numberOfOocytes || "",
-      spermParameters: Cryopreservation?.details?.details?.spermParameters || "",
-      methodOfArt: Cryopreservation?.details?.details?.methodOfArt || "",
-      numberOfOocyteFertilized: Cryopreservation?.details?.details?.numberOfOocyteFertilized || "",
-      embryoTransferDetails: Cryopreservation?.details?.details?.embryoTransferDetails || "",
-      totalNumberOfEmbryoFrozen:
-        Cryopreservation?.details?.details?.totalNumberOfEmbryoFrozen || "",
-      developmentStage: Cryopreservation?.details?.details?.developmentStage || "",
-      fragmentation: Cryopreservation?.details?.details?.fragmentation || "",
-      vitrificationMedia: Cryopreservation?.details?.details?.vitrificationMedia || "",
-      embryoGrade: Cryopreservation?.details?.details?.embryoGrade || "",
-      embryoQuality: Cryopreservation?.details?.details?.embryoQuality || "",
-      hivHbag: Cryopreservation?.details?.details?.hivHbag || "",
-      bloodGroupOfWife: Cryopreservation?.details?.details?.bloodGroupOfWife || "",
-      bloodGroupOfHusband: Cryopreservation?.details?.details?.bloodGroupOfHusband || "",
-      expiryOfMonths: Cryopreservation?.details?.details?.expiryOfMonths || "",
-      dateOfExpiry: Cryopreservation?.details?.details?.dateOfExpiry || null,
-      cryoCanNumber: Cryopreservation?.details?.details?.cryoCanNumber || "",
-      canisterNumber: Cryopreservation?.details?.details?.canisterNumber || "",
-      gobletColours: Cryopreservation?.details?.details?.gobletColours || "",
-      overallDefects: Cryopreservation?.details?.details?.overallDefects || "",
-      tankNumber: Cryopreservation?.details?.details?.tankNumber || "",
-      container: Cryopreservation?.details?.details?.container || "",
-      description: Cryopreservation?.details?.details?.description || "",
-      disclaimer: Cryopreservation?.details?.details?.disclaimer || "",
-      note: Cryopreservation?.details?.details?.note || "",
-      files: [],
-    },
-  };
+  const initialValues: IEditCryoPreservationForm<ICryoPreservationEmbryoForm> =
+    {
+      status: Cryopreservation?.status || '',
+      details: {
+        doctor: Cryopreservation?.details?.details?.doctor || '',
+        date: Cryopreservation?.details?.details?.date || null,
+        timeOfFreezing:
+          Cryopreservation?.details?.details?.timeOfFreezing || null,
+        ivf: Cryopreservation?.details?.details?.ivf || '',
+        embryologistA: Cryopreservation?.details?.details?.embryologistA || '',
+        embryologistB: Cryopreservation?.details?.details?.embryologistB || '',
+        numberOfOocytes:
+          Cryopreservation?.details?.details?.numberOfOocytes || '',
+        spermParameters:
+          Cryopreservation?.details?.details?.spermParameters || '',
+        methodOfArt: Cryopreservation?.details?.details?.methodOfArt || '',
+        numberOfOocyteFertilized:
+          Cryopreservation?.details?.details?.numberOfOocyteFertilized || '',
+        embryoTransferDetails:
+          Cryopreservation?.details?.details?.embryoTransferDetails || '',
+        totalNumberOfEmbryoFrozen:
+          Cryopreservation?.details?.details?.totalNumberOfEmbryoFrozen || '',
+        developmentStage:
+          Cryopreservation?.details?.details?.developmentStage || '',
+        fragmentation: Cryopreservation?.details?.details?.fragmentation || '',
+        vitrificationMedia:
+          Cryopreservation?.details?.details?.vitrificationMedia || '',
+        embryoGrade: Cryopreservation?.details?.details?.embryoGrade || '',
+        embryoQuality: Cryopreservation?.details?.details?.embryoQuality || '',
+        hivHbag: Cryopreservation?.details?.details?.hivHbag || '',
+        bloodGroupOfWife:
+          Cryopreservation?.details?.details?.bloodGroupOfWife || '',
+        bloodGroupOfHusband:
+          Cryopreservation?.details?.details?.bloodGroupOfHusband || '',
+        expiryOfMonths:
+          Cryopreservation?.details?.details?.expiryOfMonths || '',
+        dateOfExpiry: Cryopreservation?.details?.details?.dateOfExpiry || null,
+        cryoCanNumber: Cryopreservation?.details?.details?.cryoCanNumber || '',
+        canisterNumber:
+          Cryopreservation?.details?.details?.canisterNumber || '',
+        gobletColours: Cryopreservation?.details?.details?.gobletColours || '',
+        overallDefects:
+          Cryopreservation?.details?.details?.overallDefects || '',
+        tankNumber: Cryopreservation?.details?.details?.tankNumber || '',
+        container: Cryopreservation?.details?.details?.container || '',
+        description: Cryopreservation?.details?.details?.description || '',
+        disclaimer: Cryopreservation?.details?.details?.disclaimer || '',
+        note: Cryopreservation?.details?.details?.note || '',
+        files: [],
+      },
+    };
 
   const formik = useFormik({
     initialValues: initialValues,
@@ -214,18 +240,31 @@ const Embryo: React.FC<EmbryoProps> = ({ doctors }) => {
       <form onSubmit={formik.handleSubmit}>
         {/* {JSON.stringify(formik.values.details.doctor, null, 2)} */}
 
-        <ReportModalHeader reportName={cryopreservationName} doctor={doctor} date={date} />
+        <ReportModalHeader
+          reportName={cryopreservationName}
+          doctor={doctor}
+          date={date}
+        />
         <Grid container spacing={2} marginBottom={2} mt={2} flex={1}>
           <Grid item xs={12} sm={6} md={3}>
             <FieldAutocomplete
               options={doctors}
-              getOptionLabel={(option) => `${option.firstName} ${option.lastName}`}
+              getOptionLabel={option =>
+                `${option.firstName} ${option.lastName}`
+              }
               isOptionEqualToValue={(option, value) => option._id === value._id}
               value={formik.values.details.doctor}
-              onChange={(newValue) => formik.setFieldValue(`details.doctor`, newValue)}
+              onChange={newValue =>
+                formik.setFieldValue(`details.doctor`, newValue)
+              }
               label="Doctor"
-              error={formik.touched.details?.doctor && Boolean(formik.errors.details?.doctor)}
-              helperText={formik.touched.details?.doctor && formik.errors.details?.doctor}
+              error={
+                formik.touched.details?.doctor &&
+                Boolean(formik.errors.details?.doctor)
+              }
+              helperText={
+                formik.touched.details?.doctor && formik.errors.details?.doctor
+              }
             />
           </Grid>
           <Grid item xs={12} sm={6} md={3}>
@@ -233,14 +272,17 @@ const Embryo: React.FC<EmbryoProps> = ({ doctors }) => {
               label="Date Of Freezing"
               format="dd/MM/yyyy"
               value={formik.values.details.date}
-              onChange={(date) => formik.setFieldValue("details.date", date)}
-              sx={{ width: "100%" }}
+              onChange={date => formik.setFieldValue('details.date', date)}
+              sx={{ width: '100%' }}
               slots={TextField}
               slotProps={{
                 textField: {
                   fullWidth: true,
-                  error: formik.touched.details?.date && Boolean(formik.errors.details?.date),
-                  helperText: formik.touched.details?.date && formik.errors.details?.date,
+                  error:
+                    formik.touched.details?.date &&
+                    Boolean(formik.errors.details?.date),
+                  helperText:
+                    formik.touched.details?.date && formik.errors.details?.date,
                 },
               }}
             />
@@ -249,7 +291,9 @@ const Embryo: React.FC<EmbryoProps> = ({ doctors }) => {
             <CustomTimePicker
               label="Time Of Freezing"
               value={formik.values.details?.timeOfFreezing}
-              onChange={(date) => formik.setFieldValue("details.timeOfFreezing", date)}
+              onChange={date =>
+                formik.setFieldValue('details.timeOfFreezing', date)
+              }
             />
           </Grid>
         </Grid>
@@ -262,51 +306,66 @@ const Embryo: React.FC<EmbryoProps> = ({ doctors }) => {
               name="details.ivf"
               value={formik.values.details.ivf}
               onChange={formik.handleChange}
-              error={formik.touched.details?.ivf && Boolean(formik.errors.details?.ivf)}
-              helperText={formik.touched.details?.ivf && formik.errors.details?.ivf}
+              error={
+                formik.touched.details?.ivf &&
+                Boolean(formik.errors.details?.ivf)
+              }
+              helperText={
+                formik.touched.details?.ivf && formik.errors.details?.ivf
+              }
             />
           </Grid>
           <Grid item xs={12} sm={6} md={3}>
             <FieldAutocomplete
               options={doctors}
-              getOptionLabel={(option) => `${option.firstName || ""} ${option.lastName || ""}`}
+              getOptionLabel={option =>
+                `${option.firstName || ''} ${option.lastName || ''}`
+              }
               filterOptions={(options, _state) => {
                 return options.filter(
-                  (option) => option.speciality === DoctorSpeciality.Embryologist
+                  option => option.speciality === DoctorSpeciality.Embryologist,
                 );
               }}
               isOptionEqualToValue={(option, value) => option._id === value._id}
               value={formik.values.details.embryologistA}
-              onChange={(newValue) => formik.setFieldValue(`details.embryologistA`, newValue)}
+              onChange={newValue =>
+                formik.setFieldValue(`details.embryologistA`, newValue)
+              }
               label="Embryologist 1"
               error={
                 formik.touched.details?.embryologistA &&
                 Boolean(formik.errors.details?.embryologistA)
               }
               helperText={
-                formik.touched.details?.embryologistA && formik.errors.details?.embryologistA
+                formik.touched.details?.embryologistA &&
+                formik.errors.details?.embryologistA
               }
             />
           </Grid>
           <Grid item xs={12} sm={6} md={3}>
             <FieldAutocomplete
               options={doctors}
-              getOptionLabel={(option) => `${option.firstName || ""} ${option.lastName || ""}`}
+              getOptionLabel={option =>
+                `${option.firstName || ''} ${option.lastName || ''}`
+              }
               filterOptions={(options, _state) => {
                 return options.filter(
-                  (option) => option.speciality === DoctorSpeciality.Embryologist
+                  option => option.speciality === DoctorSpeciality.Embryologist,
                 );
               }}
               isOptionEqualToValue={(option, value) => option._id === value._id}
               value={formik.values.details.embryologistB}
-              onChange={(newValue) => formik.setFieldValue(`details.embryologistB`, newValue)}
+              onChange={newValue =>
+                formik.setFieldValue(`details.embryologistB`, newValue)
+              }
               label="Embryologist 2"
               error={
                 formik.touched.details?.embryologistB &&
                 Boolean(formik.errors.details?.embryologistB)
               }
               helperText={
-                formik.touched.details?.embryologistB && formik.errors.details?.embryologistB
+                formik.touched.details?.embryologistB &&
+                formik.errors.details?.embryologistB
               }
             />
           </Grid>
@@ -330,7 +389,8 @@ const Embryo: React.FC<EmbryoProps> = ({ doctors }) => {
                 Boolean(formik.errors.details?.numberOfOocytes)
               }
               helperText={
-                formik.touched.details?.numberOfOocytes && formik.errors.details?.numberOfOocytes
+                formik.touched.details?.numberOfOocytes &&
+                formik.errors.details?.numberOfOocytes
               }
             />
           </Grid>
@@ -346,7 +406,8 @@ const Embryo: React.FC<EmbryoProps> = ({ doctors }) => {
                 Boolean(formik.errors.details?.spermParameters)
               }
               helperText={
-                formik.touched.details?.spermParameters && formik.errors.details?.spermParameters
+                formik.touched.details?.spermParameters &&
+                formik.errors.details?.spermParameters
               }
             />
           </Grid>
@@ -358,9 +419,13 @@ const Embryo: React.FC<EmbryoProps> = ({ doctors }) => {
               name="details.methodOfArt"
               onChange={formik.handleChange}
               error={
-                formik.touched.details?.methodOfArt && Boolean(formik.errors.details?.methodOfArt)
+                formik.touched.details?.methodOfArt &&
+                Boolean(formik.errors.details?.methodOfArt)
               }
-              helperText={formik.touched.details?.methodOfArt && formik.errors.details?.methodOfArt}
+              helperText={
+                formik.touched.details?.methodOfArt &&
+                formik.errors.details?.methodOfArt
+              }
             />
           </Grid>
           <Grid item xs={12} sm={6} md={3}>
@@ -435,7 +500,8 @@ const Embryo: React.FC<EmbryoProps> = ({ doctors }) => {
                 Boolean(formik.errors.details?.developmentStage)
               }
               helperText={
-                formik.touched.details?.developmentStage && formik.errors.details?.developmentStage
+                formik.touched.details?.developmentStage &&
+                formik.errors.details?.developmentStage
               }
             />
           </Grid>
@@ -452,7 +518,8 @@ const Embryo: React.FC<EmbryoProps> = ({ doctors }) => {
                 Boolean(formik.errors.details?.fragmentation)
               }
               helperText={
-                formik.touched.details?.fragmentation && formik.errors.details?.fragmentation
+                formik.touched.details?.fragmentation &&
+                formik.errors.details?.fragmentation
               }
             />
           </Grid>
@@ -462,7 +529,7 @@ const Embryo: React.FC<EmbryoProps> = ({ doctors }) => {
               fullWidth
               value={formik.values.details?.vitrificationMedia}
               name="details.vitrificationMedia"
-              onChange={(e) => formik.handleChange(e)}
+              onChange={e => formik.handleChange(e)}
               error={
                 formik.touched.details?.vitrificationMedia &&
                 Boolean(formik.errors.details?.vitrificationMedia)
@@ -484,9 +551,13 @@ const Embryo: React.FC<EmbryoProps> = ({ doctors }) => {
               name="details.embryoGrade"
               onChange={formik.handleChange}
               error={
-                formik.touched.details?.embryoGrade && Boolean(formik.errors.details?.embryoGrade)
+                formik.touched.details?.embryoGrade &&
+                Boolean(formik.errors.details?.embryoGrade)
               }
-              helperText={formik.touched.details?.embryoGrade && formik.errors.details?.embryoGrade}
+              helperText={
+                formik.touched.details?.embryoGrade &&
+                formik.errors.details?.embryoGrade
+              }
             />
           </Grid>
           <Grid item xs={12} sm={6} md={3}>
@@ -501,7 +572,8 @@ const Embryo: React.FC<EmbryoProps> = ({ doctors }) => {
                 Boolean(formik.errors.details?.embryoQuality)
               }
               helperText={
-                formik.touched.details?.embryoQuality && formik.errors.details?.embryoQuality
+                formik.touched.details?.embryoQuality &&
+                formik.errors.details?.embryoQuality
               }
             />
           </Grid>
@@ -517,8 +589,14 @@ const Embryo: React.FC<EmbryoProps> = ({ doctors }) => {
               value={formik.values.details?.hivHbag}
               name="details.hivHbag"
               onChange={formik.handleChange}
-              error={formik.touched.details?.hivHbag && Boolean(formik.errors.details?.hivHbag)}
-              helperText={formik.touched.details?.hivHbag && formik.errors.details?.hivHbag}
+              error={
+                formik.touched.details?.hivHbag &&
+                Boolean(formik.errors.details?.hivHbag)
+              }
+              helperText={
+                formik.touched.details?.hivHbag &&
+                formik.errors.details?.hivHbag
+              }
             />
           </Grid>
 
@@ -534,7 +612,8 @@ const Embryo: React.FC<EmbryoProps> = ({ doctors }) => {
                 Boolean(formik.errors.details?.bloodGroupOfWife)
               }
               helperText={
-                formik.touched.details?.bloodGroupOfWife && formik.errors.details?.bloodGroupOfWife
+                formik.touched.details?.bloodGroupOfWife &&
+                formik.errors.details?.bloodGroupOfWife
               }
             />
           </Grid>
@@ -567,7 +646,8 @@ const Embryo: React.FC<EmbryoProps> = ({ doctors }) => {
                 Boolean(formik.errors.details?.expiryOfMonths)
               }
               helperText={
-                formik.touched.details?.expiryOfMonths && formik.errors.details?.expiryOfMonths
+                formik.touched.details?.expiryOfMonths &&
+                formik.errors.details?.expiryOfMonths
               }
             />
           </Grid>
@@ -576,8 +656,10 @@ const Embryo: React.FC<EmbryoProps> = ({ doctors }) => {
               label="Date Of Expiry"
               format="dd/MM/yyyy"
               value={formik.values.details.dateOfExpiry}
-              onChange={(date) => formik.setFieldValue("details.dateOfExpiry", date)}
-              sx={{ width: "100%" }}
+              onChange={date =>
+                formik.setFieldValue('details.dateOfExpiry', date)
+              }
+              sx={{ width: '100%' }}
               slots={TextField}
               slotProps={{
                 textField: {
@@ -586,7 +668,8 @@ const Embryo: React.FC<EmbryoProps> = ({ doctors }) => {
                     formik.touched.details?.dateOfExpiry &&
                     Boolean(formik.errors.details?.dateOfExpiry),
                   helperText:
-                    formik.touched.details?.dateOfExpiry && formik.errors.details?.dateOfExpiry,
+                    formik.touched.details?.dateOfExpiry &&
+                    formik.errors.details?.dateOfExpiry,
                 },
               }}
             />
@@ -605,7 +688,8 @@ const Embryo: React.FC<EmbryoProps> = ({ doctors }) => {
                 Boolean(formik.errors.details?.cryoCanNumber)
               }
               helperText={
-                formik.touched.details?.cryoCanNumber && formik.errors.details?.cryoCanNumber
+                formik.touched.details?.cryoCanNumber &&
+                formik.errors.details?.cryoCanNumber
               }
             />
           </Grid>
@@ -621,7 +705,8 @@ const Embryo: React.FC<EmbryoProps> = ({ doctors }) => {
                 Boolean(formik.errors.details?.canisterNumber)
               }
               helperText={
-                formik.touched.details?.canisterNumber && formik.errors.details?.canisterNumber
+                formik.touched.details?.canisterNumber &&
+                formik.errors.details?.canisterNumber
               }
             />
           </Grid>
@@ -650,7 +735,8 @@ const Embryo: React.FC<EmbryoProps> = ({ doctors }) => {
                 Boolean(formik.errors.details?.overallDefects)
               }
               helperText={
-                formik.touched.details?.overallDefects && formik.errors.details?.overallDefects
+                formik.touched.details?.overallDefects &&
+                formik.errors.details?.overallDefects
               }
             />
           </Grid>
@@ -665,9 +751,13 @@ const Embryo: React.FC<EmbryoProps> = ({ doctors }) => {
               value={formik.values.details.tankNumber}
               onChange={formik.handleChange}
               error={
-                formik.touched.details?.tankNumber && Boolean(formik.errors.details?.tankNumber)
+                formik.touched.details?.tankNumber &&
+                Boolean(formik.errors.details?.tankNumber)
               }
-              helperText={formik.touched.details?.tankNumber && formik.errors.details?.tankNumber}
+              helperText={
+                formik.touched.details?.tankNumber &&
+                formik.errors.details?.tankNumber
+              }
             />
           </Grid>
           <Grid item xs={12} sm={6} md={3}>
@@ -678,8 +768,14 @@ const Embryo: React.FC<EmbryoProps> = ({ doctors }) => {
               name="details.container"
               value={formik.values.details.container}
               onChange={formik.handleChange}
-              error={formik.touched.details?.container && Boolean(formik.errors.details?.container)}
-              helperText={formik.touched.details?.container && formik.errors.details?.container}
+              error={
+                formik.touched.details?.container &&
+                Boolean(formik.errors.details?.container)
+              }
+              helperText={
+                formik.touched.details?.container &&
+                formik.errors.details?.container
+              }
             />
           </Grid>
           <Grid container pt={2} pl={2}>
@@ -692,8 +788,13 @@ const Embryo: React.FC<EmbryoProps> = ({ doctors }) => {
                 value={formik.values.details?.note}
                 name="details.note"
                 onChange={formik.handleChange}
-                error={formik.touched.details?.note && Boolean(formik.errors.details?.note)}
-                helperText={formik.touched.details?.note && formik.errors.details?.note}
+                error={
+                  formik.touched.details?.note &&
+                  Boolean(formik.errors.details?.note)
+                }
+                helperText={
+                  formik.touched.details?.note && formik.errors.details?.note
+                }
               />
             </Grid>
           </Grid>
@@ -731,9 +832,13 @@ const Embryo: React.FC<EmbryoProps> = ({ doctors }) => {
               name="details.description"
               onChange={formik.handleChange}
               error={
-                formik.touched.details?.description && Boolean(formik.errors.details?.description)
+                formik.touched.details?.description &&
+                Boolean(formik.errors.details?.description)
               }
-              helperText={formik.touched.details?.description && formik.errors.details?.description}
+              helperText={
+                formik.touched.details?.description &&
+                formik.errors.details?.description
+              }
             />
           </Grid>
         </Grid>
@@ -752,20 +857,33 @@ const Embryo: React.FC<EmbryoProps> = ({ doctors }) => {
               fullWidth
               onChange={formik.handleChange}
               error={
-                formik.touched.details?.disclaimer && Boolean(formik.errors.details?.disclaimer)
+                formik.touched.details?.disclaimer &&
+                Boolean(formik.errors.details?.disclaimer)
               }
-              helperText={formik.touched.details?.disclaimer && formik.errors.details?.disclaimer}
+              helperText={
+                formik.touched.details?.disclaimer &&
+                formik.errors.details?.disclaimer
+              }
             />
           </Grid>
         </Grid>
-        <Box display={"flex"} justifyContent={"center"} alignItems={"center"} gap={2} mb={2}>
+        <Box
+          display={'flex'}
+          justifyContent={'center'}
+          alignItems={'center'}
+          gap={2}
+          mb={2}
+        >
           <Grid item xs={12}>
             <FormControlLabel
               control={
                 <Checkbox
-                  checked={formik.values.status === "Completed"}
-                  onChange={(e) =>
-                    formik.setFieldValue("status", e.target.checked ? "Completed" : "Scheduled")
+                  checked={formik.values.status === 'Completed'}
+                  onChange={e =>
+                    formik.setFieldValue(
+                      'status',
+                      e.target.checked ? 'Completed' : 'Scheduled',
+                    )
                   }
                   color="primary"
                 />
@@ -775,8 +893,19 @@ const Embryo: React.FC<EmbryoProps> = ({ doctors }) => {
           </Grid>
         </Box>
 
-        <Box display={"flex"} justifyContent={"center"} alignItems={"center"} gap={2} mb={2}>
-          <Button variant="contained" color="primary" type="submit" sx={{ width: "fit-content" }}>
+        <Box
+          display={'flex'}
+          justifyContent={'center'}
+          alignItems={'center'}
+          gap={2}
+          mb={2}
+        >
+          <Button
+            variant="contained"
+            color="primary"
+            type="submit"
+            sx={{ width: 'fit-content' }}
+          >
             Save
           </Button>
           <Button onClick={onModalClose} variant="outlined">

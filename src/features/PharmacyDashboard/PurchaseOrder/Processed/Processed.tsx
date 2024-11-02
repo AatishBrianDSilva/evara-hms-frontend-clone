@@ -1,15 +1,19 @@
-import { Print, Visibility } from "@mui/icons-material";
-import { Box, Tooltip } from "@mui/material";
-import React, { useState } from "react";
-import CustomDataGrid from "../../../../components/CustomDataGrid/CustomDataGrid";
-import { GridActionsCellItem, GridColDef, GridRowParams } from "@mui/x-data-grid";
-import { useGetProcessedPurchaseOrdersQuery } from "../../../../services/pharmacyDashboardService/purchaseOrderApi";
+import { Print, Visibility } from '@mui/icons-material';
+import { Box, Tooltip } from '@mui/material';
+import React, { useState } from 'react';
+import CustomDataGrid from '../../../../components/CustomDataGrid/CustomDataGrid';
+import {
+  GridActionsCellItem,
+  GridColDef,
+  GridRowParams,
+} from '@mui/x-data-grid';
+import { useGetProcessedPurchaseOrdersQuery } from '../../../../services/pharmacyDashboardService/purchaseOrderApi';
 import {
   EPurchaseOrderStatus,
   IPurchaseOrder,
-} from "../../../../types/pharmacyDashboard/purchaseOrder";
-import ViewProcessedPurchaseOrder from "./ViewProcessedPurchaseOrder";
-import { usePrint } from "../../../../context/PrintPDFContext";
+} from '../../../../types/pharmacyDashboard/purchaseOrder';
+import ViewProcessedPurchaseOrder from './ViewProcessedPurchaseOrder';
+import { usePrint } from '../../../../context/PrintPDFContext';
 
 const Processed: React.FC = () => {
   const [page, setPage] = useState<number>(1);
@@ -39,7 +43,7 @@ const Processed: React.FC = () => {
   const purchaseOrdersPagination = purchaseOrdersData?.data?.pagination;
   const purchaseOrderLoading = purchaseOrdersLoading || purchaseOrdersFetching;
 
-  console.log("Processed PO", purchaseOrders);
+  console.log('Processed PO', purchaseOrders);
 
   const [selectedRow, setSelectedRow] = useState<IPurchaseOrder | null>(null);
   const [isViewModalOpen, setIsViewModalOpen] = useState<boolean>(false);
@@ -55,45 +59,45 @@ const Processed: React.FC = () => {
   };
 
   const columnsConfig: GridColDef[] = [
-    { field: "poNumber", headerName: "PO Number", flex: 1 },
+    { field: 'poNumber', headerName: 'PO Number', flex: 1 },
     {
-      field: "date",
-      type: "date",
-      headerName: "PO Date",
+      field: 'date',
+      type: 'date',
+      headerName: 'PO Date',
       flex: 1,
       valueFormatter(params) {
         const date = new Date(params.value);
-        const day = String(date.getDate()).padStart(2, "0");
-        const month = String(date.getMonth() + 1).padStart(2, "0"); // Months are 0-based
+        const day = String(date.getDate()).padStart(2, '0');
+        const month = String(date.getMonth() + 1).padStart(2, '0'); // Months are 0-based
         const year = String(date.getFullYear()).slice(-2); // Get last two digits of the year
         return `${day}/${month}/${year}`;
       },
     },
     {
-      field: "vendor",
-      headerName: "Vendor Name",
+      field: 'vendor',
+      headerName: 'Vendor Name',
       flex: 1,
-      valueGetter: (params) => params.row.vendor?.name || "N/A",
+      valueGetter: params => params.row.vendor?.name || 'N/A',
     },
     {
-      field: "netAmount",
-      headerName: "Amount",
+      field: 'netAmount',
+      headerName: 'Amount',
       flex: 1,
-      valueGetter: (params) => `₹ ${params.row.response?.netAmount || 0}`,
+      valueGetter: params => `₹ ${params.row.response?.netAmount || 0}`,
     },
-    { field: "createdBy", headerName: "Created By", flex: 1 },
-    { field: "authorizedBy", headerName: "Processed By", flex: 1 },
+    { field: 'createdBy', headerName: 'Created By', flex: 1 },
+    { field: 'authorizedBy', headerName: 'Processed By', flex: 1 },
     {
-      field: "invoiceNumber",
-      headerName: "Invoice Number",
+      field: 'invoiceNumber',
+      headerName: 'Invoice Number',
       flex: 1,
-      valueGetter: (params) => params.row.response?.invoiceNumber || "N/A",
+      valueGetter: params => params.row.response?.invoiceNumber || 'N/A',
     },
     {
-      field: "actions",
-      headerName: "Actions",
+      field: 'actions',
+      headerName: 'Actions',
       flex: 1,
-      type: "actions",
+      type: 'actions',
       getActions: (params: GridRowParams) => {
         const row = params.row;
         const actions = [
@@ -113,29 +117,34 @@ const Processed: React.FC = () => {
               <GridActionsCellItem
                 icon={<Print />}
                 label="Print"
-                onClick={() => fetchAndPrintPdf(row._id, "POInvoice", "pharmacy")}
+                onClick={() =>
+                  fetchAndPrintPdf(row._id, 'POInvoice', 'pharmacy')
+                }
               />
-            </Tooltip>
+            </Tooltip>,
           );
         }
 
         // Add Print action for the processed report if it exists
         if (row.reportProcessed) {
           actions.push(
-            <Tooltip title="Print Processed Report" key="print-report-processed">
+            <Tooltip
+              title="Print Processed Report"
+              key="print-report-processed"
+            >
               <GridActionsCellItem
                 icon={<Print />}
                 label="Print Processed Report"
                 onClick={() =>
                   fetchAndPrintPdf(
                     row._id,
-                    "POInvoiceProcessed",
-                    "pharmacy"
+                    'POInvoiceProcessed',
+                    'pharmacy',
                     // row.reportProcessed.key
                   )
                 }
               />
-            </Tooltip>
+            </Tooltip>,
           );
         }
 
@@ -150,8 +159,8 @@ const Processed: React.FC = () => {
   }));
 
   return (
-    <Box height={"100%"} display={"flex"} flexDirection={"column"}>
-      <Box mt={2} flex={"1 1 auto"}>
+    <Box height={'100%'} display={'flex'} flexDirection={'column'}>
+      <Box mt={2} flex={'1 1 auto'}>
         <CustomDataGrid
           autoHeight={false}
           columns={columnsConfig}
@@ -160,7 +169,7 @@ const Processed: React.FC = () => {
           pageSize={pageSize}
           totalRows={purchaseOrdersPagination?.totalDocs || 0}
           loading={purchaseOrderLoading}
-          sx={{ height: "100%" }}
+          sx={{ height: '100%' }}
           enablePagination={true}
           onPageChange={handlePageChange}
           onPageSizeChange={handlePageSizeChange}

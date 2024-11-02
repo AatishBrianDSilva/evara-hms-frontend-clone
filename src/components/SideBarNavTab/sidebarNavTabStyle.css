@@ -4,7 +4,7 @@
   width: 100%;
   padding: 12px 28px;
   flex-direction: row;
-  align-items: center ;
+  align-items: center;
   gap: 10px;
   justify-content: space-between;
   border: none;
@@ -19,7 +19,7 @@
   width: 100%;
   padding: 8px 32px;
   flex-direction: row;
-  align-items: center ;
+  align-items: center;
   gap: 10px;
   justify-content: space-between;
   border: none;
@@ -44,12 +44,12 @@
   /* Add any specific styling for your logo here */
   height: 20px;
   width: 20px;
-  color: var(--primary-main)
+  color: var(--primary-main);
 }
 
 .title {
   /* Add any specific styling for your title text here */
-  color: #3E4954;
+  color: #3e4954;
   font-size: 14px;
   font-style: normal;
   font-weight: 500;

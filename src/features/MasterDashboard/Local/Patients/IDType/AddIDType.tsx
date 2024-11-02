@@ -1,4 +1,4 @@
-import React from "react";
+import React from 'react';
 import {
   Box,
   Button,
@@ -8,11 +8,11 @@ import {
   Grid,
   MenuItem,
   TextField,
-} from "@mui/material";
-import { useFormik } from "formik";
-import _ from "lodash";
-import { useToast } from "../../../../../context/ToastContext";
-import { useAddPatientIdTypeMutation } from "../../../../../services/masterDashboardService/local/patientIdTypeApi";
+} from '@mui/material';
+import { useFormik } from 'formik';
+import _ from 'lodash';
+import { useToast } from '../../../../../context/ToastContext';
+import { useAddPatientIdTypeMutation } from '../../../../../services/masterDashboardService/local/patientIdTypeApi';
 
 interface AddIDTypeProps {
   openModal: boolean;
@@ -26,7 +26,8 @@ interface IFormValues {
 const AddIDType: React.FC<AddIDTypeProps> = ({ openModal, onClose }) => {
   const { showPromiseToast } = useToast();
 
-  const [addIDType, { isLoading: IDTypeLoading }] = useAddPatientIdTypeMutation();
+  const [addIDType, { isLoading: IDTypeLoading }] =
+    useAddPatientIdTypeMutation();
 
   const handleFormSubmit = async (values: IFormValues) => {
     const payload = {
@@ -39,9 +40,9 @@ const AddIDType: React.FC<AddIDTypeProps> = ({ openModal, onClose }) => {
     const promise = addIDType(payload).unwrap();
 
     showPromiseToast(promise, {
-      loading: "Adding...",
-      success: (data) => data || "Added Successfully",
-      error: (data) => data || "Adding Failed",
+      loading: 'Adding...',
+      success: data => data || 'Added Successfully',
+      error: data => data || 'Adding Failed',
     });
 
     try {
@@ -54,8 +55,8 @@ const AddIDType: React.FC<AddIDTypeProps> = ({ openModal, onClose }) => {
   };
 
   const initialValues: IFormValues = {
-    name: "",
-    format: "",
+    name: '',
+    format: '',
   };
 
   const formik = useFormik({
@@ -67,9 +68,9 @@ const AddIDType: React.FC<AddIDTypeProps> = ({ openModal, onClose }) => {
 
   return (
     <Dialog open={openModal} onClose={onClose} maxWidth="md" fullWidth>
-      <DialogTitle color={"primary"}>Add ID Types</DialogTitle>
+      <DialogTitle color={'primary'}>Add ID Types</DialogTitle>
       <DialogContent>
-        <Box component={"form"} onSubmit={formik.handleSubmit} p={2}>
+        <Box component={'form'} onSubmit={formik.handleSubmit} p={2}>
           <Grid container spacing={1} mb={2} mt={2}>
             <Grid item xs={8} sm={4} lg={3}>
               <TextField
@@ -99,20 +100,28 @@ const AddIDType: React.FC<AddIDTypeProps> = ({ openModal, onClose }) => {
             </Grid>
           </Grid>
 
-          <Box display={"flex"} justifyContent={"flex-end"} alignItems={"center"} gap={2} mb={2}>
+          <Box
+            display={'flex'}
+            justifyContent={'flex-end'}
+            alignItems={'center'}
+            gap={2}
+            mb={2}
+          >
             <Button
               variant="contained"
               color="primary"
               type="submit"
-              disabled={IDTypeLoading || _.isEqual(initialValues, formik.values)}
-              sx={{ width: "fit-content" }}
+              disabled={
+                IDTypeLoading || _.isEqual(initialValues, formik.values)
+              }
+              sx={{ width: 'fit-content' }}
             >
               Save
             </Button>
             <Button
               variant="contained"
               color="secondary"
-              sx={{ width: "fit-content" }}
+              sx={{ width: 'fit-content' }}
               onClick={onClose}
             >
               Cancel

@@ -1,6 +1,6 @@
-import { IDoctor } from "../doctor";
-import { IDrugLocation } from "../pharmacyDashboard/master";
-import { IPharmacyStock } from "../pharmacyDashboard/stocks";
+import { IDoctor } from '../doctor';
+import { IDrugLocation } from '../pharmacyDashboard/master';
+import { IPharmacyStock } from '../pharmacyDashboard/stocks';
 
 export interface IPatientPharmacy {
   _id: string;

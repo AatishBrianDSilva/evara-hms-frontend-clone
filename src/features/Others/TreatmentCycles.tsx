@@ -8,7 +8,7 @@ import Tab from '@mui/material/Tab';
 import Tabs from '@mui/material/Tabs';
 import TextField from '@mui/material/TextField';
 import Typography from '@mui/material/Typography';
-import React from 'react'
+import React from 'react';
 import { GridColDef } from '@mui/x-data-grid';
 import PatientInfo from './PatientInfo';
 import TreatmentCyclesTable from './TreatmentCyclesTable';
@@ -47,11 +47,11 @@ const biopsyColumn: GridColDef[] = [
     flex: 1,
   },
   {
-    field: "reason",
-    headerName: "Comments",
+    field: 'reason',
+    headerName: 'Comments',
     sortable: false,
     flex: 1,
-  }
+  },
 ];
 
 const planDetailsColumn: GridColDef[] = [
@@ -79,13 +79,12 @@ const planDetailsColumn: GridColDef[] = [
     flex: 1,
   },
   {
-    field: "reason",
-    headerName: "Remarks",
+    field: 'reason',
+    headerName: 'Remarks',
     sortable: false,
     flex: 1,
-  }
+  },
 ];
-
 
 function a11yProps(index: number) {
   return {
@@ -105,17 +104,12 @@ function CustomTabPanel(props: TabPanelProps) {
       aria-labelledby={`treatment-cycle-tab-${index}`}
       {...other}
     >
-      {value === index && (
-        <Box sx={{ p: 3 }}>
-          {children}
-        </Box>
-      )}
+      {value === index && <Box sx={{ p: 3 }}>{children}</Box>}
     </div>
   );
 }
 
 const TreatmentCycles: React.FC = () => {
-
   const [value, setValue] = React.useState(0);
 
   const handleChange = (_: React.SyntheticEvent, newValue: number) => {
@@ -126,7 +120,13 @@ const TreatmentCycles: React.FC = () => {
     return (
       <>
         <Box sx={{ borderBottom: 1, borderColor: 'divider' }}>
-          <Tabs value={value} visibleScrollbar variant='scrollable' onChange={handleChange} aria-label="treatment-cycles-tabs">
+          <Tabs
+            value={value}
+            visibleScrollbar
+            variant="scrollable"
+            onChange={handleChange}
+            aria-label="treatment-cycles-tabs"
+          >
             <Tab label="Intended Treatment" {...a11yProps(0)} />
             <Tab label="Gametes" {...a11yProps(1)} />
             <Tab label="PSG / PGD" {...a11yProps(2)} />
@@ -154,17 +154,18 @@ const TreatmentCycles: React.FC = () => {
         <CustomTabPanel value={value} index={5}>
           {renderPlanDetails()}
         </CustomTabPanel>
-        <CustomTabPanel value={value} index={6}>
-        </CustomTabPanel>
+        <CustomTabPanel value={value} index={6}></CustomTabPanel>
       </>
-    )
-  }
+    );
+  };
 
   const renderIntendedTreatment = () => {
     return (
       <Grid container spacing={4}>
         <Grid item xs={12} md={6}>
-          <Typography variant="subtitle1" sx={{ mb: 2 }}>Treatment Details</Typography>
+          <Typography variant="subtitle1" sx={{ mb: 2 }}>
+            Treatment Details
+          </Typography>
           <Grid container direction="column" gap={2}>
             <TextField id="partner" label="Partner" select fullWidth>
               <MenuItem value="Mr">Absdcef - 123</MenuItem>
@@ -183,7 +184,12 @@ const TreatmentCycles: React.FC = () => {
             </TextField>
             <CustomDateTimePicker label="Est. start of treatment" />
             <TextField id="attempts" label="Attempts" fullWidth />
-            <TextField id="female-factor" label="Female Factor" select fullWidth>
+            <TextField
+              id="female-factor"
+              label="Female Factor"
+              select
+              fullWidth
+            >
               <MenuItem value="Mr">Absdcef - 123</MenuItem>
               <MenuItem value="Mrs">Xysad - 897</MenuItem>
               <MenuItem value="Miss">Zyfdf - 154</MenuItem>
@@ -194,26 +200,54 @@ const TreatmentCycles: React.FC = () => {
               <MenuItem value="Miss">Zyfdf - 154</MenuItem>
             </TextField>
             <FormControlLabel
-              control={<Checkbox id='treatment-other-center' name="Treatment at other center" value={true} onChange={() => { }} />}
+              control={
+                <Checkbox
+                  id="treatment-other-center"
+                  name="Treatment at other center"
+                  value={true}
+                  onChange={() => {}}
+                />
+              }
               label="Treatment at other center"
             />
-            <TextField multiline maxRows={2} minRows={2} label="Other Center Detail" fullWidth />
+            <TextField
+              multiline
+              maxRows={2}
+              minRows={2}
+              label="Other Center Detail"
+              fullWidth
+            />
           </Grid>
         </Grid>
 
         <Grid item xs={12} md={6}>
-          <Typography variant='subtitle1' sx={{ mb: 2 }}>Treatment Plan Usage</Typography>
+          <Typography variant="subtitle1" sx={{ mb: 2 }}>
+            Treatment Plan Usage
+          </Typography>
           <Grid container direction="column" gap={2}>
-            <TextField id="treatment-plan-usage" label="Treatment Usage Plan" select fullWidth>
+            <TextField
+              id="treatment-plan-usage"
+              label="Treatment Usage Plan"
+              select
+              fullWidth
+            >
               <MenuItem value="Mr">Absdcef - 123</MenuItem>
               <MenuItem value="Mrs">Xysad - 897</MenuItem>
               <MenuItem value="Miss">Zyfdf - 154</MenuItem>
             </TextField>
-            <TextField multiline maxRows={2} minRows={2} label="Remarks" fullWidth />
+            <TextField
+              multiline
+              maxRows={2}
+              minRows={2}
+              label="Remarks"
+              fullWidth
+            />
             <TextField label="Previous Cycles Count" fullWidth />
 
-            <Typography variant='subtitle1' sx={{ mt: 4, mb: 2 }}>Sentinel Dates</Typography>
-            <Button variant='contained' sx={{ width: 'fit-content' }}>
+            <Typography variant="subtitle1" sx={{ mt: 4, mb: 2 }}>
+              Sentinel Dates
+            </Typography>
+            <Button variant="contained" sx={{ width: 'fit-content' }}>
               Day 1
             </Button>
             <CustomDatePicker label="Start of follicular phase (LMP)" />
@@ -231,19 +265,31 @@ const TreatmentCycles: React.FC = () => {
     );
   };
 
-
   const renderGametes = () => {
     return (
-      (<Box sx={{ flexGrow: 1 }}>
+      <Box sx={{ flexGrow: 1 }}>
         <Grid container spacing={4} direction="column">
           {/* 1st row - Gametes Egg 1 & 2 */}
           <Grid item container spacing={4}>
-            {[1, 2].map((value) => (
-              <Grid item xs={12} md={6} container spacing={2} direction="column" key={`egg-${value}`}>
+            {[1, 2].map(value => (
+              <Grid
+                item
+                xs={12}
+                md={6}
+                container
+                spacing={2}
+                direction="column"
+                key={`egg-${value}`}
+              >
                 <Grid item>
-                  <Typography variant='subtitle1'>{`Gametes Egg ${value}`}</Typography>
+                  <Typography variant="subtitle1">{`Gametes Egg ${value}`}</Typography>
                 </Grid>
-                {['Gamete Name', 'Gamete Source', 'Source Verified', 'Procedure'].map((field, index) => (
+                {[
+                  'Gamete Name',
+                  'Gamete Source',
+                  'Source Verified',
+                  'Procedure',
+                ].map((field, index) => (
                   <Grid item key={index}>
                     <TextField
                       fullWidth
@@ -264,12 +310,25 @@ const TreatmentCycles: React.FC = () => {
 
           {/* 2nd row - Gametes Sperm 1 & 2 */}
           <Grid item container spacing={4}>
-            {[1, 2].map((value) => (
-              <Grid item xs={12} md={6} container spacing={2} direction="column" key={`sperm-${value}`}>
+            {[1, 2].map(value => (
+              <Grid
+                item
+                xs={12}
+                md={6}
+                container
+                spacing={2}
+                direction="column"
+                key={`sperm-${value}`}
+              >
                 <Grid item>
-                  <Typography variant='subtitle1'>{`Gametes Sperm ${value}`}</Typography>
+                  <Typography variant="subtitle1">{`Gametes Sperm ${value}`}</Typography>
                 </Grid>
-                {['Gamete Name', 'Gamete Source', 'Source Verified', 'Procedure'].map((field, index) => (
+                {[
+                  'Gamete Name',
+                  'Gamete Source',
+                  'Source Verified',
+                  'Procedure',
+                ].map((field, index) => (
                   <Grid item key={index}>
                     <TextField
                       fullWidth
@@ -292,9 +351,14 @@ const TreatmentCycles: React.FC = () => {
           <Grid item container spacing={4}>
             <Grid item xs={12} md={6} container spacing={2} direction="column">
               <Grid item>
-                <Typography variant='subtitle1'>Gametes Embryo</Typography>
+                <Typography variant="subtitle1">Gametes Embryo</Typography>
               </Grid>
-              {['Sperm Source', 'Egg Source', 'Source Verified', 'Procedure'].map((field, index) => (
+              {[
+                'Sperm Source',
+                'Egg Source',
+                'Source Verified',
+                'Procedure',
+              ].map((field, index) => (
                 <Grid item key={index}>
                   <TextField
                     fullWidth
@@ -312,36 +376,41 @@ const TreatmentCycles: React.FC = () => {
             </Grid>
             <Grid item xs={12} md={6} container spacing={2} direction="column">
               <Grid item>
-                <Typography variant='subtitle1'>Surrogate</Typography>
+                <Typography variant="subtitle1">Surrogate</Typography>
               </Grid>
-              {['Surrogate Source', 'Source Verified', 'Procedure'].map((field, index) => (
-                <Grid item key={index}>
-                  <TextField
-                    fullWidth
-                    id={`surrogate-${field.toLowerCase().replace(/\s+/g, '-')}`}
-                    label={field}
-                    select
-                    value=""
-                  >
-                    <MenuItem value="Mr">Absdcef - 123</MenuItem>
-                    <MenuItem value="Mrs">Xysad - 897</MenuItem>
-                    <MenuItem value="Miss">Zyfdf - 154</MenuItem>
-                  </TextField>
-                </Grid>
-              ))}
+              {['Surrogate Source', 'Source Verified', 'Procedure'].map(
+                (field, index) => (
+                  <Grid item key={index}>
+                    <TextField
+                      fullWidth
+                      id={`surrogate-${field.toLowerCase().replace(/\s+/g, '-')}`}
+                      label={field}
+                      select
+                      value=""
+                    >
+                      <MenuItem value="Mr">Absdcef - 123</MenuItem>
+                      <MenuItem value="Mrs">Xysad - 897</MenuItem>
+                      <MenuItem value="Miss">Zyfdf - 154</MenuItem>
+                    </TextField>
+                  </Grid>
+                ),
+              )}
             </Grid>
           </Grid>
 
           {/* Submit Button */}
           <Grid item container justifyContent="center">
-            <Button variant='contained' sx={{ width: 'fit-content', mt: 2, mb: 2 }}>
+            <Button
+              variant="contained"
+              sx={{ width: 'fit-content', mt: 2, mb: 2 }}
+            >
               Submit
             </Button>
           </Grid>
         </Grid>
-      </Box>)
+      </Box>
     );
-  }
+  };
 
   const renderPsgPgd = () => {
     return (
@@ -356,28 +425,45 @@ const TreatmentCycles: React.FC = () => {
 
         {/* 2nd Row */}
         <Grid item container>
-          <Typography variant="subtitle1" sx={{ wordWrap: 'break-word' }} >Clinical Reason(S) for Referral: Please Tick the Appropriate Choice(s)</Typography>
+          <Typography variant="subtitle1" sx={{ wordWrap: 'break-word' }}>
+            Clinical Reason(S) for Referral: Please Tick the Appropriate
+            Choice(s)
+          </Typography>
         </Grid>
 
         <Grid item container>
           <Grid item xs={12} sm={6} container spacing={1} direction="column">
-            {["Screening for Chromosomal Aneuploidies", "Organic Azoospermia", "Organic Oligospermia", "Sperm Donor", "Male Infertility,Unspecified", "Spem Aneuploidy"].map((label, index) => (
+            {[
+              'Screening for Chromosomal Aneuploidies',
+              'Organic Azoospermia',
+              'Organic Oligospermia',
+              'Sperm Donor',
+              'Male Infertility,Unspecified',
+              'Spem Aneuploidy',
+            ].map((label, index) => (
               <Grid item key={index}>
                 <FormControlLabel
                   control={<Checkbox color="secondary" />}
                   label={label}
-                  sx={{ color: "grey.600" }}
+                  sx={{ color: 'grey.600' }}
                 />
               </Grid>
             ))}
           </Grid>
           <Grid item xs={12} sm={6} container spacing={1} direction="column">
-            {["Elevated Maternal Age(>35 Years)", "Primary Ovarian Failure", "Poor Obstetric/Reproductive History,First Trimester", "Egg (Oocyte Donor)", "Female Infertility,Unspecified", "Other"].map((label, index) => (
+            {[
+              'Elevated Maternal Age(>35 Years)',
+              'Primary Ovarian Failure',
+              'Poor Obstetric/Reproductive History,First Trimester',
+              'Egg (Oocyte Donor)',
+              'Female Infertility,Unspecified',
+              'Other',
+            ].map((label, index) => (
               <Grid item key={index}>
                 <FormControlLabel
                   control={<Checkbox color="secondary" />}
                   label={label}
-                  sx={{ color: "grey.600" }}
+                  sx={{ color: 'grey.600' }}
                 />
               </Grid>
             ))}
@@ -401,10 +487,21 @@ const TreatmentCycles: React.FC = () => {
         <Grid item container spacing={2}>
           <Grid item xs={12} md={6} container spacing={2} direction="column">
             <Grid item>
-              <TextField id="no-of-biopsies" label="No of Biopsies" fullWidth value="" />
+              <TextField
+                id="no-of-biopsies"
+                label="No of Biopsies"
+                fullWidth
+                value=""
+              />
             </Grid>
             <Grid item>
-              <TextField id="biopsy-method" label="Biopsy Method" fullWidth select value="">
+              <TextField
+                id="biopsy-method"
+                label="Biopsy Method"
+                fullWidth
+                select
+                value=""
+              >
                 <MenuItem value="laser">Laser</MenuItem>
                 <MenuItem value="acid">Acid Tyrodes</MenuItem>
                 <MenuItem value="mechanical">Mechanical</MenuItem>
@@ -414,13 +511,27 @@ const TreatmentCycles: React.FC = () => {
               <Typography variant="subtitle1">Day of Biopsy:</Typography>
             </Grid>
             <Grid item>
-              <FormControlLabel control={<Checkbox />} label="Day 3-Blastomere" sx={{ color: "grey.600" }} />
+              <FormControlLabel
+                control={<Checkbox />}
+                label="Day 3-Blastomere"
+                sx={{ color: 'grey.600' }}
+              />
             </Grid>
             <Grid item>
-              <FormControlLabel control={<Checkbox />} label="Day 5-Trophectoderm" sx={{ color: "grey.600" }} />
+              <FormControlLabel
+                control={<Checkbox />}
+                label="Day 5-Trophectoderm"
+                sx={{ color: 'grey.600' }}
+              />
             </Grid>
             <Grid item>
-              <TextField id="biopsy-performed-by" label="Biopsy Performed By" fullWidth select value="">
+              <TextField
+                id="biopsy-performed-by"
+                label="Biopsy Performed By"
+                fullWidth
+                select
+                value=""
+              >
                 <MenuItem value="yes">Yes</MenuItem>
                 <MenuItem value="no">No</MenuItem>
               </TextField>
@@ -430,24 +541,36 @@ const TreatmentCycles: React.FC = () => {
               <CustomDatePicker
                 label="Biopsy Date"
                 value={null}
-                onChange={() => { }}
+                onChange={() => {}}
               />
             </Grid>
             <Grid item>
               <CustomDateTimePicker
                 label="Planned Date/Time of Embryo Transfer"
                 value={null}
-                onChange={() => { }}
+                onChange={() => {}}
               />
             </Grid>
             <Grid item>
-              <TextField id="embryos-cryopreserved" label="All Embryos will be cryopreserved for future use(Y/N)" fullWidth select value="">
+              <TextField
+                id="embryos-cryopreserved"
+                label="All Embryos will be cryopreserved for future use(Y/N)"
+                fullWidth
+                select
+                value=""
+              >
                 <MenuItem value="yes">Yes</MenuItem>
                 <MenuItem value="no">No</MenuItem>
               </TextField>
             </Grid>
             <Grid item>
-              <TextField id="results-for-transfer" label="Results Needed for Fresh Embryo Transfer (Y/N)" fullWidth select value="">
+              <TextField
+                id="results-for-transfer"
+                label="Results Needed for Fresh Embryo Transfer (Y/N)"
+                fullWidth
+                select
+                value=""
+              >
                 <MenuItem value="yes">Yes</MenuItem>
                 <MenuItem value="no">No</MenuItem>
               </TextField>
@@ -467,7 +590,12 @@ const TreatmentCycles: React.FC = () => {
 
         {/* Embryologist Section */}
         <Grid item>
-          <Typography variant="subtitle1" sx={{ textDecorationLine: 'underline' }}>To Be Filled By Embryologist</Typography>
+          <Typography
+            variant="subtitle1"
+            sx={{ textDecorationLine: 'underline' }}
+          >
+            To Be Filled By Embryologist
+          </Typography>
         </Grid>
         <Grid item>
           <Button variant="contained">Add Row</Button>
@@ -480,13 +608,17 @@ const TreatmentCycles: React.FC = () => {
         {/* Action Buttons */}
         <Grid item container justifyContent="center" spacing={2}>
           <Grid item>
-            <Button variant="contained" color="info">Save</Button>
+            <Button variant="contained" color="info">
+              Save
+            </Button>
           </Grid>
           <Grid item>
             <Button variant="contained">Logo Print</Button>
           </Grid>
           <Grid item>
-            <Button variant="contained" color="info">Print</Button>
+            <Button variant="contained" color="info">
+              Print
+            </Button>
           </Grid>
         </Grid>
       </Grid>
@@ -500,22 +632,39 @@ const TreatmentCycles: React.FC = () => {
           {/* Sentinel Dates Column */}
           <Grid item xs={12} md={8} container spacing={2} direction="column">
             <Grid item>
-              <Typography variant='subtitle1' sx={{ mt: 4, mb: 2 }}>Sentinel Dates</Typography>
+              <Typography variant="subtitle1" sx={{ mt: 4, mb: 2 }}>
+                Sentinel Dates
+              </Typography>
             </Grid>
-            {['Treatment plan assigned', 'Menstr.day1 before downreg', 'Baseline scan', 'Start of follicular phase (LMP)', 'Start date of stim medications', 'Trigger Date', 'Egg collection Date', 'IUI Date', 'LPS', 'Thaw date', 'Embryo transfer date', 'Pregnancy test', 'Clinical pregnancy date', 'Estimate delivery date'].map((label, index) => (
+            {[
+              'Treatment plan assigned',
+              'Menstr.day1 before downreg',
+              'Baseline scan',
+              'Start of follicular phase (LMP)',
+              'Start date of stim medications',
+              'Trigger Date',
+              'Egg collection Date',
+              'IUI Date',
+              'LPS',
+              'Thaw date',
+              'Embryo transfer date',
+              'Pregnancy test',
+              'Clinical pregnancy date',
+              'Estimate delivery date',
+            ].map((label, index) => (
               <Grid item key={index}>
                 {label.includes('Date') ? (
                   <CustomDateTimePicker
                     label={label}
                     value={null}
-                    onChange={() => { }}
+                    onChange={() => {}}
                     sx={{ width: '100%' }}
                   />
                 ) : (
                   <CustomDatePicker
                     label={label}
                     value={null}
-                    onChange={() => { }}
+                    onChange={() => {}}
                     sx={{ width: '100%' }}
                   />
                 )}
@@ -526,19 +675,34 @@ const TreatmentCycles: React.FC = () => {
           {/* Events Column */}
           <Grid item xs={12} md={4} container spacing={1} direction="column">
             <Grid item>
-              <Typography variant='subtitle1' sx={{ mt: 4, mb: 2 }}>Events</Typography>
+              <Typography variant="subtitle1" sx={{ mt: 4, mb: 2 }}>
+                Events
+              </Typography>
             </Grid>
-            {['Complications', 'Hospitalized', 'Cycle cancelled', 'No embryos transferred', 'Treatment completed', 'Cycle completed', 'Delivered', 'Miscarriage', 'Extopic Pregnancy'].map((label, index) => (
+            {[
+              'Complications',
+              'Hospitalized',
+              'Cycle cancelled',
+              'No embryos transferred',
+              'Treatment completed',
+              'Cycle completed',
+              'Delivered',
+              'Miscarriage',
+              'Extopic Pregnancy',
+            ].map((label, index) => (
               <Grid item key={index}>
                 <FormControlLabel
-                  control={<Checkbox color='secondary' />}
+                  control={<Checkbox color="secondary" />}
                   label={label}
-                  sx={{ color: "grey.600" }}
+                  sx={{ color: 'grey.600' }}
                 />
               </Grid>
             ))}
             <Grid item container justifyContent="center">
-              <Button variant='contained' sx={{ width: 'fit-content', mt: 2, mb: 2 }}>
+              <Button
+                variant="contained"
+                sx={{ width: 'fit-content', mt: 2, mb: 2 }}
+              >
                 Submit
               </Button>
             </Grid>
@@ -553,9 +717,15 @@ const TreatmentCycles: React.FC = () => {
       <Box sx={{ flexGrow: 1 }}>
         <Grid container direction="column" spacing={2}>
           {/* Action Buttons and CustomDatePickers */}
-          <Grid item container justifyContent="space-between" alignItems="center" spacing={2}>
+          <Grid
+            item
+            container
+            justifyContent="space-between"
+            alignItems="center"
+            spacing={2}
+          >
             <Grid item>
-              <Button variant='contained' sx={{ width: 'fit-content' }}>
+              <Button variant="contained" sx={{ width: 'fit-content' }}>
                 Insert/Edit Treatment Plan
               </Button>
             </Grid>
@@ -563,7 +733,7 @@ const TreatmentCycles: React.FC = () => {
               <CustomDatePicker
                 label="Start Date"
                 value={new Date()}
-                onChange={() => { }}
+                onChange={() => {}}
                 sx={{ width: '100%' }}
               />
             </Grid>
@@ -571,12 +741,16 @@ const TreatmentCycles: React.FC = () => {
               <CustomDatePicker
                 label="End Date"
                 value={new Date()}
-                onChange={() => { }}
+                onChange={() => {}}
                 sx={{ width: '100%' }}
               />
             </Grid>
             <Grid item>
-              <Button variant='contained' color="primary" sx={{ width: 'fit-content' }}>
+              <Button
+                variant="contained"
+                color="primary"
+                sx={{ width: 'fit-content' }}
+              >
                 Print
               </Button>
             </Grid>
@@ -592,20 +766,19 @@ const TreatmentCycles: React.FC = () => {
   };
 
   return (
-    <div className='main-container'>
+    <div className="main-container">
       <Box sx={{ marginTop: 1 }}>
         <PatientInfo />
       </Box>
 
       <TreatmentCyclesTable />
-      <Button variant='contained' sx={{ width: 'fit-content', mt: 2, mb: 2 }}>
+      <Button variant="contained" sx={{ width: 'fit-content', mt: 2, mb: 2 }}>
         Add Treatment Cycle
       </Button>
 
       {addNewCycle()}
-
     </div>
-  )
-}
+  );
+};
 
-export default TreatmentCycles
+export default TreatmentCycles;

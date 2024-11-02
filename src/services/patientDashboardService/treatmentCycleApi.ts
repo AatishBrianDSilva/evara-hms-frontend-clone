@@ -1,9 +1,9 @@
-import { createApi } from "@reduxjs/toolkit/query/react";
+import { createApi } from '@reduxjs/toolkit/query/react';
 
-import generateQueryParams from "../../utils/generateQueryParams";
-import { ApiResponse, IQueryOptions } from "../../types/global";
-import { IPatientTreatmentCycle } from "../../types/patientDashboard/treatmentCycle";
-import { baseQuery } from "../baseQuery";
+import generateQueryParams from '../../utils/generateQueryParams';
+import { ApiResponse, IQueryOptions } from '../../types/global';
+import { IPatientTreatmentCycle } from '../../types/patientDashboard/treatmentCycle';
+import { baseQuery } from '../baseQuery';
 
 interface AddPatientTreatmentCyclePayload {
   caseId: string;
@@ -24,39 +24,39 @@ interface IEditTreatmentCyclePayload {
 }
 
 export const treatmentCycleApi = createApi({
-  reducerPath: "treatmentCycleApi",
+  reducerPath: 'treatmentCycleApi',
   baseQuery: baseQuery,
-  tagTypes: ["TreatmentCycle"],
-  endpoints: (builder) => ({
+  tagTypes: ['TreatmentCycle'],
+  endpoints: builder => ({
     getTreatmentCycles: builder.query<
       ApiResponse<IPatientTreatmentCycle[]>,
       IQueryOptions
     >({
       query: (options: IQueryOptions) => {
         const queryParams = generateQueryParams(options);
-        return { url: `treatment-cycles?${queryParams}`, method: "GET" };
+        return { url: `treatment-cycles?${queryParams}`, method: 'GET' };
       },
-      providesTags: (_result, _error, _args) => ["TreatmentCycle"],
+      providesTags: (_result, _error, _args) => ['TreatmentCycle'],
     }),
     getTreatmentCycleById: builder.query<
       ApiResponse<IPatientTreatmentCycle>,
       string
     >({
       query: (id: string) => {
-        return { url: `treatment-cycles/${id}`, method: "GET" };
+        return { url: `treatment-cycles/${id}`, method: 'GET' };
       },
-      providesTags: (_result, _error, id) => [{ type: "TreatmentCycle", id }],
+      providesTags: (_result, _error, id) => [{ type: 'TreatmentCycle', id }],
     }),
     addTreatmentCycle: builder.mutation<
       ApiResponse<IPatientTreatmentCycle>,
       AddPatientTreatmentCyclePayload[]
     >({
-      query: (treatmentCycleData) => ({
-        url: "treatment-cycles/add",
-        method: "POST",
+      query: treatmentCycleData => ({
+        url: 'treatment-cycles/add',
+        method: 'POST',
         body: treatmentCycleData,
       }),
-      invalidatesTags: ["TreatmentCycle"],
+      invalidatesTags: ['TreatmentCycle'],
     }),
     editTreatmentCycle: builder.mutation<
       ApiResponse<IPatientTreatmentCycle>,
@@ -66,18 +66,18 @@ export const treatmentCycleApi = createApi({
         const queryParams = generateQueryParams(options);
         return {
           url: `treatment-cycles/${payload.id}?${queryParams}`,
-          method: "PATCH",
+          method: 'PATCH',
           body: payload,
         };
       },
-      invalidatesTags: ["TreatmentCycle"],
+      invalidatesTags: ['TreatmentCycle'],
     }),
     deleteTreatmentCycle: builder.mutation<ApiResponse<null>, string>({
-      query: (id) => ({
+      query: id => ({
         url: `treatment-cycles/${id}`,
-        method: "DELETE",
+        method: 'DELETE',
       }),
-      invalidatesTags: ["TreatmentCycle"],
+      invalidatesTags: ['TreatmentCycle'],
     }),
   }),
 });

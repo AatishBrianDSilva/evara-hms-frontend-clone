@@ -1,15 +1,22 @@
-import React, { useCallback, useState } from "react";
-import ContentSection from "../../../../components/ContentSection/ContentSection";
-import { Box, Button, TextField } from "@mui/material";
-import { Add, Edit } from "@mui/icons-material";
-import CustomDataGrid from "../../../../components/CustomDataGrid/CustomDataGrid";
-import { GridActionsCellItem, GridColDef, GridRowParams } from "@mui/x-data-grid";
-import Delete from "@mui/icons-material/Delete";
-import DeleteConfirmationModal from "../../../../components/DeleteConfirmationModal/DeleteConfirmationModal";
-import { useToast } from "../../../../context/ToastContext";
-import _ from "lodash";
-import { useDeleteDonorMutation, useGetdonorQuery } from "../../../../services/donorApi";
-import EditDonor from "./EditDonor";
+import React, { useCallback, useState } from 'react';
+import ContentSection from '../../../../components/ContentSection/ContentSection';
+import { Box, Button, TextField } from '@mui/material';
+import { Add, Edit } from '@mui/icons-material';
+import CustomDataGrid from '../../../../components/CustomDataGrid/CustomDataGrid';
+import {
+  GridActionsCellItem,
+  GridColDef,
+  GridRowParams,
+} from '@mui/x-data-grid';
+import Delete from '@mui/icons-material/Delete';
+import DeleteConfirmationModal from '../../../../components/DeleteConfirmationModal/DeleteConfirmationModal';
+import { useToast } from '../../../../context/ToastContext';
+import _ from 'lodash';
+import {
+  useDeleteDonorMutation,
+  useGetdonorQuery,
+} from '../../../../services/donorApi';
+import EditDonor from './EditDonor';
 
 interface RowType {
   _id: string;
@@ -18,11 +25,11 @@ interface RowType {
 const LocalDonor: React.FC = () => {
   const { showPromiseToast } = useToast();
 
-  const [selectedRow, setSelectedRow] = useState<string>("");
+  const [selectedRow, setSelectedRow] = useState<string>('');
   const [isEditModalOpen, setIsEditModalOpen] = useState<boolean>(false);
   const [isDeleteModalOpen, setIsDeleteModalOpen] = useState<boolean>(false);
 
-  const [searchQuery, setSearchQuery] = useState("");
+  const [searchQuery, setSearchQuery] = useState('');
   const handleSearchChange = useCallback((query: string) => {
     setSearchQuery(query);
   }, []);
@@ -30,7 +37,7 @@ const LocalDonor: React.FC = () => {
   // Debounce the search handling
   const debouncedSearchChange = useCallback(
     _.debounce(handleSearchChange, 500),
-    [handleSearchChange] // Ensure that handleSearchChange is stable
+    [handleSearchChange], // Ensure that handleSearchChange is stable
   );
 
   const {
@@ -60,24 +67,25 @@ const LocalDonor: React.FC = () => {
 
   const columnsConfig: GridColDef[] = [
     {
-      field: "name",
-      headerName: "Name",
+      field: 'name',
+      headerName: 'Name',
       flex: 1,
-      valueGetter: (params) => `${params.row.firstName || ""} ${params.row.lastName || ""}`,
+      valueGetter: params =>
+        `${params.row.firstName || ''} ${params.row.lastName || ''}`,
     },
-    { field: "gender", headerName: "Gender", flex: 1 },
-    { field: "mobile", headerName: "Mobile", flex: 1 },
-    { field: "city", headerName: "City", flex: 1 },
-    { field: "state", headerName: "State", flex: 1 },
-    { field: "nationality", headerName: "Nationality", flex: 1 },
-    { field: "occupation", headerName: "Occupation", flex: 1 },
-    { field: "religion", headerName: "Religion", flex: 1 },
+    { field: 'gender', headerName: 'Gender', flex: 1 },
+    { field: 'mobile', headerName: 'Mobile', flex: 1 },
+    { field: 'city', headerName: 'City', flex: 1 },
+    { field: 'state', headerName: 'State', flex: 1 },
+    { field: 'nationality', headerName: 'Nationality', flex: 1 },
+    { field: 'occupation', headerName: 'Occupation', flex: 1 },
+    { field: 'religion', headerName: 'Religion', flex: 1 },
 
     {
-      field: "actions",
-      headerName: "Actions",
+      field: 'actions',
+      headerName: 'Actions',
       flex: 1,
-      type: "actions",
+      type: 'actions',
       getActions: (params: GridRowParams) => {
         const row = params.row;
         return [
@@ -102,9 +110,9 @@ const LocalDonor: React.FC = () => {
     const promise = deleteDonor(selectedRow).unwrap();
 
     showPromiseToast(promise, {
-      loading: "Deleting...",
-      success: (data) => data || "Deleted Successfully",
-      error: (data) => data || "Failed to Delete",
+      loading: 'Deleting...',
+      success: data => data || 'Deleted Successfully',
+      error: data => data || 'Failed to Delete',
     });
 
     try {
@@ -133,7 +141,7 @@ const LocalDonor: React.FC = () => {
   };
 
   const handleEditClick = (id: string) => {
-    const donorIndex = donorsData.findIndex((donor) => donor._id === id);
+    const donorIndex = donorsData.findIndex(donor => donor._id === id);
     if (donorIndex !== -1) {
       const donorId = donorsData[donorIndex].donorId;
       setSelectedRow(donorId);
@@ -142,7 +150,7 @@ const LocalDonor: React.FC = () => {
   };
 
   const handleDeleteClick = (id: string) => {
-    const donorIndex = donorsData.findIndex((donor) => donor._id === id);
+    const donorIndex = donorsData.findIndex(donor => donor._id === id);
     if (donorIndex !== -1) {
       const donorId = donorsData[donorIndex].donorId;
       setSelectedRow(donorId);
@@ -151,7 +159,7 @@ const LocalDonor: React.FC = () => {
   };
 
   const handleButtonClick = () => {
-    window.location.href = "/ivf-registration/donor-bank";
+    window.location.href = '/ivf-registration/donor-bank';
   };
 
   return (
@@ -162,7 +170,7 @@ const LocalDonor: React.FC = () => {
           placeholder="Name/Mobile"
           size="small"
           variant="outlined"
-          onChange={(e) => debouncedSearchChange(e.target.value)}
+          onChange={e => debouncedSearchChange(e.target.value)}
         />
 
         <Button
@@ -176,19 +184,23 @@ const LocalDonor: React.FC = () => {
         </Button>
       </Box>
 
-      <Box mt={2} flex={"1 1 auto"}>
+      <Box mt={2} flex={'1 1 auto'}>
         <CustomDataGrid
           autoHeight={false}
           columns={columnsConfig}
           rows={donorsData}
           loading={isLoading || isFetching}
-          sx={{ height: "100%" }}
+          sx={{ height: '100%' }}
           getRowId={getRowId}
         />
       </Box>
 
       {isEditModalOpen && selectedRow && (
-        <EditDonor openModal={isEditModalOpen} onClose={closeEditModal} id={selectedRow} />
+        <EditDonor
+          openModal={isEditModalOpen}
+          onClose={closeEditModal}
+          id={selectedRow}
+        />
       )}
 
       {isDeleteModalOpen && (

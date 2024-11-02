@@ -1,7 +1,7 @@
 // src/features/auth/authSlice.ts
-import { createSlice, PayloadAction } from "@reduxjs/toolkit";
-import { jwtDecode } from "jwt-decode";
-import { EUserRole } from "../../types/masterDashboard/global";
+import { createSlice, PayloadAction } from '@reduxjs/toolkit';
+import { jwtDecode } from 'jwt-decode';
+import { EUserRole } from '../../types/masterDashboard/global';
 
 interface AuthTokens {
   authToken: string;
@@ -39,12 +39,12 @@ const initialState: AuthState = {
 };
 
 const authSlice = createSlice({
-  name: "auth",
+  name: 'auth',
   initialState,
   reducers: {
     setCredentials: (
       state,
-      action: PayloadAction<{ authToken: string; refreshToken: string }>
+      action: PayloadAction<{ authToken: string; refreshToken: string }>,
     ) => {
       const { authToken, refreshToken } = action.payload;
       const decoded: DecodedToken = jwtDecode(authToken);
@@ -62,7 +62,7 @@ const authSlice = createSlice({
       };
       state.isAuthenticated = true;
     },
-    clearCredentials: (state) => {
+    clearCredentials: state => {
       state.tokens = null;
       state.user = null;
       state.isAuthenticated = false;

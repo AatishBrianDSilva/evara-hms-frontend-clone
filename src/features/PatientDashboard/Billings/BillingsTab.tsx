@@ -1,11 +1,11 @@
-import Box from "@mui/material/Box";
-import Tab from "@mui/material/Tab";
-import Tabs from "@mui/material/Tabs";
-import React from "react";
+import Box from '@mui/material/Box';
+import Tab from '@mui/material/Tab';
+import Tabs from '@mui/material/Tabs';
+import React from 'react';
 
-import { Outlet, useParams } from "react-router-dom";
-import useTabNavigation from "../../../hooks/useTabNavigation";
-import { EBillingsTabPaths } from "../../../types/global";
+import { Outlet, useParams } from 'react-router-dom';
+import useTabNavigation from '../../../hooks/useTabNavigation';
+import { EBillingsTabPaths } from '../../../types/global';
 
 const BillingsTab: React.FC = () => {
   const { id } = useParams<{ id: string }>();
@@ -13,7 +13,7 @@ const BillingsTab: React.FC = () => {
   const basePath = `/patient/${id}/billings`;
   const { activeTab, handleTabChange } = useTabNavigation(
     basePath,
-    Object.values(EBillingsTabPaths)
+    Object.values(EBillingsTabPaths),
   );
 
   return (
@@ -35,7 +35,7 @@ const BillingsTab: React.FC = () => {
         {/* <Tab iconPosition="top" label="Transactions" id="billings-tabpanel-6" /> */}
       </Tabs>
 
-      <Box p={2} display={"flex"} flexDirection={"column"} flex={1}>
+      <Box p={2} display={'flex'} flexDirection={'column'} flex={1}>
         <Outlet />
       </Box>
     </>

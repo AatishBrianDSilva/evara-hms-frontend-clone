@@ -5,9 +5,7 @@ import CalendarMonth from '@mui/icons-material/CalendarMonth';
 
 import AppointmentsList from './AppointmentsList';
 
-
 const Appointment: React.FC = () => {
-
   return (
     <ContentSection title="Appointments" icon={<CalendarMonth />}>
       <AppointmentsList />

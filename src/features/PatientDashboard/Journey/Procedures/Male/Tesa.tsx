@@ -7,36 +7,41 @@ import {
   Skeleton,
   TextField,
   Typography,
-} from "@mui/material";
-import React from "react";
-import ReportModalHeader from "../../../../../components/ReportModalHeader/ReportModalHeader";
-import { useDispatch, useSelector } from "react-redux";
-import { useToast } from "../../../../../context/ToastContext";
-import { RootState } from "../../../../../app/store";
+} from '@mui/material';
+import React from 'react';
+import ReportModalHeader from '../../../../../components/ReportModalHeader/ReportModalHeader';
+import { useDispatch, useSelector } from 'react-redux';
+import { useToast } from '../../../../../context/ToastContext';
+import { RootState } from '../../../../../app/store';
 import {
   useEditProcedureMutation,
   useGetProcedureByIdQuery,
-} from "../../../../../services/patientDashboardService/procedureApi";
-import { IDoctor } from "../../../../../types/doctor";
+} from '../../../../../services/patientDashboardService/procedureApi';
+import { IDoctor } from '../../../../../types/doctor';
 import {
   IEditProcedureForm,
   IEditProcedurePayload,
-} from "../../../../../types/patientDashboard/procedures";
-import { ITesaForm } from "../../../../../types/patientDashboard/procedures";
-import { useFormik } from "formik";
-import { EProcedureType } from "../../../../../types/master";
-import _ from "lodash";
-import { closeEditProcedure } from "../procedureSlice";
-import FieldAutocomplete from "../../../../../components/FieldAutoComplete/FieldAutoComplete";
-import CustomDatePicker from "../../../../../components/CustomDatePicker/CustomDatePicker";
-import FileUploadButton from "../../../../../components/FileUploadAndPreview/FileUploadButton";
-import { EBuckets, EDocumentTypes } from "../../../../../types/global";
-import { DoctorSpeciality } from "../../../../../types/masterDashboard/global";
+} from '../../../../../types/patientDashboard/procedures';
+import { ITesaForm } from '../../../../../types/patientDashboard/procedures';
+import { useFormik } from 'formik';
+import { EProcedureType } from '../../../../../types/master';
+import _ from 'lodash';
+import { closeEditProcedure } from '../procedureSlice';
+import FieldAutocomplete from '../../../../../components/FieldAutoComplete/FieldAutoComplete';
+import CustomDatePicker from '../../../../../components/CustomDatePicker/CustomDatePicker';
+import FileUploadButton from '../../../../../components/FileUploadAndPreview/FileUploadButton';
+import { EBuckets, EDocumentTypes } from '../../../../../types/global';
+import { DoctorSpeciality } from '../../../../../types/masterDashboard/global';
 
 const renderSkeletonLoader = () => {
   return (
     <>
-      <Box display={"flex"} justifyContent={"space-between"} borderBottom={1} py={2}>
+      <Box
+        display={'flex'}
+        justifyContent={'space-between'}
+        borderBottom={1}
+        py={2}
+      >
         <Box>
           <Skeleton variant="text" width={100} height={20} />
           <Skeleton variant="text" width={100} height={20} />
@@ -48,7 +53,7 @@ const renderSkeletonLoader = () => {
       </Box>
       <Box pt={2} mt={2}>
         <Box>
-          <Grid container justifyContent={"space-between"}>
+          <Grid container justifyContent={'space-between'}>
             <Grid item md={6} lg={3}>
               <Skeleton variant="text" width={100} height={20} />
             </Grid>
@@ -79,7 +84,9 @@ const Tesa: React.FC<TesaProps> = ({ doctors }) => {
   const dispatch = useDispatch();
   const { showPromiseToast } = useToast();
 
-  const openEditDialog = useSelector((state: RootState) => state.procedure.editProcedureOpen);
+  const openEditDialog = useSelector(
+    (state: RootState) => state.procedure.editProcedureOpen,
+  );
   const patient = useSelector((state: RootState) => state.patients.patient);
 
   const {
@@ -93,45 +100,48 @@ const Tesa: React.FC<TesaProps> = ({ doctors }) => {
   const procedure = procedureData?.data;
   const loading = procedureLoading || procedureFetching;
 
-  const [fileUploadedUrl, setFileUploadedUrl] = React.useState<string[]>([""]);
+  const [fileUploadedUrl, setFileUploadedUrl] = React.useState<string[]>(['']);
 
   const date = new Date(procedure?.date || new Date()).toLocaleDateString();
-  const doctor = procedure?.doctor?.firstName + " " + procedure?.doctor?.lastName;
+  const doctor =
+    procedure?.doctor?.firstName + ' ' + procedure?.doctor?.lastName;
   const procedureName = procedure?.procedure?.procedure?.procedureName;
   const actualProcedureName = procedure?.procedure?.name;
 
-  console.log("Procedure at Tesa", procedure);
+  console.log('Procedure at Tesa', procedure);
 
-  const [editProcedure, { isLoading: editingProcedure }] = useEditProcedureMutation();
+  const [editProcedure, { isLoading: editingProcedure }] =
+    useEditProcedureMutation();
 
   const initialVaules: IEditProcedureForm<ITesaForm> = {
-    status: procedure?.status || "Scheduled",
+    status: procedure?.status || 'Scheduled',
     files: [],
-    notes: procedure?.result?.notes || "",
+    notes: procedure?.result?.notes || '',
     result: {
-      dateOfAdmission: procedure?.result?.details?.dateOfAdmission || "",
-      dateOfOperation: procedure?.result?.details?.dateOfOperation || "",
-      dateOfDischarge: procedure?.result?.details?.dateOfDischarge || "",
-      indication: procedure?.result?.details?.indication || "",
-      operationDetails: procedure?.result?.details?.operationDetails || "",
-      complaintHistory: procedure?.result?.details?.complaintHistory || "",
+      dateOfAdmission: procedure?.result?.details?.dateOfAdmission || '',
+      dateOfOperation: procedure?.result?.details?.dateOfOperation || '',
+      dateOfDischarge: procedure?.result?.details?.dateOfDischarge || '',
+      indication: procedure?.result?.details?.indication || '',
+      operationDetails: procedure?.result?.details?.operationDetails || '',
+      complaintHistory: procedure?.result?.details?.complaintHistory || '',
       surgeon: procedure?.result?.details?.surgeon || null,
       anaesthetist: procedure?.result?.details?.anaesthetist || null,
-      typeOfAnaesthesia: procedure?.result?.details?.typeOfAnaesthesia || "",
-      procedureDetails: procedure?.result?.details?.procedureDetails || "",
-      findings: procedure?.result?.details?.findings || "",
-      summary: procedure?.result?.details?.summary || "",
-      investigationsSent: procedure?.result?.details?.investigationsSent || "",
-      postOperativeInstructions: procedure?.result?.details?.postOperativeInstructions || "",
+      typeOfAnaesthesia: procedure?.result?.details?.typeOfAnaesthesia || '',
+      procedureDetails: procedure?.result?.details?.procedureDetails || '',
+      findings: procedure?.result?.details?.findings || '',
+      summary: procedure?.result?.details?.summary || '',
+      investigationsSent: procedure?.result?.details?.investigationsSent || '',
+      postOperativeInstructions:
+        procedure?.result?.details?.postOperativeInstructions || '',
       embryologist: procedure?.result?.details?.embryologist || null,
-      remarks: procedure?.result?.details?.remarks || "",
-      description: procedure?.result?.details?.description || "",
+      remarks: procedure?.result?.details?.remarks || '',
+      description: procedure?.result?.details?.description || '',
     },
   };
 
   const handleSubmit = async (values: IEditProcedureForm<ITesaForm>) => {
-    console.log("Formik values", values);
-    const actualName = actualProcedureName || "Default Procedure Name"; // Use a fallback if procedureName is null/undefined
+    console.log('Formik values', values);
+    const actualName = actualProcedureName || 'Default Procedure Name'; // Use a fallback if procedureName is null/undefined
 
     const payload: IEditProcedurePayload = {
       status: values.status,
@@ -145,20 +155,23 @@ const Tesa: React.FC<TesaProps> = ({ doctors }) => {
       actualName: actualName, // New field added to the payload
     };
 
-    console.log("Payload", payload);
+    console.log('Payload', payload);
 
-    const promise = editProcedure({ _id: openEditDialog.id, ...payload }).unwrap();
+    const promise = editProcedure({
+      _id: openEditDialog.id,
+      ...payload,
+    }).unwrap();
 
     showPromiseToast(promise, {
-      loading: "Updating procedure...",
-      success: () => "Procedure updated successfully",
-      error: () => "An error occurred while updating procedure",
+      loading: 'Updating procedure...',
+      success: () => 'Procedure updated successfully',
+      error: () => 'An error occurred while updating procedure',
     });
 
     try {
       await promise;
     } catch (error) {
-      console.error("Failed to update procedure", error);
+      console.error('Failed to update procedure', error);
     }
   };
 
@@ -177,8 +190,12 @@ const Tesa: React.FC<TesaProps> = ({ doctors }) => {
 
   return (
     <form onSubmit={formik.handleSubmit}>
-      <ReportModalHeader date={date} doctor={doctor} reportName={procedureName} />
-      <Box display={"flex"} flexDirection={"column"} mt={2} flex={1}>
+      <ReportModalHeader
+        date={date}
+        doctor={doctor}
+        reportName={procedureName}
+      />
+      <Box display={'flex'} flexDirection={'column'} mt={2} flex={1}>
         {/* {JSON.stringify(formik.initialValues, null, 2)} */}
         <Grid container spacing={2} mb={2}>
           <Grid item xs={12} md={6} lg={4}>
@@ -186,13 +203,16 @@ const Tesa: React.FC<TesaProps> = ({ doctors }) => {
               name="result.dateOfAdmission"
               value={formik?.values.result.dateOfAdmission}
               label="Date Of Admission"
-              onChange={(date) => formik.setFieldValue("result.dateOfAdmission", date)}
+              onChange={date =>
+                formik.setFieldValue('result.dateOfAdmission', date)
+              }
               error={
                 formik.touched.result?.dateOfAdmission &&
                 Boolean(formik.errors.result?.dateOfAdmission)
               }
               helperText={
-                formik.touched.result?.dateOfAdmission && formik.errors.result?.dateOfAdmission
+                formik.touched.result?.dateOfAdmission &&
+                formik.errors.result?.dateOfAdmission
               }
             />
           </Grid>
@@ -201,13 +221,16 @@ const Tesa: React.FC<TesaProps> = ({ doctors }) => {
               name="result.dateOfOperation"
               value={formik?.values.result.dateOfOperation}
               label="Date Of Operation"
-              onChange={(date) => formik.setFieldValue("result.dateOfOperation", date)}
+              onChange={date =>
+                formik.setFieldValue('result.dateOfOperation', date)
+              }
               error={
                 formik.touched.result?.dateOfOperation &&
                 Boolean(formik.errors.result?.dateOfOperation)
               }
               helperText={
-                formik.touched.result?.dateOfOperation && formik.errors.result?.dateOfOperation
+                formik.touched.result?.dateOfOperation &&
+                formik.errors.result?.dateOfOperation
               }
             />
           </Grid>
@@ -215,14 +238,17 @@ const Tesa: React.FC<TesaProps> = ({ doctors }) => {
             <CustomDatePicker
               name="result.dateOfDischarge"
               value={formik?.values.result.dateOfDischarge}
-              onChange={(date) => formik.setFieldValue("result.dateOfDischarge", date)}
+              onChange={date =>
+                formik.setFieldValue('result.dateOfDischarge', date)
+              }
               label="Date Of Discharge"
               error={
                 formik.touched.result?.dateOfDischarge &&
                 Boolean(formik.errors.result?.dateOfDischarge)
               }
               helperText={
-                formik.touched.result?.dateOfDischarge && formik.errors.result?.dateOfDischarge
+                formik.touched.result?.dateOfDischarge &&
+                formik.errors.result?.dateOfDischarge
               }
             />
           </Grid>
@@ -273,12 +299,16 @@ const Tesa: React.FC<TesaProps> = ({ doctors }) => {
           <Grid item xs={12} md={6} lg={4}>
             <FieldAutocomplete
               options={doctors}
-              getOptionLabel={(option) => `${option.firstName} ${option.lastName}`}
+              getOptionLabel={option =>
+                `${option.firstName} ${option.lastName}`
+              }
               isOptionEqualToValue={(option, value) => {
                 return option._id === value._id;
               }}
               value={formik.values.result.surgeon}
-              onChange={(newValue) => formik.setFieldValue("result.surgeon", newValue)}
+              onChange={newValue =>
+                formik.setFieldValue('result.surgeon', newValue)
+              }
               label="Surgeon"
             />
           </Grid>
@@ -286,17 +316,21 @@ const Tesa: React.FC<TesaProps> = ({ doctors }) => {
           <Grid item xs={12} md={6} lg={4}>
             <FieldAutocomplete
               options={doctors}
-              getOptionLabel={(option) => `${option.firstName} ${option.lastName}`}
+              getOptionLabel={option =>
+                `${option.firstName} ${option.lastName}`
+              }
               isOptionEqualToValue={(option, value) => {
                 return option._id === value._id;
               }}
               filterOptions={(options, _state) => {
                 return options.filter(
-                  (option) => option.speciality === DoctorSpeciality.Embryologist
+                  option => option.speciality === DoctorSpeciality.Embryologist,
                 );
               }}
               value={formik.values.result.embryologist}
-              onChange={(newValue) => formik.setFieldValue("result.embryologist", newValue)}
+              onChange={newValue =>
+                formik.setFieldValue('result.embryologist', newValue)
+              }
               label="Embryologist"
             />
           </Grid>
@@ -304,20 +338,28 @@ const Tesa: React.FC<TesaProps> = ({ doctors }) => {
           <Grid item xs={12} md={6} lg={4}>
             <FieldAutocomplete
               options={doctors}
-              getOptionLabel={(option) => `${option.firstName || ""} ${option.lastName || ""}`}
+              getOptionLabel={option =>
+                `${option.firstName || ''} ${option.lastName || ''}`
+              }
               filterOptions={(options, _state) => {
                 return options.filter(
-                  (option) => option.speciality === DoctorSpeciality.Anaesthetist
+                  option => option.speciality === DoctorSpeciality.Anaesthetist,
                 );
               }}
               isOptionEqualToValue={(option, value) => option._id === value._id}
               value={formik.values.result.anaesthetist}
-              onChange={(newValue) => formik.setFieldValue(`details.anaesthetist`, newValue)}
+              onChange={newValue =>
+                formik.setFieldValue(`details.anaesthetist`, newValue)
+              }
               label="Anaesthetist"
               error={
-                formik.touched.result?.anaesthetist && Boolean(formik.errors.result?.anaesthetist)
+                formik.touched.result?.anaesthetist &&
+                Boolean(formik.errors.result?.anaesthetist)
               }
-              helperText={formik.touched.result?.anaesthetist && formik.errors.result?.anaesthetist}
+              helperText={
+                formik.touched.result?.anaesthetist &&
+                formik.errors.result?.anaesthetist
+              }
             />
           </Grid>
           <Grid item xs={12} md={6} lg={4}>
@@ -445,14 +487,23 @@ const Tesa: React.FC<TesaProps> = ({ doctors }) => {
           </Grid>
         </Grid>
       </Box>
-      <Box display={"flex"} justifyContent={"center"} alignItems={"center"} gap={2} mb={2}>
+      <Box
+        display={'flex'}
+        justifyContent={'center'}
+        alignItems={'center'}
+        gap={2}
+        mb={2}
+      >
         <Grid item xs={12}>
           <FormControlLabel
             control={
               <Checkbox
-                checked={formik.values.status === "Completed"}
-                onChange={(e) =>
-                  formik.setFieldValue("status", e.target.checked ? "Completed" : "Scheduled")
+                checked={formik.values.status === 'Completed'}
+                onChange={e =>
+                  formik.setFieldValue(
+                    'status',
+                    e.target.checked ? 'Completed' : 'Scheduled',
+                  )
                 }
                 color="primary"
               />
@@ -461,12 +512,13 @@ const Tesa: React.FC<TesaProps> = ({ doctors }) => {
           />
         </Grid>
       </Box>
-      <Box display={"flex"} justifyContent={"center"} gap={2} p={2}>
+      <Box display={'flex'} justifyContent={'center'} gap={2} p={2}>
         <Button
           variant="contained"
           disabled={
             editingProcedure ||
-            (_.isEqual(formik.values, formik.initialValues) && fileUploadedUrl.length === 0)
+            (_.isEqual(formik.values, formik.initialValues) &&
+              fileUploadedUrl.length === 0)
           }
           color="primary"
           type="submit"

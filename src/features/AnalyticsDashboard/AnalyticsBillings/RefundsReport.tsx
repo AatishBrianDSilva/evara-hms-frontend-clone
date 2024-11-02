@@ -1,14 +1,14 @@
-import React, { useEffect, useState, useCallback } from "react";
-import { Box, TextField, Button } from "@mui/material";
-import ContentSection from "../../../components/ContentSection/ContentSection";
-import CustomDataGrid from "../../../components/CustomDataGrid/CustomDataGrid";
-import { GridActionsCellItem, GridColDef } from "@mui/x-data-grid";
-import { formatToIndianCurrencyFormat } from "../../../utils/formatToIndianCurrencyFormat";
-import { useGetRefundReportsQuery } from "../../../services/analyticsDashboardService/billings/refundReports";
-import ViewReports from "../../PatientDashboard/Journey/ViewReports";
-import { Visibility } from "@mui/icons-material";
-import debounce from "lodash/debounce";
-import { exportToCSV } from "../../../utils/exportCSV"; // Import the CSV utility
+import React, { useEffect, useState, useCallback } from 'react';
+import { Box, TextField, Button } from '@mui/material';
+import ContentSection from '../../../components/ContentSection/ContentSection';
+import CustomDataGrid from '../../../components/CustomDataGrid/CustomDataGrid';
+import { GridActionsCellItem, GridColDef } from '@mui/x-data-grid';
+import { formatToIndianCurrencyFormat } from '../../../utils/formatToIndianCurrencyFormat';
+import { useGetRefundReportsQuery } from '../../../services/analyticsDashboardService/billings/refundReports';
+import ViewReports from '../../PatientDashboard/Journey/ViewReports';
+import { Visibility } from '@mui/icons-material';
+import debounce from 'lodash/debounce';
+import { exportToCSV } from '../../../utils/exportCSV'; // Import the CSV utility
 
 interface RowType {
   _id: string;
@@ -24,10 +24,11 @@ interface RowType {
 const RefundsReport: React.FC = () => {
   const [page, setPage] = useState<number>(1);
   const [pageSize, setPageSize] = useState<number>(25);
-  const [searchPatientId, setSearchPatientId] = useState<string>(""); // Patient ID filter
-  const [searchPatientName, setSearchPatientName] = useState<string>(""); // Patient name filter
-  const [searchQuery, setSearchQuery] = useState<string>(""); // Combined search query
-  const [isViewInvoicesModalOpen, setIsViewInvoicesModalOpen] = useState<boolean>(false);
+  const [searchPatientId, setSearchPatientId] = useState<string>(''); // Patient ID filter
+  const [searchPatientName, setSearchPatientName] = useState<string>(''); // Patient name filter
+  const [searchQuery, setSearchQuery] = useState<string>(''); // Combined search query
+  const [isViewInvoicesModalOpen, setIsViewInvoicesModalOpen] =
+    useState<boolean>(false);
   const [selectedFiles, setSelectedFiles] = useState<string[]>([]);
 
   // Debounce the search query to avoid too many requests
@@ -35,7 +36,7 @@ const RefundsReport: React.FC = () => {
     debounce((query: string) => {
       setSearchQuery(query);
     }, 500),
-    []
+    [],
   );
 
   // Handle filtering changes and search query
@@ -43,7 +44,7 @@ const RefundsReport: React.FC = () => {
     const queryParts = [];
     if (searchPatientId) queryParts.push(`patientCode:${searchPatientId}`);
     if (searchPatientName) queryParts.push(`patientName:${searchPatientName}`);
-    const combinedQuery = queryParts.join(" ");
+    const combinedQuery = queryParts.join(' ');
     debounceSetSearchQuery(combinedQuery);
     setPage(1); // Reset to page 1 on search query change
     return () => debounceSetSearchQuery.cancel();
@@ -78,10 +79,10 @@ const RefundsReport: React.FC = () => {
       _id: refund._id,
       refundDate: refund.refundDetails?.refundDate || refund.createdAt,
       refundAmount: refund.refundDetails?.refundAmount || 0,
-      reason: refund.refundDetails?.reason || "N/A",
-      method: refund.refundDetails?.method || "N/A",
-      patientCode: refund.patientCode || "N/A",
-      patientName: refund.patientName || "N/A", // Add patientName
+      reason: refund.refundDetails?.reason || 'N/A',
+      method: refund.refundDetails?.method || 'N/A',
+      patientCode: refund.patientCode || 'N/A',
+      patientName: refund.patientName || 'N/A', // Add patientName
       files: refund.refundDetails?.files || [],
     })) || [];
 
@@ -100,19 +101,19 @@ const RefundsReport: React.FC = () => {
   const handleDownloadCSV = () => {
     if (refundDetails.length > 0) {
       const headers = [
-        "Refund Date",
-        "Patient Code",
-        "Patient Name",
-        "Refund Amount",
-        "Reason",
-        "Payment Method",
+        'Refund Date',
+        'Patient Code',
+        'Patient Name',
+        'Refund Amount',
+        'Reason',
+        'Payment Method',
       ];
 
       const formattedData = refundDetails.map((refund: RowType) => [
-        new Date(refund.refundDate).toLocaleDateString("en-GB", {
-          day: "2-digit",
-          month: "2-digit",
-          year: "numeric",
+        new Date(refund.refundDate).toLocaleDateString('en-GB', {
+          day: '2-digit',
+          month: '2-digit',
+          year: 'numeric',
         }),
         refund.patientCode,
         refund.patientName,
@@ -121,62 +122,62 @@ const RefundsReport: React.FC = () => {
         refund.method,
       ]);
 
-      exportToCSV([headers, ...formattedData], "Refunds_Report");
+      exportToCSV([headers, ...formattedData], 'Refunds_Report');
     } else {
-      console.log("No data to export");
+      console.log('No data to export');
     }
   };
 
   const columnsConfig: GridColDef[] = [
     {
-      field: "refundDate",
-      headerName: "Refund Date",
-      type: "date",
+      field: 'refundDate',
+      headerName: 'Refund Date',
+      type: 'date',
       flex: 1,
-      valueFormatter: (params) => {
+      valueFormatter: params => {
         const date = new Date(params.value);
-        return date.toLocaleDateString("en-GB", {
-          day: "2-digit",
-          month: "2-digit",
-          year: "numeric",
+        return date.toLocaleDateString('en-GB', {
+          day: '2-digit',
+          month: '2-digit',
+          year: 'numeric',
         });
       },
     },
     {
-      field: "patientCode",
-      headerName: "Patient Code",
+      field: 'patientCode',
+      headerName: 'Patient Code',
       flex: 1,
     },
     {
-      field: "patientName",
-      headerName: "Patient Name",
+      field: 'patientName',
+      headerName: 'Patient Name',
       flex: 1,
     },
     {
-      field: "refundAmount",
-      headerName: "Refund Amount",
+      field: 'refundAmount',
+      headerName: 'Refund Amount',
       flex: 1,
-      valueFormatter: (params) => formatToIndianCurrencyFormat(params.value),
+      valueFormatter: params => formatToIndianCurrencyFormat(params.value),
     },
     {
-      field: "reason",
-      headerName: "Reason for Refund",
+      field: 'reason',
+      headerName: 'Reason for Refund',
       flex: 2,
       valueFormatter(params) {
-        return params.value || "N/A";
+        return params.value || 'N/A';
       },
     },
     {
-      field: "method",
-      headerName: "Payment Method",
+      field: 'method',
+      headerName: 'Payment Method',
       flex: 1,
     },
     {
-      field: "actions",
-      headerName: "Actions",
+      field: 'actions',
+      headerName: 'Actions',
       flex: 1,
-      type: "actions",
-      getActions: (params) => [
+      type: 'actions',
+      getActions: params => [
         <GridActionsCellItem
           icon={<Visibility />}
           label="View Invoices"
@@ -193,14 +194,14 @@ const RefundsReport: React.FC = () => {
           label="Search by Patient ID"
           size="small"
           variant="outlined"
-          onChange={(e) => setSearchPatientId(e.target.value)}
+          onChange={e => setSearchPatientId(e.target.value)}
           placeholder="Enter patient ID"
         />
         <TextField
           label="Search by Patient Name"
           size="small"
           variant="outlined"
-          onChange={(e) => setSearchPatientName(e.target.value)}
+          onChange={e => setSearchPatientName(e.target.value)}
           placeholder="Enter patient name"
         />
         <Button variant="contained" color="primary" onClick={handleDownloadCSV}>
@@ -221,7 +222,7 @@ const RefundsReport: React.FC = () => {
         onPageChange={handlePageChange}
         onPageSizeChange={handlePageSizeChange}
         loading={isLoading || isFetching} // Use the loading prop in DataGrid
-        extendedPageSizeOptions={[25, 50, 100, { label: "All", value: -1 }]} // Add pagination options
+        extendedPageSizeOptions={[25, 50, 100, { label: 'All', value: -1 }]} // Add pagination options
       />
 
       {isViewInvoicesModalOpen && (

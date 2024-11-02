@@ -1,49 +1,58 @@
-import { createApi } from "@reduxjs/toolkit/query/react";
-import generateQueryParams from "../../../utils/generateQueryParams";
-import { ApiResponse, IQueryOptions } from "../../../types/global";
-import { INotesTreatmentAdvice } from "../../../types/masterDashboard/local";
-import { baseQuery } from "../../baseQuery";
+import { createApi } from '@reduxjs/toolkit/query/react';
+import generateQueryParams from '../../../utils/generateQueryParams';
+import { ApiResponse, IQueryOptions } from '../../../types/global';
+import { INotesTreatmentAdvice } from '../../../types/masterDashboard/local';
+import { baseQuery } from '../../baseQuery';
 
 export const notesTreatmentAdvicesApi = createApi({
-  reducerPath: "notesTreatmentAdvicesApi",
+  reducerPath: 'notesTreatmentAdvicesApi',
   baseQuery: baseQuery,
-  tagTypes: ["NotesTreatmentAdvices"],
-  endpoints: (builder) => ({
+  tagTypes: ['NotesTreatmentAdvices'],
+  endpoints: builder => ({
     addNotesTreatmentAdvice: builder.mutation({
-      query: (notesTreatmentAdviceData) => ({
-        url: "master/notes/treatment-advice/add",
-        method: "POST",
+      query: notesTreatmentAdviceData => ({
+        url: 'master/notes/treatment-advice/add',
+        method: 'POST',
         body: notesTreatmentAdviceData,
       }),
-      invalidatesTags: ["NotesTreatmentAdvices"],
+      invalidatesTags: ['NotesTreatmentAdvices'],
     }),
     updateNotesTreatmentAdvice: builder.mutation({
       query: ({ id, ...updateData }) => ({
         url: `master/notes/treatment-advice/${id}`,
-        method: "PUT",
+        method: 'PUT',
         body: updateData,
       }),
-      invalidatesTags: ["NotesTreatmentAdvices"],
+      invalidatesTags: ['NotesTreatmentAdvices'],
     }),
-    getNotesTreatmentAdvices: builder.query<ApiResponse<INotesTreatmentAdvice[]>, IQueryOptions>({
-      query: (options) => {
+    getNotesTreatmentAdvices: builder.query<
+      ApiResponse<INotesTreatmentAdvice[]>,
+      IQueryOptions
+    >({
+      query: options => {
         const queryParams = generateQueryParams(options);
-        return { url: `master/notes/treatment-advice?${queryParams}`, method: "GET" };
+        return {
+          url: `master/notes/treatment-advice?${queryParams}`,
+          method: 'GET',
+        };
       },
-      providesTags: ["NotesTreatmentAdvices"],
+      providesTags: ['NotesTreatmentAdvices'],
     }),
-    getNotesTreatmentAdviceById: builder.query<ApiResponse<INotesTreatmentAdvice>, string>({
-      query: (id) => {
-        return { url: `master/notes/treatment-advice/${id}`, method: "GET" };
+    getNotesTreatmentAdviceById: builder.query<
+      ApiResponse<INotesTreatmentAdvice>,
+      string
+    >({
+      query: id => {
+        return { url: `master/notes/treatment-advice/${id}`, method: 'GET' };
       },
-      providesTags: ["NotesTreatmentAdvices"],
+      providesTags: ['NotesTreatmentAdvices'],
     }),
     deleteNotesTreatmentAdvice: builder.mutation<ApiResponse<null>, string>({
       query: (id: string) => ({
         url: `master/notes/treatment-advice/${id}`,
-        method: "DELETE",
+        method: 'DELETE',
       }),
-      invalidatesTags: ["NotesTreatmentAdvices"],
+      invalidatesTags: ['NotesTreatmentAdvices'],
     }),
   }),
 });

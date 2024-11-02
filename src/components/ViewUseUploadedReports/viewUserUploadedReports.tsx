@@ -1,7 +1,14 @@
-import { DialogTitle, IconButton, List, ListItem, ListItemText, Typography } from "@mui/material";
-import React from "react";
-import { usePrint } from "../../context/PrintPDFContext";
-import { Visibility } from "@mui/icons-material";
+import {
+  DialogTitle,
+  IconButton,
+  List,
+  ListItem,
+  ListItemText,
+  Typography,
+} from '@mui/material';
+import React from 'react';
+import { usePrint } from '../../context/PrintPDFContext';
+import { Visibility } from '@mui/icons-material';
 
 type Props = { files: string[] };
 
@@ -10,21 +17,21 @@ const ViewUserUploadedReports: React.FC<Props> = ({ files }) => {
 
   const fetchContentType = async (fileUrl: string): Promise<string> => {
     const response = await fetch(fileUrl, {
-      method: "HEAD",
+      method: 'HEAD',
     });
-    return response.headers.get("Content-Type") || "";
+    return response.headers.get('Content-Type') || '';
   };
 
   const handleViewReportsClick = async (fileUrl: string) => {
     const contentType = await fetchContentType(fileUrl);
-    if (contentType.startsWith("application/")) {
-      console.log("File type : PDF");
+    if (contentType.startsWith('application/')) {
+      console.log('File type : PDF');
       fetchAndPrintUploadedPDF(fileUrl);
-    } else if (contentType.startsWith("image/")) {
-      console.log("File type : Image");
+    } else if (contentType.startsWith('image/')) {
+      console.log('File type : Image');
       downloadImage(fileUrl);
     } else {
-      console.log("Manage other?");
+      console.log('Manage other?');
     }
   };
 
@@ -33,15 +40,15 @@ const ViewUserUploadedReports: React.FC<Props> = ({ files }) => {
       const response = await fetch(fileUrl);
       const blob = await response.blob();
       const url = window.URL.createObjectURL(blob);
-      const link = document.createElement("a");
+      const link = document.createElement('a');
       link.href = url;
-      link.download = fileUrl.split("/").pop() || "downloaded_image";
+      link.download = fileUrl.split('/').pop() || 'downloaded_image';
       document.body.appendChild(link); // Required for this to work in FireFox
       link.click();
       link.remove();
       window.URL.revokeObjectURL(url);
     } catch (error) {
-      console.error("Error downloading image:", error);
+      console.error('Error downloading image:', error);
     }
   };
 
@@ -63,7 +70,7 @@ const ViewUserUploadedReports: React.FC<Props> = ({ files }) => {
               }
               sx={{ pl: 3 }}
             >
-              <ListItemText primary={file.split("/").pop()} />
+              <ListItemText primary={file.split('/').pop()} />
             </ListItem>
           ))}
         </List>

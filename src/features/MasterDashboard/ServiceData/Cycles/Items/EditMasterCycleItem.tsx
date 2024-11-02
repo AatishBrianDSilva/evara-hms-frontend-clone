@@ -1,4 +1,4 @@
-import React from "react";
+import React from 'react';
 import {
   Box,
   Button,
@@ -10,14 +10,14 @@ import {
   FormControlLabel,
   Grid,
   TextField,
-} from "@mui/material";
-import { useFormik } from "formik";
-import { useToast } from "../../../../../context/ToastContext";
+} from '@mui/material';
+import { useFormik } from 'formik';
+import { useToast } from '../../../../../context/ToastContext';
 import {
   useEditMasterTreatmentCycleMutation,
   useGetMasterTreatmentCycleByIdQuery,
-} from "../../../../../services/masterDashboardService/serviceData/cycles/masterTreatmentCycleApi";
-import CustomDatePicker from "../../../../../components/CustomDatePicker/CustomDatePicker";
+} from '../../../../../services/masterDashboardService/serviceData/cycles/masterTreatmentCycleApi';
+import CustomDatePicker from '../../../../../components/CustomDatePicker/CustomDatePicker';
 
 interface EditMasterCycleItemProps {
   openModal: boolean;
@@ -49,10 +49,10 @@ const EditMasterCycleItem: React.FC<EditMasterCycleItemProps> = ({
 
   const isCycleItemLoading = CycleItemLoading || CycleItemFetching;
 
-  console.log("Data at edit Masters", data);
+  console.log('Data at edit Masters', data);
 
   const initialValues: IFormValues = {
-    cycleName: data?.name || "",
+    cycleName: data?.name || '',
     price: data?.cost || 0,
     validTill: data?.validTill ? new Date(data.validTill) : null,
     isActive: data?.active || false,
@@ -63,7 +63,7 @@ const EditMasterCycleItem: React.FC<EditMasterCycleItemProps> = ({
 
   const formik = useFormik({
     initialValues: initialValues,
-    onSubmit: async (values) => {
+    onSubmit: async values => {
       try {
         const cost = values.price || 0;
 
@@ -79,18 +79,18 @@ const EditMasterCycleItem: React.FC<EditMasterCycleItemProps> = ({
         };
 
         const promise = editCycleItemMutation(payload).unwrap();
-        console.log("Payload", payload);
+        console.log('Payload', payload);
 
         showPromiseToast(promise, {
-          loading: "Editing CycleItem...",
-          success: (data) => data || "CycleItem Edited Successfully",
-          error: (data) => data || "Failed to Edit CycleItem",
+          loading: 'Editing CycleItem...',
+          success: data => data || 'CycleItem Edited Successfully',
+          error: data => data || 'Failed to Edit CycleItem',
         });
 
         await promise;
         onClose();
       } catch (error) {
-        console.error("Edit failed:", error);
+        console.error('Edit failed:', error);
       }
     },
     // validationSchema: validationSchema,
@@ -99,12 +99,12 @@ const EditMasterCycleItem: React.FC<EditMasterCycleItemProps> = ({
 
   return (
     <Dialog open={openModal} onClose={onClose} maxWidth="md" fullWidth>
-      <DialogTitle color={"primary"}>Edit CycleItem</DialogTitle>
+      <DialogTitle color={'primary'}>Edit CycleItem</DialogTitle>
       <DialogContent>
         {isCycleItemLoading ? (
           <CircularProgress />
         ) : (
-          <Box component={"form"} onSubmit={formik.handleSubmit} p={2}>
+          <Box component={'form'} onSubmit={formik.handleSubmit} p={2}>
             <Grid container spacing={2} mb={2} mt={2}>
               <Grid item lg={4}>
                 <TextField
@@ -142,7 +142,7 @@ const EditMasterCycleItem: React.FC<EditMasterCycleItemProps> = ({
                   name="validTill"
                   label="Valid Till"
                   value={formik.values.validTill}
-                  onChange={(value) => formik.setFieldValue("validTill", value)}
+                  onChange={value => formik.setFieldValue('validTill', value)}
                 />
               </Grid>
               <Grid item lg={4}>
@@ -159,9 +159,9 @@ const EditMasterCycleItem: React.FC<EditMasterCycleItemProps> = ({
               </Grid>
             </Grid>
             <Box
-              display={"flex"}
-              justifyContent={"flex-end"}
-              alignItems={"center"}
+              display={'flex'}
+              justifyContent={'flex-end'}
+              alignItems={'center'}
               gap={2}
               mb={2}
             >
@@ -171,7 +171,7 @@ const EditMasterCycleItem: React.FC<EditMasterCycleItemProps> = ({
                 type="submit"
                 disabled={isEditing || isCycleItemLoading}
               >
-                {isEditing ? "Saving..." : "Save"}
+                {isEditing ? 'Saving...' : 'Save'}
               </Button>
               <Button variant="contained" color="secondary" onClick={onClose}>
                 Cancel

@@ -1,16 +1,23 @@
-import { Box, Button, Grid, MenuItem, TextField, Typography } from "@mui/material";
-import { useFormik } from "formik";
-import React, { useContext } from "react";
-import ModalContext from "../../../../../context/ModalContext";
-import { IPatientTreatmentCycleChecklist } from "../../../../../types/patientDashboard/treatmentCycle";
+import {
+  Box,
+  Button,
+  Grid,
+  MenuItem,
+  TextField,
+  Typography,
+} from '@mui/material';
+import { useFormik } from 'formik';
+import React, { useContext } from 'react';
+import ModalContext from '../../../../../context/ModalContext';
+import { IPatientTreatmentCycleChecklist } from '../../../../../types/patientDashboard/treatmentCycle';
 import {
   useEditTreatmentCycleMutation,
   useGetTreatmentCyclesQuery,
-} from "../../../../../services/patientDashboardService/treatmentCycleApi";
-import { useToast } from "../../../../../context/ToastContext";
-import _ from "lodash";
-import { useSelector } from "react-redux";
-import { RootState } from "../../../../../app/store";
+} from '../../../../../services/patientDashboardService/treatmentCycleApi';
+import { useToast } from '../../../../../context/ToastContext';
+import _ from 'lodash';
+import { useSelector } from 'react-redux';
+import { RootState } from '../../../../../app/store';
 
 interface IFormValues {
   femaleHistorySheetComplete: boolean | string;
@@ -27,7 +34,10 @@ interface IUIChecklistProps {
   treatmentCycleId: string;
 }
 
-const IUIChecklist: React.FC<IUIChecklistProps> = ({ checklist, treatmentCycleId }) => {
+const IUIChecklist: React.FC<IUIChecklistProps> = ({
+  checklist,
+  treatmentCycleId,
+}) => {
   const { closeModal } = useContext(ModalContext);
   const { showPromiseToast } = useToast();
 
@@ -46,23 +56,25 @@ const IUIChecklist: React.FC<IUIChecklistProps> = ({ checklist, treatmentCycleId
     },
     {
       skip: !patient?.patientId,
-    }
+    },
   );
 
   const patientTreatmentCycles = cycleData?.data || [];
 
   // Find the specific treatment cycle by ID
   const currentTreatmentCycle = patientTreatmentCycles.find(
-    (cycle) => cycle._id === treatmentCycleId
+    cycle => cycle._id === treatmentCycleId,
   );
 
   // Find the specific checklist by category and ID
-  const currentChecklist = currentTreatmentCycle?.checklists.find((c) => c._id === checklist._id);
+  const currentChecklist = currentTreatmentCycle?.checklists.find(
+    c => c._id === checklist._id,
+  );
 
   const handleFormSubmit = async (values: IFormValues) => {
     const options = {
       conditions: {
-        editType: "update",
+        editType: 'update',
         category: checklist.category,
       },
     };
@@ -78,9 +90,9 @@ const IUIChecklist: React.FC<IUIChecklistProps> = ({ checklist, treatmentCycleId
     const promise = updateChecklist({ payload, options }).unwrap();
 
     showPromiseToast(promise, {
-      loading: "Adding Checklist...",
-      success: (data) => data.message || "Checklist Updated Successfully",
-      error: (data) => data.message || "Error Updating Checklist",
+      loading: 'Adding Checklist...',
+      success: data => data.message || 'Checklist Updated Successfully',
+      error: data => data.message || 'Error Updating Checklist',
     });
 
     try {
@@ -91,13 +103,15 @@ const IUIChecklist: React.FC<IUIChecklistProps> = ({ checklist, treatmentCycleId
   };
 
   const initialValues: IFormValues = {
-    femaleHistorySheetComplete: currentChecklist?.details?.femaleHistorySheetComplete || "",
-    maleHistorySheetComplete: currentChecklist?.details?.maleHistorySheetComplete || "",
-    uterus: currentChecklist?.details?.uterus || "",
-    hysteroScopyFindings: currentChecklist?.details?.hysteroScopyFindings || "",
-    totalPatencyStatus: currentChecklist?.details?.totalPatencyStatus || "",
-    consentForm: currentChecklist?.details?.consentForm || "",
-    otherInformation: currentChecklist?.details?.otherInformation || "",
+    femaleHistorySheetComplete:
+      currentChecklist?.details?.femaleHistorySheetComplete || '',
+    maleHistorySheetComplete:
+      currentChecklist?.details?.maleHistorySheetComplete || '',
+    uterus: currentChecklist?.details?.uterus || '',
+    hysteroScopyFindings: currentChecklist?.details?.hysteroScopyFindings || '',
+    totalPatencyStatus: currentChecklist?.details?.totalPatencyStatus || '',
+    consentForm: currentChecklist?.details?.consentForm || '',
+    otherInformation: currentChecklist?.details?.otherInformation || '',
   };
 
   const formik = useFormik({
@@ -108,7 +122,7 @@ const IUIChecklist: React.FC<IUIChecklistProps> = ({ checklist, treatmentCycleId
   });
 
   return (
-    <Box component={"form"} onSubmit={formik.handleSubmit} p={2}>
+    <Box component={'form'} onSubmit={formik.handleSubmit} p={2}>
       <Typography variant="button" color="primary">
         Add IUI Checklist
       </Typography>
@@ -126,11 +140,12 @@ const IUIChecklist: React.FC<IUIChecklistProps> = ({ checklist, treatmentCycleId
               Boolean(formik.errors.femaleHistorySheetComplete)
             }
             helperText={
-              formik.touched.femaleHistorySheetComplete && formik.errors.femaleHistorySheetComplete
+              formik.touched.femaleHistorySheetComplete &&
+              formik.errors.femaleHistorySheetComplete
             }
           >
-            <MenuItem value={"true"}>Yes</MenuItem>
-            <MenuItem value={"false"}>No</MenuItem>
+            <MenuItem value={'true'}>Yes</MenuItem>
+            <MenuItem value={'false'}>No</MenuItem>
           </TextField>
         </Grid>
         <Grid item lg={4}>
@@ -146,11 +161,12 @@ const IUIChecklist: React.FC<IUIChecklistProps> = ({ checklist, treatmentCycleId
               Boolean(formik.errors.maleHistorySheetComplete)
             }
             helperText={
-              formik.touched.maleHistorySheetComplete && formik.errors.maleHistorySheetComplete
+              formik.touched.maleHistorySheetComplete &&
+              formik.errors.maleHistorySheetComplete
             }
           >
-            <MenuItem value={"true"}>Yes</MenuItem>
-            <MenuItem value={"false"}>No</MenuItem>
+            <MenuItem value={'true'}>Yes</MenuItem>
+            <MenuItem value={'false'}>No</MenuItem>
           </TextField>
         </Grid>
         <Grid item lg={4}>
@@ -164,8 +180,8 @@ const IUIChecklist: React.FC<IUIChecklistProps> = ({ checklist, treatmentCycleId
             error={formik.touched.uterus && Boolean(formik.errors.uterus)}
             helperText={formik.touched.uterus && formik.errors.uterus}
           >
-            <MenuItem value={"true"}>AV</MenuItem>
-            <MenuItem value={"false"}>RV</MenuItem>
+            <MenuItem value={'true'}>AV</MenuItem>
+            <MenuItem value={'false'}>RV</MenuItem>
           </TextField>
         </Grid>
         <Grid item lg={4}>
@@ -177,12 +193,16 @@ const IUIChecklist: React.FC<IUIChecklistProps> = ({ checklist, treatmentCycleId
             value={formik.values.hysteroScopyFindings}
             onChange={formik.handleChange}
             error={
-              formik.touched.hysteroScopyFindings && Boolean(formik.errors.hysteroScopyFindings)
+              formik.touched.hysteroScopyFindings &&
+              Boolean(formik.errors.hysteroScopyFindings)
             }
-            helperText={formik.touched.hysteroScopyFindings && formik.errors.hysteroScopyFindings}
+            helperText={
+              formik.touched.hysteroScopyFindings &&
+              formik.errors.hysteroScopyFindings
+            }
           >
-            <MenuItem value={"true"}>Yes</MenuItem>
-            <MenuItem value={"false"}>No</MenuItem>
+            <MenuItem value={'true'}>Yes</MenuItem>
+            <MenuItem value={'false'}>No</MenuItem>
           </TextField>
         </Grid>
         <Grid item lg={4}>
@@ -192,8 +212,14 @@ const IUIChecklist: React.FC<IUIChecklistProps> = ({ checklist, treatmentCycleId
             label="Total Patency Status"
             value={formik.values.totalPatencyStatus}
             onChange={formik.handleChange}
-            error={formik.touched.totalPatencyStatus && Boolean(formik.errors.totalPatencyStatus)}
-            helperText={formik.touched.totalPatencyStatus && formik.errors.totalPatencyStatus}
+            error={
+              formik.touched.totalPatencyStatus &&
+              Boolean(formik.errors.totalPatencyStatus)
+            }
+            helperText={
+              formik.touched.totalPatencyStatus &&
+              formik.errors.totalPatencyStatus
+            }
           />
         </Grid>
         <Grid item lg={4}>
@@ -204,11 +230,13 @@ const IUIChecklist: React.FC<IUIChecklistProps> = ({ checklist, treatmentCycleId
             label="IUI Consent Form Signed"
             value={formik.values.consentForm}
             onChange={formik.handleChange}
-            error={formik.touched.consentForm && Boolean(formik.errors.consentForm)}
+            error={
+              formik.touched.consentForm && Boolean(formik.errors.consentForm)
+            }
             helperText={formik.touched.consentForm && formik.errors.consentForm}
           >
-            <MenuItem value={"true"}>Yes</MenuItem>
-            <MenuItem value={"false"}>No</MenuItem>
+            <MenuItem value={'true'}>Yes</MenuItem>
+            <MenuItem value={'false'}>No</MenuItem>
           </TextField>
         </Grid>
         <Grid item lg={4}>
@@ -219,25 +247,36 @@ const IUIChecklist: React.FC<IUIChecklistProps> = ({ checklist, treatmentCycleId
             label="Other Information"
             value={formik.values.otherInformation}
             onChange={formik.handleChange}
-            error={formik.touched.otherInformation && Boolean(formik.errors.otherInformation)}
-            helperText={formik.touched.otherInformation && formik.errors.otherInformation}
+            error={
+              formik.touched.otherInformation &&
+              Boolean(formik.errors.otherInformation)
+            }
+            helperText={
+              formik.touched.otherInformation && formik.errors.otherInformation
+            }
           />
         </Grid>
       </Grid>
-      <Box display={"flex"} justifyContent={"flex-end"} alignItems={"center"} gap={2} mb={2}>
+      <Box
+        display={'flex'}
+        justifyContent={'flex-end'}
+        alignItems={'center'}
+        gap={2}
+        mb={2}
+      >
         <Button
           variant="contained"
           color="primary"
           type="submit"
           disabled={isLoading || _.isEqual(initialValues, formik.values)}
-          sx={{ width: "fit-content" }}
+          sx={{ width: 'fit-content' }}
         >
           Save
         </Button>
         <Button
           variant="contained"
           color="secondary"
-          sx={{ width: "fit-content" }}
+          sx={{ width: 'fit-content' }}
           onClick={closeModal}
         >
           Cancel

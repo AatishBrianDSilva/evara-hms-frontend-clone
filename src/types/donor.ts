@@ -1,4 +1,4 @@
-import { ICase } from "./case";
+import { ICase } from './case';
 
 export interface IDonor {
   _id: string;

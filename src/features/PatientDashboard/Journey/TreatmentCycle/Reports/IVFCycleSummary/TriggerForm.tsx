@@ -1,7 +1,7 @@
-import React from "react";
-import { Grid, TextField, Typography } from "@mui/material";
-import CustomDatePicker from "../../../../../../components/CustomDatePicker/CustomDatePicker";
-import { FormikProps } from "formik";
+import React from 'react';
+import { Grid, TextField, Typography } from '@mui/material';
+import CustomDatePicker from '../../../../../../components/CustomDatePicker/CustomDatePicker';
+import { FormikProps } from 'formik';
 
 // Define the type for form values
 interface ITriggerFormValues {
@@ -51,7 +51,7 @@ const TriggerForm: React.FC<TriggerFormProps> = ({ formik }) => (
         <CustomDatePicker
           label="Trigger Date"
           value={formik.values.triggerDate}
-          onChange={(date) => formik.setFieldValue("triggerDate", date, true)}
+          onChange={date => formik.setFieldValue('triggerDate', date, true)}
         />
       </Grid>
       <Grid item xs={12} sm={4}>

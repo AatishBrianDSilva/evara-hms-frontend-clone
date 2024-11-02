@@ -1,9 +1,17 @@
-import React from "react";
-import { Box, Button, Dialog, DialogContent, DialogTitle, Grid, TextField } from "@mui/material";
-import { useFormik } from "formik";
-import _ from "lodash";
-import { useToast } from "../../../../context/ToastContext";
-import { useAddConsentMutation } from "../../../../services/masterDashboardService/local/consentApi";
+import React from 'react';
+import {
+  Box,
+  Button,
+  Dialog,
+  DialogContent,
+  DialogTitle,
+  Grid,
+  TextField,
+} from '@mui/material';
+import { useFormik } from 'formik';
+import _ from 'lodash';
+import { useToast } from '../../../../context/ToastContext';
+import { useAddConsentMutation } from '../../../../services/masterDashboardService/local/consentApi';
 
 interface AddConsentProps {
   openModal: boolean;
@@ -34,9 +42,9 @@ const AddConsent: React.FC<AddConsentProps> = ({ openModal, onClose }) => {
     const promise = addConsent(payload).unwrap();
 
     showPromiseToast(promise, {
-      loading: "Adding...",
-      success: (data) => data || "Added Successfully",
-      error: (data) => data || "Adding Failed",
+      loading: 'Adding...',
+      success: data => data || 'Added Successfully',
+      error: data => data || 'Adding Failed',
     });
 
     try {
@@ -49,10 +57,10 @@ const AddConsent: React.FC<AddConsentProps> = ({ openModal, onClose }) => {
   };
 
   const initialValues: IFormValues = {
-    name: "",
-    purpose: "",
-    associatedWith: "",
-    file: "",
+    name: '',
+    purpose: '',
+    associatedWith: '',
+    file: '',
   };
 
   const formik = useFormik({
@@ -64,9 +72,9 @@ const AddConsent: React.FC<AddConsentProps> = ({ openModal, onClose }) => {
 
   return (
     <Dialog open={openModal} onClose={onClose} maxWidth="md" fullWidth>
-      <DialogTitle color={"primary"}>Add Consent</DialogTitle>
+      <DialogTitle color={'primary'}>Add Consent</DialogTitle>
       <DialogContent>
-        <Box component={"form"} onSubmit={formik.handleSubmit} p={2}>
+        <Box component={'form'} onSubmit={formik.handleSubmit} p={2}>
           <Grid container spacing={1} mb={2} mt={2}>
             <Grid item xs={8} sm={4} lg={3}>
               <TextField
@@ -110,20 +118,28 @@ const AddConsent: React.FC<AddConsentProps> = ({ openModal, onClose }) => {
             </Grid>
           </Grid>
 
-          <Box display={"flex"} justifyContent={"flex-end"} alignItems={"center"} gap={2} mb={2}>
+          <Box
+            display={'flex'}
+            justifyContent={'flex-end'}
+            alignItems={'center'}
+            gap={2}
+            mb={2}
+          >
             <Button
               variant="contained"
               color="primary"
               type="submit"
-              disabled={ConsentLoading || _.isEqual(initialValues, formik.values)}
-              sx={{ width: "fit-content" }}
+              disabled={
+                ConsentLoading || _.isEqual(initialValues, formik.values)
+              }
+              sx={{ width: 'fit-content' }}
             >
               Save
             </Button>
             <Button
               variant="contained"
               color="secondary"
-              sx={{ width: "fit-content" }}
+              sx={{ width: 'fit-content' }}
               onClick={onClose}
             >
               Cancel

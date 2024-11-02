@@ -1,39 +1,49 @@
-import * as React from "react";
-import Button from "@mui/material/Button";
-import Menu from "@mui/material/Menu";
-import { DateRangePicker, RangeKeyDict, defaultStaticRanges } from "react-date-range";
-import { addDays, endOfDay, endOfWeek, startOfDay, startOfWeek } from "date-fns";
-import DateRangeIcon from "@mui/icons-material/DateRange";
-import "react-date-range/dist/styles.css"; // main style file
-import "react-date-range/dist/theme/default.css"; // theme css file
-import { enIN } from "date-fns/locale";
-import { Box } from "@mui/material";
-import { Cancel, Check } from "@mui/icons-material";
+import * as React from 'react';
+import Button from '@mui/material/Button';
+import Menu from '@mui/material/Menu';
+import {
+  DateRangePicker,
+  RangeKeyDict,
+  defaultStaticRanges,
+} from 'react-date-range';
+import {
+  addDays,
+  endOfDay,
+  endOfWeek,
+  startOfDay,
+  startOfWeek,
+} from 'date-fns';
+import DateRangeIcon from '@mui/icons-material/DateRange';
+import 'react-date-range/dist/styles.css'; // main style file
+import 'react-date-range/dist/theme/default.css'; // theme css file
+import { enIN } from 'date-fns/locale';
+import { Box } from '@mui/material';
+import { Cancel, Check } from '@mui/icons-material';
 
 const predefinedRanges = [
   {
-    label: "Today",
+    label: 'Today',
     range: {
       startDate: startOfDay(new Date()),
       endDate: endOfDay(new Date()),
     },
   },
   {
-    label: "Yesterday",
+    label: 'Yesterday',
     range: {
       startDate: startOfDay(addDays(new Date(), -1)),
       endDate: endOfDay(addDays(new Date(), -1)),
     },
   },
   {
-    label: "This Week",
+    label: 'This Week',
     range: {
       startDate: startOfWeek(new Date(), { weekStartsOn: 1 }), // Start from Monday
       endDate: endOfWeek(new Date(), { weekStartsOn: 1 }), // End on Sunday
     },
   },
   {
-    label: "Last Week",
+    label: 'Last Week',
     range: {
       startDate: startOfWeek(addDays(new Date(), -7), { weekStartsOn: 1 }),
       endDate: endOfWeek(addDays(new Date(), -7), { weekStartsOn: 1 }),
@@ -41,8 +51,8 @@ const predefinedRanges = [
   },
 ];
 
-const modifiedStaticRanges = defaultStaticRanges.map((range) => {
-  if (range.label === "This Week") {
+const modifiedStaticRanges = defaultStaticRanges.map(range => {
+  if (range.label === 'This Week') {
     return {
       ...range,
       range: () => ({
@@ -52,7 +62,7 @@ const modifiedStaticRanges = defaultStaticRanges.map((range) => {
     };
   }
 
-  if (range.label === "Last Week") {
+  if (range.label === 'Last Week') {
     return {
       ...range,
       range: () => ({
@@ -66,10 +76,10 @@ const modifiedStaticRanges = defaultStaticRanges.map((range) => {
 });
 
 enum RangeLabel {
-  Today = "Today",
-  Yesterday = "Yesterday",
-  ThisWeek = "This Week",
-  LastWeek = "Last Week",
+  Today = 'Today',
+  Yesterday = 'Yesterday',
+  ThisWeek = 'This Week',
+  LastWeek = 'Last Week',
 }
 
 interface SelectionRange {
@@ -88,15 +98,18 @@ const CustomeDateRangePicker: React.FC<CustomeDateRangePickerProps> = ({
   onChange,
 }) => {
   const defaultRange =
-    predefinedRanges.find((range) => range.label === defaultRangeLabel) || predefinedRanges[2];
+    predefinedRanges.find(range => range.label === defaultRangeLabel) ||
+    predefinedRanges[2];
 
   const [anchorEl, setAnchorEl] = React.useState<null | HTMLElement>(null);
   const [selectionRange, setSelectionRange] = React.useState<SelectionRange>({
     startDate: defaultRange.range.startDate,
     endDate: defaultRange.range.endDate,
-    key: "selection",
+    key: 'selection',
   });
-  const [rangeLabel, setRangeLabel] = React.useState<string>(defaultRange.label);
+  const [rangeLabel, setRangeLabel] = React.useState<string>(
+    defaultRange.label,
+  );
   const latestRangesRef = React.useRef<SelectionRange>(selectionRange);
 
   const open = Boolean(anchorEl);
@@ -124,12 +137,14 @@ const CustomeDateRangePicker: React.FC<CustomeDateRangePickerProps> = ({
     latestRangesRef.current = selectedRange;
 
     const matchedRange = predefinedRanges.find(
-      (range) =>
-        range.range.startDate.toDateString() === selectedRange.startDate.toDateString() &&
-        range.range.endDate.toDateString() === selectedRange.endDate.toDateString()
+      range =>
+        range.range.startDate.toDateString() ===
+          selectedRange.startDate.toDateString() &&
+        range.range.endDate.toDateString() ===
+          selectedRange.endDate.toDateString(),
     );
 
-    setRangeLabel(matchedRange ? matchedRange.label : "");
+    setRangeLabel(matchedRange ? matchedRange.label : '');
   };
 
   const formatDate = (date: Date) => {
@@ -144,9 +159,9 @@ const CustomeDateRangePicker: React.FC<CustomeDateRangePickerProps> = ({
     <>
       <Button
         id="date-range-button"
-        aria-controls={open ? "date-range-menu" : undefined}
+        aria-controls={open ? 'date-range-menu' : undefined}
         aria-haspopup="true"
-        aria-expanded={open ? "true" : undefined}
+        aria-expanded={open ? 'true' : undefined}
         onClick={handleClick}
         variant="outlined"
         color="secondary"
@@ -160,7 +175,7 @@ const CustomeDateRangePicker: React.FC<CustomeDateRangePickerProps> = ({
         open={open}
         onClose={handleClose}
         MenuListProps={{
-          "aria-labelledby": "date-range-button",
+          'aria-labelledby': 'date-range-button',
         }}
       >
         <DateRangePicker
@@ -171,10 +186,20 @@ const CustomeDateRangePicker: React.FC<CustomeDateRangePickerProps> = ({
           inputRanges={[]}
         />
         <Box display="flex" justifyContent="flex-end" m={2} gap={2}>
-          <Button startIcon={<Cancel />} variant="text" color="primary" onClick={handleClose}>
+          <Button
+            startIcon={<Cancel />}
+            variant="text"
+            color="primary"
+            onClick={handleClose}
+          >
             Cancel
           </Button>
-          <Button startIcon={<Check />} variant="text" color="primary" onClick={handleSave}>
+          <Button
+            startIcon={<Check />}
+            variant="text"
+            color="primary"
+            onClick={handleSave}
+          >
             Apply
           </Button>
         </Box>

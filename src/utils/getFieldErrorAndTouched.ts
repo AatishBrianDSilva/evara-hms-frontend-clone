@@ -1,4 +1,4 @@
-import { FormikTouched, FormikErrors } from "formik";
+import { FormikTouched, FormikErrors } from 'formik';
 
 interface FieldState<T> {
   touched: FormikTouched<T>[];
@@ -13,7 +13,7 @@ interface FieldErrorAndTouched {
 function getFieldErrorAndTouched<T>(
   fieldState: FieldState<T>,
   index: number,
-  fieldName: keyof T
+  fieldName: keyof T,
 ): FieldErrorAndTouched {
   const { touched, errors } = fieldState;
 
@@ -22,7 +22,7 @@ function getFieldErrorAndTouched<T>(
 
   return {
     isError: Boolean(isFieldTouched && fieldError),
-    errorMessage: typeof fieldError === "string" ? fieldError : undefined,
+    errorMessage: typeof fieldError === 'string' ? fieldError : undefined,
   };
 }
 

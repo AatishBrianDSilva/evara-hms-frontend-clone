@@ -1,18 +1,18 @@
-import { createSlice } from "@reduxjs/toolkit";
+import { createSlice } from '@reduxjs/toolkit';
 
 const initialState = {
-  editCryoPreservationOpen: { id: "", status: false },
+  editCryoPreservationOpen: { id: '', status: false },
 };
 
 export const cryoPreservationSlice = createSlice({
-  name: "cryoPreservation",
+  name: 'cryoPreservation',
   initialState,
   reducers: {
     openEditCryoPreservation: (state, action) => {
       state.editCryoPreservationOpen = action.payload;
     },
-    closeEditCryoPreservation: (state) => {
-      state.editCryoPreservationOpen = { id: "", status: false };
+    closeEditCryoPreservation: state => {
+      state.editCryoPreservationOpen = { id: '', status: false };
     },
   },
 });

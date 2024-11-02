@@ -9,14 +9,20 @@ import { useLocation } from 'react-router-dom';
 interface SideBarNavTabProps {
   isAccordion: boolean; // Whether this tab is an accordion tab
   accordionItems: any[] | undefined; // The list of items to show in the accordion
-  logoSrc: OverridableComponent<SvgIconTypeMap<{}, "svg">> | null; // The material icon component for the logo
+  logoSrc: OverridableComponent<SvgIconTypeMap<{}, 'svg'>> | null; // The material icon component for the logo
   title: string; // The text title for the tab
   path: string; // The path to navigate to when this tab is selected
   onSelect: () => void; // The function to call when this tab is selected
 }
 
-const SideBarNavTab: React.FC<SideBarNavTabProps> = ({ logoSrc, title, path, onSelect, isAccordion, accordionItems }) => {
-
+const SideBarNavTab: React.FC<SideBarNavTabProps> = ({
+  logoSrc,
+  title,
+  path,
+  onSelect,
+  isAccordion,
+  accordionItems,
+}) => {
   const location = useLocation();
   const theme = useTheme();
 
@@ -34,65 +40,125 @@ const SideBarNavTab: React.FC<SideBarNavTabProps> = ({ logoSrc, title, path, onS
     return accordionItems?.map((item, index) => {
       const isAccSelected = location.pathname === item.path;
       return (
-        <button key={index} className={`sidebar-nav-tab-accordion ${isAccSelected ? 'selected' : ''}`} onClick={item.onSelect}>
-          <div className='left-items'>
-            {item.icon && (<Avatar sx={{ color: iconColor, height: '24px', width: '24px', bgcolor: 'transparent' }} alt='Right arrow'>
-              {React.createElement(item.icon)}
-            </Avatar>)}
+        <button
+          key={index}
+          className={`sidebar-nav-tab-accordion ${isAccSelected ? 'selected' : ''}`}
+          onClick={item.onSelect}
+        >
+          <div className="left-items">
+            {item.icon && (
+              <Avatar
+                sx={{
+                  color: iconColor,
+                  height: '24px',
+                  width: '24px',
+                  bgcolor: 'transparent',
+                }}
+                alt="Right arrow"
+              >
+                {React.createElement(item.icon)}
+              </Avatar>
+            )}
 
-            <span className={`title ${isAccSelected ? 'selected' : ''}`}>{item.title}</span>
+            <span className={`title ${isAccSelected ? 'selected' : ''}`}>
+              {item.title}
+            </span>
           </div>
         </button>
-      )
+      );
     });
   };
 
   const renderAccordionTab = () => {
     return (
       <>
-        <button className={`sidebar-nav-tab ${isSelected ? 'selected' : ''}`} onClick={toggleAccordion}>
-          <div className='left-items'>
-            {logoSrc && (<Avatar sx={{ color: iconColor, height: '24px', width: '24px', bgcolor: 'transparent' }} alt='Logo'>
-              {React.createElement(logoSrc)}
-            </Avatar>)}
+        <button
+          className={`sidebar-nav-tab ${isSelected ? 'selected' : ''}`}
+          onClick={toggleAccordion}
+        >
+          <div className="left-items">
+            {logoSrc && (
+              <Avatar
+                sx={{
+                  color: iconColor,
+                  height: '24px',
+                  width: '24px',
+                  bgcolor: 'transparent',
+                }}
+                alt="Logo"
+              >
+                {React.createElement(logoSrc)}
+              </Avatar>
+            )}
 
-            <span className={`title ${isSelected ? 'selected' : ''}`}>{title}</span>
+            <span className={`title ${isSelected ? 'selected' : ''}`}>
+              {title}
+            </span>
           </div>
 
-          <div className='right-items'>
-            <Avatar sx={{ color: iconColor, height: '24px', width: '24px', bgcolor: 'transparent' }} alt='Accordion toggle'>
+          <div className="right-items">
+            <Avatar
+              sx={{
+                color: iconColor,
+                height: '24px',
+                width: '24px',
+                bgcolor: 'transparent',
+              }}
+              alt="Accordion toggle"
+            >
               {isAccordionOpen ? <ChevronLeftOutlined /> : <ChevronRight />}
             </Avatar>
           </div>
         </button>
         {isAccordionOpen && (
-          <div className="accordion-content">
-            {renderAccordionContent()}
-          </div>
+          <div className="accordion-content">{renderAccordionContent()}</div>
         )}
       </>
-    )
+    );
   };
 
   const renderNormalTab = () => {
     return (
-      <button className={`sidebar-nav-tab ${isSelected ? 'selected' : ''}`} onClick={onSelect}>
-        <div className='left-items'>
-          {logoSrc && (<Avatar sx={{ color: iconColor, height: '24px', width: '24px', bgcolor: 'transparent' }} alt='Right arrow'>
-            {React.createElement(logoSrc)}
-          </Avatar>)}
+      <button
+        className={`sidebar-nav-tab ${isSelected ? 'selected' : ''}`}
+        onClick={onSelect}
+      >
+        <div className="left-items">
+          {logoSrc && (
+            <Avatar
+              sx={{
+                color: iconColor,
+                height: '24px',
+                width: '24px',
+                bgcolor: 'transparent',
+              }}
+              alt="Right arrow"
+            >
+              {React.createElement(logoSrc)}
+            </Avatar>
+          )}
 
-          <span className={`title ${isSelected ? 'selected' : ''}`}>{title}</span>
+          <span className={`title ${isSelected ? 'selected' : ''}`}>
+            {title}
+          </span>
         </div>
 
-        <div className='right-items'>
-          <Avatar sx={{ color: iconColor, height: '24px', width: '24px', bgcolor: 'transparent' }} alt='Right arrow'>
+        <div className="right-items">
+          <Avatar
+            sx={{
+              color: iconColor,
+              height: '24px',
+              width: '24px',
+              bgcolor: 'transparent',
+            }}
+            alt="Right arrow"
+          >
             <ChevronRight />
           </Avatar>
         </div>
       </button>
-    )
-  }
+    );
+  };
 
   if (!isAccordion) {
     return renderNormalTab();

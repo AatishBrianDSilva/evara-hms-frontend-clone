@@ -1,5 +1,5 @@
-import { useMemo } from "react";
-import { ContentProps } from "../types/patientDashboard/treatmentCycle";
+import { useMemo } from 'react';
+import { ContentProps } from '../types/patientDashboard/treatmentCycle';
 
 interface ContentDetails {
   name: string;
@@ -9,12 +9,14 @@ interface ContentDetails {
   files?: string[];
 }
 
-const useGenerateTreatmentCyclelistDetails = (contentProps: ContentProps): ContentDetails => {
+const useGenerateTreatmentCyclelistDetails = (
+  contentProps: ContentProps,
+): ContentDetails => {
   return useMemo(() => {
-    let name = "";
-    let status = ""; // Default to 'Unknown', adjust based on your logic
-    let category = "";
-    let documentId = "";
+    let name = '';
+    let status = ''; // Default to 'Unknown', adjust based on your logic
+    let category = '';
+    let documentId = '';
     let files: string[] = [];
 
     if (contentProps.protocol) {

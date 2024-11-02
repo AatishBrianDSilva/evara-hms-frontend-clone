@@ -1,4 +1,4 @@
-import React from "react";
+import React from 'react';
 import {
   Box,
   Button,
@@ -8,15 +8,15 @@ import {
   Grid,
   Skeleton,
   TextField,
-} from "@mui/material";
-import { useFormik } from "formik";
-import _ from "lodash";
+} from '@mui/material';
+import { useFormik } from 'formik';
+import _ from 'lodash';
 
 import {
   useGetPatientSourceByIdQuery,
   useUpdatePatientSourceMutation,
-} from "../../../../../services/masterDashboardService/local/patientSourceApi";
-import { useToast } from "../../../../../context/ToastContext";
+} from '../../../../../services/masterDashboardService/local/patientSourceApi';
+import { useToast } from '../../../../../context/ToastContext';
 
 interface EditPatientSourceProps {
   openModal: boolean;
@@ -40,7 +40,13 @@ const skeletonLoader = () => {
             <Skeleton variant="rectangular" width="100%" height={56} />
           </Grid>
         </Grid>
-        <Box display={"flex"} justifyContent={"flex-end"} alignItems={"center"} gap={2} mb={2}>
+        <Box
+          display={'flex'}
+          justifyContent={'flex-end'}
+          alignItems={'center'}
+          gap={2}
+          mb={2}
+        >
           <Skeleton variant="rectangular" width={90} height={36} />
           <Skeleton variant="rectangular" width={90} height={36} />
         </Box>
@@ -49,7 +55,11 @@ const skeletonLoader = () => {
   );
 };
 
-const EditPatientSource: React.FC<EditPatientSourceProps> = ({ openModal, onClose, id }) => {
+const EditPatientSource: React.FC<EditPatientSourceProps> = ({
+  openModal,
+  onClose,
+  id,
+}) => {
   const { showPromiseToast } = useToast();
 
   const {
@@ -67,14 +77,15 @@ const EditPatientSource: React.FC<EditPatientSourceProps> = ({ openModal, onClos
   // console.log("Data at edit Source", data);
 
   const initialValues: IFormValues = {
-    name: data?.name || "",
+    name: data?.name || '',
   };
 
-  const [editPatientSourceMutation, { isLoading: isEditing }] = useUpdatePatientSourceMutation();
+  const [editPatientSourceMutation, { isLoading: isEditing }] =
+    useUpdatePatientSourceMutation();
 
   const formik = useFormik({
     initialValues: initialValues,
-    onSubmit: async (values) => {
+    onSubmit: async values => {
       try {
         const payload = {
           id: id,
@@ -85,15 +96,15 @@ const EditPatientSource: React.FC<EditPatientSourceProps> = ({ openModal, onClos
         // console.log("Payload", payload);
 
         showPromiseToast(promise, {
-          loading: "Editing Patient Source...",
-          success: (data) => data || "Patient Source Edited Successfully",
-          error: (data) => data || "Failed to Edit Source",
+          loading: 'Editing Patient Source...',
+          success: data => data || 'Patient Source Edited Successfully',
+          error: data => data || 'Failed to Edit Source',
         });
 
         await promise;
         onClose();
       } catch (error) {
-        console.error("Edit failed:", error);
+        console.error('Edit failed:', error);
       }
     },
     // validationSchema: validationSchema,
@@ -102,12 +113,12 @@ const EditPatientSource: React.FC<EditPatientSourceProps> = ({ openModal, onClos
 
   return (
     <Dialog open={openModal} onClose={onClose} maxWidth="md" fullWidth>
-      <DialogTitle color={"primary"}>Edit Patient Source</DialogTitle>
+      <DialogTitle color={'primary'}>Edit Patient Source</DialogTitle>
       {PatientSourceLoading ? (
         skeletonLoader()
       ) : (
         <DialogContent>
-          <Box component={"form"} onSubmit={formik.handleSubmit} p={2}>
+          <Box component={'form'} onSubmit={formik.handleSubmit} p={2}>
             <Grid container spacing={1} mb={2} mt={2}>
               <Grid item xs={8} sm={4} lg={3}>
                 <TextField
@@ -120,14 +131,20 @@ const EditPatientSource: React.FC<EditPatientSourceProps> = ({ openModal, onClos
                 />
               </Grid>
             </Grid>
-            <Box display={"flex"} justifyContent={"flex-end"} alignItems={"center"} gap={2} mb={2}>
+            <Box
+              display={'flex'}
+              justifyContent={'flex-end'}
+              alignItems={'center'}
+              gap={2}
+              mb={2}
+            >
               <Button
                 variant="contained"
                 color="primary"
                 type="submit"
                 disabled={isEditing || isPatientSourceLoading}
               >
-                {isEditing ? "Saving..." : "Save"}
+                {isEditing ? 'Saving...' : 'Save'}
               </Button>
               <Button variant="contained" color="secondary" onClick={onClose}>
                 Cancel

@@ -1,15 +1,16 @@
-import React from 'react'
-import { Box, Tab, Tabs, } from '@mui/material';
+import React from 'react';
+import { Box, Tab, Tabs } from '@mui/material';
 
 import { Outlet } from 'react-router-dom';
 import useTabNavigation from '../../../hooks/useTabNavigation';
 import { EInternalOrdersTabPaths } from '../../../types/global';
 
-
 const InternalOrdersTabs: React.FC = () => {
-
   const basePath = `/pharmacy/orders`;
-  const { activeTab, handleTabChange } = useTabNavigation(basePath, Object.values(EInternalOrdersTabPaths));
+  const { activeTab, handleTabChange } = useTabNavigation(
+    basePath,
+    Object.values(EInternalOrdersTabPaths),
+  );
 
   return (
     <>
@@ -24,22 +25,18 @@ const InternalOrdersTabs: React.FC = () => {
           aria-label="Orders Tabs"
           sx={{ boxShadow: 5, borderRadius: 1 }}
         >
-          <Tab label="Draft" id='order-main-tabpanel-0' />
-          <Tab label="Approved" id='order-main-tabpanel-1' />
-          <Tab label="Rejected" id='order-main-tabpanel-2' />
-          <Tab label="Processed" id='order-main-tabpanel-5' />
+          <Tab label="Draft" id="order-main-tabpanel-0" />
+          <Tab label="Approved" id="order-main-tabpanel-1" />
+          <Tab label="Rejected" id="order-main-tabpanel-2" />
+          <Tab label="Processed" id="order-main-tabpanel-5" />
         </Tabs>
       </Box>
 
-      <Box
-        py={2}
-        borderRadius={1}
-        flex={"1 1 auto"}
-      >
+      <Box py={2} borderRadius={1} flex={'1 1 auto'}>
         <Outlet />
       </Box>
     </>
-  )
-}
+  );
+};
 
-export default InternalOrdersTabs
+export default InternalOrdersTabs;

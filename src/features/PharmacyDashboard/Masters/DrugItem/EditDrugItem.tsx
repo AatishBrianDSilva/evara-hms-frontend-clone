@@ -1,4 +1,4 @@
-import React from "react";
+import React from 'react';
 import {
   Box,
   Button,
@@ -11,23 +11,23 @@ import {
   MenuItem,
   Skeleton,
   TextField,
-} from "@mui/material";
-import { useFormik } from "formik";
-import { useToast } from "../../../../context/ToastContext";
+} from '@mui/material';
+import { useFormik } from 'formik';
+import { useToast } from '../../../../context/ToastContext';
 import {
   useEditDrugItemMutation,
   useGetDrugItemByIdQuery,
-} from "../../../../services/pharmacyDashboardService/master/drugItemApi";
-import _ from "lodash";
-import { AddDrugItemValidationSchema } from "../../../../yup/pharmacyDashboard";
-import FieldAutocomplete from "../../../../components/FieldAutoComplete/FieldAutoComplete";
+} from '../../../../services/pharmacyDashboardService/master/drugItemApi';
+import _ from 'lodash';
+import { AddDrugItemValidationSchema } from '../../../../yup/pharmacyDashboard';
+import FieldAutocomplete from '../../../../components/FieldAutoComplete/FieldAutoComplete';
 import {
   EDrugClass,
   IDrugCategory,
   IDrugManufacturer,
   IDrugType,
   ITaxRate,
-} from "../../../../types/pharmacyDashboard/master";
+} from '../../../../types/pharmacyDashboard/master';
 
 interface EditDrugItemProps {
   openModal: boolean;
@@ -67,7 +67,13 @@ const skeletonLoader = () => {
             <Skeleton variant="rectangular" width="100%" height={56} />
           </Grid>
         </Grid>
-        <Box display={"flex"} justifyContent={"flex-end"} alignItems={"center"} gap={2} mb={2}>
+        <Box
+          display={'flex'}
+          justifyContent={'flex-end'}
+          alignItems={'center'}
+          gap={2}
+          mb={2}
+        >
           <Skeleton variant="rectangular" width={90} height={36} />
           <Skeleton variant="rectangular" width={90} height={36} />
         </Box>
@@ -94,7 +100,8 @@ const EditDrugItem: React.FC<EditDrugItemProps> = ({
   const [editDrugItem, { isLoading: editLoading }] = useEditDrugItemMutation();
   const handleFormSubmit = async (values: IFormValues) => {
     const type =
-      values.category?.name === "Medication" || values.category?.name === "Emergency Medication"
+      values.category?.name === 'Medication' ||
+      values.category?.name === 'Emergency Medication'
         ? values.type?._id
         : null;
 
@@ -109,7 +116,7 @@ const EditDrugItem: React.FC<EditDrugItemProps> = ({
       packSize: values.packSize ? values.packSize : 0,
       taxRate: values.taxRate?._id || null,
       manufacturer: values.manufacturer?._id || null,
-      status: values.status ? "Active" : "Inactive",
+      status: values.status ? 'Active' : 'Inactive',
       mrp: values.mrp || 0,
       rate: values.rate || 0,
       criticalCount: values.criticalCount || 10,
@@ -118,9 +125,9 @@ const EditDrugItem: React.FC<EditDrugItemProps> = ({
     const promise = editDrugItem(payload).unwrap();
 
     showPromiseToast(promise, {
-      loading: "Editing Drug Item...",
-      success: (data) => data || "Drug Item Edited Successfully",
-      error: (data) => data || "Failed to Edit Drug Item",
+      loading: 'Editing Drug Item...',
+      success: data => data || 'Drug Item Edited Successfully',
+      error: data => data || 'Failed to Edit Drug Item',
     });
 
     try {
@@ -133,18 +140,18 @@ const EditDrugItem: React.FC<EditDrugItemProps> = ({
   };
 
   const initialValues: IFormValues = {
-    name: item?.name || "",
-    genericName: item?.genericName || "",
-    drugClass: item?.drugClass || "",
-    hsnCode: item?.hsnCode || "",
+    name: item?.name || '',
+    genericName: item?.genericName || '',
+    drugClass: item?.drugClass || '',
+    hsnCode: item?.hsnCode || '',
     category: item?.category || null,
     type: item?.type || null,
     packSize: item?.packSize || null,
     taxRate: item?.taxRate || null,
-    mrp: item?.mrp.toString() || "",
-    rate: item?.rate.toString() || "",
+    mrp: item?.mrp.toString() || '',
+    rate: item?.rate.toString() || '',
     manufacturer: item?.manufacturer || null,
-    status: item?.status === "Active" ? true : false,
+    status: item?.status === 'Active' ? true : false,
     criticalCount: item?.criticalCount || 10,
   };
 
@@ -157,12 +164,12 @@ const EditDrugItem: React.FC<EditDrugItemProps> = ({
 
   return (
     <Dialog open={openModal} onClose={onClose} maxWidth="md" fullWidth>
-      <DialogTitle color={"primary"}>Edit Drug Item</DialogTitle>
+      <DialogTitle color={'primary'}>Edit Drug Item</DialogTitle>
       {loading ? (
         skeletonLoader()
       ) : (
         <DialogContent>
-          <Box component={"form"} onSubmit={formik.handleSubmit} p={2}>
+          <Box component={'form'} onSubmit={formik.handleSubmit} p={2}>
             <Grid container spacing={2} mb={2} mt={2}>
               <Grid item lg={4}>
                 <TextField
@@ -184,8 +191,13 @@ const EditDrugItem: React.FC<EditDrugItemProps> = ({
                   label="Generic Name"
                   value={formik.values.genericName}
                   onChange={formik.handleChange}
-                  error={formik.touched.genericName && Boolean(formik.errors.genericName)}
-                  helperText={formik.touched.genericName && formik.errors.genericName}
+                  error={
+                    formik.touched.genericName &&
+                    Boolean(formik.errors.genericName)
+                  }
+                  helperText={
+                    formik.touched.genericName && formik.errors.genericName
+                  }
                 />
               </Grid>
               <Grid item lg={4}>
@@ -197,10 +209,14 @@ const EditDrugItem: React.FC<EditDrugItemProps> = ({
                   label="Drug Class"
                   value={formik.values.drugClass}
                   onChange={formik.handleChange}
-                  error={formik.touched.drugClass && Boolean(formik.errors.drugClass)}
-                  helperText={formik.touched.drugClass && formik.errors.drugClass}
+                  error={
+                    formik.touched.drugClass && Boolean(formik.errors.drugClass)
+                  }
+                  helperText={
+                    formik.touched.drugClass && formik.errors.drugClass
+                  }
                 >
-                  {Object.values(EDrugClass).map((drugClass) => (
+                  {Object.values(EDrugClass).map(drugClass => (
                     <MenuItem value={drugClass}>{drugClass}</MenuItem>
                   ))}
                 </TextField>
@@ -213,34 +229,44 @@ const EditDrugItem: React.FC<EditDrugItemProps> = ({
                   label="HSN Code"
                   value={formik.values.hsnCode}
                   onChange={formik.handleChange}
-                  error={formik.touched.hsnCode && Boolean(formik.errors.hsnCode)}
+                  error={
+                    formik.touched.hsnCode && Boolean(formik.errors.hsnCode)
+                  }
                   helperText={formik.touched.hsnCode && formik.errors.hsnCode}
                 />
               </Grid>
               <Grid item lg={4}>
                 <FieldAutocomplete
                   options={drugCategories}
-                  isOptionEqualToValue={(option, value) => option._id === value._id}
-                  getOptionLabel={(option) => option.name}
+                  isOptionEqualToValue={(option, value) =>
+                    option._id === value._id
+                  }
+                  getOptionLabel={option => option.name}
                   label="Category"
                   value={formik.values.category}
-                  onChange={(newValue) => formik.setFieldValue("category", newValue)}
-                  error={formik.touched.category && Boolean(formik.errors.category)}
+                  onChange={newValue =>
+                    formik.setFieldValue('category', newValue)
+                  }
+                  error={
+                    formik.touched.category && Boolean(formik.errors.category)
+                  }
                   helperText={formik.touched.category && formik.errors.category}
                 />
               </Grid>
               <Grid item lg={4}>
                 <FieldAutocomplete
                   disabled={
-                    formik.values.category?.name !== "Medication" &&
-                    formik.values.category?.name !== "Emergency Medication"
+                    formik.values.category?.name !== 'Medication' &&
+                    formik.values.category?.name !== 'Emergency Medication'
                   }
                   options={drugTypes}
-                  isOptionEqualToValue={(option, value) => option._id === value._id}
-                  getOptionLabel={(option) => _.upperFirst(option.name)}
+                  isOptionEqualToValue={(option, value) =>
+                    option._id === value._id
+                  }
+                  getOptionLabel={option => _.upperFirst(option.name)}
                   label="Type"
                   value={formik.values.type}
-                  onChange={(newValue) => formik.setFieldValue("type", newValue)}
+                  onChange={newValue => formik.setFieldValue('type', newValue)}
                   error={formik.touched.type && Boolean(formik.errors.type)}
                   helperText={formik.touched.type && formik.errors.type}
                 />
@@ -251,21 +277,29 @@ const EditDrugItem: React.FC<EditDrugItemProps> = ({
                   id="packSize"
                   name="packSize"
                   label="Pack Size"
-                  value={formik.values.packSize || ""}
+                  value={formik.values.packSize || ''}
                   onChange={formik.handleChange}
-                  error={formik.touched.packSize && Boolean(formik.errors.packSize)}
+                  error={
+                    formik.touched.packSize && Boolean(formik.errors.packSize)
+                  }
                   helperText={formik.touched.packSize && formik.errors.packSize}
                 />
               </Grid>
               <Grid item lg={4}>
                 <FieldAutocomplete
                   options={taxRates}
-                  isOptionEqualToValue={(option, value) => option._id === value._id}
-                  getOptionLabel={(option) => option.taxRate.toString()}
+                  isOptionEqualToValue={(option, value) =>
+                    option._id === value._id
+                  }
+                  getOptionLabel={option => option.taxRate.toString()}
                   label="Tax Rate"
                   value={formik.values.taxRate}
-                  onChange={(newValue) => formik.setFieldValue("taxRate", newValue)}
-                  error={formik.touched.taxRate && Boolean(formik.errors.taxRate)}
+                  onChange={newValue =>
+                    formik.setFieldValue('taxRate', newValue)
+                  }
+                  error={
+                    formik.touched.taxRate && Boolean(formik.errors.taxRate)
+                  }
                   helperText={formik.touched.taxRate && formik.errors.taxRate}
                 />
               </Grid>
@@ -275,7 +309,7 @@ const EditDrugItem: React.FC<EditDrugItemProps> = ({
                   id="MRP"
                   name="mrp"
                   label="MRP"
-                  value={formik.values.mrp || ""}
+                  value={formik.values.mrp || ''}
                   onChange={formik.handleChange}
                   error={formik.touched.mrp && Boolean(formik.errors.mrp)}
                   helperText={formik.touched.mrp && formik.errors.mrp}
@@ -287,7 +321,7 @@ const EditDrugItem: React.FC<EditDrugItemProps> = ({
                   id="Rate"
                   name="rate"
                   label="Rate"
-                  value={formik.values.rate || ""}
+                  value={formik.values.rate || ''}
                   onChange={formik.handleChange}
                   error={formik.touched.rate && Boolean(formik.errors.rate)}
                   helperText={formik.touched.rate && formik.errors.rate}
@@ -296,13 +330,22 @@ const EditDrugItem: React.FC<EditDrugItemProps> = ({
               <Grid item lg={4}>
                 <FieldAutocomplete
                   options={drugManufacturers}
-                  isOptionEqualToValue={(option, value) => option._id === value._id}
-                  getOptionLabel={(option) => option.name}
+                  isOptionEqualToValue={(option, value) =>
+                    option._id === value._id
+                  }
+                  getOptionLabel={option => option.name}
                   label="Manufacturer"
                   value={formik.values.manufacturer}
-                  onChange={(newValue) => formik.setFieldValue("manufacturer", newValue)}
-                  error={formik.touched.manufacturer && Boolean(formik.errors.manufacturer)}
-                  helperText={formik.touched.manufacturer && formik.errors.manufacturer}
+                  onChange={newValue =>
+                    formik.setFieldValue('manufacturer', newValue)
+                  }
+                  error={
+                    formik.touched.manufacturer &&
+                    Boolean(formik.errors.manufacturer)
+                  }
+                  helperText={
+                    formik.touched.manufacturer && formik.errors.manufacturer
+                  }
                 />
               </Grid>
               <Grid item lg={4}>
@@ -313,11 +356,16 @@ const EditDrugItem: React.FC<EditDrugItemProps> = ({
                   label="Critical Count"
                   value={formik.values.criticalCount}
                   onChange={formik.handleChange}
-                  error={formik.touched.criticalCount && Boolean(formik.errors.criticalCount)}
-                  helperText={formik.touched.criticalCount && formik.errors.criticalCount}
+                  error={
+                    formik.touched.criticalCount &&
+                    Boolean(formik.errors.criticalCount)
+                  }
+                  helperText={
+                    formik.touched.criticalCount && formik.errors.criticalCount
+                  }
                 />
               </Grid>
-              <Grid item lg={12} display={"flex"} justifyContent={"center"}>
+              <Grid item lg={12} display={'flex'} justifyContent={'center'}>
                 <FormControlLabel
                   label="Active ?"
                   control={
@@ -331,20 +379,28 @@ const EditDrugItem: React.FC<EditDrugItemProps> = ({
                 />
               </Grid>
             </Grid>
-            <Box display={"flex"} justifyContent={"flex-end"} alignItems={"center"} gap={2} mb={2}>
+            <Box
+              display={'flex'}
+              justifyContent={'flex-end'}
+              alignItems={'center'}
+              gap={2}
+              mb={2}
+            >
               <Button
                 variant="contained"
                 color="primary"
                 type="submit"
-                disabled={editLoading || _.isEqual(initialValues, formik.values)}
-                sx={{ width: "fit-content" }}
+                disabled={
+                  editLoading || _.isEqual(initialValues, formik.values)
+                }
+                sx={{ width: 'fit-content' }}
               >
                 Save
               </Button>
               <Button
                 variant="contained"
                 color="secondary"
-                sx={{ width: "fit-content" }}
+                sx={{ width: 'fit-content' }}
                 onClick={onClose}
               >
                 Cancel

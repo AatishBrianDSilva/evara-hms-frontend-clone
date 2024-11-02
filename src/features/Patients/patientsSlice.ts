@@ -1,6 +1,6 @@
-import { createSlice, PayloadAction } from "@reduxjs/toolkit";
-import { IPatient } from "../../types/patient";
-import { ICase } from "../../types/case";
+import { createSlice, PayloadAction } from '@reduxjs/toolkit';
+import { IPatient } from '../../types/patient';
+import { ICase } from '../../types/case';
 
 interface PatientState {
   patientId: string | null;
@@ -19,7 +19,7 @@ const initialState: PatientState = {
 };
 
 export const patientsSlice = createSlice({
-  name: "patients",
+  name: 'patients',
   initialState,
   reducers: {
     setPatientId: (state, action: PayloadAction<string | null>) => {
@@ -39,7 +39,7 @@ export const patientsSlice = createSlice({
     setCase: (state, action: PayloadAction<ICase>) => {
       state.case = action.payload;
     },
-    swapPatientAndPartner: (state) => {
+    swapPatientAndPartner: state => {
       const tempPatient = state.patient;
       state.patient = state.partner;
       state.partner = tempPatient;

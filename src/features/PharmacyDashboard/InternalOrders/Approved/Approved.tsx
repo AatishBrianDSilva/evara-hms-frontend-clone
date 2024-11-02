@@ -1,4 +1,4 @@
-import { AddCircle, Visibility } from "@mui/icons-material";
+import { AddCircle, Visibility } from '@mui/icons-material';
 import {
   Box,
   Button,
@@ -8,21 +8,25 @@ import {
   DialogTitle,
   Tooltip,
   Typography,
-} from "@mui/material";
-import React, { useState } from "react";
-import CustomDataGrid from "../../../../components/CustomDataGrid/CustomDataGrid";
-import { GridActionsCellItem, GridColDef, GridRowParams } from "@mui/x-data-grid";
+} from '@mui/material';
+import React, { useState } from 'react';
+import CustomDataGrid from '../../../../components/CustomDataGrid/CustomDataGrid';
+import {
+  GridActionsCellItem,
+  GridColDef,
+  GridRowParams,
+} from '@mui/x-data-grid';
 
 import {
   useGetInternalOrdersQuery,
   useProcessInternalOrderMutation,
-} from "../../../../services/pharmacyDashboardService/internalOrderApi";
-import { useToast } from "../../../../context/ToastContext";
+} from '../../../../services/pharmacyDashboardService/internalOrderApi';
+import { useToast } from '../../../../context/ToastContext';
 import {
   EInternalOrderStatus,
   IInternalOrder,
-} from "../../../../types/pharmacyDashboard/internalOrder";
-import ViewInternalOrder from "../ViewInternalOrder";
+} from '../../../../types/pharmacyDashboard/internalOrder';
+import ViewInternalOrder from '../ViewInternalOrder';
 
 const ApprovedInternalOrder: React.FC = () => {
   const { showPromiseToast } = useToast();
@@ -85,9 +89,9 @@ const ApprovedInternalOrder: React.FC = () => {
       const promise = processInternalOrder(id).unwrap();
 
       showPromiseToast(promise, {
-        loading: "Processing Internal Order",
-        success: (msg) => msg || "Processed Internal Order Successfully",
-        error: (msg) => msg || "Error in processing Internal Order",
+        loading: 'Processing Internal Order',
+        success: msg => msg || 'Processed Internal Order Successfully',
+        error: msg => msg || 'Error in processing Internal Order',
       });
 
       try {
@@ -100,33 +104,33 @@ const ApprovedInternalOrder: React.FC = () => {
   };
 
   const columnsConfig: GridColDef[] = [
-    { field: "ioNumber", headerName: "IO Number", flex: 1 },
+    { field: 'ioNumber', headerName: 'IO Number', flex: 1 },
     {
-      field: "date",
-      type: "date",
-      headerName: "IO Date",
+      field: 'date',
+      type: 'date',
+      headerName: 'IO Date',
       flex: 1,
       valueFormatter(params) {
         const date = new Date(params.value);
-        const day = String(date.getDate()).padStart(2, "0");
-        const month = String(date.getMonth() + 1).padStart(2, "0"); // Months are 0-based
+        const day = String(date.getDate()).padStart(2, '0');
+        const month = String(date.getMonth() + 1).padStart(2, '0'); // Months are 0-based
         const year = String(date.getFullYear()).slice(-2); // Get last two digits of the year
         return `${day}/${month}/${year}`;
       },
     },
     {
-      field: "items",
-      headerName: "Items",
+      field: 'items',
+      headerName: 'Items',
       flex: 1,
-      valueGetter: (params) => `${params.row.items?.length}`,
+      valueGetter: params => `${params.row.items?.length}`,
     },
-    { field: "createdBy", headerName: "Created By", flex: 1 },
-    { field: "authorizedBy", headerName: "Authorized By", flex: 1 },
+    { field: 'createdBy', headerName: 'Created By', flex: 1 },
+    { field: 'authorizedBy', headerName: 'Authorized By', flex: 1 },
     {
-      field: "actions",
-      headerName: "Actions",
+      field: 'actions',
+      headerName: 'Actions',
       flex: 1,
-      type: "actions",
+      type: 'actions',
       getActions: (params: GridRowParams) => {
         const row = params.row;
         return [
@@ -150,10 +154,10 @@ const ApprovedInternalOrder: React.FC = () => {
   ];
 
   return (
-    <Box height={"100%"} display={"flex"} flexDirection={"column"}>
+    <Box height={'100%'} display={'flex'} flexDirection={'column'}>
       {/* Render the CustomDataGrid only if there's no error */}
 
-      <Box mt={2} flex={"1 1 auto"}>
+      <Box mt={2} flex={'1 1 auto'}>
         <CustomDataGrid
           autoHeight={false}
           columns={columnsConfig}
@@ -162,7 +166,7 @@ const ApprovedInternalOrder: React.FC = () => {
           pageSize={pageSize}
           totalRows={internalOrdersPagination?.totalDocs || 0}
           loading={internalOrderLoading}
-          sx={{ height: "100%" }}
+          sx={{ height: '100%' }}
           enablePagination={true}
           onPageChange={handlePageChange}
           onPageSizeChange={handlePageSizeChange}
@@ -171,10 +175,17 @@ const ApprovedInternalOrder: React.FC = () => {
 
       {/* Order Modal */}
       {isOrderModalOpen && (
-        <Dialog open={isOrderModalOpen} onClose={closeOrderModal} maxWidth="sm" fullWidth>
-          <DialogTitle color={"primary"}>Process Order</DialogTitle>
+        <Dialog
+          open={isOrderModalOpen}
+          onClose={closeOrderModal}
+          maxWidth="sm"
+          fullWidth
+        >
+          <DialogTitle color={'primary'}>Process Order</DialogTitle>
           <DialogContent>
-            <Typography>Are you sure you want to process order {selectedRow?.ioNumber}?</Typography>
+            <Typography>
+              Are you sure you want to process order {selectedRow?.ioNumber}?
+            </Typography>
           </DialogContent>
           <DialogActions>
             <Button color="primary" onClick={closeOrderModal}>
@@ -196,7 +207,7 @@ const ApprovedInternalOrder: React.FC = () => {
         <ViewInternalOrder
           openModal={isViewModalOpen}
           onClose={closeViewModal}
-          id={selectedRow?._id || ""}
+          id={selectedRow?._id || ''}
         />
       )}
     </Box>

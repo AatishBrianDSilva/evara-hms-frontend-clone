@@ -1,5 +1,5 @@
-import { ICase } from "./case";
-import { IDonor } from "./donor";
+import { ICase } from './case';
+import { IDonor } from './donor';
 
 export interface IPatient {
   _id: string;

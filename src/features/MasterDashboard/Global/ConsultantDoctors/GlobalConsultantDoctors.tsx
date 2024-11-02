@@ -1,16 +1,23 @@
-import React, { useCallback, useState } from "react";
-import ContentSection from "../../../../components/ContentSection/ContentSection";
-import { Box, Button, TextField } from "@mui/material";
-import { Add, Edit } from "@mui/icons-material";
-import CustomDataGrid from "../../../../components/CustomDataGrid/CustomDataGrid";
-import { GridActionsCellItem, GridColDef, GridRowParams } from "@mui/x-data-grid";
-import Delete from "@mui/icons-material/Delete";
-import DeleteConfirmationModal from "../../../../components/DeleteConfirmationModal/DeleteConfirmationModal";
-import { useToast } from "../../../../context/ToastContext";
-import _ from "lodash";
-import { useGetDoctorsQuery, useDeleteDoctorMutation } from "../../../../services/doctorsApi";
-import AddGlobalConsultant from "./AddGlobalConsultantDoctor";
-import EditGlobalConsultant from "./EditGlobalConsultantDoctor";
+import React, { useCallback, useState } from 'react';
+import ContentSection from '../../../../components/ContentSection/ContentSection';
+import { Box, Button, TextField } from '@mui/material';
+import { Add, Edit } from '@mui/icons-material';
+import CustomDataGrid from '../../../../components/CustomDataGrid/CustomDataGrid';
+import {
+  GridActionsCellItem,
+  GridColDef,
+  GridRowParams,
+} from '@mui/x-data-grid';
+import Delete from '@mui/icons-material/Delete';
+import DeleteConfirmationModal from '../../../../components/DeleteConfirmationModal/DeleteConfirmationModal';
+import { useToast } from '../../../../context/ToastContext';
+import _ from 'lodash';
+import {
+  useGetDoctorsQuery,
+  useDeleteDoctorMutation,
+} from '../../../../services/doctorsApi';
+import AddGlobalConsultant from './AddGlobalConsultantDoctor';
+import EditGlobalConsultant from './EditGlobalConsultantDoctor';
 
 interface RowType {
   _id: string;
@@ -19,7 +26,7 @@ interface RowType {
 const GlobalConsultantDoctor: React.FC = () => {
   const { showPromiseToast } = useToast();
 
-  const [selectedRow, setSelectedRow] = useState<string>("");
+  const [selectedRow, setSelectedRow] = useState<string>('');
   const [isAddModalOpen, setIsAddModalOpen] = useState<boolean>(false);
   const [isEditModalOpen, setIsEditModalOpen] = useState<boolean>(false);
   const [isDeleteModalOpen, setIsDeleteModalOpen] = useState<boolean>(false);
@@ -32,14 +39,18 @@ const GlobalConsultantDoctor: React.FC = () => {
   // Debounce the search handling
   const debouncedSearchChange = useCallback(
     _.debounce(handleSearchChange, 500),
-    [handleSearchChange] // Ensure that handleSearchChange is stable
+    [handleSearchChange], // Ensure that handleSearchChange is stable
   );
 
   const {
     data: DoctorData,
     isLoading: DoctorLoading,
     isFetching: DoctorFetching,
-  } = useGetDoctorsQuery({ paginate: false, filters: { isAdmin: true, isGlobal: true }, searchQuery });
+  } = useGetDoctorsQuery({
+    paginate: false,
+    filters: { isAdmin: true, isGlobal: true },
+    searchQuery,
+  });
 
   const Doctors = DoctorData?.data?.records || [];
 
@@ -49,27 +60,27 @@ const GlobalConsultantDoctor: React.FC = () => {
 
   const columnsConfig: GridColDef[] = [
     {
-      field: "fullName",
-      headerName: "Doctor Name",
+      field: 'fullName',
+      headerName: 'Doctor Name',
       flex: 1,
-      renderCell: (params) => `${params.row.firstName} ${params.row.lastName}`, // Render the full name
+      renderCell: params => `${params.row.firstName} ${params.row.lastName}`, // Render the full name
     },
-    { field: "mobile", headerName: "Contact number ", flex: 1 },
+    { field: 'mobile', headerName: 'Contact number ', flex: 1 },
     {
-      field: "city",
-      headerName: "City",
-      flex: 1,
-    },
-    {
-      field: "speciality",
-      headerName: "Speciality",
+      field: 'city',
+      headerName: 'City',
       flex: 1,
     },
     {
-      field: "actions",
-      headerName: "Actions",
+      field: 'speciality',
+      headerName: 'Speciality',
       flex: 1,
-      type: "actions",
+    },
+    {
+      field: 'actions',
+      headerName: 'Actions',
+      flex: 1,
+      type: 'actions',
       getActions: (params: GridRowParams) => {
         const row = params.row;
         return [
@@ -94,9 +105,9 @@ const GlobalConsultantDoctor: React.FC = () => {
     const promise = deleteUser(selectedRow).unwrap();
 
     showPromiseToast(promise, {
-      loading: "Deleting...",
-      success: (data) => data || "Deleted Successfully",
-      error: (data) => data || "Failed to Delete",
+      loading: 'Deleting...',
+      success: data => data || 'Deleted Successfully',
+      error: data => data || 'Failed to Delete',
     });
 
     try {
@@ -144,9 +155,14 @@ const GlobalConsultantDoctor: React.FC = () => {
 
   return (
     <ContentSection title="Consultant Doctors">
-
       <Box display="flex" justifyContent="flex-end" gap={2}>
-        <TextField label="Search" placeholder="Name/Number/Speciality" size="small" variant="outlined" onChange={(e) => debouncedSearchChange(e.target.value)} />
+        <TextField
+          label="Search"
+          placeholder="Name/Number/Speciality"
+          size="small"
+          variant="outlined"
+          onChange={e => debouncedSearchChange(e.target.value)}
+        />
 
         <Button
           variant="contained"
@@ -159,18 +175,23 @@ const GlobalConsultantDoctor: React.FC = () => {
         </Button>
       </Box>
 
-      <Box mt={2} flex={"1 1 auto"}>
+      <Box mt={2} flex={'1 1 auto'}>
         <CustomDataGrid
           autoHeight={false}
           columns={columnsConfig}
           rows={Doctors}
           loading={DoctorLoading || DoctorFetching}
-          sx={{ height: "100%" }}
+          sx={{ height: '100%' }}
           getRowId={getRowId}
         />
       </Box>
 
-      {isAddModalOpen && <AddGlobalConsultant openModal={isAddModalOpen} onClose={closeAddModal} />}
+      {isAddModalOpen && (
+        <AddGlobalConsultant
+          openModal={isAddModalOpen}
+          onClose={closeAddModal}
+        />
+      )}
 
       {isEditModalOpen && (
         <EditGlobalConsultant

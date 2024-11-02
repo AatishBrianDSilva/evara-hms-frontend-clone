@@ -1,7 +1,7 @@
-import React from "react";
-import { Grid, Typography } from "@mui/material";
-import CustomDatePicker from "../../../../../../components/CustomDatePicker/CustomDatePicker";
-import { FormikProps } from "formik";
+import React from 'react';
+import { Grid, Typography } from '@mui/material';
+import CustomDatePicker from '../../../../../../components/CustomDatePicker/CustomDatePicker';
+import { FormikProps } from 'formik';
 
 // Define the type for form values
 interface IFormValues {
@@ -22,7 +22,7 @@ const PretreatmentsForm: React.FC<PretreatmentsFormProps> = ({ formik }) => (
         <CustomDatePicker
           label="LMP (Last Menstrual Period)"
           value={formik.values.lmp}
-          onChange={(date) => formik.setFieldValue("lmp", date, true)}
+          onChange={date => formik.setFieldValue('lmp', date, true)}
         />
       </Grid>
     </Grid>

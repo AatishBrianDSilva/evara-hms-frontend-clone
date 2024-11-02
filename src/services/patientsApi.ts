@@ -1,57 +1,60 @@
-import { createApi } from "@reduxjs/toolkit/query/react";
-import generateQueryParams from "../utils/generateQueryParams";
-import { ApiResponse, IQueryOptions, PaginatedResponse } from "../types/global";
-import { baseQuery } from "./baseQuery";
-import { IPatient } from "../types/patient";
+import { createApi } from '@reduxjs/toolkit/query/react';
+import generateQueryParams from '../utils/generateQueryParams';
+import { ApiResponse, IQueryOptions, PaginatedResponse } from '../types/global';
+import { baseQuery } from './baseQuery';
+import { IPatient } from '../types/patient';
 
 export const patientsApi = createApi({
-  reducerPath: "patientsApi",
+  reducerPath: 'patientsApi',
   baseQuery: baseQuery,
-  tagTypes: ["Patient"],
-  endpoints: (builder) => ({
+  tagTypes: ['Patient'],
+  endpoints: builder => ({
     addPatient: builder.mutation({
-      query: (patientData) => ({
-        url: "patients/add",
-        method: "POST",
+      query: patientData => ({
+        url: 'patients/add',
+        method: 'POST',
         body: patientData,
       }),
-      invalidatesTags: ["Patient"],
+      invalidatesTags: ['Patient'],
     }),
     updatePatient: builder.mutation({
       query: ({ id, ...updateData }) => ({
         url: `patients/${id}`,
-        method: "PUT",
+        method: 'PUT',
         body: updateData,
       }),
-      invalidatesTags: (_result, _error, { id }) => [{ type: "Patient", id }],
+      invalidatesTags: (_result, _error, { id }) => [{ type: 'Patient', id }],
     }),
     addPartner: builder.mutation({
       query: ({ partnerData, patientId }) => ({
         url: `patients/${patientId}/partner/add`,
-        method: "POST",
+        method: 'POST',
         body: partnerData,
       }),
-      invalidatesTags: ["Patient"],
+      invalidatesTags: ['Patient'],
     }),
-    getPatients: builder.query<ApiResponse<PaginatedResponse<IPatient>>, IQueryOptions>({
-      query: (options) => {
+    getPatients: builder.query<
+      ApiResponse<PaginatedResponse<IPatient>>,
+      IQueryOptions
+    >({
+      query: options => {
         const queryParams = generateQueryParams(options);
-        return { url: `patients?${queryParams}`, method: "GET" };
+        return { url: `patients?${queryParams}`, method: 'GET' };
       },
-      providesTags: ["Patient"],
+      providesTags: ['Patient'],
     }),
     getPatientById: builder.query({
       query: (id: string) => {
-        return { url: `patients/${id}`, method: "GET" };
+        return { url: `patients/${id}`, method: 'GET' };
       },
-      providesTags: ["Patient"],
+      providesTags: ['Patient'],
     }),
     deletePatient: builder.mutation<ApiResponse<null>, string>({
       query: (id: string) => ({
         url: `patients/${id}`,
-        method: "DELETE",
+        method: 'DELETE',
       }),
-      invalidatesTags: ["Patient"],
+      invalidatesTags: ['Patient'],
     }),
   }),
 });

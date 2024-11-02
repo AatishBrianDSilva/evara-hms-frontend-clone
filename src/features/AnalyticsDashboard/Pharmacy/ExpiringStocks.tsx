@@ -1,17 +1,17 @@
-import React, { useEffect, useState } from "react";
-import ContentSection from "../../../components/ContentSection/ContentSection";
-import { Box, TextField } from "@mui/material";
-import CustomDataGrid from "../../../components/CustomDataGrid/CustomDataGrid";
-import { GridColDef } from "@mui/x-data-grid";
-import { useGetPaginatedStocksQuery } from "../../../services/pharmacyDashboardService/stocksApi";
-import _ from "lodash";
+import React, { useEffect, useState } from 'react';
+import ContentSection from '../../../components/ContentSection/ContentSection';
+import { Box, TextField } from '@mui/material';
+import CustomDataGrid from '../../../components/CustomDataGrid/CustomDataGrid';
+import { GridColDef } from '@mui/x-data-grid';
+import { useGetPaginatedStocksQuery } from '../../../services/pharmacyDashboardService/stocksApi';
+import _ from 'lodash';
 
 const ExpiringStocks: React.FC = () => {
   const [page, setPage] = useState<number>(1);
   const [pageSize, setPageSize] = useState<number>(25);
-  const [searchTerm, setSearchTerm] = useState<string>("");
-  const [locationQuery, setLocationQuery] = useState<string>("");
-  const [searchQuery, setSearchQuery] = useState<string>("");
+  const [searchTerm, setSearchTerm] = useState<string>('');
+  const [locationQuery, setLocationQuery] = useState<string>('');
+  const [searchQuery, setSearchQuery] = useState<string>('');
 
   const handlePageChange = (newPage: number) => {
     setPage(newPage);
@@ -42,7 +42,7 @@ const ExpiringStocks: React.FC = () => {
     if (locationQuery) {
       queryParts.push(`location:${locationQuery}`);
     }
-    setSearchQuery(queryParts.join(" "));
+    setSearchQuery(queryParts.join(' '));
   }, [searchTerm, locationQuery]);
 
   // Fetch data from the backend
@@ -62,31 +62,31 @@ const ExpiringStocks: React.FC = () => {
   const stocksLoading = stockLoading || stockFetching;
 
   // Filter stocks based on expiry date in the frontend
-  const filteredStocks = allStocks.filter((stock) => {
+  const filteredStocks = allStocks.filter(stock => {
     const expiryDate = new Date(stock.latestExpiryDate);
     return expiryDate >= currentDate && expiryDate <= oneMonthFromNow;
   });
 
-  console.log("Expiring Stocks", filteredStocks);
+  console.log('Expiring Stocks', filteredStocks);
 
   const columnsConfig: GridColDef[] = [
     {
-      field: "itemName",
-      headerName: "Item Name",
+      field: 'itemName',
+      headerName: 'Item Name',
       flex: 1,
-      valueGetter: (params) => params.row.item?.name,
+      valueGetter: params => params.row.item?.name,
     },
     {
-      field: "latestExpiryDate",
-      headerName: "Latest Expiry Date",
-      type: "date",
+      field: 'latestExpiryDate',
+      headerName: 'Latest Expiry Date',
+      type: 'date',
       flex: 1,
       valueFormatter: ({ value }) => new Date(value).toLocaleDateString(),
     },
     {
-      field: "updatedAt",
-      headerName: "Updated At",
-      type: "date",
+      field: 'updatedAt',
+      headerName: 'Updated At',
+      type: 'date',
       flex: 1,
       valueFormatter: ({ value }) => new Date(value).toLocaleDateString(),
     },
@@ -97,14 +97,14 @@ const ExpiringStocks: React.FC = () => {
     //   valueGetter: (params) => _.upperFirst(params.row.item?.category?.name),
     // },
     {
-      field: "type",
-      headerName: "Type",
+      field: 'type',
+      headerName: 'Type',
       flex: 1,
-      valueGetter: (params) => _.upperFirst(params.row.item?.type?.name) || "N/A",
+      valueGetter: params => _.upperFirst(params.row.item?.type?.name) || 'N/A',
     },
     {
-      field: "locationNames",
-      headerName: "Locations",
+      field: 'locationNames',
+      headerName: 'Locations',
       flex: 1,
     },
     // {
@@ -113,8 +113,8 @@ const ExpiringStocks: React.FC = () => {
     //   flex: 1,
     // },
     {
-      field: "totalQuantity",
-      headerName: "Quantity",
+      field: 'totalQuantity',
+      headerName: 'Quantity',
       flex: 1,
     },
     // {
@@ -149,7 +149,7 @@ const ExpiringStocks: React.FC = () => {
         />
       </Box>
 
-      <Box mt={2} flex={"1 1 auto"}>
+      <Box mt={2} flex={'1 1 auto'}>
         <CustomDataGrid
           autoHeight={false}
           columns={columnsConfig}
@@ -158,7 +158,7 @@ const ExpiringStocks: React.FC = () => {
           pageSize={pageSize}
           totalRows={stocksPagination?.totalDocs || 0}
           loading={stocksLoading}
-          sx={{ height: "100%" }}
+          sx={{ height: '100%' }}
           enablePagination={true}
           onPageChange={handlePageChange}
           onPageSizeChange={handlePageSizeChange}

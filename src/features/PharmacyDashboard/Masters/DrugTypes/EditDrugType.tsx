@@ -1,4 +1,4 @@
-import React from "react";
+import React from 'react';
 import {
   Box,
   Button,
@@ -10,15 +10,15 @@ import {
   Grid,
   Skeleton,
   TextField,
-} from "@mui/material";
-import { useFormik } from "formik";
-import { useToast } from "../../../../context/ToastContext";
+} from '@mui/material';
+import { useFormik } from 'formik';
+import { useToast } from '../../../../context/ToastContext';
 import {
   useEditDrugTypeMutation,
   useGetDrugTypeByIdQuery,
-} from "../../../../services/pharmacyDashboardService/master/drugTypeApi";
-import _ from "lodash";
-import { AddDrugTypeValidationSchema } from "../../../../yup/pharmacyDashboard";
+} from '../../../../services/pharmacyDashboardService/master/drugTypeApi';
+import _ from 'lodash';
+import { AddDrugTypeValidationSchema } from '../../../../yup/pharmacyDashboard';
 
 interface EditDrugTypeProps {
   openModal: boolean;
@@ -45,7 +45,13 @@ const skeletonLoader = () => {
             <Skeleton variant="rectangular" width="100%" height={56} />
           </Grid>
         </Grid>
-        <Box display={"flex"} justifyContent={"flex-end"} alignItems={"center"} gap={2} mb={2}>
+        <Box
+          display={'flex'}
+          justifyContent={'flex-end'}
+          alignItems={'center'}
+          gap={2}
+          mb={2}
+        >
           <Skeleton variant="rectangular" width={90} height={36} />
           <Skeleton variant="rectangular" width={90} height={36} />
         </Box>
@@ -54,7 +60,11 @@ const skeletonLoader = () => {
   );
 };
 
-const EditDrugType: React.FC<EditDrugTypeProps> = ({ openModal, onClose, id }) => {
+const EditDrugType: React.FC<EditDrugTypeProps> = ({
+  openModal,
+  onClose,
+  id,
+}) => {
   const { showPromiseToast } = useToast();
 
   const { data, isFetching, isLoading } = useGetDrugTypeByIdQuery(id);
@@ -68,15 +78,15 @@ const EditDrugType: React.FC<EditDrugTypeProps> = ({ openModal, onClose, id }) =
       name: values.name,
       shortcode: values.shortcode,
       notes: values.notes,
-      status: values.status ? "Active" : "Inactive",
+      status: values.status ? 'Active' : 'Inactive',
     };
 
     const promise = editDrugType(payload).unwrap();
 
     showPromiseToast(promise, {
-      loading: "Editing Drug Type...",
-      success: (data) => data || "Drug Type Edited Successfully",
-      error: (data) => data || "Failed to Edit Drug Type",
+      loading: 'Editing Drug Type...',
+      success: data => data || 'Drug Type Edited Successfully',
+      error: data => data || 'Failed to Edit Drug Type',
     });
 
     try {
@@ -89,10 +99,10 @@ const EditDrugType: React.FC<EditDrugTypeProps> = ({ openModal, onClose, id }) =
   };
 
   const initialValues: IFormValues = {
-    name: type?.name || "",
-    shortcode: type?.shortcode || "",
-    notes: type?.notes || "",
-    status: type?.status === "Active" ? true : false,
+    name: type?.name || '',
+    shortcode: type?.shortcode || '',
+    notes: type?.notes || '',
+    status: type?.status === 'Active' ? true : false,
   };
 
   const formik = useFormik({
@@ -104,12 +114,12 @@ const EditDrugType: React.FC<EditDrugTypeProps> = ({ openModal, onClose, id }) =
 
   return (
     <Dialog open={openModal} onClose={onClose} maxWidth="md" fullWidth>
-      <DialogTitle color={"primary"}>Edit Drug Type</DialogTitle>
+      <DialogTitle color={'primary'}>Edit Drug Type</DialogTitle>
       {loading ? (
         skeletonLoader()
       ) : (
         <DialogContent>
-          <Box component={"form"} onSubmit={formik.handleSubmit} p={2}>
+          <Box component={'form'} onSubmit={formik.handleSubmit} p={2}>
             <Grid container spacing={2} mb={2} mt={2}>
               <Grid item lg={4}>
                 <TextField
@@ -129,8 +139,12 @@ const EditDrugType: React.FC<EditDrugTypeProps> = ({ openModal, onClose, id }) =
                   label="Short Code"
                   value={formik.values.shortcode}
                   onChange={formik.handleChange}
-                  error={formik.touched.shortcode && Boolean(formik.errors.shortcode)}
-                  helperText={formik.touched.shortcode && formik.errors.shortcode}
+                  error={
+                    formik.touched.shortcode && Boolean(formik.errors.shortcode)
+                  }
+                  helperText={
+                    formik.touched.shortcode && formik.errors.shortcode
+                  }
                 />
               </Grid>
               <Grid item lg={4}>
@@ -145,7 +159,7 @@ const EditDrugType: React.FC<EditDrugTypeProps> = ({ openModal, onClose, id }) =
                 />
               </Grid>
 
-              <Grid item lg={12} display={"flex"} justifyContent={"center"}>
+              <Grid item lg={12} display={'flex'} justifyContent={'center'}>
                 <FormControlLabel
                   label="Active ?"
                   control={
@@ -159,20 +173,28 @@ const EditDrugType: React.FC<EditDrugTypeProps> = ({ openModal, onClose, id }) =
                 />
               </Grid>
             </Grid>
-            <Box display={"flex"} justifyContent={"flex-end"} alignItems={"center"} gap={2} mb={2}>
+            <Box
+              display={'flex'}
+              justifyContent={'flex-end'}
+              alignItems={'center'}
+              gap={2}
+              mb={2}
+            >
               <Button
                 variant="contained"
                 color="primary"
                 type="submit"
-                disabled={editLoading || _.isEqual(initialValues, formik.values)}
-                sx={{ width: "fit-content" }}
+                disabled={
+                  editLoading || _.isEqual(initialValues, formik.values)
+                }
+                sx={{ width: 'fit-content' }}
               >
                 Save
               </Button>
               <Button
                 variant="contained"
                 color="secondary"
-                sx={{ width: "fit-content" }}
+                sx={{ width: 'fit-content' }}
                 onClick={onClose}
               >
                 Cancel

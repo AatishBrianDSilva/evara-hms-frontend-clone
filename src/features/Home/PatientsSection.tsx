@@ -1,21 +1,24 @@
-import React from "react";
-import Box from "@mui/material/Box";
-import Typography from "@mui/material/Typography";
-import { ArrowForward, AssignmentLate } from "@mui/icons-material";
-import PatientSummaryCard from "../../components/PatientSummaryCard/PatientSummaryCard";
-import SkeletonPatientSummaryCard from "../../components/PatientSummaryCard/Skeleton";
-import { IconButton } from "@mui/material";
-import PatientCard from "../../components/PatientCard/PatientCard";
-import { calculateAge } from "../../utils/calculateAge";
-import SkeletonPatientCard from "../../components/PatientCard/Skeleton";
-import { useGetPatientSummaryQuery } from "../../services/homeApi";
+import React from 'react';
+import Box from '@mui/material/Box';
+import Typography from '@mui/material/Typography';
+import { ArrowForward, AssignmentLate } from '@mui/icons-material';
+import PatientSummaryCard from '../../components/PatientSummaryCard/PatientSummaryCard';
+import SkeletonPatientSummaryCard from '../../components/PatientSummaryCard/Skeleton';
+import { IconButton } from '@mui/material';
+import PatientCard from '../../components/PatientCard/PatientCard';
+import { calculateAge } from '../../utils/calculateAge';
+import SkeletonPatientCard from '../../components/PatientCard/Skeleton';
+import { useGetPatientSummaryQuery } from '../../services/homeApi';
 
 interface PatientsSectionProps {
   startDate: Date | null;
   endDate: Date | null;
 }
 
-const PatientsSection: React.FC<PatientsSectionProps> = ({ startDate, endDate }) => {
+const PatientsSection: React.FC<PatientsSectionProps> = ({
+  startDate,
+  endDate,
+}) => {
   // Fetch patients for the selected date range
   const {
     data: patientsData,
@@ -24,26 +27,32 @@ const PatientsSection: React.FC<PatientsSectionProps> = ({ startDate, endDate })
   } = useGetPatientSummaryQuery(
     {
       dateRange: {
-        startDate: startDate?.toISOString() || "",
-        endDate: endDate?.toISOString() || "",
+        startDate: startDate?.toISOString() || '',
+        endDate: endDate?.toISOString() || '',
       },
     },
     {
       skip: !startDate || !endDate,
-    }
+    },
   );
 
   const patientSummary = patientsData?.data;
   const loading = isPatientLoading || isPatientFetching;
 
   const handleArrowClick = () => {
-    window.location.href = "/patients";
+    window.location.href = '/patients';
   };
 
   return (
-    <Box display="flex" flexDirection="column" gap={2} overflow={"hidden"} width="100%">
+    <Box
+      display="flex"
+      flexDirection="column"
+      gap={2}
+      overflow={'hidden'}
+      width="100%"
+    >
       <Box display="flex" justifyContent="space-between">
-        <Typography variant="h6" sx={{ fontWeight: "bold" }}>
+        <Typography variant="h6" sx={{ fontWeight: 'bold' }}>
           Patients
         </Typography>
       </Box>
@@ -52,7 +61,7 @@ const PatientsSection: React.FC<PatientsSectionProps> = ({ startDate, endDate })
         display="flex"
         width="100%"
         height="358px" // Total height including the heading and content
-        justifyContent={"space-between"}
+        justifyContent={'space-between'}
         gap={2}
       >
         {/* First part: Patient Summary (30% width) */}
@@ -112,11 +121,14 @@ const PatientsSection: React.FC<PatientsSectionProps> = ({ startDate, endDate })
             bgcolor="#FFFFFF"
           >
             {loading ? (
-              [1, 2, 3, 4].map((_, index) => <SkeletonPatientCard key={index} />) // Show 4 skeleton cards during loading
-            ) : patientSummary?.patients && patientSummary?.patients.length > 0 ? (
-              patientSummary?.patients.map((patient) => (
+              [1, 2, 3, 4].map((_, index) => (
+                <SkeletonPatientCard key={index} />
+              )) // Show 4 skeleton cards during loading
+            ) : patientSummary?.patients &&
+              patientSummary?.patients.length > 0 ? (
+              patientSummary?.patients.map(patient => (
                 <Box key={patient._id} width="23%" minWidth="200px">
-                  {" "}
+                  {' '}
                   {/* Each card takes up 24% width to fit 4 cards in a row */}
                   <PatientCard
                     patientId={patient.patientId}
@@ -129,7 +141,12 @@ const PatientsSection: React.FC<PatientsSectionProps> = ({ startDate, endDate })
                 </Box>
               ))
             ) : (
-              <Box display={"flex"} justifyContent={"center"} alignItems={"center"} flex={1}>
+              <Box
+                display={'flex'}
+                justifyContent={'center'}
+                alignItems={'center'}
+                flex={1}
+              >
                 <Box display="flex" alignItems="center" sx={{ m: 2 }}>
                   <AssignmentLate color="info" sx={{ mr: 1 }} />
                   <Typography variant="body1" color="textSecondary">

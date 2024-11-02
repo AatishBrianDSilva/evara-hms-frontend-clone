@@ -1,22 +1,23 @@
-import { createSlice } from "@reduxjs/toolkit";
+import { createSlice } from '@reduxjs/toolkit';
 
 const initialState = {
-  editTreatmentCycleOpen: { id: "", status: false },
+  editTreatmentCycleOpen: { id: '', status: false },
 };
 
 export const treatmentCycleSlice = createSlice({
-  name: "treatmentCycle",
+  name: 'treatmentCycle',
   initialState,
   reducers: {
     openEditTreatmentCycle: (state, action) => {
       state.editTreatmentCycleOpen = action.payload;
     },
-    closeEditTreatmentCycle: (state) => {
-      state.editTreatmentCycleOpen = { id: "", status: false };
+    closeEditTreatmentCycle: state => {
+      state.editTreatmentCycleOpen = { id: '', status: false };
     },
   },
 });
 
-export const { openEditTreatmentCycle, closeEditTreatmentCycle } = treatmentCycleSlice.actions;
+export const { openEditTreatmentCycle, closeEditTreatmentCycle } =
+  treatmentCycleSlice.actions;
 
 export default treatmentCycleSlice.reducer;

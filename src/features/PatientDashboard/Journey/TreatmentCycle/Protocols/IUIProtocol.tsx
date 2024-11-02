@@ -1,18 +1,18 @@
-import { Box, Button, Grid, TextField, Typography } from "@mui/material";
-import { useFormik } from "formik";
-import React, { useContext } from "react";
-import { IUIProtocolValidationSchema } from "../../../../../yup/patientDashboard/treatmentCycle";
-import CustomDatePicker from "../../../../../components/CustomDatePicker/CustomDatePicker";
-import ModalContext from "../../../../../context/ModalContext";
-import { IPatientTreatmentCycleProtocol } from "../../../../../types/patientDashboard/treatmentCycle";
+import { Box, Button, Grid, TextField, Typography } from '@mui/material';
+import { useFormik } from 'formik';
+import React, { useContext } from 'react';
+import { IUIProtocolValidationSchema } from '../../../../../yup/patientDashboard/treatmentCycle';
+import CustomDatePicker from '../../../../../components/CustomDatePicker/CustomDatePicker';
+import ModalContext from '../../../../../context/ModalContext';
+import { IPatientTreatmentCycleProtocol } from '../../../../../types/patientDashboard/treatmentCycle';
 import {
   useEditTreatmentCycleMutation,
   useGetTreatmentCyclesQuery,
-} from "../../../../../services/patientDashboardService/treatmentCycleApi";
-import { useToast } from "../../../../../context/ToastContext";
-import _ from "lodash";
-import { useSelector } from "react-redux";
-import { RootState } from "../../../../../app/store";
+} from '../../../../../services/patientDashboardService/treatmentCycleApi';
+import { useToast } from '../../../../../context/ToastContext';
+import _ from 'lodash';
+import { useSelector } from 'react-redux';
+import { RootState } from '../../../../../app/store';
 
 interface IFormValues {
   lmpDate: Date | null;
@@ -24,7 +24,10 @@ interface IUIProtocolProps {
   treatmentCycleId: string;
 }
 
-const IUIProtocol: React.FC<IUIProtocolProps> = ({ protocol, treatmentCycleId }) => {
+const IUIProtocol: React.FC<IUIProtocolProps> = ({
+  protocol,
+  treatmentCycleId,
+}) => {
   const { closeModal } = useContext(ModalContext);
   const { showPromiseToast } = useToast();
 
@@ -44,7 +47,7 @@ const IUIProtocol: React.FC<IUIProtocolProps> = ({ protocol, treatmentCycleId })
     },
     {
       skip: !patient?.patientId,
-    }
+    },
   );
   const patientTreatmentCycles = cycleData?.data || [];
 
@@ -52,16 +55,18 @@ const IUIProtocol: React.FC<IUIProtocolProps> = ({ protocol, treatmentCycleId })
 
   // Find the specific treatment cycle by ID
   const currentTreatmentCycle = patientTreatmentCycles.find(
-    (cycle) => cycle._id === treatmentCycleId
+    cycle => cycle._id === treatmentCycleId,
   );
 
   // Find the specific protocol by category and ID
-  const currentProtocol = currentTreatmentCycle?.protocols.find((p) => p._id === protocol._id);
+  const currentProtocol = currentTreatmentCycle?.protocols.find(
+    p => p._id === protocol._id,
+  );
 
   const handleFormSubmit = async (values: IFormValues) => {
     const options = {
       conditions: {
-        editType: "update",
+        editType: 'update',
         category: protocol.category,
       },
     };
@@ -77,9 +82,9 @@ const IUIProtocol: React.FC<IUIProtocolProps> = ({ protocol, treatmentCycleId })
     const promise = updateProtocol({ payload, options }).unwrap();
 
     showPromiseToast(promise, {
-      loading: "Adding Protocol...",
-      success: (data) => data.message || "Protocol Updated Successfully",
-      error: (data) => data.message || "Error Updating Protocol",
+      loading: 'Adding Protocol...',
+      success: data => data.message || 'Protocol Updated Successfully',
+      error: data => data.message || 'Error Updating Protocol',
     });
 
     try {
@@ -90,8 +95,10 @@ const IUIProtocol: React.FC<IUIProtocolProps> = ({ protocol, treatmentCycleId })
   };
 
   const initialValues: IFormValues = {
-    lmpDate: currentProtocol?.details?.lmpDate ? new Date(currentProtocol.details.lmpDate) : null,
-    cycleNumber: currentProtocol?.details?.cycleNumber || "",
+    lmpDate: currentProtocol?.details?.lmpDate
+      ? new Date(currentProtocol.details.lmpDate)
+      : null,
+    cycleNumber: currentProtocol?.details?.cycleNumber || '',
   };
 
   const formik = useFormik({
@@ -102,7 +109,7 @@ const IUIProtocol: React.FC<IUIProtocolProps> = ({ protocol, treatmentCycleId })
   });
 
   return (
-    <Box component={"form"} onSubmit={formik.handleSubmit} p={2}>
+    <Box component={'form'} onSubmit={formik.handleSubmit} p={2}>
       <Typography variant="button" color="primary">
         Add IUI Protocol
       </Typography>
@@ -112,7 +119,7 @@ const IUIProtocol: React.FC<IUIProtocolProps> = ({ protocol, treatmentCycleId })
             label="LMP Date"
             name="lmpDate"
             value={formik.values.lmpDate}
-            onChange={(date) => formik.setFieldValue("lmpDate", date)}
+            onChange={date => formik.setFieldValue('lmpDate', date)}
             error={formik.touched.lmpDate && Boolean(formik.errors.lmpDate)}
             helperText={formik.touched.lmpDate && formik.errors.lmpDate}
           />
@@ -124,25 +131,33 @@ const IUIProtocol: React.FC<IUIProtocolProps> = ({ protocol, treatmentCycleId })
             label="Cycle Number"
             value={formik.values.cycleNumber}
             onChange={formik.handleChange}
-            error={formik.touched.cycleNumber && Boolean(formik.errors.cycleNumber)}
+            error={
+              formik.touched.cycleNumber && Boolean(formik.errors.cycleNumber)
+            }
             helperText={formik.touched.cycleNumber && formik.errors.cycleNumber}
           />
         </Grid>
       </Grid>
-      <Box display={"flex"} justifyContent={"flex-end"} alignItems={"center"} gap={2} mb={2}>
+      <Box
+        display={'flex'}
+        justifyContent={'flex-end'}
+        alignItems={'center'}
+        gap={2}
+        mb={2}
+      >
         <Button
           variant="contained"
           color="primary"
           type="submit"
           disabled={isLoading || _.isEqual(initialValues, formik.values)}
-          sx={{ width: "fit-content" }}
+          sx={{ width: 'fit-content' }}
         >
           Save
         </Button>
         <Button
           variant="contained"
           color="secondary"
-          sx={{ width: "fit-content" }}
+          sx={{ width: 'fit-content' }}
           onClick={closeModal}
         >
           Cancel

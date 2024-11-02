@@ -1,8 +1,8 @@
-import React from "react";
-import { Drawer, List, Typography } from "@mui/material";
-import NestedList, { NestedListItem } from "./NestedList";
-import CorporateFareIcon from "@mui/icons-material/CorporateFare";
-import FiberManualRecordIcon from "@mui/icons-material/FiberManualRecord";
+import React from 'react';
+import { Drawer, List, Typography } from '@mui/material';
+import NestedList, { NestedListItem } from './NestedList';
+import CorporateFareIcon from '@mui/icons-material/CorporateFare';
+import FiberManualRecordIcon from '@mui/icons-material/FiberManualRecord';
 
 const AnalyticsSidebar: React.FC = () => {
   const menuItems: NestedListItem[] = [
@@ -51,22 +51,22 @@ const AnalyticsSidebar: React.FC = () => {
     // },
     {
       icon: CorporateFareIcon,
-      primaryText: "Billings",
+      primaryText: 'Billings',
       children: [
         {
           icon: FiberManualRecordIcon,
-          primaryText: "Patient Billings",
-          path: "/analytics/billings/patient-billings",
+          primaryText: 'Patient Billings',
+          path: '/analytics/billings/patient-billings',
         },
         {
           icon: FiberManualRecordIcon,
-          primaryText: "Refund Reports",
-          path: "/analytics/billings/refund-reports",
+          primaryText: 'Refund Reports',
+          path: '/analytics/billings/refund-reports',
         },
         {
           icon: FiberManualRecordIcon,
-          primaryText: "Revenue Breakup Reports",
-          path: "/analytics/billings/revenue-breakup-reports",
+          primaryText: 'Revenue Breakup Reports',
+          path: '/analytics/billings/revenue-breakup-reports',
         },
         // {
         //   icon: FiberManualRecordIcon,
@@ -82,7 +82,7 @@ const AnalyticsSidebar: React.FC = () => {
     },
     {
       icon: CorporateFareIcon,
-      primaryText: "Pharmacy",
+      primaryText: 'Pharmacy',
       children: [
         // {
         //   icon: FiberManualRecordIcon,
@@ -91,48 +91,48 @@ const AnalyticsSidebar: React.FC = () => {
         // },
         {
           icon: FiberManualRecordIcon,
-          primaryText: "Pharmacy Reports",
-          path: "/analytics/pharmacy/pharmacy-reports",
+          primaryText: 'Pharmacy Reports',
+          path: '/analytics/pharmacy/pharmacy-reports',
         },
         {
           icon: FiberManualRecordIcon,
-          primaryText: "Purchase Order Reports",
-          path: "/analytics/pharmacy/purchase-order-reports",
+          primaryText: 'Purchase Order Reports',
+          path: '/analytics/pharmacy/purchase-order-reports',
         },
         {
           icon: FiberManualRecordIcon,
-          primaryText: "Sale By Schedule",
-          path: "/analytics/pharmacy/sale-by-schedule-reports",
+          primaryText: 'Sale By Schedule',
+          path: '/analytics/pharmacy/sale-by-schedule-reports',
         },
         {
           icon: FiberManualRecordIcon,
-          primaryText: "Internal Consumption",
-          path: "/analytics/pharmacy/internal-consumption-reports",
+          primaryText: 'Internal Consumption',
+          path: '/analytics/pharmacy/internal-consumption-reports',
         },
         {
           icon: FiberManualRecordIcon,
-          primaryText: "Drugs And Vendors",
-          path: "/analytics/pharmacy/drugs-and-vendors-reports",
+          primaryText: 'Drugs And Vendors',
+          path: '/analytics/pharmacy/drugs-and-vendors-reports',
         },
         {
           icon: FiberManualRecordIcon,
-          primaryText: "Patient Return",
-          path: "/analytics/pharmacy/patient-return-reports",
+          primaryText: 'Patient Return',
+          path: '/analytics/pharmacy/patient-return-reports',
         },
         {
           icon: FiberManualRecordIcon,
-          primaryText: "Stock Summary",
-          path: "/analytics/pharmacy/stock-summary-reports",
+          primaryText: 'Stock Summary',
+          path: '/analytics/pharmacy/stock-summary-reports',
         },
         {
           icon: FiberManualRecordIcon,
-          primaryText: "Expiry Details",
-          path: "/analytics/pharmacy/expiry-details",
+          primaryText: 'Expiry Details',
+          path: '/analytics/pharmacy/expiry-details',
         },
         {
           icon: FiberManualRecordIcon,
-          primaryText: "Critical Stocks",
-          path: "/analytics/pharmacy/critical-stocks",
+          primaryText: 'Critical Stocks',
+          path: '/analytics/pharmacy/critical-stocks',
         },
       ],
     },
@@ -144,12 +144,12 @@ const AnalyticsSidebar: React.FC = () => {
       sx={{
         width: 240,
         flexShrink: 0,
-        "& .MuiDrawer-paper": {
+        '& .MuiDrawer-paper': {
           width: 240,
-          top: "65px",
-          left: "6px",
-          height: "calc(100vh - 80px)",
-          boxSizing: "border-box",
+          top: '65px',
+          left: '6px',
+          height: 'calc(100vh - 80px)',
+          boxSizing: 'border-box',
           borderRadius: 1,
         },
       }}
@@ -158,7 +158,7 @@ const AnalyticsSidebar: React.FC = () => {
       }}
     >
       <List
-        sx={{ width: "100%", maxWidth: 360, bgcolor: "background.paper" }}
+        sx={{ width: '100%', maxWidth: 360, bgcolor: 'background.paper' }}
         component="nav"
         aria-labelledby="nested-list-subheader"
         subheader={

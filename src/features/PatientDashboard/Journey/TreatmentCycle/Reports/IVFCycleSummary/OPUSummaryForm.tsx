@@ -1,7 +1,7 @@
-import React from "react";
-import { Grid, TextField, Typography } from "@mui/material";
-import CustomDatePicker from "../../../../../../components/CustomDatePicker/CustomDatePicker";
-import { FormikProps } from "formik";
+import React from 'react';
+import { Grid, TextField, Typography } from '@mui/material';
+import CustomDatePicker from '../../../../../../components/CustomDatePicker/CustomDatePicker';
+import { FormikProps } from 'formik';
 
 // Define the type for form values
 interface IFormValues {
@@ -35,7 +35,9 @@ const OPUSummaryForm: React.FC<OPUSummaryFormProps> = ({ formik }) => (
         <CustomDatePicker
           label="Oocyte Pick up Date"
           value={formik.values.oocytePickUpDate}
-          onChange={(date) => formik.setFieldValue("oocytePickUpDate", date, true)}
+          onChange={date =>
+            formik.setFieldValue('oocytePickUpDate', date, true)
+          }
         />
       </Grid>
       <Grid item xs={12} sm={4}>

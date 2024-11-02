@@ -97,7 +97,6 @@ const Investigations: React.FC = () => {
   const [value, setValue] = React.useState(0);
   const [nestedValue, setNestedValue] = React.useState(0);
 
-
   const handleChange = (_: React.SyntheticEvent, newValue: number) => {
     setValue(newValue);
     setNestedValue(0);
@@ -110,8 +109,13 @@ const Investigations: React.FC = () => {
   const renderFemaleEarlyPregancnyScanReport = () => {
     return (
       <>
-        <Box display={"flex"} justifyContent={"space-between"} alignItems={"center"} mb={2}>
-          <Button variant='contained' sx={{ width: 'fit-content' }}>
+        <Box
+          display={'flex'}
+          justifyContent={'space-between'}
+          alignItems={'center'}
+          mb={2}
+        >
+          <Button variant="contained" sx={{ width: 'fit-content' }}>
             Add New
           </Button>
           <TextField label="Search" />
@@ -123,14 +127,19 @@ const Investigations: React.FC = () => {
           pageSizeOptions={[5, 10]}
         />
       </>
-    )
-  }
+    );
+  };
 
   const renderFemaleEndrometrialAssement = () => {
     return (
       <>
-        <Box display={"flex"} justifyContent={"space-between"} alignItems={"center"} mb={2}>
-          <Button variant='contained' sx={{ width: 'fit-content' }}>
+        <Box
+          display={'flex'}
+          justifyContent={'space-between'}
+          alignItems={'center'}
+          mb={2}
+        >
+          <Button variant="contained" sx={{ width: 'fit-content' }}>
             Add New
           </Button>
           <TextField label="Search" />
@@ -142,18 +151,24 @@ const Investigations: React.FC = () => {
           pageSizeOptions={[5, 10]}
         />
       </>
-    )
-  }
+    );
+  };
 
   const renderFemaleBaseLineFollicularMonitoring = () => {
     return (
       <>
-        <Box gap={2} display={"flex"} justifyContent={"flex-start"} alignItems={"center"} mb={2}>
-          <Button variant='contained' sx={{ width: 'fit-content' }}>
+        <Box
+          gap={2}
+          display={'flex'}
+          justifyContent={'flex-start'}
+          alignItems={'center'}
+          mb={2}
+        >
+          <Button variant="contained" sx={{ width: 'fit-content' }}>
             Add Follicular Tracking
           </Button>
-          <CustomDatePicker label='Start Date' />
-          <CustomDatePicker label='End Date' />
+          <CustomDatePicker label="Start Date" />
+          <CustomDatePicker label="End Date" />
         </Box>
 
         <CustomDataGrid
@@ -162,14 +177,19 @@ const Investigations: React.FC = () => {
           pageSizeOptions={[5, 10]}
         />
       </>
-    )
-  }
+    );
+  };
 
   const renderFemaleUltraSoundScan = () => {
     return (
       <>
-        <Box display={"flex"} justifyContent={"space-between"} alignItems={"center"} mb={2}>
-          <Button variant='contained' sx={{ width: 'fit-content' }}>
+        <Box
+          display={'flex'}
+          justifyContent={'space-between'}
+          alignItems={'center'}
+          mb={2}
+        >
+          <Button variant="contained" sx={{ width: 'fit-content' }}>
             Add New
           </Button>
           <TextField label="Search" />
@@ -181,13 +201,17 @@ const Investigations: React.FC = () => {
           pageSizeOptions={[5, 10]}
         />
 
-        <Typography variant='subtitle1' mb={2} mt={2}>Baseline Scan</Typography>
+        <Typography variant="subtitle1" mb={2} mt={2}>
+          Baseline Scan
+        </Typography>
         <Grid container gap={2}>
           <Grid item xs={12} md={6} lg={2}>
             <TextField fullWidth select label="Scan Type">
               <MenuItem value="baseline scan">Baseline Scan</MenuItem>
               <MenuItem value="sono hysterogram">Sono Hysterogram</MenuItem>
-              <MenuItem value="baseline scan and sono hysterogram">Baseline Scan and Sono Hysterogram</MenuItem>
+              <MenuItem value="baseline scan and sono hysterogram">
+                Baseline Scan and Sono Hysterogram
+              </MenuItem>
               <MenuItem value="pelvic organ scan">Pelvic Organ Scan</MenuItem>
             </TextField>
           </Grid>
@@ -205,19 +229,31 @@ const Investigations: React.FC = () => {
           </Grid>
         </Grid>
 
-        <Typography variant='subtitle1' mt={2}>Pelvis</Typography>
-        <Grid container direction={"column"} mb={2}>
+        <Typography variant="subtitle1" mt={2}>
+          Pelvis
+        </Typography>
+        <Grid container direction={'column'} mb={2}>
           <Grid item xs={12} md={6} lg={6}>
-            <FormControlLabel label="TransAbdominal" control={<Checkbox
-              id='register-isPatientSurrogate-id'
-              name="isPatientSurrogate"
-            />} />
+            <FormControlLabel
+              label="TransAbdominal"
+              control={
+                <Checkbox
+                  id="register-isPatientSurrogate-id"
+                  name="isPatientSurrogate"
+                />
+              }
+            />
           </Grid>
           <Grid item xs={12} md={6} lg={6}>
-            <FormControlLabel label="Transvaginal Sonography" control={<Checkbox
-              id='register-isPatientSurrogate-id'
-              name="isPatientSurrogate"
-            />} />
+            <FormControlLabel
+              label="Transvaginal Sonography"
+              control={
+                <Checkbox
+                  id="register-isPatientSurrogate-id"
+                  name="isPatientSurrogate"
+                />
+              }
+            />
           </Grid>
         </Grid>
 
@@ -263,20 +299,29 @@ const Investigations: React.FC = () => {
             <TextField multiline fullWidth label="Cavity echo appeared" />
           </Grid>
           <Grid item xs={12} md={6} lg={4}>
-            <TextField multiline fullWidth label="Endometrial thickness measuring" />
+            <TextField
+              multiline
+              fullWidth
+              label="Endometrial thickness measuring"
+            />
           </Grid>
           <Grid item xs={12} md={6} lg={4}>
             <TextField multiline fullWidth label="Any Other Pathology" />
           </Grid>
         </Grid>
 
-        <Typography variant='subtitle1'>Right ovary</Typography>
+        <Typography variant="subtitle1">Right ovary</Typography>
         <Grid container spacing={2} mb={2}>
           <Grid item xs={12} md={12} lg={12}>
-            <FormControlLabel label=" Not Visualized" control={<Checkbox
-              id='register-isPatientSurrogate-id'
-              name="isPatientSurrogate"
-            />} />
+            <FormControlLabel
+              label=" Not Visualized"
+              control={
+                <Checkbox
+                  id="register-isPatientSurrogate-id"
+                  name="isPatientSurrogate"
+                />
+              }
+            />
           </Grid>
           <Grid item xs={12} md={6} lg={4}>
             <TextField fullWidth label="Volume" />
@@ -301,13 +346,20 @@ const Investigations: React.FC = () => {
           </Grid>
         </Grid>
 
-        <Typography variant='subtitle1' mt={2}>Left ovary</Typography>
+        <Typography variant="subtitle1" mt={2}>
+          Left ovary
+        </Typography>
         <Grid container spacing={2} mb={2}>
           <Grid item xs={12} md={12} lg={12}>
-            <FormControlLabel label=" Not Visualized" control={<Checkbox
-              id='register-isPatientSurrogate-id'
-              name="isPatientSurrogate"
-            />} />
+            <FormControlLabel
+              label=" Not Visualized"
+              control={
+                <Checkbox
+                  id="register-isPatientSurrogate-id"
+                  name="isPatientSurrogate"
+                />
+              }
+            />
           </Grid>
           <Grid item xs={12} md={6} lg={4}>
             <TextField fullWidth label="Volume" />
@@ -348,232 +400,271 @@ const Investigations: React.FC = () => {
           </Grid>
         </Grid>
 
-        <Typography variant="subtitle1" sx={{ mt: 2, mb: 2 }}>Upload Images & Description</Typography>
-        <Grid container spacing={2} marginBottom={2} >
+        <Typography variant="subtitle1" sx={{ mt: 2, mb: 2 }}>
+          Upload Images & Description
+        </Typography>
+        <Grid container spacing={2} marginBottom={2}>
           <Grid item xs={12}>
             {/* Upload image button */}
-            <Button component="label" variant="outlined" sx={{ width: 'fit-content' }} startIcon={<CloudUploadIcon />}>
+            <Button
+              component="label"
+              variant="outlined"
+              sx={{ width: 'fit-content' }}
+              startIcon={<CloudUploadIcon />}
+            >
               Upload Images
-              <VisuallyHiddenInput onChange={() => { }} type="file" accept="image/*" />
+              <VisuallyHiddenInput
+                onChange={() => {}}
+                type="file"
+                accept="image/*"
+              />
             </Button>
           </Grid>
           <Grid item xs={12} sm={6} md={6}>
             <TextField label="Description" multiline minRows={2} fullWidth />
           </Grid>
         </Grid>
-        <Box display={"flex"} justifyContent={'center'} alignItems={"center"} gap={2}>
-          <Button variant='contained'>Save</Button>
-          <Button variant='contained' color='secondary'>Cancel</Button>
+        <Box
+          display={'flex'}
+          justifyContent={'center'}
+          alignItems={'center'}
+          gap={2}
+        >
+          <Button variant="contained">Save</Button>
+          <Button variant="contained" color="secondary">
+            Cancel
+          </Button>
         </Box>
       </>
-    )
-  }
+    );
+  };
 
   const renderFemaleLabReports = () => {
     return (
       <Box>
-        <Grid container spacing={2} >
-          <Grid item md={12} >
-            <Button variant='text' >+ Add test</Button>
+        <Grid container spacing={2}>
+          <Grid item md={12}>
+            <Button variant="text">+ Add test</Button>
           </Grid>
           <Grid item xs={12} md={6} lg={4}>
             <TextField label="Blood Group Typing" fullWidth />
           </Grid>
-          <Grid item xs={12} md={6} lg={4} >
+          <Grid item xs={12} md={6} lg={4}>
             <TextField fullWidth label="Hb" />
           </Grid>
-          <Grid item xs={12} md={6} lg={4} >
+          <Grid item xs={12} md={6} lg={4}>
             <TextField fullWidth label="Platelets" />
           </Grid>
-          <Grid item xs={12} md={6} lg={4} >
+          <Grid item xs={12} md={6} lg={4}>
             <TextField fullWidth label="FBS" />
           </Grid>
-          <Grid item xs={12} md={6} lg={4} >
+          <Grid item xs={12} md={6} lg={4}>
             <TextField fullWidth label="Lipid Profile" />
           </Grid>
-          <Grid item xs={12} md={6} lg={4} >
+          <Grid item xs={12} md={6} lg={4}>
             <TextField fullWidth label="HbA1C" />
           </Grid>
-          <Grid item xs={12} md={6} lg={4} >
+          <Grid item xs={12} md={6} lg={4}>
             <TextField fullWidth label="HIV" />
           </Grid>
-          <Grid item xs={12} md={6} lg={4} >
+          <Grid item xs={12} md={6} lg={4}>
             <TextField fullWidth label="HbSAg" />
           </Grid>
-          <Grid item xs={12} md={6} lg={4} >
+          <Grid item xs={12} md={6} lg={4}>
             <TextField fullWidth label="HCV" />
           </Grid>
-          <Grid item xs={12} md={6} lg={4} >
+          <Grid item xs={12} md={6} lg={4}>
             <TextField fullWidth label="FSH" />
           </Grid>
-          <Grid item xs={12} md={6} lg={4} >
+          <Grid item xs={12} md={6} lg={4}>
             <TextField fullWidth label="LH" />
           </Grid>
-          <Grid item xs={12} md={6} lg={4} >
+          <Grid item xs={12} md={6} lg={4}>
             <TextField fullWidth label="Prolactin" />
           </Grid>
-          <Grid item xs={12} md={6} lg={4} >
+          <Grid item xs={12} md={6} lg={4}>
             <TextField fullWidth label="TSH" />
           </Grid>
-          <Grid item xs={12} md={6} lg={4} >
+          <Grid item xs={12} md={6} lg={4}>
             <TextField fullWidth label="AMH" />
           </Grid>
-          <Grid item xs={12} md={6} lg={4} >
+          <Grid item xs={12} md={6} lg={4}>
             <TextField fullWidth label="HPLC" />
           </Grid>
-          <Grid item xs={12} md={6} lg={4} >
+          <Grid item xs={12} md={6} lg={4}>
             <TextField fullWidth label="S.Creatine" />
           </Grid>
-          <Grid item xs={12} md={6} lg={4} >
+          <Grid item xs={12} md={6} lg={4}>
             <TextField fullWidth label="Urine Culture" />
           </Grid>
-          <Grid item xs={12} md={6} lg={4} >
+          <Grid item xs={12} md={6} lg={4}>
             <TextField fullWidth label="OGTT" />
           </Grid>
-          <Grid item xs={12} md={6} lg={4} >
+          <Grid item xs={12} md={6} lg={4}>
             <TextField fullWidth label="KARYOTYPING" />
           </Grid>
-          <Grid item xs={12} md={6} lg={4} >
+          <Grid item xs={12} md={6} lg={4}>
             <TextField fullWidth label="CUE" />
           </Grid>
-          <Grid item xs={12} md={6} lg={4} >
+          <Grid item xs={12} md={6} lg={4}>
             <TextField fullWidth label="VITAMIN D" />
           </Grid>
-          <Grid item xs={12} md={6} lg={4} >
+          <Grid item xs={12} md={6} lg={4}>
             <TextField fullWidth label="Estradiol (E2)" />
           </Grid>
-          <Grid item xs={12} md={6} lg={4} >
+          <Grid item xs={12} md={6} lg={4}>
             <TextField fullWidth label="BSR" />
           </Grid>
-          <Grid item xs={12} md={6} lg={4} >
+          <Grid item xs={12} md={6} lg={4}>
             <TextField fullWidth label="RBC" />
           </Grid>
-          <Grid item xs={12} md={6} lg={4} >
+          <Grid item xs={12} md={6} lg={4}>
             <TextField fullWidth label="TLC" />
           </Grid>
-          <Grid item xs={12} md={6} lg={4} >
+          <Grid item xs={12} md={6} lg={4}>
             <TextField fullWidth label="NEUTROPHILS" />
           </Grid>
-          <Grid item xs={12} md={6} lg={4} >
+          <Grid item xs={12} md={6} lg={4}>
             <TextField fullWidth label="LUMPHOCYTES" />
           </Grid>
           <Grid item xs={12} md={6} lg={4}>
             <TextField fullWidth label="CBC" />
           </Grid>
         </Grid>
-        <Box display={"flex"} justifyContent={"center"} alignItems={"center"} gap={2} mt={2}>
-          <Button variant='contained'>Save</Button>
-          <Button variant='contained' color='secondary'>Print</Button>
+        <Box
+          display={'flex'}
+          justifyContent={'center'}
+          alignItems={'center'}
+          gap={2}
+          mt={2}
+        >
+          <Button variant="contained">Save</Button>
+          <Button variant="contained" color="secondary">
+            Print
+          </Button>
         </Box>
       </Box>
-    )
-  }
+    );
+  };
 
   const renderMaleLabReports = () => {
     return (
       <Box>
-        <Grid container spacing={2} >
-          <Grid item md={12} >
-            <Button variant='text' >+ Add test</Button>
+        <Grid container spacing={2}>
+          <Grid item md={12}>
+            <Button variant="text">+ Add test</Button>
           </Grid>
           <Grid item xs={12} md={6} lg={4}>
             <TextField label="Blood Group Typing" fullWidth />
           </Grid>
-          <Grid item xs={12} md={6} lg={4} >
+          <Grid item xs={12} md={6} lg={4}>
             <TextField fullWidth label="Hb" />
           </Grid>
-          <Grid item xs={12} md={6} lg={4} >
+          <Grid item xs={12} md={6} lg={4}>
             <TextField fullWidth label="Platelets" />
           </Grid>
-          <Grid item xs={12} md={6} lg={4} >
+          <Grid item xs={12} md={6} lg={4}>
             <TextField fullWidth label="FBS" />
           </Grid>
-          <Grid item xs={12} md={6} lg={4} >
+          <Grid item xs={12} md={6} lg={4}>
             <TextField fullWidth label="Lipid Profile" />
           </Grid>
-          <Grid item xs={12} md={6} lg={4} >
+          <Grid item xs={12} md={6} lg={4}>
             <TextField fullWidth label="HbA1C" />
           </Grid>
-          <Grid item xs={12} md={6} lg={4} >
+          <Grid item xs={12} md={6} lg={4}>
             <TextField fullWidth label="HIV" />
           </Grid>
-          <Grid item xs={12} md={6} lg={4} >
+          <Grid item xs={12} md={6} lg={4}>
             <TextField fullWidth label="HbSAg" />
           </Grid>
-          <Grid item xs={12} md={6} lg={4} >
+          <Grid item xs={12} md={6} lg={4}>
             <TextField fullWidth label="HCV" />
           </Grid>
-          <Grid item xs={12} md={6} lg={4} >
+          <Grid item xs={12} md={6} lg={4}>
             <TextField fullWidth label="FSH" />
           </Grid>
-          <Grid item xs={12} md={6} lg={4} >
+          <Grid item xs={12} md={6} lg={4}>
             <TextField fullWidth label="LH" />
           </Grid>
-          <Grid item xs={12} md={6} lg={4} >
+          <Grid item xs={12} md={6} lg={4}>
             <TextField fullWidth label="Prolactin" />
           </Grid>
-          <Grid item xs={12} md={6} lg={4} >
+          <Grid item xs={12} md={6} lg={4}>
             <TextField fullWidth label="TSH" />
           </Grid>
-          <Grid item xs={12} md={6} lg={4} >
+          <Grid item xs={12} md={6} lg={4}>
             <TextField fullWidth label="AMH" />
           </Grid>
-          <Grid item xs={12} md={6} lg={4} >
+          <Grid item xs={12} md={6} lg={4}>
             <TextField fullWidth label="HPLC" />
           </Grid>
-          <Grid item xs={12} md={6} lg={4} >
+          <Grid item xs={12} md={6} lg={4}>
             <TextField fullWidth label="S.Creatine" />
           </Grid>
-          <Grid item xs={12} md={6} lg={4} >
+          <Grid item xs={12} md={6} lg={4}>
             <TextField fullWidth label="Urine Culture" />
           </Grid>
-          <Grid item xs={12} md={6} lg={4} >
+          <Grid item xs={12} md={6} lg={4}>
             <TextField fullWidth label="OGTT" />
           </Grid>
-          <Grid item xs={12} md={6} lg={4} >
+          <Grid item xs={12} md={6} lg={4}>
             <TextField fullWidth label="KARYOTYPING" />
           </Grid>
-          <Grid item xs={12} md={6} lg={4} >
+          <Grid item xs={12} md={6} lg={4}>
             <TextField fullWidth label="CUE" />
           </Grid>
-          <Grid item xs={12} md={6} lg={4} >
+          <Grid item xs={12} md={6} lg={4}>
             <TextField fullWidth label="VITAMIN D" />
           </Grid>
-          <Grid item xs={12} md={6} lg={4} >
+          <Grid item xs={12} md={6} lg={4}>
             <TextField fullWidth label="Estradiol (E2)" />
           </Grid>
-          <Grid item xs={12} md={6} lg={4} >
+          <Grid item xs={12} md={6} lg={4}>
             <TextField fullWidth label="BSR" />
           </Grid>
-          <Grid item xs={12} md={6} lg={4} >
+          <Grid item xs={12} md={6} lg={4}>
             <TextField fullWidth label="RBC" />
           </Grid>
-          <Grid item xs={12} md={6} lg={4} >
+          <Grid item xs={12} md={6} lg={4}>
             <TextField fullWidth label="TLC" />
           </Grid>
-          <Grid item xs={12} md={6} lg={4} >
+          <Grid item xs={12} md={6} lg={4}>
             <TextField fullWidth label="NEUTROPHILS" />
           </Grid>
-          <Grid item xs={12} md={6} lg={4} >
+          <Grid item xs={12} md={6} lg={4}>
             <TextField fullWidth label="LUMPHOCYTES" />
           </Grid>
           <Grid item xs={12} md={6} lg={4}>
             <TextField fullWidth label="CBC" />
           </Grid>
         </Grid>
-        <Box display={"flex"} justifyContent={"center"} alignItems={"center"} gap={2} mt={2}>
-          <Button variant='contained'>Save</Button>
-          <Button variant='contained' color='secondary'>Print</Button>
+        <Box
+          display={'flex'}
+          justifyContent={'center'}
+          alignItems={'center'}
+          gap={2}
+          mt={2}
+        >
+          <Button variant="contained">Save</Button>
+          <Button variant="contained" color="secondary">
+            Print
+          </Button>
         </Box>
       </Box>
-    )
-  }
+    );
+  };
 
   const renderMaleSemenAnalysis = () => {
     return (
       <>
-        <Box display={"flex"} justifyContent={"space-between"} alignItems={"center"} mb={2}>
-          <Button variant='contained' sx={{ width: 'fit-content' }}>
+        <Box
+          display={'flex'}
+          justifyContent={'space-between'}
+          alignItems={'center'}
+          mb={2}
+        >
+          <Button variant="contained" sx={{ width: 'fit-content' }}>
             Add New
           </Button>
         </Box>
@@ -584,14 +675,19 @@ const Investigations: React.FC = () => {
           pageSizeOptions={[5, 10]}
         />
       </>
-    )
-  }
+    );
+  };
 
   const renderMaleSpermDFI = () => {
     return (
       <>
-        <Box display={"flex"} justifyContent={"space-between"} alignItems={"center"} mb={2}>
-          <Button variant='contained' sx={{ width: 'fit-content' }}>
+        <Box
+          display={'flex'}
+          justifyContent={'space-between'}
+          alignItems={'center'}
+          mb={2}
+        >
+          <Button variant="contained" sx={{ width: 'fit-content' }}>
             Add New
           </Button>
         </Box>
@@ -602,8 +698,8 @@ const Investigations: React.FC = () => {
           pageSizeOptions={[5, 10]}
         />
       </>
-    )
-  }
+    );
+  };
 
   return (
     <div className="main-container">
@@ -614,15 +710,33 @@ const Investigations: React.FC = () => {
       <TreatmentCyclesTable />
 
       <Box mt={2} sx={{ borderBottom: 1, borderColor: 'divider' }}>
-        <Tabs value={value} onChange={handleChange} aria-label="investigations-tabs" variant="scrollable">
-          <Tab label="Female" id="investigations-tab-0" aria-controls="investigations-tabpanel-0" />
-          <Tab label="Male" id="investigations-tab-1" aria-controls="investigations-tabpanel-1" />
+        <Tabs
+          value={value}
+          onChange={handleChange}
+          aria-label="investigations-tabs"
+          variant="scrollable"
+        >
+          <Tab
+            label="Female"
+            id="investigations-tab-0"
+            aria-controls="investigations-tabpanel-0"
+          />
+          <Tab
+            label="Male"
+            id="investigations-tab-1"
+            aria-controls="investigations-tabpanel-1"
+          />
         </Tabs>
       </Box>
 
       <CustomTabPanel value={value} index={0}>
         <Box sx={{ borderBottom: 1, borderColor: 'divider' }}>
-          <Tabs value={nestedValue} onChange={handleNestedChange} aria-label="nested-tabs" variant="scrollable">
+          <Tabs
+            value={nestedValue}
+            onChange={handleNestedChange}
+            aria-label="nested-tabs"
+            variant="scrollable"
+          >
             <Tab label="Lab Reports" />
             <Tab label="Ultra Sound Scan" />
             <Tab label="Base Line Follicular Mointoring" />
@@ -656,7 +770,12 @@ const Investigations: React.FC = () => {
 
       <CustomTabPanel value={value} index={1}>
         <Box sx={{ borderBottom: 1, borderColor: 'divider' }}>
-          <Tabs value={nestedValue} onChange={handleNestedChange} aria-label="nested-tabs" variant="scrollable">
+          <Tabs
+            value={nestedValue}
+            onChange={handleNestedChange}
+            aria-label="nested-tabs"
+            variant="scrollable"
+          >
             <Tab label="Lab Reports" />
             <Tab label="Semen Analysis" />
             <Tab label="Sperm DFI" />

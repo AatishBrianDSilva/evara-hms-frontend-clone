@@ -1,8 +1,12 @@
-import { createApi } from "@reduxjs/toolkit/query/react";
-import generateQueryParams from "../../utils/generateQueryParams";
-import { ApiResponse, IQueryOptions, PaginatedResponse } from "../../types/global";
-import { IPatientPackage } from "../../types/patientDashboard/investigation";
-import { baseQuery } from "../baseQuery";
+import { createApi } from '@reduxjs/toolkit/query/react';
+import generateQueryParams from '../../utils/generateQueryParams';
+import {
+  ApiResponse,
+  IQueryOptions,
+  PaginatedResponse,
+} from '../../types/global';
+import { IPatientPackage } from '../../types/patientDashboard/investigation';
+import { baseQuery } from '../baseQuery';
 
 interface AddPatientPackagePayload {
   caseId: string;
@@ -13,30 +17,36 @@ interface AddPatientPackagePayload {
 }
 
 export const packageApi = createApi({
-  reducerPath: "packageApi",
+  reducerPath: 'packageApi',
   baseQuery: baseQuery,
-  tagTypes: ["Package"],
-  endpoints: (builder) => ({
-    getPackages: builder.query<ApiResponse<PaginatedResponse<IPatientPackage>>, IQueryOptions>({
+  tagTypes: ['Package'],
+  endpoints: builder => ({
+    getPackages: builder.query<
+      ApiResponse<PaginatedResponse<IPatientPackage>>,
+      IQueryOptions
+    >({
       query: (options: IQueryOptions) => {
         const queryParams = generateQueryParams(options);
-        return { url: `packages?${queryParams}`, method: "GET" };
+        return { url: `packages?${queryParams}`, method: 'GET' };
       },
-      providesTags: (_result, _error, _args) => ["Package"],
+      providesTags: (_result, _error, _args) => ['Package'],
     }),
     getPackageById: builder.query<ApiResponse<IPatientPackage>, string>({
       query: (id: string) => {
-        return { url: `packages/${id}`, method: "GET" };
+        return { url: `packages/${id}`, method: 'GET' };
       },
-      providesTags: (_result, _error, id) => [{ type: "Package", id }],
+      providesTags: (_result, _error, id) => [{ type: 'Package', id }],
     }),
-    addPackage: builder.mutation<ApiResponse<IPatientPackage>, AddPatientPackagePayload[]>({
-      query: (packageData) => ({
-        url: "packages/add",
-        method: "POST",
+    addPackage: builder.mutation<
+      ApiResponse<IPatientPackage>,
+      AddPatientPackagePayload[]
+    >({
+      query: packageData => ({
+        url: 'packages/add',
+        method: 'POST',
         body: packageData,
       }),
-      invalidatesTags: ["Package"],
+      invalidatesTags: ['Package'],
     }),
     // editPackage: builder.mutation<ApiResponse<IPatientPackage>, any>({
     //   query: (packageData) => ({
@@ -47,11 +57,11 @@ export const packageApi = createApi({
     //   invalidatesTags: ["Package"],
     // }),
     deletePackage: builder.mutation<ApiResponse<null>, string>({
-      query: (id) => ({
+      query: id => ({
         url: `packages/${id}`,
-        method: "DELETE",
+        method: 'DELETE',
       }),
-      invalidatesTags: ["Package"],
+      invalidatesTags: ['Package'],
     }),
   }),
 });

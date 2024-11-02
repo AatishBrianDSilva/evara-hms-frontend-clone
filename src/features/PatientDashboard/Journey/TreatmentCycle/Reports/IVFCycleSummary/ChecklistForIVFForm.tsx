@@ -1,6 +1,6 @@
-import React from "react";
-import { Grid, MenuItem, TextField, Typography } from "@mui/material";
-import { FormikProps } from "formik";
+import React from 'react';
+import { Grid, MenuItem, TextField, Typography } from '@mui/material';
+import { FormikProps } from 'formik';
 
 // Define the type for form values
 interface IFormValues {
@@ -30,7 +30,9 @@ interface ChecklistForIVFFormProps {
   formik: FormikProps<IFormValues>;
 }
 
-const ChecklistForIVFForm: React.FC<ChecklistForIVFFormProps> = ({ formik }) => (
+const ChecklistForIVFForm: React.FC<ChecklistForIVFFormProps> = ({
+  formik,
+}) => (
   <>
     <Typography variant="h6" pt={2} pb={2}>
       Checklist For IVF

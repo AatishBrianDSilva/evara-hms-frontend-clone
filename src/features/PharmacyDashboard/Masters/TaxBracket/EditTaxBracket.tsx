@@ -1,4 +1,4 @@
-import React from "react";
+import React from 'react';
 import {
   Box,
   Button,
@@ -10,15 +10,15 @@ import {
   Grid,
   Skeleton,
   TextField,
-} from "@mui/material";
-import { useFormik } from "formik";
-import { useToast } from "../../../../context/ToastContext";
+} from '@mui/material';
+import { useFormik } from 'formik';
+import { useToast } from '../../../../context/ToastContext';
 import {
   useEditTaxBracketMutation,
   useGetTaxBracketByIdQuery,
-} from "../../../../services/pharmacyDashboardService/master/taxBracketApi";
-import _ from "lodash";
-import { AddTaxBracketValidationSchema } from "../../../../yup/pharmacyDashboard";
+} from '../../../../services/pharmacyDashboardService/master/taxBracketApi';
+import _ from 'lodash';
+import { AddTaxBracketValidationSchema } from '../../../../yup/pharmacyDashboard';
 
 interface EditTaxBracketProps {
   openModal: boolean;
@@ -44,7 +44,13 @@ const skeletonLoader = () => {
             <Skeleton variant="rectangular" width="100%" height={56} />
           </Grid>
         </Grid>
-        <Box display={"flex"} justifyContent={"flex-end"} alignItems={"center"} gap={2} mb={2}>
+        <Box
+          display={'flex'}
+          justifyContent={'flex-end'}
+          alignItems={'center'}
+          gap={2}
+          mb={2}
+        >
           <Skeleton variant="rectangular" width={90} height={36} />
           <Skeleton variant="rectangular" width={90} height={36} />
         </Box>
@@ -53,7 +59,11 @@ const skeletonLoader = () => {
   );
 };
 
-const EditTaxBracket: React.FC<EditTaxBracketProps> = ({ openModal, onClose, id }) => {
+const EditTaxBracket: React.FC<EditTaxBracketProps> = ({
+  openModal,
+  onClose,
+  id,
+}) => {
   const { showPromiseToast } = useToast();
 
   const {
@@ -70,15 +80,15 @@ const EditTaxBracket: React.FC<EditTaxBracketProps> = ({ openModal, onClose, id 
       id,
       taxRate: values.taxRate,
       notes: values.notes,
-      status: values.status ? "Active" : "Inactive",
+      status: values.status ? 'Active' : 'Inactive',
     };
 
     const promise = editTaxBracket(payload).unwrap();
 
     showPromiseToast(promise, {
-      loading: "Editing Tax Bracket...",
-      success: (data) => data || "Tax Bracket Edited Successfully",
-      error: (data) => data || "Failed to Edit Tax Bracket",
+      loading: 'Editing Tax Bracket...',
+      success: data => data || 'Tax Bracket Edited Successfully',
+      error: data => data || 'Failed to Edit Tax Bracket',
     });
 
     try {
@@ -91,9 +101,9 @@ const EditTaxBracket: React.FC<EditTaxBracketProps> = ({ openModal, onClose, id 
   };
 
   const initialValues: IFormValues = {
-    taxRate: taxRate?.taxRate || "",
-    notes: taxRate?.notes || "",
-    status: taxRate?.status === "Active" ? true : false,
+    taxRate: taxRate?.taxRate || '',
+    notes: taxRate?.notes || '',
+    status: taxRate?.status === 'Active' ? true : false,
   };
 
   const formik = useFormik({
@@ -105,12 +115,12 @@ const EditTaxBracket: React.FC<EditTaxBracketProps> = ({ openModal, onClose, id 
 
   return (
     <Dialog open={openModal} onClose={onClose} maxWidth="md" fullWidth>
-      <DialogTitle color={"primary"}>Edit Tax Bracket</DialogTitle>
+      <DialogTitle color={'primary'}>Edit Tax Bracket</DialogTitle>
       {taxRateLoading ? (
         skeletonLoader()
       ) : (
         <DialogContent>
-          <Box component={"form"} onSubmit={formik.handleSubmit} p={2}>
+          <Box component={'form'} onSubmit={formik.handleSubmit} p={2}>
             <Grid container spacing={2} mb={2} mt={2}>
               <Grid item lg={4}>
                 <TextField
@@ -119,7 +129,9 @@ const EditTaxBracket: React.FC<EditTaxBracketProps> = ({ openModal, onClose, id 
                   label="Tax Rate"
                   value={formik.values.taxRate}
                   onChange={formik.handleChange}
-                  error={formik.touched.taxRate && Boolean(formik.errors.taxRate)}
+                  error={
+                    formik.touched.taxRate && Boolean(formik.errors.taxRate)
+                  }
                   helperText={formik.touched.taxRate && formik.errors.taxRate}
                 />
               </Grid>
@@ -134,7 +146,7 @@ const EditTaxBracket: React.FC<EditTaxBracketProps> = ({ openModal, onClose, id 
                   helperText={formik.touched.notes && formik.errors.notes}
                 />
               </Grid>
-              <Grid item lg={12} display={"flex"} justifyContent={"center"}>
+              <Grid item lg={12} display={'flex'} justifyContent={'center'}>
                 <FormControlLabel
                   label="Active ?"
                   control={
@@ -148,20 +160,26 @@ const EditTaxBracket: React.FC<EditTaxBracketProps> = ({ openModal, onClose, id 
                 />
               </Grid>
             </Grid>
-            <Box display={"flex"} justifyContent={"flex-end"} alignItems={"center"} gap={2} mb={2}>
+            <Box
+              display={'flex'}
+              justifyContent={'flex-end'}
+              alignItems={'center'}
+              gap={2}
+              mb={2}
+            >
               <Button
                 variant="contained"
                 color="primary"
                 type="submit"
                 disabled={isLoading || _.isEqual(initialValues, formik.values)}
-                sx={{ width: "fit-content" }}
+                sx={{ width: 'fit-content' }}
               >
                 Save
               </Button>
               <Button
                 variant="contained"
                 color="secondary"
-                sx={{ width: "fit-content" }}
+                sx={{ width: 'fit-content' }}
                 onClick={onClose}
               >
                 Cancel

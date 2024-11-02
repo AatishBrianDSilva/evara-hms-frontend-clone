@@ -1,12 +1,12 @@
-import { IDrugItem, IDrugVendor } from "./master";
+import { IDrugItem, IDrugVendor } from './master';
 
 export enum EPurchaseOrderStatus {
-  Draft = "Draft",
-  Approved = "Approved",
-  Rejected = "Rejected",
-  Ordered = "Ordered",
-  PartiallyProcessed = "PartiallyProcessed",
-  Processed = "Processed",
+  Draft = 'Draft',
+  Approved = 'Approved',
+  Rejected = 'Rejected',
+  Ordered = 'Ordered',
+  PartiallyProcessed = 'PartiallyProcessed',
+  Processed = 'Processed',
 }
 
 export interface IPurchaseOrderRequest {

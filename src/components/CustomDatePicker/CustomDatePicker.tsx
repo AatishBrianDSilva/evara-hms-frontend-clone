@@ -1,7 +1,7 @@
-import React, { forwardRef } from "react";
-import { DatePicker } from "@mui/x-date-pickers/DatePicker";
-import { TextField, SxProps } from "@mui/material";
-import { DateView } from "@mui/x-date-pickers";
+import React, { forwardRef } from 'react';
+import { DatePicker } from '@mui/x-date-pickers/DatePicker';
+import { TextField, SxProps } from '@mui/material';
+import { DateView } from '@mui/x-date-pickers';
 
 interface DatePickerProps {
   name?: string;
@@ -23,18 +23,18 @@ const CustomDatePicker = forwardRef<any, DatePickerProps>(
     {
       name,
       label,
-      format = "dd/MM/yyyy",
+      format = 'dd/MM/yyyy',
       value,
       onChange,
       error = false,
-      helperText = "",
+      helperText = '',
       minDate,
       maxDate,
       fullWidth = true,
       sx,
       views,
     },
-    ref
+    ref,
   ) => (
     <DatePicker
       name={name}
@@ -57,7 +57,7 @@ const CustomDatePicker = forwardRef<any, DatePickerProps>(
         },
       }}
     />
-  )
+  ),
 );
 
 export default CustomDatePicker;

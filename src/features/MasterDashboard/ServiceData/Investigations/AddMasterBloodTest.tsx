@@ -1,4 +1,4 @@
-import React, { useCallback } from "react";
+import React, { useCallback } from 'react';
 import {
   Box,
   Button,
@@ -10,12 +10,12 @@ import {
   MenuItem,
   TextField,
   Typography,
-} from "@mui/material";
-import { FormikErrors, FormikTouched, useFormik } from "formik";
-import _ from "lodash";
-import { useToast } from "../../../../context/ToastContext";
-import { Add, Delete } from "@mui/icons-material";
-import { useAddMasterMedicalTestMutation } from "../../../../services/masterDashboardService/serviceData/masterInvestigationApi";
+} from '@mui/material';
+import { FormikErrors, FormikTouched, useFormik } from 'formik';
+import _ from 'lodash';
+import { useToast } from '../../../../context/ToastContext';
+import { Add, Delete } from '@mui/icons-material';
+import { useAddMasterMedicalTestMutation } from '../../../../services/masterDashboardService/serviceData/masterInvestigationApi';
 
 interface AddMasterBloodTestProps {
   openModal: boolean;
@@ -35,7 +35,10 @@ interface IFormValues {
   components: IComponent[];
 }
 
-const AddMasterBloodTest: React.FC<AddMasterBloodTestProps> = ({ openModal, onClose }) => {
+const AddMasterBloodTest: React.FC<AddMasterBloodTestProps> = ({
+  openModal,
+  onClose,
+}) => {
   const { showPromiseToast } = useToast();
 
   const [addInvestigation, { isLoading }] = useAddMasterMedicalTestMutation();
@@ -45,24 +48,24 @@ const AddMasterBloodTest: React.FC<AddMasterBloodTestProps> = ({ openModal, onCl
       testName: values.testName,
       description: values.description,
       gender: values.gender,
-      testType: "BloodTest", // Ensure testType is set to 'BloodTest'
+      testType: 'BloodTest', // Ensure testType is set to 'BloodTest'
 
-      components: values.components.map((component) => ({
+      components: values.components.map(component => ({
         componentName: component.componentName,
         unit: component.unit,
         referenceRange: component.referenceRange,
-        componentType: "text", // Set componentType to 'text'
+        componentType: 'text', // Set componentType to 'text'
       })),
     };
 
-    console.log("Payload to be submitted:", payload); // Log the payload
+    console.log('Payload to be submitted:', payload); // Log the payload
 
     const promise = addInvestigation(payload).unwrap();
 
     showPromiseToast(promise, {
-      loading: "Adding...",
-      success: (data) => data || "Added Successfully",
-      error: (data) => data || "Adding Failed",
+      loading: 'Adding...',
+      success: data => data || 'Added Successfully',
+      error: data => data || 'Adding Failed',
     });
 
     try {
@@ -77,14 +80,14 @@ const AddMasterBloodTest: React.FC<AddMasterBloodTestProps> = ({ openModal, onCl
   };
 
   const initialValues: IFormValues = {
-    testName: "",
-    description: "",
-    gender: "",
+    testName: '',
+    description: '',
+    gender: '',
     components: [
       {
-        componentName: "",
-        unit: "",
-        referenceRange: "",
+        componentName: '',
+        unit: '',
+        referenceRange: '',
       },
     ],
   };
@@ -96,7 +99,7 @@ const AddMasterBloodTest: React.FC<AddMasterBloodTestProps> = ({ openModal, onCl
   });
 
   const handleAddFields = () => {
-    formik.setFieldValue("components", [
+    formik.setFieldValue('components', [
       ...formik.values.components,
       { componentName: null, unit: null, referenceRange: null },
     ]);
@@ -104,13 +107,14 @@ const AddMasterBloodTest: React.FC<AddMasterBloodTestProps> = ({ openModal, onCl
 
   const handleDeleteField = (index: number) => {
     const newFields = formik.values.components.filter((_, i) => i !== index);
-    formik.setFieldValue("components", newFields);
+    formik.setFieldValue('components', newFields);
   };
 
   const getFieldErrorAndTouched = useCallback(
-    (index: number, fieldName: "componentName" | "unit" | "referenceRange") => {
+    (index: number, fieldName: 'componentName' | 'unit' | 'referenceRange') => {
       // Ensure that we're working with the correct structure
-      const touched = formik?.touched?.components as FormikTouched<IComponent>[];
+      const touched = formik?.touched
+        ?.components as FormikTouched<IComponent>[];
       const error = formik?.errors?.components as FormikErrors<IComponent>[];
 
       const isFieldTouched = touched?.[index]?.[fieldName];
@@ -118,17 +122,17 @@ const AddMasterBloodTest: React.FC<AddMasterBloodTestProps> = ({ openModal, onCl
 
       return {
         isError: Boolean(isFieldTouched && fieldError),
-        errorMessage: typeof fieldError === "string" ? fieldError : undefined,
+        errorMessage: typeof fieldError === 'string' ? fieldError : undefined,
       };
     },
-    [formik.touched.components, formik.errors.components]
+    [formik.touched.components, formik.errors.components],
   );
 
   return (
     <Dialog open={openModal} onClose={onClose} maxWidth="md" fullWidth>
-      <DialogTitle color={"primary"}>Add Master Blood Test</DialogTitle>
+      <DialogTitle color={'primary'}>Add Master Blood Test</DialogTitle>
       <DialogContent>
-        <Box component={"form"} onSubmit={formik.handleSubmit} p={2}>
+        <Box component={'form'} onSubmit={formik.handleSubmit} p={2}>
           <Grid container spacing={2} mb={2} mt={2} alignItems="center">
             <Grid item lg={2}>
               <TextField
@@ -164,18 +168,22 @@ const AddMasterBloodTest: React.FC<AddMasterBloodTestProps> = ({ openModal, onCl
             </Grid>
           </Grid>
 
-          <Typography variant="subtitle1" color={"primary"} mt={2}>
+          <Typography variant="subtitle1" color={'primary'} mt={2}>
             Component Details
           </Typography>
 
           {formik.values.components.map((_field: any, index: number) => {
-            const { isError: isComponentNameError, errorMessage: componentNameErrorMessage } =
-              getFieldErrorAndTouched(index, "componentName");
+            const {
+              isError: isComponentNameError,
+              errorMessage: componentNameErrorMessage,
+            } = getFieldErrorAndTouched(index, 'componentName');
             const { isError: isUnitError, errorMessage: unitErrorMessage } =
-              getFieldErrorAndTouched(index, "unit");
+              getFieldErrorAndTouched(index, 'unit');
             // const { isError: isMrpPerUnitError, errorMessage: mrpPerPackErrorMessage } = getFieldErrorAndTouched(index, 'mrpPerPack');
-            const { isError: isReferenceRangeError, errorMessage: referenceRangeErrorMessage } =
-              getFieldErrorAndTouched(index, "referenceRange");
+            const {
+              isError: isReferenceRangeError,
+              errorMessage: referenceRangeErrorMessage,
+            } = getFieldErrorAndTouched(index, 'referenceRange');
 
             const isLastItem = index === formik.values.components.length - 1;
             const onlyOneItem = formik.values.components.length === 1;
@@ -187,10 +195,12 @@ const AddMasterBloodTest: React.FC<AddMasterBloodTestProps> = ({ openModal, onCl
                     fullWidth
                     name={`components[${index}].componentName`}
                     label="Component Name"
-                    value={formik.values.components[index].componentName || ""}
+                    value={formik.values.components[index].componentName || ''}
                     onChange={formik.handleChange}
                     error={isComponentNameError}
-                    helperText={isComponentNameError ? componentNameErrorMessage : ""}
+                    helperText={
+                      isComponentNameError ? componentNameErrorMessage : ''
+                    }
                   />
                 </Grid>
                 <Grid item flex={1}>
@@ -198,10 +208,10 @@ const AddMasterBloodTest: React.FC<AddMasterBloodTestProps> = ({ openModal, onCl
                     fullWidth
                     name={`components[${index}].unit`}
                     label="Unit"
-                    value={formik.values.components[index].unit || ""}
+                    value={formik.values.components[index].unit || ''}
                     onChange={formik.handleChange}
                     error={isUnitError}
-                    helperText={isUnitError ? unitErrorMessage : ""}
+                    helperText={isUnitError ? unitErrorMessage : ''}
                   />
                 </Grid>
                 <Grid item flex={1}>
@@ -209,23 +219,28 @@ const AddMasterBloodTest: React.FC<AddMasterBloodTestProps> = ({ openModal, onCl
                     fullWidth
                     name={`components[${index}].referenceRange`}
                     label="Reference Range"
-                    value={formik.values.components[index].referenceRange || ""}
+                    value={formik.values.components[index].referenceRange || ''}
                     onChange={formik.handleChange}
                     error={isReferenceRangeError}
-                    helperText={isReferenceRangeError ? referenceRangeErrorMessage : ""}
+                    helperText={
+                      isReferenceRangeError ? referenceRangeErrorMessage : ''
+                    }
                   />
                 </Grid>
                 {/* Dynamic Add/Delete Buttons */}
                 <Grid
                   item
                   flex={1}
-                  display={"flex"}
-                  justifyContent={"flex-start"}
-                  alignItems={"flex-start"}
+                  display={'flex'}
+                  justifyContent={'flex-start'}
+                  alignItems={'flex-start'}
                 >
                   {!onlyOneItem && (
-                    <IconButton size="small" onClick={() => handleDeleteField(index)}>
-                      <Delete fontSize={"small"} />
+                    <IconButton
+                      size="small"
+                      onClick={() => handleDeleteField(index)}
+                    >
+                      <Delete fontSize={'small'} />
                     </IconButton>
                   )}
                   {isLastItem && (
@@ -234,10 +249,10 @@ const AddMasterBloodTest: React.FC<AddMasterBloodTestProps> = ({ openModal, onCl
                       color="primary"
                       onClick={handleAddFields}
                       disabled={formik.values.components.some(
-                        (component) => !component.componentName
+                        component => !component.componentName,
                       )}
                     >
-                      <Add fontSize={"small"} />
+                      <Add fontSize={'small'} />
                     </IconButton>
                   )}
                 </Grid>
@@ -245,20 +260,26 @@ const AddMasterBloodTest: React.FC<AddMasterBloodTestProps> = ({ openModal, onCl
             );
           })}
 
-          <Box display={"flex"} justifyContent={"flex-end"} alignItems={"center"} gap={2} mb={2}>
+          <Box
+            display={'flex'}
+            justifyContent={'flex-end'}
+            alignItems={'center'}
+            gap={2}
+            mb={2}
+          >
             <Button
               variant="contained"
               color="primary"
               type="submit"
               disabled={_.isEqual(initialValues, formik.values) || isLoading}
-              sx={{ width: "fit-content" }}
+              sx={{ width: 'fit-content' }}
             >
               Save
             </Button>
             <Button
               variant="contained"
               color="secondary"
-              sx={{ width: "fit-content" }}
+              sx={{ width: 'fit-content' }}
               onClick={onClose}
             >
               Cancel

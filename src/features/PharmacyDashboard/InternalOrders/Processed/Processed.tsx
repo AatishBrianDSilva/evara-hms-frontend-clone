@@ -1,15 +1,19 @@
-import { Visibility } from "@mui/icons-material";
-import { Box, Tooltip } from "@mui/material";
-import React, { useState } from "react";
-import CustomDataGrid from "../../../../components/CustomDataGrid/CustomDataGrid";
-import { GridActionsCellItem, GridColDef, GridRowParams } from "@mui/x-data-grid";
+import { Visibility } from '@mui/icons-material';
+import { Box, Tooltip } from '@mui/material';
+import React, { useState } from 'react';
+import CustomDataGrid from '../../../../components/CustomDataGrid/CustomDataGrid';
+import {
+  GridActionsCellItem,
+  GridColDef,
+  GridRowParams,
+} from '@mui/x-data-grid';
 
-import { useGetInternalOrdersQuery } from "../../../../services/pharmacyDashboardService/internalOrderApi";
+import { useGetInternalOrdersQuery } from '../../../../services/pharmacyDashboardService/internalOrderApi';
 import {
   EInternalOrderStatus,
   IInternalOrder,
-} from "../../../../types/pharmacyDashboard/internalOrder";
-import ViewInternalOrder from "../ViewInternalOrder";
+} from '../../../../types/pharmacyDashboard/internalOrder';
+import ViewInternalOrder from '../ViewInternalOrder';
 
 const ProcessInternalOrder: React.FC = () => {
   // Internal Orders
@@ -36,7 +40,7 @@ const ProcessInternalOrder: React.FC = () => {
   const internalOrdersPagination = internalOrdersData?.data?.pagination;
   const internalOrderLoading = internalOrdersLoading || internalOrdersFetching;
 
-  console.log("Processed Orders", internalOrders);
+  console.log('Processed Orders', internalOrders);
 
   // Modals
   const [selectedRow, setSelectedRow] = useState<IInternalOrder>();
@@ -53,45 +57,47 @@ const ProcessInternalOrder: React.FC = () => {
   };
 
   const columnsConfig: GridColDef[] = [
-    { field: "ioNumber", headerName: "IO Number", flex: 1 },
+    { field: 'ioNumber', headerName: 'IO Number', flex: 1 },
     {
-      field: "date",
-      type: "date",
-      headerName: "IO Date",
+      field: 'date',
+      type: 'date',
+      headerName: 'IO Date',
       flex: 1,
       valueFormatter(params) {
         const date = new Date(params.value);
-        const day = String(date.getDate()).padStart(2, "0");
-        const month = String(date.getMonth() + 1).padStart(2, "0"); // Months are 0-based
+        const day = String(date.getDate()).padStart(2, '0');
+        const month = String(date.getMonth() + 1).padStart(2, '0'); // Months are 0-based
         const year = String(date.getFullYear()).slice(-2); // Get last two digits of the year
         return `${day}/${month}/${year}`;
       },
     },
     {
-      field: "items",
-      headerName: "Items",
+      field: 'items',
+      headerName: 'Items',
       flex: 1,
-      valueGetter: (params) => `${params.row.items?.length}`,
+      valueGetter: params => `${params.row.items?.length}`,
     },
-    { field: "createdBy", headerName: "Transferred By", flex: 1 },
+    { field: 'createdBy', headerName: 'Transferred By', flex: 1 },
     {
-      field: "transferFrom",
-      headerName: "Transfer From",
+      field: 'transferFrom',
+      headerName: 'Transfer From',
       flex: 1,
-      valueGetter: (params) => `${params.row.items[0]?.transferFrom?.location?.location || ""}`,
+      valueGetter: params =>
+        `${params.row.items[0]?.transferFrom?.location?.location || ''}`,
     },
     {
-      field: "transferTo",
-      headerName: "Transfer To",
+      field: 'transferTo',
+      headerName: 'Transfer To',
       flex: 1,
-      valueGetter: (params) => `${params.row.items[0]?.transferTo?.location || ""}`,
+      valueGetter: params =>
+        `${params.row.items[0]?.transferTo?.location || ''}`,
     },
 
     {
-      field: "actions",
-      headerName: "Actions",
+      field: 'actions',
+      headerName: 'Actions',
       flex: 1,
-      type: "actions",
+      type: 'actions',
       getActions: (params: GridRowParams) => {
         const row = params.row;
         return [
@@ -108,10 +114,10 @@ const ProcessInternalOrder: React.FC = () => {
   ];
 
   return (
-    <Box height={"100%"} display={"flex"} flexDirection={"column"}>
+    <Box height={'100%'} display={'flex'} flexDirection={'column'}>
       {/* Render the CustomDataGrid only if there's no error */}
 
-      <Box mt={2} flex={"1 1 auto"}>
+      <Box mt={2} flex={'1 1 auto'}>
         <CustomDataGrid
           autoHeight={false}
           columns={columnsConfig}
@@ -120,7 +126,7 @@ const ProcessInternalOrder: React.FC = () => {
           pageSize={pageSize}
           totalRows={internalOrdersPagination?.totalDocs || 0}
           loading={internalOrderLoading}
-          sx={{ height: "100%" }}
+          sx={{ height: '100%' }}
           enablePagination={true}
           onPageChange={handlePageChange}
           onPageSizeChange={handlePageSizeChange}
@@ -132,7 +138,7 @@ const ProcessInternalOrder: React.FC = () => {
         <ViewInternalOrder
           openModal={isViewModalOpen}
           onClose={closeViewModal}
-          id={selectedRow?._id || ""}
+          id={selectedRow?._id || ''}
         />
       )}
     </Box>

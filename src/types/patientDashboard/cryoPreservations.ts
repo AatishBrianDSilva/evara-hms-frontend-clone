@@ -1,6 +1,6 @@
-import { IDoctor } from "../doctor";
-import { ECryoPreservationType, IMasterCryoPreservations } from "../master";
-import { IPatient } from "../patient";
+import { IDoctor } from '../doctor';
+import { ECryoPreservationType, IMasterCryoPreservations } from '../master';
+import { IPatient } from '../patient';
 
 export interface IEditCryoPreservationForm<T> {
   details: T;

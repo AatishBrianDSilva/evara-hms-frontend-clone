@@ -1,4 +1,4 @@
-import React from "react";
+import React from 'react';
 import {
   Box,
   Button,
@@ -8,14 +8,14 @@ import {
   Grid,
   Skeleton,
   TextField,
-} from "@mui/material";
-import { useFormik } from "formik";
-import _ from "lodash";
+} from '@mui/material';
+import { useFormik } from 'formik';
+import _ from 'lodash';
 import {
   useGetNotesTreatmentAdviceByIdQuery,
   useUpdateNotesTreatmentAdviceMutation,
-} from "../../../../../services/masterDashboardService/local/notesTreatmentAdviceApi";
-import { useToast } from "../../../../../context/ToastContext";
+} from '../../../../../services/masterDashboardService/local/notesTreatmentAdviceApi';
+import { useToast } from '../../../../../context/ToastContext';
 
 interface EditAdviceProps {
   openModal: boolean;
@@ -39,7 +39,13 @@ const skeletonLoader = () => {
             <Skeleton variant="rectangular" width="100%" height={56} />
           </Grid>
         </Grid>
-        <Box display={"flex"} justifyContent={"flex-end"} alignItems={"center"} gap={2} mb={2}>
+        <Box
+          display={'flex'}
+          justifyContent={'flex-end'}
+          alignItems={'center'}
+          gap={2}
+          mb={2}
+        >
           <Skeleton variant="rectangular" width={90} height={36} />
           <Skeleton variant="rectangular" width={90} height={36} />
         </Box>
@@ -66,14 +72,15 @@ const EditAdvice: React.FC<EditAdviceProps> = ({ openModal, onClose, id }) => {
   // console.log("Data at Advice", data);
 
   const initialValues: IFormValues = {
-    name: data?.name || "",
+    name: data?.name || '',
   };
 
-  const [editAdviceMutation, { isLoading: isEditing }] = useUpdateNotesTreatmentAdviceMutation();
+  const [editAdviceMutation, { isLoading: isEditing }] =
+    useUpdateNotesTreatmentAdviceMutation();
 
   const formik = useFormik({
     initialValues: initialValues,
-    onSubmit: async (values) => {
+    onSubmit: async values => {
       try {
         const payload = {
           id: id,
@@ -84,15 +91,15 @@ const EditAdvice: React.FC<EditAdviceProps> = ({ openModal, onClose, id }) => {
         // console.log("Payload", payload);
 
         showPromiseToast(promise, {
-          loading: "Editing Advice...",
-          success: (data) => data || "Advice Edited Successfully",
-          error: (data) => data || "Failed to Edit Advice",
+          loading: 'Editing Advice...',
+          success: data => data || 'Advice Edited Successfully',
+          error: data => data || 'Failed to Edit Advice',
         });
 
         await promise;
         onClose();
       } catch (error) {
-        console.error("Edit failed:", error);
+        console.error('Edit failed:', error);
       }
     },
     // validationSchema: validationSchema,
@@ -101,12 +108,12 @@ const EditAdvice: React.FC<EditAdviceProps> = ({ openModal, onClose, id }) => {
 
   return (
     <Dialog open={openModal} onClose={onClose} maxWidth="md" fullWidth>
-      <DialogTitle color={"primary"}>Edit Advice</DialogTitle>
+      <DialogTitle color={'primary'}>Edit Advice</DialogTitle>
       {AdviceLoading ? (
         skeletonLoader()
       ) : (
         <DialogContent>
-          <Box component={"form"} onSubmit={formik.handleSubmit} p={2}>
+          <Box component={'form'} onSubmit={formik.handleSubmit} p={2}>
             <Grid container spacing={1} mb={2} mt={2}>
               <Grid item xs={8} sm={4} lg={3}>
                 <TextField
@@ -119,14 +126,20 @@ const EditAdvice: React.FC<EditAdviceProps> = ({ openModal, onClose, id }) => {
                 />
               </Grid>
             </Grid>
-            <Box display={"flex"} justifyContent={"flex-end"} alignItems={"center"} gap={2} mb={2}>
+            <Box
+              display={'flex'}
+              justifyContent={'flex-end'}
+              alignItems={'center'}
+              gap={2}
+              mb={2}
+            >
               <Button
                 variant="contained"
                 color="primary"
                 type="submit"
                 disabled={isEditing || isAdviceLoading}
               >
-                {isEditing ? "Saving..." : "Save"}
+                {isEditing ? 'Saving...' : 'Save'}
               </Button>
               <Button variant="contained" color="secondary" onClick={onClose}>
                 Cancel

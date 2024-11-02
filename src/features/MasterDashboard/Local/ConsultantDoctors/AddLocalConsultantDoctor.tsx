@@ -1,4 +1,4 @@
-import React from "react";
+import React from 'react';
 import {
   Box,
   Button,
@@ -10,14 +10,14 @@ import {
   Grid,
   MenuItem,
   TextField,
-} from "@mui/material";
-import { useFormik } from "formik";
-import _ from "lodash";
-import { useToast } from "../../../../context/ToastContext";
-import { useAddDoctorMutation } from "../../../../services/doctorsApi";
-import CustomDatePicker from "../../../../components/CustomDatePicker/CustomDatePicker";
-import { DoctorSpeciality } from "../../../../types/masterDashboard/global";
-import FieldAutocomplete from "../../../../components/FieldAutoComplete/FieldAutoComplete";
+} from '@mui/material';
+import { useFormik } from 'formik';
+import _ from 'lodash';
+import { useToast } from '../../../../context/ToastContext';
+import { useAddDoctorMutation } from '../../../../services/doctorsApi';
+import CustomDatePicker from '../../../../components/CustomDatePicker/CustomDatePicker';
+import { DoctorSpeciality } from '../../../../types/masterDashboard/global';
+import FieldAutocomplete from '../../../../components/FieldAutoComplete/FieldAutoComplete';
 
 interface AddDoctorProps {
   openModal: boolean;
@@ -42,51 +42,54 @@ interface IFormValues {
   pincode: string;
   state: string;
   speciality: string;
-  status: "active" | "inactive";
+  status: 'active' | 'inactive';
 }
 
-const AddLocalConsultant: React.FC<AddDoctorProps> = ({ openModal, onClose }) => {
+const AddLocalConsultant: React.FC<AddDoctorProps> = ({
+  openModal,
+  onClose,
+}) => {
   const { showPromiseToast } = useToast();
 
   const [addDoctor, { isLoading: DoctorLoading }] = useAddDoctorMutation();
 
   const indianStates = [
-    "Andhra Pradesh",
-    "Arunachal Pradesh",
-    "Assam",
-    "Bihar",
-    "Chhattisgarh",
-    "Goa",
-    "Gujarat",
-    "Haryana",
-    "Himachal Pradesh",
-    "Jharkhand",
-    "Karnataka",
-    "Kerala",
-    "Madhya Pradesh",
-    "Maharashtra",
-    "Manipur",
-    "Meghalaya",
-    "Mizoram",
-    "Nagaland",
-    "Odisha",
-    "Punjab",
-    "Rajasthan",
-    "Sikkim",
-    "Tamil Nadu",
-    "Telangana",
-    "Tripura",
-    "Uttar Pradesh",
-    "Uttarakhand",
-    "West Bengal",
-    "Andaman and Nicobar Islands",
-    "Chandigarh",
-    "Dadra and Nagar Haveli and Daman and Diu",
-    "Lakshadweep",
-    "Delhi",
-    "Puducherry",
-    "Ladakh",
-    "Jammu and Kashmir",
+    'Andhra Pradesh',
+    'Arunachal Pradesh',
+    'Assam',
+    'Bihar',
+    'Chhattisgarh',
+    'Goa',
+    'Gujarat',
+    'Haryana',
+    'Himachal Pradesh',
+    'Jharkhand',
+    'Karnataka',
+    'Kerala',
+    'Madhya Pradesh',
+    'Maharashtra',
+    'Manipur',
+    'Meghalaya',
+    'Mizoram',
+    'Nagaland',
+    'Odisha',
+    'Punjab',
+    'Rajasthan',
+    'Sikkim',
+    'Tamil Nadu',
+    'Telangana',
+    'Tripura',
+    'Uttar Pradesh',
+    'Uttarakhand',
+    'West Bengal',
+    'Andaman and Nicobar Islands',
+    'Chandigarh',
+    'Dadra and Nagar Haveli and Daman and Diu',
+    'Lakshadweep',
+    'Delhi',
+    'Puducherry',
+    'Ladakh',
+    'Jammu and Kashmir',
   ];
 
   const handleFormSubmit = async (values: IFormValues) => {
@@ -118,9 +121,9 @@ const AddLocalConsultant: React.FC<AddDoctorProps> = ({ openModal, onClose }) =>
     const promise = addDoctor(payload).unwrap();
 
     showPromiseToast(promise, {
-      loading: "Adding...",
-      success: (data) => data || "Added Successfully",
-      error: (data) => data || "Adding Failed",
+      loading: 'Adding...',
+      success: data => data || 'Added Successfully',
+      error: data => data || 'Adding Failed',
     });
 
     try {
@@ -133,25 +136,25 @@ const AddLocalConsultant: React.FC<AddDoctorProps> = ({ openModal, onClose }) =>
   };
 
   const initialValues: IFormValues = {
-    addressLine1: "",
-    addressLine2: "",
+    addressLine1: '',
+    addressLine2: '',
     // branchId: "",
-    city: "",
+    city: '',
     // clinicId: "",
     // designation: "",
-    speciality: "",
+    speciality: '',
     dob: null,
-    education: "",
-    email: "",
-    firstName: "",
-    gender: "",
-    image: "",
-    lastName: "",
-    licenceNumber: "",
-    mobile: "",
-    pincode: "",
-    state: "",
-    status: "active",
+    education: '',
+    email: '',
+    firstName: '',
+    gender: '',
+    image: '',
+    lastName: '',
+    licenceNumber: '',
+    mobile: '',
+    pincode: '',
+    state: '',
+    status: 'active',
   };
 
   const formik = useFormik({
@@ -163,9 +166,9 @@ const AddLocalConsultant: React.FC<AddDoctorProps> = ({ openModal, onClose }) =>
 
   return (
     <Dialog open={openModal} onClose={onClose} maxWidth="md" fullWidth>
-      <DialogTitle color={"primary"}>Add Consultant Doctors</DialogTitle>
+      <DialogTitle color={'primary'}>Add Consultant Doctors</DialogTitle>
       <DialogContent>
-        <Box component={"form"} onSubmit={formik.handleSubmit} p={2}>
+        <Box component={'form'} onSubmit={formik.handleSubmit} p={2}>
           <Grid container spacing={1} mb={2} mt={2}>
             <Grid item xs={8} sm={4} lg={3}>
               <TextField
@@ -247,7 +250,7 @@ const AddLocalConsultant: React.FC<AddDoctorProps> = ({ openModal, onClose }) =>
                 name="dob"
                 label="Date of Birth"
                 value={formik.values.dob}
-                onChange={(value) => formik.setFieldValue("dob", value)}
+                onChange={value => formik.setFieldValue('dob', value)}
               />
             </Grid>
           </Grid>
@@ -270,11 +273,15 @@ const AddLocalConsultant: React.FC<AddDoctorProps> = ({ openModal, onClose }) =>
                 label="Speciality"
                 value={formik.values.speciality}
                 onChange={formik.handleChange}
-                error={formik.touched.speciality && Boolean(formik.errors.speciality)}
-                helperText={formik.touched.speciality && formik.errors.speciality}
+                error={
+                  formik.touched.speciality && Boolean(formik.errors.speciality)
+                }
+                helperText={
+                  formik.touched.speciality && formik.errors.speciality
+                }
                 fullWidth
               >
-                {Object.values(DoctorSpeciality).map((speciality) => (
+                {Object.values(DoctorSpeciality).map(speciality => (
                   <MenuItem key={speciality} value={speciality}>
                     {speciality}
                   </MenuItem>
@@ -346,10 +353,10 @@ const AddLocalConsultant: React.FC<AddDoctorProps> = ({ openModal, onClose }) =>
                 label="State"
                 options={indianStates}
                 isOptionEqualToValue={(option, value) => option === value}
-                getOptionLabel={(option) => option}
+                getOptionLabel={option => option}
                 value={formik.values.state}
-                onChange={(value) => {
-                  formik.setFieldValue("state", value);
+                onChange={value => {
+                  formik.setFieldValue('state', value);
                 }}
               />
             </Grid>
@@ -377,9 +384,12 @@ const AddLocalConsultant: React.FC<AddDoctorProps> = ({ openModal, onClose }) =>
               <FormControlLabel
                 control={
                   <Checkbox
-                    checked={formik.values.status === "active"}
-                    onChange={(e) =>
-                      formik.setFieldValue("status", e.target.checked ? "active" : "inactive")
+                    checked={formik.values.status === 'active'}
+                    onChange={e =>
+                      formik.setFieldValue(
+                        'status',
+                        e.target.checked ? 'active' : 'inactive',
+                      )
                     }
                   />
                 }
@@ -388,20 +398,28 @@ const AddLocalConsultant: React.FC<AddDoctorProps> = ({ openModal, onClose }) =>
             </Grid>
           </Grid>
 
-          <Box display={"flex"} justifyContent={"flex-end"} alignItems={"center"} gap={2} mb={2}>
+          <Box
+            display={'flex'}
+            justifyContent={'flex-end'}
+            alignItems={'center'}
+            gap={2}
+            mb={2}
+          >
             <Button
               variant="contained"
               color="primary"
               type="submit"
-              disabled={DoctorLoading || _.isEqual(initialValues, formik.values)}
-              sx={{ width: "fit-content" }}
+              disabled={
+                DoctorLoading || _.isEqual(initialValues, formik.values)
+              }
+              sx={{ width: 'fit-content' }}
             >
               Save
             </Button>
             <Button
               variant="contained"
               color="secondary"
-              sx={{ width: "fit-content" }}
+              sx={{ width: 'fit-content' }}
               onClick={onClose}
             >
               Cancel

@@ -1,20 +1,24 @@
-import React, { useState } from "react";
-import ContentSection from "../../../../../components/ContentSection/ContentSection";
-import { Box, Button } from "@mui/material";
-import { Add, Edit } from "@mui/icons-material";
-import CustomDataGrid from "../../../../../components/CustomDataGrid/CustomDataGrid";
-import { GridActionsCellItem, GridColDef, GridRowParams } from "@mui/x-data-grid";
-import Delete from "@mui/icons-material/Delete";
-import DeleteConfirmationModal from "../../../../../components/DeleteConfirmationModal/DeleteConfirmationModal";
-import { useToast } from "../../../../../context/ToastContext";
-import _ from "lodash";
+import React, { useState } from 'react';
+import ContentSection from '../../../../../components/ContentSection/ContentSection';
+import { Box, Button } from '@mui/material';
+import { Add, Edit } from '@mui/icons-material';
+import CustomDataGrid from '../../../../../components/CustomDataGrid/CustomDataGrid';
+import {
+  GridActionsCellItem,
+  GridColDef,
+  GridRowParams,
+} from '@mui/x-data-grid';
+import Delete from '@mui/icons-material/Delete';
+import DeleteConfirmationModal from '../../../../../components/DeleteConfirmationModal/DeleteConfirmationModal';
+import { useToast } from '../../../../../context/ToastContext';
+import _ from 'lodash';
 
 import {
   useGetPatientSourcesQuery,
   useDeletePatientSourceMutation,
-} from "../../../../../services/masterDashboardService/local/patientSourceApi";
-import AddPatientSource from "./AddSource";
-import EditPatientSource from "./EditSource";
+} from '../../../../../services/masterDashboardService/local/patientSourceApi';
+import AddPatientSource from './AddSource';
+import EditPatientSource from './EditSource';
 
 interface RowType {
   _id: string;
@@ -23,7 +27,7 @@ interface RowType {
 const PatientSource: React.FC = () => {
   const { showPromiseToast } = useToast();
 
-  const [selectedRow, setSelectedRow] = useState<string>("");
+  const [selectedRow, setSelectedRow] = useState<string>('');
   const [isAddModalOpen, setIsAddModalOpen] = useState<boolean>(false);
   const [isEditModalOpen, setIsEditModalOpen] = useState<boolean>(false);
   const [isDeleteModalOpen, setIsDeleteModalOpen] = useState<boolean>(false);
@@ -32,32 +36,35 @@ const PatientSource: React.FC = () => {
     data: PatientSourceData,
     isLoading: PatientSourceLoading,
     isFetching: PatientSourceFetching,
-  } = useGetPatientSourcesQuery({ paginate: false, filters: { isAdmin: true, isGlobal: false } });
+  } = useGetPatientSourcesQuery({
+    paginate: false,
+    filters: { isAdmin: true, isGlobal: false },
+  });
 
   const PatientSources = PatientSourceData?.data || [];
 
-  console.log("Patient Source Data", PatientSources);
+  console.log('Patient Source Data', PatientSources);
 
   const getRowId = (row: RowType) => row._id;
 
   const columnsConfig: GridColDef[] = [
     {
-      field: "name",
-      headerName: "Source",
+      field: 'name',
+      headerName: 'Source',
       flex: 1,
     },
     {
-      field: "clinicId",
-      headerName: "Clinic Id",
+      field: 'clinicId',
+      headerName: 'Clinic Id',
       flex: 1,
     },
-    { field: "branchId", headerName: "Branch Id", flex: 1 },
+    { field: 'branchId', headerName: 'Branch Id', flex: 1 },
 
     {
-      field: "actions",
-      headerName: "Actions",
+      field: 'actions',
+      headerName: 'Actions',
       flex: 1,
-      type: "actions",
+      type: 'actions',
       getActions: (params: GridRowParams) => {
         const row = params.row;
         return [
@@ -76,15 +83,16 @@ const PatientSource: React.FC = () => {
     },
   ];
 
-  const [deleteUser, { isLoading: DeleteLoading }] = useDeletePatientSourceMutation();
+  const [deleteUser, { isLoading: DeleteLoading }] =
+    useDeletePatientSourceMutation();
 
   const handleDelete = async () => {
     const promise = deleteUser(selectedRow).unwrap();
 
     showPromiseToast(promise, {
-      loading: "Deleting...",
-      success: (data) => data || "Deleted Successfully",
-      error: (data) => data || "Failed to Delete",
+      loading: 'Deleting...',
+      success: data => data || 'Deleted Successfully',
+      error: data => data || 'Failed to Delete',
     });
 
     try {
@@ -144,21 +152,27 @@ const PatientSource: React.FC = () => {
         </Button>
       </Box>
 
-      <Box mt={2} flex={"1 1 auto"}>
+      <Box mt={2} flex={'1 1 auto'}>
         <CustomDataGrid
           autoHeight={false}
           columns={columnsConfig}
           rows={PatientSources}
           loading={PatientSourceLoading || PatientSourceFetching}
-          sx={{ height: "100%" }}
+          sx={{ height: '100%' }}
           getRowId={getRowId}
         />
       </Box>
 
-      {isAddModalOpen && <AddPatientSource openModal={isAddModalOpen} onClose={closeAddModal} />}
+      {isAddModalOpen && (
+        <AddPatientSource openModal={isAddModalOpen} onClose={closeAddModal} />
+      )}
 
       {isEditModalOpen && (
-        <EditPatientSource openModal={isEditModalOpen} onClose={closeEditModal} id={selectedRow} />
+        <EditPatientSource
+          openModal={isEditModalOpen}
+          onClose={closeEditModal}
+          id={selectedRow}
+        />
       )}
 
       {isDeleteModalOpen && (

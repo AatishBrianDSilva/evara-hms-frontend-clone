@@ -18,40 +18,45 @@ interface DateTimePickerProps {
   views?: readonly DateOrTimeView[] | undefined;
 }
 
-const CustomDateTimePicker = forwardRef<any, DateTimePickerProps>(({
-  name,
-  label,
-  format = 'dd/MM/yyyy HH:mm',
-  value,
-  onChange,
-  error = false,
-  helperText = '',
-  minDate,
-  minTime,
-  fullWidth = true,
-  sx,
-  views
-}, ref) => (
-  <DateTimePicker
-    ref={ref}
-    name={name}
-    label={label}
-    value={value}
-    views={views}
-    onChange={onChange}
-    format={format}
-    minDate={minDate}
-    minTime={minTime}
-    slots={{ textField: TextField }}
-    sx={sx}
-    slotProps={{
-      textField: {
-        fullWidth: fullWidth,
-        error,
-        helperText,
-      }
-    }}
-  />
-))
+const CustomDateTimePicker = forwardRef<any, DateTimePickerProps>(
+  (
+    {
+      name,
+      label,
+      format = 'dd/MM/yyyy HH:mm',
+      value,
+      onChange,
+      error = false,
+      helperText = '',
+      minDate,
+      minTime,
+      fullWidth = true,
+      sx,
+      views,
+    },
+    ref,
+  ) => (
+    <DateTimePicker
+      ref={ref}
+      name={name}
+      label={label}
+      value={value}
+      views={views}
+      onChange={onChange}
+      format={format}
+      minDate={minDate}
+      minTime={minTime}
+      slots={{ textField: TextField }}
+      sx={sx}
+      slotProps={{
+        textField: {
+          fullWidth: fullWidth,
+          error,
+          helperText,
+        },
+      }}
+    />
+  ),
+);
 
 export default CustomDateTimePicker;

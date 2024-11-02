@@ -1,14 +1,14 @@
-import { createApi } from "@reduxjs/toolkit/query/react";
+import { createApi } from '@reduxjs/toolkit/query/react';
 
-import generateQueryParams from "../../../utils/generateQueryParams";
+import generateQueryParams from '../../../utils/generateQueryParams';
 import {
   ApiResponse,
   IQueryOptions,
   PaginatedResponse,
-} from "../../../types/global";
+} from '../../../types/global';
 // import { IPatientCryoPreservation } from "../../types/patientDashboard/cryoPreservations";
-import { IPatientBillingEstimation } from "../../../types/patientDashboard/billings";
-import { baseQuery } from "../../baseQuery";
+import { IPatientBillingEstimation } from '../../../types/patientDashboard/billings';
+import { baseQuery } from '../../baseQuery';
 
 interface AddEstimationPayload {
   patientCode: string | null;
@@ -35,39 +35,39 @@ interface AddEstimationPayload {
 // }
 
 export const estimationApi = createApi({
-  reducerPath: "estimationApi",
+  reducerPath: 'estimationApi',
   baseQuery: baseQuery,
-  tagTypes: ["Estimations"],
-  endpoints: (builder) => ({
+  tagTypes: ['Estimations'],
+  endpoints: builder => ({
     getEstimations: builder.query<
       ApiResponse<PaginatedResponse<IPatientBillingEstimation>>,
       IQueryOptions
     >({
       query: (options: IQueryOptions) => {
         const queryParams = generateQueryParams(options);
-        return { url: `billings/estimations?${queryParams}`, method: "GET" };
+        return { url: `billings/estimations?${queryParams}`, method: 'GET' };
       },
-      providesTags: (_result, _error, _args) => ["Estimations"],
+      providesTags: (_result, _error, _args) => ['Estimations'],
     }),
     getEstimationById: builder.query<
       ApiResponse<IPatientBillingEstimation>,
       string
     >({
       query: (id: string) => {
-        return { url: `billings/estimations/${id}`, method: "GET" };
+        return { url: `billings/estimations/${id}`, method: 'GET' };
       },
-      providesTags: (_result, _error, id) => [{ type: "Estimations", id }],
+      providesTags: (_result, _error, id) => [{ type: 'Estimations', id }],
     }),
     addEstimation: builder.mutation<
       ApiResponse<IPatientBillingEstimation>,
       AddEstimationPayload
     >({
-      query: (estimationData) => ({
-        url: "billings/estimations/add",
-        method: "POST",
+      query: estimationData => ({
+        url: 'billings/estimations/add',
+        method: 'POST',
         body: estimationData,
       }),
-      invalidatesTags: ["Estimations"],
+      invalidatesTags: ['Estimations'],
     }),
     editEstimation: builder.mutation<
       ApiResponse<IPatientBillingEstimation>,
@@ -75,17 +75,17 @@ export const estimationApi = createApi({
     >({
       query: (id: string) => ({
         url: `billings/estimations/${id}`,
-        method: "PUT",
+        method: 'PUT',
         body: id,
       }),
-      invalidatesTags: ["Estimations"],
+      invalidatesTags: ['Estimations'],
     }),
     deleteEstimation: builder.mutation<ApiResponse<null>, string>({
-      query: (id) => ({
+      query: id => ({
         url: `billings/estimations/${id}`,
-        method: "DELETE",
+        method: 'DELETE',
       }),
-      invalidatesTags: ["Estimations"],
+      invalidatesTags: ['Estimations'],
     }),
   }),
 });

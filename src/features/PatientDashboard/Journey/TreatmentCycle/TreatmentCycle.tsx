@@ -1,19 +1,19 @@
-import Button from "@mui/material/Button";
-import Box from "@mui/material/Box";
+import Button from '@mui/material/Button';
+import Box from '@mui/material/Box';
 
-import React, { useState } from "react";
-import Add from "@mui/icons-material/Add";
-import { useSelector } from "react-redux";
-import { RootState } from "../../../../app/store";
-import AddTreatmentCycle from "./AddTreatmentCycle";
-import { useGetDoctorsQuery } from "../../../../services/doctorsApi";
-import { useGetMasterTreatmentCyclesQuery } from "../../../../services/masterDashboardService/serviceData/cycles/masterTreatmentCycleApi";
-import { Chip, CircularProgress, Divider } from "@mui/material";
-import { useGetTreatmentCyclesQuery } from "../../../../services/patientDashboardService/treatmentCycleApi";
+import React, { useState } from 'react';
+import Add from '@mui/icons-material/Add';
+import { useSelector } from 'react-redux';
+import { RootState } from '../../../../app/store';
+import AddTreatmentCycle from './AddTreatmentCycle';
+import { useGetDoctorsQuery } from '../../../../services/doctorsApi';
+import { useGetMasterTreatmentCyclesQuery } from '../../../../services/masterDashboardService/serviceData/cycles/masterTreatmentCycleApi';
+import { Chip, CircularProgress, Divider } from '@mui/material';
+import { useGetTreatmentCyclesQuery } from '../../../../services/patientDashboardService/treatmentCycleApi';
 
-import TreatmentCycleCard from "../../../../components/TreatmentCycleCard/TreatmentCycleCard";
-import TreatmentCycleCardSkeleton from "../../../../components/TreatmentCycleCard/TreatmentCycleSkeleton";
-import { useNavigate, useParams } from "react-router-dom";
+import TreatmentCycleCard from '../../../../components/TreatmentCycleCard/TreatmentCycleCard';
+import TreatmentCycleCardSkeleton from '../../../../components/TreatmentCycleCard/TreatmentCycleSkeleton';
+import { useNavigate, useParams } from 'react-router-dom';
 
 const TreatmentCycles: React.FC = () => {
   const navigate = useNavigate();
@@ -44,7 +44,7 @@ const TreatmentCycles: React.FC = () => {
     },
     {
       skip: !patient?.patientId,
-    }
+    },
   );
   const masterTreatmentCycles = MasterTreatmentCyclesData?.data || [];
 
@@ -65,12 +65,13 @@ const TreatmentCycles: React.FC = () => {
     },
     {
       skip: !patient?.patientId,
-    }
+    },
   );
   const patientTreatmentCycles = investgationsData?.data || [];
-  const patientTreatmentCyclesLoading = treatmentCycleLoading || treatmentCycleFetching;
+  const patientTreatmentCyclesLoading =
+    treatmentCycleLoading || treatmentCycleFetching;
 
-  console.log("Cycle", patientTreatmentCycles);
+  console.log('Cycle', patientTreatmentCycles);
 
   const loading =
     DoctorsLoading ||
@@ -78,7 +79,8 @@ const TreatmentCycles: React.FC = () => {
     DoctorFetching ||
     MasterTreatmentCycleFetching;
 
-  const [addTreatmentCycleOpen, setAddTreatmentCycleOpen] = useState<boolean>(false);
+  const [addTreatmentCycleOpen, setAddTreatmentCycleOpen] =
+    useState<boolean>(false);
 
   const closeForm = () => {
     setAddTreatmentCycleOpen(false);
@@ -92,15 +94,27 @@ const TreatmentCycles: React.FC = () => {
 
   // Main return statement
   return (
-    <Box p={2} display={"flex"} flexDirection={"column"} flex={1}>
-      <Box display={"flex"} justifyContent="flex-end" alignItems="center" mb={3}>
+    <Box p={2} display={'flex'} flexDirection={'column'} flex={1}>
+      <Box
+        display={'flex'}
+        justifyContent="flex-end"
+        alignItems="center"
+        mb={3}
+      >
         {hasFilters && (
-          <Button variant="contained" color="primary" onClick={handleResetFilters} sx={{ mr: 2 }}>
+          <Button
+            variant="contained"
+            color="primary"
+            onClick={handleResetFilters}
+            sx={{ mr: 2 }}
+          >
             Remove Filter
           </Button>
         )}
         <Button
-          startIcon={loading ? <CircularProgress size={16} color="secondary" /> : <Add />}
+          startIcon={
+            loading ? <CircularProgress size={16} color="secondary" /> : <Add />
+          }
           variant="contained"
           color="primary"
           onClick={() => setAddTreatmentCycleOpen(true)}
@@ -111,26 +125,30 @@ const TreatmentCycles: React.FC = () => {
 
       <Box
         gap={2}
-        display={"flex"}
-        justifyContent={"center"}
-        alignItems={"center"}
-        flexDirection={"column"}
+        display={'flex'}
+        justifyContent={'center'}
+        alignItems={'center'}
+        flexDirection={'column'}
       >
         {(patientTreatmentCyclesLoading && <TreatmentCycleCardSkeleton />) ||
           patientTreatmentCycles.map((treatmentCycle, index) => (
             <Box
               key={index}
-              display={"flex"}
-              flexDirection={"column"}
-              width={"100%"}
+              display={'flex'}
+              flexDirection={'column'}
+              width={'100%'}
               gap={2}
-              justifyContent={"center"}
-              alignItems={"center"}
+              justifyContent={'center'}
+              alignItems={'center'}
             >
               <Divider textAlign="left" flexItem>
                 <Chip
                   label={`Treatment: #${index + 1}`}
-                  color={treatmentCycle.status === "Completed" ? "success" : "warning"}
+                  color={
+                    treatmentCycle.status === 'Completed'
+                      ? 'success'
+                      : 'warning'
+                  }
                   size="small"
                 />
               </Divider>

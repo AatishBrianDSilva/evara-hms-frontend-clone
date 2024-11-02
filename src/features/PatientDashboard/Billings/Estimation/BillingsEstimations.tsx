@@ -1,20 +1,24 @@
-import Box from "@mui/material/Box";
-import React, { useState } from "react";
-import CustomDataGrid from "../../../../components/CustomDataGrid/CustomDataGrid";
-import { useSelector } from "react-redux";
-import { GridActionsCellItem, GridColDef, GridRowParams } from "@mui/x-data-grid";
-import { useToast } from "../../../../context/ToastContext";
-import { Button, Typography } from "@mui/material";
-import { Add, Delete } from "@mui/icons-material";
-import { useGetEstimationsQuery } from "../../../../services/patientDashboardService/billings/estimationApi";
-import AddEstimations from "./AddEstimations";
-import { RootState } from "../../../../app/store";
-import { useAddBillingMutation } from "../../../../services/patientDashboardService/billings/billingApi";
-import { useDeleteEstimationMutation } from "../../../../services/patientDashboardService/billings/estimationApi";
-import DeleteConfirmationModal from "../../../../components/DeleteConfirmationModal/DeleteConfirmationModal";
-import EditEstimation from "./EditEstimation";
-import { useNavigate } from "react-router-dom";
-import { formatToIndianCurrencyFormat } from "../../../../utils/formatToIndianCurrencyFormat";
+import Box from '@mui/material/Box';
+import React, { useState } from 'react';
+import CustomDataGrid from '../../../../components/CustomDataGrid/CustomDataGrid';
+import { useSelector } from 'react-redux';
+import {
+  GridActionsCellItem,
+  GridColDef,
+  GridRowParams,
+} from '@mui/x-data-grid';
+import { useToast } from '../../../../context/ToastContext';
+import { Button, Typography } from '@mui/material';
+import { Add, Delete } from '@mui/icons-material';
+import { useGetEstimationsQuery } from '../../../../services/patientDashboardService/billings/estimationApi';
+import AddEstimations from './AddEstimations';
+import { RootState } from '../../../../app/store';
+import { useAddBillingMutation } from '../../../../services/patientDashboardService/billings/billingApi';
+import { useDeleteEstimationMutation } from '../../../../services/patientDashboardService/billings/estimationApi';
+import DeleteConfirmationModal from '../../../../components/DeleteConfirmationModal/DeleteConfirmationModal';
+import EditEstimation from './EditEstimation';
+import { useNavigate } from 'react-router-dom';
+import { formatToIndianCurrencyFormat } from '../../../../utils/formatToIndianCurrencyFormat';
 
 interface RowType {
   _id: string;
@@ -84,74 +88,77 @@ const BillingsEstimations: React.FC = () => {
       limit: pageSize,
       filters: {
         patientCode: patient?.patientId,
-        status: "Active",
+        status: 'Active',
       },
     },
     {
       skip: !patient?.patientId,
       refetchOnFocus: true,
       refetchOnMountOrArgChange: true,
-    }
+    },
   );
   const patientEstimations = estimationsData?.data?.records || [];
   const patientEstimationsPagination = estimationsData?.data?.pagination;
   const patientEstimationLoading = estimationsLoading || estimationsFetching;
 
-  console.log("Estimation Data", patientEstimations);
+  console.log('Estimation Data', patientEstimations);
 
   const getRowId = (row: RowType) => row._id;
 
-  const [deleteEstimation, { isLoading: isDeleteLoading }] = useDeleteEstimationMutation();
+  const [deleteEstimation, { isLoading: isDeleteLoading }] =
+    useDeleteEstimationMutation();
 
-  const [addBillingMutation, { isLoading: isAddBillingMutationLoading }] = useAddBillingMutation();
+  const [addBillingMutation, { isLoading: isAddBillingMutationLoading }] =
+    useAddBillingMutation();
 
   const columnsConfig: GridColDef[] = [
-
     {
-      field: "date",
-      headerName: "Date",
+      field: 'date',
+      headerName: 'Date',
       valueGetter(params) {
-        return params.row.createdAt ? new Date(params.row.createdAt).toLocaleDateString() : "";
+        return params.row.createdAt
+          ? new Date(params.row.createdAt).toLocaleDateString()
+          : '';
       },
       flex: 1,
     },
     {
-      field: "serviceName",
-      headerName: "Item",
+      field: 'serviceName',
+      headerName: 'Item',
       flex: 1,
     },
-    { field: "quantity", headerName: "Quantity", flex: 1 },
+    { field: 'quantity', headerName: 'Quantity', flex: 1 },
     {
-      field: "estimatedUnitPrice",
-      headerName: "MRP",
+      field: 'estimatedUnitPrice',
+      headerName: 'MRP',
       flex: 1,
-      valueFormatter: (params) => formatToIndianCurrencyFormat(params.value),
+      valueFormatter: params => formatToIndianCurrencyFormat(params.value),
     },
     {
-      field: "estimatedPrice",
-      headerName: "Amount",
+      field: 'estimatedPrice',
+      headerName: 'Amount',
       flex: 1,
-      valueFormatter: (params) => formatToIndianCurrencyFormat(params.value),
+      valueFormatter: params => formatToIndianCurrencyFormat(params.value),
     },
     {
-      field: "estimatedTax",
-      headerName: "Tax",
+      field: 'estimatedTax',
+      headerName: 'Tax',
       flex: 1,
-      valueFormatter: (params) =>
-        params.value ? formatToIndianCurrencyFormat(params.value) : "NA",
+      valueFormatter: params =>
+        params.value ? formatToIndianCurrencyFormat(params.value) : 'NA',
     },
     {
-      field: "estimatedTotal",
-      headerName: "Total Amount",
+      field: 'estimatedTotal',
+      headerName: 'Total Amount',
       flex: 1,
-      valueFormatter: (params) => formatToIndianCurrencyFormat(params.value),
+      valueFormatter: params => formatToIndianCurrencyFormat(params.value),
     },
     {
-      field: "actions",
-      type: "actions",
-      headerName: "Actions",
+      field: 'actions',
+      type: 'actions',
+      headerName: 'Actions',
       flex: 1,
-      cellClassName: "actions",
+      cellClassName: 'actions',
       getActions: (params: GridRowParams) => {
         const row = params.row;
         return [
@@ -172,22 +179,22 @@ const BillingsEstimations: React.FC = () => {
 
   const handleContinue = async () => {
     const payload = {
-      estimations: checkedRows.map((row) => row._id),
+      estimations: checkedRows.map(row => row._id),
     };
 
     const promise = addBillingMutation(payload).unwrap();
 
     showPromiseToast(promise, {
       loading: `Generating Bill...`,
-      success: () => "Bill generated successfully",
-      error: () => "Error generating Bill",
+      success: () => 'Bill generated successfully',
+      error: () => 'Error generating Bill',
     });
 
     try {
       await promise;
       navigate(`/patient/${patient?.patientId}/billings/pending`);
     } catch (error) {
-      console.error("Error deleting estimation", error);
+      console.error('Error deleting estimation', error);
     }
   };
 
@@ -195,23 +202,33 @@ const BillingsEstimations: React.FC = () => {
     const id = selectedRow.id;
     const promise = deleteEstimation(id).unwrap();
     showPromiseToast(promise, {
-      loading: "Deleting estimation...",
-      success: () => "estimation deleted successfully",
-      error: () => "Error deleting estimation",
+      loading: 'Deleting estimation...',
+      success: () => 'estimation deleted successfully',
+      error: () => 'Error deleting estimation',
     });
 
     try {
       await promise;
     } catch (error) {
-      console.error("Error deleting estimation", error);
+      console.error('Error deleting estimation', error);
     }
     closeDeleteModal();
   };
 
   return (
-    <Box p={2} display={"flex"} flexDirection={"column"} flex={1}>
-      <Box display={"flex"} justifyContent="flex-end" alignItems="center" mb={3}>
-        <Button startIcon={<Add />} variant="contained" color="primary" onClick={openAddModal}>
+    <Box p={2} display={'flex'} flexDirection={'column'} flex={1}>
+      <Box
+        display={'flex'}
+        justifyContent="flex-end"
+        alignItems="center"
+        mb={3}
+      >
+        <Button
+          startIcon={<Add />}
+          variant="contained"
+          color="primary"
+          onClick={openAddModal}
+        >
           Estimation
         </Button>
       </Box>
@@ -227,26 +244,34 @@ const BillingsEstimations: React.FC = () => {
         onPageChange={handlePageChange}
         onPageSizeChange={handlePageSizeChange}
         loading={patientEstimationLoading}
-        sx={{ height: "100%" }}
+        sx={{ height: '100%' }}
         enablePagination={true}
         checkboxSelection={true}
-        onSelectionChange={(newSelection) => {
+        onSelectionChange={newSelection => {
           const selectedRows = newSelection
-            .map((id) => {
-              const row = patientEstimations.find((estimation) => estimation._id === id);
+            .map(id => {
+              const row = patientEstimations.find(
+                estimation => estimation._id === id,
+              );
               return { _id: row?._id, estimatedTotal: row?.estimatedTotal };
             })
             .filter(
-              (row) => row._id !== undefined && row.estimatedTotal !== undefined
+              row => row._id !== undefined && row.estimatedTotal !== undefined,
             ) as checkRowType[];
           setCheckedRows(selectedRows);
         }}
       />
 
-      {isAddModalOpen && <AddEstimations openModal={isAddModalOpen} onClose={closeAddModal} />}
+      {isAddModalOpen && (
+        <AddEstimations openModal={isAddModalOpen} onClose={closeAddModal} />
+      )}
 
       {selectedRow && isEditModalOpen && (
-        <EditEstimation openModal={isEditModalOpen} onClose={closeEditModal} id={selectedRow.id} />
+        <EditEstimation
+          openModal={isEditModalOpen}
+          onClose={closeEditModal}
+          id={selectedRow.id}
+        />
       )}
 
       {isDeleteModalOpen && (
@@ -259,22 +284,28 @@ const BillingsEstimations: React.FC = () => {
         />
       )}
 
-      <Box display={"flex"} justifyContent="flex-end" alignItems="center" mt={3} gap={2}>
+      <Box
+        display={'flex'}
+        justifyContent="flex-end"
+        alignItems="center"
+        mt={3}
+        gap={2}
+      >
         <Box
-          display={"flex"}
-          flexDirection={"row"}
-          alignItems={"center"}
+          display={'flex'}
+          flexDirection={'row'}
+          alignItems={'center'}
           gap={2}
-          bgcolor={"secondary.main"}
+          bgcolor={'secondary.main'}
           p={0.75}
           borderRadius={1}
-          color={"white"}
+          color={'white'}
           boxShadow={1}
         >
           <Typography>Total Amount:</Typography>
           <Typography>
             {formatToIndianCurrencyFormat(
-              checkedRows.reduce((acc, row) => acc + row.estimatedTotal, 0)
+              checkedRows.reduce((acc, row) => acc + row.estimatedTotal, 0),
             )}
           </Typography>
         </Box>

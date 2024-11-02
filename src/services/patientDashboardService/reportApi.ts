@@ -1,26 +1,26 @@
-import { createApi } from "@reduxjs/toolkit/query/react";
-import generateQueryParams from "../../utils/generateQueryParams";
-import { ApiResponse, IQueryOptions } from "../../types/global";
-import { baseQuery } from "../baseQuery";
+import { createApi } from '@reduxjs/toolkit/query/react';
+import generateQueryParams from '../../utils/generateQueryParams';
+import { ApiResponse, IQueryOptions } from '../../types/global';
+import { baseQuery } from '../baseQuery';
 
 export const patientReportsApi = createApi({
-  reducerPath: "patientReportsApi",
+  reducerPath: 'patientReportsApi',
   baseQuery: baseQuery,
-  tagTypes: ["PatientReports"],
-  endpoints: (builder) => ({
+  tagTypes: ['PatientReports'],
+  endpoints: builder => ({
     getReports: builder.query<ApiResponse<any>, IQueryOptions>({
       query: (options: IQueryOptions) => {
         // console.log("api test", options);
         const queryParams = generateQueryParams(options);
-        return { url: `reports?${queryParams}`, method: "GET" };
+        return { url: `reports?${queryParams}`, method: 'GET' };
       },
-      providesTags: (_result, _error, _args) => ["PatientReports"],
+      providesTags: (_result, _error, _args) => ['PatientReports'],
     }),
     getReportById: builder.query<ApiResponse<any>, string>({
       query: (id: string) => {
-        return { url: `reports/patient/${id}`, method: "GET" };
+        return { url: `reports/patient/${id}`, method: 'GET' };
       },
-      providesTags: (_result, _error, id) => [{ type: "PatientReports", id }],
+      providesTags: (_result, _error, id) => [{ type: 'PatientReports', id }],
     }),
   }),
 });

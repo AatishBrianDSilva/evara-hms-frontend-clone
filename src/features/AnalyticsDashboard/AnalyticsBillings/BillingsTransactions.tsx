@@ -52,15 +52,19 @@ const BillingsTransactions: React.FC = () => {
     setFilterClinic(event.target.value as string);
   };
 
-  const handleItemNameChange = (event: React.ChangeEvent<{ value: unknown }>) => {
+  const handleItemNameChange = (
+    event: React.ChangeEvent<{ value: unknown }>,
+  ) => {
     setFilterItemName(event.target.value as string);
   };
 
-  const handleMethodsChange = (event: React.ChangeEvent<{ value: unknown }>) => {
+  const handleMethodsChange = (
+    event: React.ChangeEvent<{ value: unknown }>,
+  ) => {
     setFilterMethods(event.target.value as string);
   };
 
-  const filteredBillings = patientsBillingData.filter((billing) => {
+  const filteredBillings = patientsBillingData.filter(billing => {
     const searchTermLower = searchTerm.toLowerCase();
     const itemNameLower = filterItemName.toLowerCase();
     const methodsLower = filterMethods.toLowerCase();
@@ -92,7 +96,7 @@ const BillingsTransactions: React.FC = () => {
           value={filterClinic}
           onChange={handleClinicChange}
         >
-          {clinics.map((clinic) => (
+          {clinics.map(clinic => (
             <MenuItem key={clinic} value={clinic}>
               {clinic}
             </MenuItem>
@@ -106,7 +110,7 @@ const BillingsTransactions: React.FC = () => {
           value={filterItemName}
           onChange={handleItemNameChange}
         >
-          {itemNames.map((itemName) => (
+          {itemNames.map(itemName => (
             <MenuItem key={itemName} value={itemName}>
               {itemName}
             </MenuItem>
@@ -120,7 +124,7 @@ const BillingsTransactions: React.FC = () => {
           value={filterMethods}
           onChange={handleMethodsChange}
         >
-          {methods.map((method) => (
+          {methods.map(method => (
             <MenuItem key={method} value={method}>
               {method}
             </MenuItem>

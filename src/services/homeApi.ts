@@ -1,9 +1,9 @@
-import { createApi } from "@reduxjs/toolkit/query/react";
-import { ApiResponse, IQueryOptions } from "../types/global";
-import { baseQuery } from "./baseQuery";
-import generateQueryParams from "../utils/generateQueryParams";
-import { IAppointment } from "../types/appointment";
-import { IPatient } from "../types/patient";
+import { createApi } from '@reduxjs/toolkit/query/react';
+import { ApiResponse, IQueryOptions } from '../types/global';
+import { baseQuery } from './baseQuery';
+import generateQueryParams from '../utils/generateQueryParams';
+import { IAppointment } from '../types/appointment';
+import { IPatient } from '../types/patient';
 
 interface badge {
   color: string;
@@ -48,24 +48,24 @@ export interface IPharmacySummary {
 }
 
 export const homeApi = createApi({
-  reducerPath: "homeApi",
+  reducerPath: 'homeApi',
   baseQuery: baseQuery,
-  endpoints: (builder) => ({
+  endpoints: builder => ({
     getSummary: builder.query<ApiResponse<ISummary>, IQueryOptions>({
-      query: (options) => {
+      query: options => {
         const queryParams = generateQueryParams(options);
-        return { url: `home/summary?${queryParams}`, method: "GET" };
+        return { url: `home/summary?${queryParams}`, method: 'GET' };
       },
     }),
     getAppointmentSummary: builder.query<
       ApiResponse<IAppointment[]>,
       IQueryOptions
     >({
-      query: (options) => {
+      query: options => {
         const queryParams = generateQueryParams(options);
         return {
           url: `home/appointment-summary?${queryParams}`,
-          method: "GET",
+          method: 'GET',
         };
       },
     }),
@@ -73,18 +73,18 @@ export const homeApi = createApi({
       ApiResponse<IPatientSummary>,
       IQueryOptions
     >({
-      query: (options) => {
+      query: options => {
         const queryParams = generateQueryParams(options);
-        return { url: `home/patient-summary?${queryParams}`, method: "GET" };
+        return { url: `home/patient-summary?${queryParams}`, method: 'GET' };
       },
     }),
     getPharmacySummary: builder.query<
       ApiResponse<IPharmacySummary>,
       IQueryOptions
     >({
-      query: (options) => {
+      query: options => {
         const queryParams = generateQueryParams(options);
-        return { url: `home/pharmacy-summary?${queryParams}`, method: "GET" };
+        return { url: `home/pharmacy-summary?${queryParams}`, method: 'GET' };
       },
     }),
   }),

@@ -1,11 +1,11 @@
-import { IDrugLocation } from "./master";
-import { IPharmacyStock } from "./stocks";
+import { IDrugLocation } from './master';
+import { IPharmacyStock } from './stocks';
 
 export enum EInternalOrderStatus {
-  Draft = "Draft",
-  Approved = "Approved",
-  Rejected = "Rejected",
-  Processed = "Processed",
+  Draft = 'Draft',
+  Approved = 'Approved',
+  Rejected = 'Rejected',
+  Processed = 'Processed',
 }
 
 export interface IInternalOrderItems {

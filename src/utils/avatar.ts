@@ -7,7 +7,7 @@ export function stringToColor(string: string) {
     hash = string.charCodeAt(i) + ((hash << 5) - hash);
   }
 
-  let color = "#";
+  let color = '#';
 
   for (i = 0; i < 3; i += 1) {
     const value = (hash >> (i * 8)) & 0xff;
@@ -18,7 +18,7 @@ export function stringToColor(string: string) {
 }
 
 export function stringAvatar(name: string, sx: any = {}) {
-  const nameParts = name.split(" ");
+  const nameParts = name.split(' ');
   const initials =
     nameParts.length === 1
       ? nameParts[0][0]

@@ -1,8 +1,8 @@
-import * as React from "react";
-import { Box, Typography, Avatar } from "@mui/material";
-import PersonIcon from "@mui/icons-material/Person";
-import PhoneIcon from "@mui/icons-material/Phone";
-import { stringAvatar } from "../../utils/avatar";
+import * as React from 'react';
+import { Box, Typography, Avatar } from '@mui/material';
+import PersonIcon from '@mui/icons-material/Person';
+import PhoneIcon from '@mui/icons-material/Phone';
+import { stringAvatar } from '../../utils/avatar';
 
 interface AppointmentDetailCardProps {
   doctorName: string;
@@ -20,8 +20,8 @@ const AppointmentDetailCard: React.FC<AppointmentDetailCardProps> = ({
   const image_sx = {
     height: 56,
     width: 56,
-    border: "2px solid",
-    borderColor: "secondary.main",
+    border: '2px solid',
+    borderColor: 'secondary.main',
   };
 
   return (

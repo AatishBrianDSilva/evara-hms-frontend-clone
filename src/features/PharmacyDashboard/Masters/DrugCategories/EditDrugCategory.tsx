@@ -1,4 +1,4 @@
-import React from "react";
+import React from 'react';
 import {
   Box,
   Button,
@@ -10,15 +10,15 @@ import {
   Grid,
   Skeleton,
   TextField,
-} from "@mui/material";
-import { useFormik } from "formik";
-import { useToast } from "../../../../context/ToastContext";
+} from '@mui/material';
+import { useFormik } from 'formik';
+import { useToast } from '../../../../context/ToastContext';
 import {
   useEditDrugCategoryMutation,
   useGetDrugCategoryByIdQuery,
-} from "../../../../services/pharmacyDashboardService/master/drugCategoryApi";
-import _ from "lodash";
-import { AddDrugCategoryValidationSchema } from "../../../../yup/pharmacyDashboard";
+} from '../../../../services/pharmacyDashboardService/master/drugCategoryApi';
+import _ from 'lodash';
+import { AddDrugCategoryValidationSchema } from '../../../../yup/pharmacyDashboard';
 
 interface EditDrugCategoryProps {
   openModal: boolean;
@@ -44,7 +44,13 @@ const skeletonLoader = () => {
             <Skeleton variant="rectangular" width="100%" height={56} />
           </Grid>
         </Grid>
-        <Box display={"flex"} justifyContent={"flex-end"} alignItems={"center"} gap={2} mb={2}>
+        <Box
+          display={'flex'}
+          justifyContent={'flex-end'}
+          alignItems={'center'}
+          gap={2}
+          mb={2}
+        >
           <Skeleton variant="rectangular" width={90} height={36} />
           <Skeleton variant="rectangular" width={90} height={36} />
         </Box>
@@ -53,28 +59,33 @@ const skeletonLoader = () => {
   );
 };
 
-const EditDrugCategory: React.FC<EditDrugCategoryProps> = ({ openModal, onClose, id }) => {
+const EditDrugCategory: React.FC<EditDrugCategoryProps> = ({
+  openModal,
+  onClose,
+  id,
+}) => {
   const { showPromiseToast } = useToast();
 
   const { data, isFetching, isLoading } = useGetDrugCategoryByIdQuery(id);
   const category = data?.data;
   const loading = isFetching || isLoading;
 
-  const [editDrugCategory, { isLoading: editLoading }] = useEditDrugCategoryMutation();
+  const [editDrugCategory, { isLoading: editLoading }] =
+    useEditDrugCategoryMutation();
   const handleFormSubmit = async (values: IFormValues) => {
     const payload = {
       id,
       name: values.name,
       notes: values.notes,
-      status: values.status ? "Active" : "Inactive",
+      status: values.status ? 'Active' : 'Inactive',
     };
 
     const promise = editDrugCategory(payload).unwrap();
 
     showPromiseToast(promise, {
-      loading: "Editing Drug Category...",
-      success: (data) => data || "Drug Category Edited Successfully",
-      error: (data) => data || "Failed to Edit Drug Category",
+      loading: 'Editing Drug Category...',
+      success: data => data || 'Drug Category Edited Successfully',
+      error: data => data || 'Failed to Edit Drug Category',
     });
 
     try {
@@ -87,9 +98,9 @@ const EditDrugCategory: React.FC<EditDrugCategoryProps> = ({ openModal, onClose,
   };
 
   const initialValues: IFormValues = {
-    name: category?.name || "",
-    notes: category?.notes || "",
-    status: category?.status === "Active" ? true : false,
+    name: category?.name || '',
+    notes: category?.notes || '',
+    status: category?.status === 'Active' ? true : false,
   };
 
   const formik = useFormik({
@@ -101,12 +112,12 @@ const EditDrugCategory: React.FC<EditDrugCategoryProps> = ({ openModal, onClose,
 
   return (
     <Dialog open={openModal} onClose={onClose} maxWidth="md" fullWidth>
-      <DialogTitle color={"primary"}>Edit Drug Category</DialogTitle>
+      <DialogTitle color={'primary'}>Edit Drug Category</DialogTitle>
       {loading ? (
         skeletonLoader()
       ) : (
         <DialogContent>
-          <Box component={"form"} onSubmit={formik.handleSubmit} p={2}>
+          <Box component={'form'} onSubmit={formik.handleSubmit} p={2}>
             <Grid container spacing={2} mb={2} mt={2}>
               <Grid item lg={4}>
                 <TextField
@@ -130,7 +141,7 @@ const EditDrugCategory: React.FC<EditDrugCategoryProps> = ({ openModal, onClose,
                   helperText={formik.touched.notes && formik.errors.notes}
                 />
               </Grid>
-              <Grid item lg={12} display={"flex"} justifyContent={"center"}>
+              <Grid item lg={12} display={'flex'} justifyContent={'center'}>
                 <FormControlLabel
                   label="Active ?"
                   control={
@@ -144,20 +155,28 @@ const EditDrugCategory: React.FC<EditDrugCategoryProps> = ({ openModal, onClose,
                 />
               </Grid>
             </Grid>
-            <Box display={"flex"} justifyContent={"flex-end"} alignItems={"center"} gap={2} mb={2}>
+            <Box
+              display={'flex'}
+              justifyContent={'flex-end'}
+              alignItems={'center'}
+              gap={2}
+              mb={2}
+            >
               <Button
                 variant="contained"
                 color="primary"
                 type="submit"
-                disabled={editLoading || _.isEqual(initialValues, formik.values)}
-                sx={{ width: "fit-content" }}
+                disabled={
+                  editLoading || _.isEqual(initialValues, formik.values)
+                }
+                sx={{ width: 'fit-content' }}
               >
                 Save
               </Button>
               <Button
                 variant="contained"
                 color="secondary"
-                sx={{ width: "fit-content" }}
+                sx={{ width: 'fit-content' }}
                 onClick={onClose}
               >
                 Cancel

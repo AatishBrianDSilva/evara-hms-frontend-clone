@@ -1,5 +1,5 @@
-import * as React from "react";
-import { Box, Skeleton, Avatar } from "@mui/material";
+import * as React from 'react';
+import { Box, Skeleton, Avatar } from '@mui/material';
 
 const SkeletonAppointmentDetailCard: React.FC = () => {
   return (
@@ -25,13 +25,23 @@ const SkeletonAppointmentDetailCard: React.FC = () => {
 
         {/* Patient Name Skeleton */}
         <Box display="flex" alignItems="center" mt={1}>
-          <Skeleton variant="rectangular" width="20px" height="20px" sx={{ mr: 1 }} />
+          <Skeleton
+            variant="rectangular"
+            width="20px"
+            height="20px"
+            sx={{ mr: 1 }}
+          />
           <Skeleton variant="text" width="60%" height={20} />
         </Box>
 
         {/* Patient Phone Number Skeleton */}
         <Box display="flex" alignItems="center" mt={1}>
-          <Skeleton variant="rectangular" width="20px" height="20px" sx={{ mr: 1 }} />
+          <Skeleton
+            variant="rectangular"
+            width="20px"
+            height="20px"
+            sx={{ mr: 1 }}
+          />
           <Skeleton variant="text" width="60%" height={20} />
         </Box>
       </Box>

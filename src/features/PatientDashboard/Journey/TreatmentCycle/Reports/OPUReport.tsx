@@ -1,23 +1,23 @@
-import React, { useContext } from "react";
-import { Box, Button, Grid, TextField, Typography } from "@mui/material";
-import { useFormik } from "formik";
-import FileUploadButton from "../../../../../components/FileUploadAndPreview/FileUploadButton";
-import { EBuckets, EDocumentTypes } from "../../../../../types/global";
-import { useSelector } from "react-redux";
-import { RootState } from "../../../../../app/store";
-import { useToast } from "../../../../../context/ToastContext";
-import ModalContext from "../../../../../context/ModalContext";
+import React, { useContext } from 'react';
+import { Box, Button, Grid, TextField, Typography } from '@mui/material';
+import { useFormik } from 'formik';
+import FileUploadButton from '../../../../../components/FileUploadAndPreview/FileUploadButton';
+import { EBuckets, EDocumentTypes } from '../../../../../types/global';
+import { useSelector } from 'react-redux';
+import { RootState } from '../../../../../app/store';
+import { useToast } from '../../../../../context/ToastContext';
+import ModalContext from '../../../../../context/ModalContext';
 import {
   useEditTreatmentCycleMutation,
   useGetTreatmentCyclesQuery,
-} from "../../../../../services/patientDashboardService/treatmentCycleApi";
-import { IPatientTreatmentCycleReport } from "../../../../../types/patientDashboard/treatmentCycle";
-import _ from "lodash";
-import CustomDatePicker from "../../../../../components/CustomDatePicker/CustomDatePicker";
-import CustomTimePicker from "../../../../../components/CustomDatePicker/CustomTimePicker";
-import FieldAutocomplete from "../../../../../components/FieldAutoComplete/FieldAutoComplete";
-import { DoctorSpeciality } from "../../../../../types/masterDashboard/global";
-import { useGetDoctorsQuery } from "../../../../../services/doctorsApi";
+} from '../../../../../services/patientDashboardService/treatmentCycleApi';
+import { IPatientTreatmentCycleReport } from '../../../../../types/patientDashboard/treatmentCycle';
+import _ from 'lodash';
+import CustomDatePicker from '../../../../../components/CustomDatePicker/CustomDatePicker';
+import CustomTimePicker from '../../../../../components/CustomDatePicker/CustomTimePicker';
+import FieldAutocomplete from '../../../../../components/FieldAutoComplete/FieldAutoComplete';
+import { DoctorSpeciality } from '../../../../../types/masterDashboard/global';
+import { useGetDoctorsQuery } from '../../../../../services/doctorsApi';
 
 interface IFormValues {
   preTreatments: string;
@@ -84,8 +84,11 @@ interface OPUReportProps {
   treatmentCycleId: string;
 }
 
-const OocyteAspirationReportForm: React.FC<OPUReportProps> = ({ report, treatmentCycleId }) => {
-  const [fileUploadedUrl, setFileUploadedUrl] = React.useState<string[]>([""]);
+const OocyteAspirationReportForm: React.FC<OPUReportProps> = ({
+  report,
+  treatmentCycleId,
+}) => {
+  const [fileUploadedUrl, setFileUploadedUrl] = React.useState<string[]>(['']);
 
   const patient = useSelector((state: RootState) => state.patients.patient);
 
@@ -112,87 +115,99 @@ const OocyteAspirationReportForm: React.FC<OPUReportProps> = ({ report, treatmen
     },
     {
       skip: !patient?.patientId,
-    }
+    },
   );
 
   const patientTreatmentCycles = treatmentCyclesData?.data || [];
 
   // Find the specific treatment cycle by ID
   const currentTreatmentCycle = patientTreatmentCycles.find(
-    (cycle) => cycle._id === treatmentCycleId
+    cycle => cycle._id === treatmentCycleId,
   );
 
   // Find the specific report by category and ID
-  const currentReport = currentTreatmentCycle?.reports.find((r) => r._id === report._id);
+  const currentReport = currentTreatmentCycle?.reports.find(
+    r => r._id === report._id,
+  );
 
   const initialValues: IFormValues = {
-    preTreatments: currentReport?.details?.preTreatments || "",
-    AddonDrug: currentReport?.details?.AddonDrug || "",
-    DaysofpreTreatment: currentReport?.details?.DaysofpreTreatment || "",
-    LMP: currentReport?.details?.LMP ? new Date(currentReport.details.LMP) : null,
-    PreTreatmentsComments: currentReport?.details?.PreTreatmentsComments || "",
-    stimulationProtocol: currentReport?.details?.stimulationProtocol || "",
-    daysOfStimulation: currentReport?.details?.daysOfStimulation || "",
+    preTreatments: currentReport?.details?.preTreatments || '',
+    AddonDrug: currentReport?.details?.AddonDrug || '',
+    DaysofpreTreatment: currentReport?.details?.DaysofpreTreatment || '',
+    LMP: currentReport?.details?.LMP
+      ? new Date(currentReport.details.LMP)
+      : null,
+    PreTreatmentsComments: currentReport?.details?.PreTreatmentsComments || '',
+    stimulationProtocol: currentReport?.details?.stimulationProtocol || '',
+    daysOfStimulation: currentReport?.details?.daysOfStimulation || '',
     dateOfStimulation: currentReport?.details?.dateOfStimulation
       ? new Date(currentReport.details.dateOfStimulation)
       : null,
-    oralStimulatingAgents: currentReport?.details?.oralStimulatingAgents || "",
-    rFSHDosage: currentReport?.details?.rFSHDosage || "",
-    rLHDosage: currentReport?.details?.rLHDosage || "",
-    hpHMGDosage: currentReport?.details?.hpHMGDosage || "",
-    hpFSHDosage: currentReport?.details?.hpFSHDosage || "",
-    totalGonadotrophinDose: currentReport?.details?.totalGonadotrophinDose || "",
-    downRegulationDays: currentReport?.details?.downRegulationDays || "",
-    downRegulationDate: currentReport?.details?.downRegulationDate || "",
-    downRegulationE2: currentReport?.details?.downRegulationE2 || "",
+    oralStimulatingAgents: currentReport?.details?.oralStimulatingAgents || '',
+    rFSHDosage: currentReport?.details?.rFSHDosage || '',
+    rLHDosage: currentReport?.details?.rLHDosage || '',
+    hpHMGDosage: currentReport?.details?.hpHMGDosage || '',
+    hpFSHDosage: currentReport?.details?.hpFSHDosage || '',
+    totalGonadotrophinDose:
+      currentReport?.details?.totalGonadotrophinDose || '',
+    downRegulationDays: currentReport?.details?.downRegulationDays || '',
+    downRegulationDate: currentReport?.details?.downRegulationDate || '',
+    downRegulationE2: currentReport?.details?.downRegulationE2 || '',
     downRegulationEndometrialThickness:
-      currentReport?.details?.downRegulationEndometrialThickness || "",
-    deviationsDuringCycle: currentReport?.details?.deviationsDuringCycle || "",
-    endometrialThickness: currentReport?.details?.endometrialThickness || "",
-    fluidInCavity: currentReport?.details?.fluidInCavity || "",
-    interventionsDuringCycle: currentReport?.details?.interventionsDuringCycle || "",
-    growthHormoneDosage: currentReport?.details?.growthHormoneDosage || "",
-    trigger: currentReport?.details?.trigger || "",
-    triggerComments: currentReport?.details?.triggerComments || "",
+      currentReport?.details?.downRegulationEndometrialThickness || '',
+    deviationsDuringCycle: currentReport?.details?.deviationsDuringCycle || '',
+    endometrialThickness: currentReport?.details?.endometrialThickness || '',
+    fluidInCavity: currentReport?.details?.fluidInCavity || '',
+    interventionsDuringCycle:
+      currentReport?.details?.interventionsDuringCycle || '',
+    growthHormoneDosage: currentReport?.details?.growthHormoneDosage || '',
+    trigger: currentReport?.details?.trigger || '',
+    triggerComments: currentReport?.details?.triggerComments || '',
     triggerDate: currentReport?.details?.triggerDate
       ? new Date(currentReport.details.triggerDate)
       : null,
     triggerTime: currentReport?.details?.triggerTime
       ? new Date(currentReport.details.triggerTime)
       : null,
-    repeatTrigger: currentReport?.details?.repeatTrigger || "",
-    preTriggerE2: currentReport?.details?.preTriggerE2 || "",
-    preTriggerLH: currentReport?.details?.preTriggerLH || "",
-    preTriggerProgesterone: currentReport?.details?.preTriggerProgesterone || "",
-    postTriggerLH: currentReport?.details?.postTriggerLH || "",
-    postTriggerProgesterone: currentReport?.details?.postTriggerProgesterone || "",
-    postTriggerBHCG: currentReport?.details?.postTriggerBHCG || "",
-    e2DayOfTrigger: currentReport?.details?.e2DayOfTrigger || "",
+    repeatTrigger: currentReport?.details?.repeatTrigger || '',
+    preTriggerE2: currentReport?.details?.preTriggerE2 || '',
+    preTriggerLH: currentReport?.details?.preTriggerLH || '',
+    preTriggerProgesterone:
+      currentReport?.details?.preTriggerProgesterone || '',
+    postTriggerLH: currentReport?.details?.postTriggerLH || '',
+    postTriggerProgesterone:
+      currentReport?.details?.postTriggerProgesterone || '',
+    postTriggerBHCG: currentReport?.details?.postTriggerBHCG || '',
+    e2DayOfTrigger: currentReport?.details?.e2DayOfTrigger || '',
     endometrialThicknessDayOfTrigger:
-      currentReport?.details?.endometrialThicknessDayOfTrigger || "",
-    opuDate: currentReport?.details?.opuDate ? new Date(currentReport.details.opuDate) : null,
-    opuTime: currentReport?.details?.opuTime ? new Date(currentReport.details.opuTime) : null,
-    totalDose: currentReport?.details?.totalDose || "",
-    surgeon: currentReport?.details?.surgeon || "",
+      currentReport?.details?.endometrialThicknessDayOfTrigger || '',
+    opuDate: currentReport?.details?.opuDate
+      ? new Date(currentReport.details.opuDate)
+      : null,
+    opuTime: currentReport?.details?.opuTime
+      ? new Date(currentReport.details.opuTime)
+      : null,
+    totalDose: currentReport?.details?.totalDose || '',
+    surgeon: currentReport?.details?.surgeon || '',
     anaesthetist: currentReport?.details?.anaesthetist || null,
-    otherSurgeons: currentReport?.details?.otherSurgeons || "",
-    selfDonor: currentReport?.details?.selfDonor || "",
-    differenceTriggerOPU: currentReport?.details?.differenceTriggerOPU || "",
-    folliclesAtTrigger: currentReport?.details?.folliclesAtTrigger || "",
-    oocytesRetrieved: currentReport?.details?.oocytesRetrieved || "",
-    matureOocytes: currentReport?.details?.matureOocytes || "",
-    immatureOocytes: currentReport?.details?.matureOocytes || "",
-    oocyteQuality: currentReport?.details?.oocyteQuality || "",
-    specificAbnormalities: currentReport?.details?.immatureOocytes || "",
+    otherSurgeons: currentReport?.details?.otherSurgeons || '',
+    selfDonor: currentReport?.details?.selfDonor || '',
+    differenceTriggerOPU: currentReport?.details?.differenceTriggerOPU || '',
+    folliclesAtTrigger: currentReport?.details?.folliclesAtTrigger || '',
+    oocytesRetrieved: currentReport?.details?.oocytesRetrieved || '',
+    matureOocytes: currentReport?.details?.matureOocytes || '',
+    immatureOocytes: currentReport?.details?.matureOocytes || '',
+    oocyteQuality: currentReport?.details?.oocyteQuality || '',
+    specificAbnormalities: currentReport?.details?.immatureOocytes || '',
 
-    Freezing: currentReport?.details?.Freezing || "",
-    description: currentReport?.details?.description || "",
+    Freezing: currentReport?.details?.Freezing || '',
+    description: currentReport?.details?.description || '',
   };
 
   const handleFormSubmit = async (values: IFormValues) => {
     const options = {
       conditions: {
-        editType: "update",
+        editType: 'update',
         category: report.category,
       },
     };
@@ -209,9 +224,9 @@ const OocyteAspirationReportForm: React.FC<OPUReportProps> = ({ report, treatmen
     const promise = updateOPUReport({ payload, options }).unwrap();
 
     showPromiseToast(promise, {
-      loading: "Saving OPU Report...",
-      success: (data) => data.message || "OPU Report Updated Successfully",
-      error: (data) => data.message || "Error Updating OPU Report",
+      loading: 'Saving OPU Report...',
+      success: data => data.message || 'OPU Report Updated Successfully',
+      error: data => data.message || 'Error Updating OPU Report',
     });
 
     try {
@@ -245,8 +260,13 @@ const OocyteAspirationReportForm: React.FC<OPUReportProps> = ({ report, treatmen
             fullWidth
             value={formik.values.preTreatments}
             onChange={formik.handleChange}
-            error={formik.touched.preTreatments && Boolean(formik.errors.preTreatments)}
-            helperText={formik.touched.preTreatments && formik.errors.preTreatments}
+            error={
+              formik.touched.preTreatments &&
+              Boolean(formik.errors.preTreatments)
+            }
+            helperText={
+              formik.touched.preTreatments && formik.errors.preTreatments
+            }
           />
         </Grid>
         <Grid item lg={4}>
@@ -268,8 +288,14 @@ const OocyteAspirationReportForm: React.FC<OPUReportProps> = ({ report, treatmen
             type="number"
             value={formik.values.DaysofpreTreatment}
             onChange={formik.handleChange}
-            error={formik.touched.DaysofpreTreatment && Boolean(formik.errors.DaysofpreTreatment)}
-            helperText={formik.touched.DaysofpreTreatment && formik.errors.DaysofpreTreatment}
+            error={
+              formik.touched.DaysofpreTreatment &&
+              Boolean(formik.errors.DaysofpreTreatment)
+            }
+            helperText={
+              formik.touched.DaysofpreTreatment &&
+              formik.errors.DaysofpreTreatment
+            }
           />
         </Grid>
         <Grid item lg={4}>
@@ -277,7 +303,7 @@ const OocyteAspirationReportForm: React.FC<OPUReportProps> = ({ report, treatmen
             label="LMP Date"
             name="LMP"
             value={formik.values.LMP}
-            onChange={(date) => formik.setFieldValue("LMP", date)}
+            onChange={date => formik.setFieldValue('LMP', date)}
             error={formik.touched.LMP && Boolean(formik.errors.LMP)}
           />
         </Grid>
@@ -292,10 +318,12 @@ const OocyteAspirationReportForm: React.FC<OPUReportProps> = ({ report, treatmen
               value={formik.values.PreTreatmentsComments}
               onChange={formik.handleChange}
               error={
-                formik.touched.PreTreatmentsComments && Boolean(formik.errors.PreTreatmentsComments)
+                formik.touched.PreTreatmentsComments &&
+                Boolean(formik.errors.PreTreatmentsComments)
               }
               helperText={
-                formik.touched.PreTreatmentsComments && formik.errors.PreTreatmentsComments
+                formik.touched.PreTreatmentsComments &&
+                formik.errors.PreTreatmentsComments
               }
             />
           </Grid>
@@ -313,8 +341,14 @@ const OocyteAspirationReportForm: React.FC<OPUReportProps> = ({ report, treatmen
             fullWidth
             value={formik.values.stimulationProtocol}
             onChange={formik.handleChange}
-            error={formik.touched.stimulationProtocol && Boolean(formik.errors.stimulationProtocol)}
-            helperText={formik.touched.stimulationProtocol && formik.errors.stimulationProtocol}
+            error={
+              formik.touched.stimulationProtocol &&
+              Boolean(formik.errors.stimulationProtocol)
+            }
+            helperText={
+              formik.touched.stimulationProtocol &&
+              formik.errors.stimulationProtocol
+            }
           />
         </Grid>
         <Grid item lg={4}>
@@ -325,8 +359,14 @@ const OocyteAspirationReportForm: React.FC<OPUReportProps> = ({ report, treatmen
             type="number"
             value={formik.values.daysOfStimulation}
             onChange={formik.handleChange}
-            error={formik.touched.daysOfStimulation && Boolean(formik.errors.daysOfStimulation)}
-            helperText={formik.touched.daysOfStimulation && formik.errors.daysOfStimulation}
+            error={
+              formik.touched.daysOfStimulation &&
+              Boolean(formik.errors.daysOfStimulation)
+            }
+            helperText={
+              formik.touched.daysOfStimulation &&
+              formik.errors.daysOfStimulation
+            }
           />
         </Grid>
         <Grid item lg={4}>
@@ -334,8 +374,11 @@ const OocyteAspirationReportForm: React.FC<OPUReportProps> = ({ report, treatmen
             label="Date of Stimulation"
             name="dateOfStimulation"
             value={formik.values.dateOfStimulation}
-            onChange={(date) => formik.setFieldValue("dateOfStimulation", date)}
-            error={formik.touched.dateOfStimulation && Boolean(formik.errors.dateOfStimulation)}
+            onChange={date => formik.setFieldValue('dateOfStimulation', date)}
+            error={
+              formik.touched.dateOfStimulation &&
+              Boolean(formik.errors.dateOfStimulation)
+            }
           />
         </Grid>
         <Grid item lg={4}>
@@ -346,9 +389,13 @@ const OocyteAspirationReportForm: React.FC<OPUReportProps> = ({ report, treatmen
             value={formik.values.oralStimulatingAgents}
             onChange={formik.handleChange}
             error={
-              formik.touched.oralStimulatingAgents && Boolean(formik.errors.oralStimulatingAgents)
+              formik.touched.oralStimulatingAgents &&
+              Boolean(formik.errors.oralStimulatingAgents)
             }
-            helperText={formik.touched.oralStimulatingAgents && formik.errors.oralStimulatingAgents}
+            helperText={
+              formik.touched.oralStimulatingAgents &&
+              formik.errors.oralStimulatingAgents
+            }
           />
         </Grid>
         <Grid item lg={4}>
@@ -359,8 +406,14 @@ const OocyteAspirationReportForm: React.FC<OPUReportProps> = ({ report, treatmen
             type="number"
             value={formik.values.downRegulationDays}
             onChange={formik.handleChange}
-            error={formik.touched.downRegulationDays && Boolean(formik.errors.downRegulationDays)}
-            helperText={formik.touched.downRegulationDays && formik.errors.downRegulationDays}
+            error={
+              formik.touched.downRegulationDays &&
+              Boolean(formik.errors.downRegulationDays)
+            }
+            helperText={
+              formik.touched.downRegulationDays &&
+              formik.errors.downRegulationDays
+            }
           />
         </Grid>
         <Grid item lg={4}>
@@ -368,8 +421,11 @@ const OocyteAspirationReportForm: React.FC<OPUReportProps> = ({ report, treatmen
             label="Down Regulation Date"
             name="downRegulationDate"
             value={formik.values.downRegulationDate}
-            onChange={(date) => formik.setFieldValue("downRegulationDate", date)}
-            error={formik.touched.downRegulationDate && Boolean(formik.errors.downRegulationDate)}
+            onChange={date => formik.setFieldValue('downRegulationDate', date)}
+            error={
+              formik.touched.downRegulationDate &&
+              Boolean(formik.errors.downRegulationDate)
+            }
           />
         </Grid>
         <Grid item lg={4}>
@@ -379,8 +435,13 @@ const OocyteAspirationReportForm: React.FC<OPUReportProps> = ({ report, treatmen
             fullWidth
             value={formik.values.downRegulationE2}
             onChange={formik.handleChange}
-            error={formik.touched.downRegulationE2 && Boolean(formik.errors.downRegulationE2)}
-            helperText={formik.touched.downRegulationE2 && formik.errors.downRegulationE2}
+            error={
+              formik.touched.downRegulationE2 &&
+              Boolean(formik.errors.downRegulationE2)
+            }
+            helperText={
+              formik.touched.downRegulationE2 && formik.errors.downRegulationE2
+            }
           />
         </Grid>
         <Grid item lg={4}>
@@ -413,7 +474,9 @@ const OocyteAspirationReportForm: React.FC<OPUReportProps> = ({ report, treatmen
               fullWidth
               value={formik.values.rFSHDosage}
               onChange={formik.handleChange}
-              error={formik.touched.rFSHDosage && Boolean(formik.errors.rFSHDosage)}
+              error={
+                formik.touched.rFSHDosage && Boolean(formik.errors.rFSHDosage)
+              }
               helperText={formik.touched.rFSHDosage && formik.errors.rFSHDosage}
             />
           </Grid>
@@ -424,7 +487,9 @@ const OocyteAspirationReportForm: React.FC<OPUReportProps> = ({ report, treatmen
               fullWidth
               value={formik.values.rLHDosage}
               onChange={formik.handleChange}
-              error={formik.touched.rLHDosage && Boolean(formik.errors.rLHDosage)}
+              error={
+                formik.touched.rLHDosage && Boolean(formik.errors.rLHDosage)
+              }
               helperText={formik.touched.rLHDosage && formik.errors.rLHDosage}
             />
           </Grid>
@@ -435,8 +500,12 @@ const OocyteAspirationReportForm: React.FC<OPUReportProps> = ({ report, treatmen
               fullWidth
               value={formik.values.hpHMGDosage}
               onChange={formik.handleChange}
-              error={formik.touched.hpHMGDosage && Boolean(formik.errors.hpHMGDosage)}
-              helperText={formik.touched.hpHMGDosage && formik.errors.hpHMGDosage}
+              error={
+                formik.touched.hpHMGDosage && Boolean(formik.errors.hpHMGDosage)
+              }
+              helperText={
+                formik.touched.hpHMGDosage && formik.errors.hpHMGDosage
+              }
             />
           </Grid>
           <Grid item lg={4}>
@@ -446,8 +515,12 @@ const OocyteAspirationReportForm: React.FC<OPUReportProps> = ({ report, treatmen
               fullWidth
               value={formik.values.hpFSHDosage}
               onChange={formik.handleChange}
-              error={formik.touched.hpFSHDosage && Boolean(formik.errors.hpFSHDosage)}
-              helperText={formik.touched.hpFSHDosage && formik.errors.hpFSHDosage}
+              error={
+                formik.touched.hpFSHDosage && Boolean(formik.errors.hpFSHDosage)
+              }
+              helperText={
+                formik.touched.hpFSHDosage && formik.errors.hpFSHDosage
+              }
             />
           </Grid>
           <Grid item lg={4}>
@@ -462,7 +535,8 @@ const OocyteAspirationReportForm: React.FC<OPUReportProps> = ({ report, treatmen
                 Boolean(formik.errors.totalGonadotrophinDose)
               }
               helperText={
-                formik.touched.totalGonadotrophinDose && formik.errors.totalGonadotrophinDose
+                formik.touched.totalGonadotrophinDose &&
+                formik.errors.totalGonadotrophinDose
               }
             />
           </Grid>
@@ -474,10 +548,12 @@ const OocyteAspirationReportForm: React.FC<OPUReportProps> = ({ report, treatmen
               value={formik.values.deviationsDuringCycle}
               onChange={formik.handleChange}
               error={
-                formik.touched.deviationsDuringCycle && Boolean(formik.errors.deviationsDuringCycle)
+                formik.touched.deviationsDuringCycle &&
+                Boolean(formik.errors.deviationsDuringCycle)
               }
               helperText={
-                formik.touched.deviationsDuringCycle && formik.errors.deviationsDuringCycle
+                formik.touched.deviationsDuringCycle &&
+                formik.errors.deviationsDuringCycle
               }
             />
           </Grid>
@@ -489,9 +565,13 @@ const OocyteAspirationReportForm: React.FC<OPUReportProps> = ({ report, treatmen
               value={formik.values.endometrialThickness}
               onChange={formik.handleChange}
               error={
-                formik.touched.endometrialThickness && Boolean(formik.errors.endometrialThickness)
+                formik.touched.endometrialThickness &&
+                Boolean(formik.errors.endometrialThickness)
               }
-              helperText={formik.touched.endometrialThickness && formik.errors.endometrialThickness}
+              helperText={
+                formik.touched.endometrialThickness &&
+                formik.errors.endometrialThickness
+              }
             />
           </Grid>
           <Grid item lg={4}>
@@ -501,8 +581,13 @@ const OocyteAspirationReportForm: React.FC<OPUReportProps> = ({ report, treatmen
               fullWidth
               value={formik.values.fluidInCavity}
               onChange={formik.handleChange}
-              error={formik.touched.fluidInCavity && Boolean(formik.errors.fluidInCavity)}
-              helperText={formik.touched.fluidInCavity && formik.errors.fluidInCavity}
+              error={
+                formik.touched.fluidInCavity &&
+                Boolean(formik.errors.fluidInCavity)
+              }
+              helperText={
+                formik.touched.fluidInCavity && formik.errors.fluidInCavity
+              }
             />
           </Grid>
           <Grid item lg={4}>
@@ -517,7 +602,8 @@ const OocyteAspirationReportForm: React.FC<OPUReportProps> = ({ report, treatmen
                 Boolean(formik.errors.interventionsDuringCycle)
               }
               helperText={
-                formik.touched.interventionsDuringCycle && formik.errors.interventionsDuringCycle
+                formik.touched.interventionsDuringCycle &&
+                formik.errors.interventionsDuringCycle
               }
             />
           </Grid>
@@ -529,9 +615,13 @@ const OocyteAspirationReportForm: React.FC<OPUReportProps> = ({ report, treatmen
               value={formik.values.growthHormoneDosage}
               onChange={formik.handleChange}
               error={
-                formik.touched.growthHormoneDosage && Boolean(formik.errors.growthHormoneDosage)
+                formik.touched.growthHormoneDosage &&
+                Boolean(formik.errors.growthHormoneDosage)
               }
-              helperText={formik.touched.growthHormoneDosage && formik.errors.growthHormoneDosage}
+              helperText={
+                formik.touched.growthHormoneDosage &&
+                formik.errors.growthHormoneDosage
+              }
             />
           </Grid>
         </Grid>
@@ -560,16 +650,20 @@ const OocyteAspirationReportForm: React.FC<OPUReportProps> = ({ report, treatmen
               label="Trigger Date"
               name="triggerDate"
               value={formik.values.triggerDate}
-              onChange={(date) => formik.setFieldValue("triggerDate", date)}
-              error={formik.touched.triggerDate && Boolean(formik.errors.triggerDate)}
+              onChange={date => formik.setFieldValue('triggerDate', date)}
+              error={
+                formik.touched.triggerDate && Boolean(formik.errors.triggerDate)
+              }
             />
           </Grid>
           <Grid item lg={4}>
             <CustomTimePicker
               label="Trigger Time"
               value={formik.values.triggerTime}
-              onChange={(date) => formik.setFieldValue("triggerTime", date)}
-              error={formik.touched.triggerTime && Boolean(formik.errors.triggerTime)}
+              onChange={date => formik.setFieldValue('triggerTime', date)}
+              error={
+                formik.touched.triggerTime && Boolean(formik.errors.triggerTime)
+              }
             />
           </Grid>
           <Grid container pl={2} pt={2}>
@@ -582,8 +676,14 @@ const OocyteAspirationReportForm: React.FC<OPUReportProps> = ({ report, treatmen
                 minRows={2}
                 value={formik.values.triggerComments}
                 onChange={formik.handleChange}
-                error={formik.touched.triggerComments && Boolean(formik.errors.triggerComments)}
-                helperText={formik.touched.triggerComments && formik.errors.triggerComments}
+                error={
+                  formik.touched.triggerComments &&
+                  Boolean(formik.errors.triggerComments)
+                }
+                helperText={
+                  formik.touched.triggerComments &&
+                  formik.errors.triggerComments
+                }
               />
             </Grid>
           </Grid>
@@ -594,8 +694,13 @@ const OocyteAspirationReportForm: React.FC<OPUReportProps> = ({ report, treatmen
               fullWidth
               value={formik.values.repeatTrigger}
               onChange={formik.handleChange}
-              error={formik.touched.repeatTrigger && Boolean(formik.errors.repeatTrigger)}
-              helperText={formik.touched.repeatTrigger && formik.errors.repeatTrigger}
+              error={
+                formik.touched.repeatTrigger &&
+                Boolean(formik.errors.repeatTrigger)
+              }
+              helperText={
+                formik.touched.repeatTrigger && formik.errors.repeatTrigger
+              }
             />
           </Grid>
           <Grid item lg={4}>
@@ -605,8 +710,13 @@ const OocyteAspirationReportForm: React.FC<OPUReportProps> = ({ report, treatmen
               fullWidth
               value={formik.values.preTriggerE2}
               onChange={formik.handleChange}
-              error={formik.touched.preTriggerE2 && Boolean(formik.errors.preTriggerE2)}
-              helperText={formik.touched.preTriggerE2 && formik.errors.preTriggerE2}
+              error={
+                formik.touched.preTriggerE2 &&
+                Boolean(formik.errors.preTriggerE2)
+              }
+              helperText={
+                formik.touched.preTriggerE2 && formik.errors.preTriggerE2
+              }
             />
           </Grid>
           <Grid item lg={4}>
@@ -616,8 +726,13 @@ const OocyteAspirationReportForm: React.FC<OPUReportProps> = ({ report, treatmen
               fullWidth
               value={formik.values.preTriggerLH}
               onChange={formik.handleChange}
-              error={formik.touched.preTriggerLH && Boolean(formik.errors.preTriggerLH)}
-              helperText={formik.touched.preTriggerLH && formik.errors.preTriggerLH}
+              error={
+                formik.touched.preTriggerLH &&
+                Boolean(formik.errors.preTriggerLH)
+              }
+              helperText={
+                formik.touched.preTriggerLH && formik.errors.preTriggerLH
+              }
             />
           </Grid>
           <Grid item lg={4}>
@@ -632,7 +747,8 @@ const OocyteAspirationReportForm: React.FC<OPUReportProps> = ({ report, treatmen
                 Boolean(formik.errors.preTriggerProgesterone)
               }
               helperText={
-                formik.touched.preTriggerProgesterone && formik.errors.preTriggerProgesterone
+                formik.touched.preTriggerProgesterone &&
+                formik.errors.preTriggerProgesterone
               }
             />
           </Grid>
@@ -643,8 +759,13 @@ const OocyteAspirationReportForm: React.FC<OPUReportProps> = ({ report, treatmen
               fullWidth
               value={formik.values.postTriggerLH}
               onChange={formik.handleChange}
-              error={formik.touched.postTriggerLH && Boolean(formik.errors.postTriggerLH)}
-              helperText={formik.touched.postTriggerLH && formik.errors.postTriggerLH}
+              error={
+                formik.touched.postTriggerLH &&
+                Boolean(formik.errors.postTriggerLH)
+              }
+              helperText={
+                formik.touched.postTriggerLH && formik.errors.postTriggerLH
+              }
             />
           </Grid>
           <Grid item lg={4}>
@@ -659,7 +780,8 @@ const OocyteAspirationReportForm: React.FC<OPUReportProps> = ({ report, treatmen
                 Boolean(formik.errors.postTriggerProgesterone)
               }
               helperText={
-                formik.touched.postTriggerProgesterone && formik.errors.postTriggerProgesterone
+                formik.touched.postTriggerProgesterone &&
+                formik.errors.postTriggerProgesterone
               }
             />
           </Grid>
@@ -670,8 +792,13 @@ const OocyteAspirationReportForm: React.FC<OPUReportProps> = ({ report, treatmen
               fullWidth
               value={formik.values.postTriggerBHCG}
               onChange={formik.handleChange}
-              error={formik.touched.postTriggerBHCG && Boolean(formik.errors.postTriggerBHCG)}
-              helperText={formik.touched.postTriggerBHCG && formik.errors.postTriggerBHCG}
+              error={
+                formik.touched.postTriggerBHCG &&
+                Boolean(formik.errors.postTriggerBHCG)
+              }
+              helperText={
+                formik.touched.postTriggerBHCG && formik.errors.postTriggerBHCG
+              }
             />
           </Grid>
           <Grid item lg={4}>
@@ -681,8 +808,13 @@ const OocyteAspirationReportForm: React.FC<OPUReportProps> = ({ report, treatmen
               fullWidth
               value={formik.values.e2DayOfTrigger}
               onChange={formik.handleChange}
-              error={formik.touched.e2DayOfTrigger && Boolean(formik.errors.e2DayOfTrigger)}
-              helperText={formik.touched.e2DayOfTrigger && formik.errors.e2DayOfTrigger}
+              error={
+                formik.touched.e2DayOfTrigger &&
+                Boolean(formik.errors.e2DayOfTrigger)
+              }
+              helperText={
+                formik.touched.e2DayOfTrigger && formik.errors.e2DayOfTrigger
+              }
             />
           </Grid>
           <Grid item lg={4}>
@@ -714,7 +846,7 @@ const OocyteAspirationReportForm: React.FC<OPUReportProps> = ({ report, treatmen
             label="OPU Date"
             name="opuDate"
             value={formik.values.opuDate}
-            onChange={(date) => formik.setFieldValue("opuDate", date)}
+            onChange={date => formik.setFieldValue('opuDate', date)}
             error={formik.touched.opuDate && Boolean(formik.errors.opuDate)}
           />
         </Grid>
@@ -722,7 +854,7 @@ const OocyteAspirationReportForm: React.FC<OPUReportProps> = ({ report, treatmen
           <CustomTimePicker
             label="OPU Time"
             value={formik.values.opuTime}
-            onChange={(date) => formik.setFieldValue("opuTime", date)}
+            onChange={date => formik.setFieldValue('opuTime', date)}
             error={formik.touched.opuTime && Boolean(formik.errors.opuTime)}
           />
         </Grid>
@@ -740,25 +872,31 @@ const OocyteAspirationReportForm: React.FC<OPUReportProps> = ({ report, treatmen
         <Grid item lg={4}>
           <FieldAutocomplete
             options={doctors}
-            getOptionLabel={(option) => `${option.firstName || ""} ${option.lastName || ""}`}
+            getOptionLabel={option =>
+              `${option.firstName || ''} ${option.lastName || ''}`
+            }
             isOptionEqualToValue={(option, value) => option._id === value._id}
             value={formik.values.surgeon}
-            onChange={(newValue) => formik.setFieldValue("surgeon", newValue)}
+            onChange={newValue => formik.setFieldValue('surgeon', newValue)}
             label="Surgeon"
           />
         </Grid>
         <Grid item lg={4}>
           <FieldAutocomplete
             options={doctors}
-            getOptionLabel={(option) => `${option.firstName || ""} ${option.lastName || ""}`}
+            getOptionLabel={option =>
+              `${option.firstName || ''} ${option.lastName || ''}`
+            }
             filterOptions={(options, _state) => {
               return options.filter(
-                (option) => option.speciality === DoctorSpeciality.Anaesthetist
+                option => option.speciality === DoctorSpeciality.Anaesthetist,
               );
             }}
             isOptionEqualToValue={(option, value) => option._id === value._id}
             value={formik.values.anaesthetist}
-            onChange={(newValue) => formik.setFieldValue("anaesthetist", newValue)}
+            onChange={newValue =>
+              formik.setFieldValue('anaesthetist', newValue)
+            }
             label="Anaesthetist"
           />
         </Grid>
@@ -769,8 +907,13 @@ const OocyteAspirationReportForm: React.FC<OPUReportProps> = ({ report, treatmen
             fullWidth
             value={formik.values.otherSurgeons}
             onChange={formik.handleChange}
-            error={formik.touched.otherSurgeons && Boolean(formik.errors.otherSurgeons)}
-            helperText={formik.touched.otherSurgeons && formik.errors.otherSurgeons}
+            error={
+              formik.touched.otherSurgeons &&
+              Boolean(formik.errors.otherSurgeons)
+            }
+            helperText={
+              formik.touched.otherSurgeons && formik.errors.otherSurgeons
+            }
           />
         </Grid>
         <Grid item lg={4}>
@@ -792,9 +935,13 @@ const OocyteAspirationReportForm: React.FC<OPUReportProps> = ({ report, treatmen
             value={formik.values.differenceTriggerOPU}
             onChange={formik.handleChange}
             error={
-              formik.touched.differenceTriggerOPU && Boolean(formik.errors.differenceTriggerOPU)
+              formik.touched.differenceTriggerOPU &&
+              Boolean(formik.errors.differenceTriggerOPU)
             }
-            helperText={formik.touched.differenceTriggerOPU && formik.errors.differenceTriggerOPU}
+            helperText={
+              formik.touched.differenceTriggerOPU &&
+              formik.errors.differenceTriggerOPU
+            }
           />
         </Grid>
         <Grid item lg={4}>
@@ -804,8 +951,14 @@ const OocyteAspirationReportForm: React.FC<OPUReportProps> = ({ report, treatmen
             fullWidth
             value={formik.values.folliclesAtTrigger}
             onChange={formik.handleChange}
-            error={formik.touched.folliclesAtTrigger && Boolean(formik.errors.folliclesAtTrigger)}
-            helperText={formik.touched.folliclesAtTrigger && formik.errors.folliclesAtTrigger}
+            error={
+              formik.touched.folliclesAtTrigger &&
+              Boolean(formik.errors.folliclesAtTrigger)
+            }
+            helperText={
+              formik.touched.folliclesAtTrigger &&
+              formik.errors.folliclesAtTrigger
+            }
           />
         </Grid>
         <Grid item lg={4}>
@@ -815,8 +968,13 @@ const OocyteAspirationReportForm: React.FC<OPUReportProps> = ({ report, treatmen
             fullWidth
             value={formik.values.oocytesRetrieved}
             onChange={formik.handleChange}
-            error={formik.touched.oocytesRetrieved && Boolean(formik.errors.oocytesRetrieved)}
-            helperText={formik.touched.oocytesRetrieved && formik.errors.oocytesRetrieved}
+            error={
+              formik.touched.oocytesRetrieved &&
+              Boolean(formik.errors.oocytesRetrieved)
+            }
+            helperText={
+              formik.touched.oocytesRetrieved && formik.errors.oocytesRetrieved
+            }
           />
         </Grid>
         <Grid item lg={4}>
@@ -826,8 +984,13 @@ const OocyteAspirationReportForm: React.FC<OPUReportProps> = ({ report, treatmen
             fullWidth
             value={formik.values.matureOocytes}
             onChange={formik.handleChange}
-            error={formik.touched.matureOocytes && Boolean(formik.errors.matureOocytes)}
-            helperText={formik.touched.matureOocytes && formik.errors.matureOocytes}
+            error={
+              formik.touched.matureOocytes &&
+              Boolean(formik.errors.matureOocytes)
+            }
+            helperText={
+              formik.touched.matureOocytes && formik.errors.matureOocytes
+            }
           />
         </Grid>
         <Grid item lg={4}>
@@ -837,8 +1000,13 @@ const OocyteAspirationReportForm: React.FC<OPUReportProps> = ({ report, treatmen
             fullWidth
             value={formik.values.immatureOocytes}
             onChange={formik.handleChange}
-            error={formik.touched.immatureOocytes && Boolean(formik.errors.immatureOocytes)}
-            helperText={formik.touched.immatureOocytes && formik.errors.immatureOocytes}
+            error={
+              formik.touched.immatureOocytes &&
+              Boolean(formik.errors.immatureOocytes)
+            }
+            helperText={
+              formik.touched.immatureOocytes && formik.errors.immatureOocytes
+            }
           />
         </Grid>
 
@@ -850,8 +1018,13 @@ const OocyteAspirationReportForm: React.FC<OPUReportProps> = ({ report, treatmen
             fullWidth
             value={formik.values.oocyteQuality}
             onChange={formik.handleChange}
-            error={formik.touched.oocyteQuality && Boolean(formik.errors.oocyteQuality)}
-            helperText={formik.touched.oocyteQuality && formik.errors.oocyteQuality}
+            error={
+              formik.touched.oocyteQuality &&
+              Boolean(formik.errors.oocyteQuality)
+            }
+            helperText={
+              formik.touched.oocyteQuality && formik.errors.oocyteQuality
+            }
           />
         </Grid>
         {/* Specific Abnormalities in Oocytes */}
@@ -863,9 +1036,13 @@ const OocyteAspirationReportForm: React.FC<OPUReportProps> = ({ report, treatmen
             value={formik.values.specificAbnormalities}
             onChange={formik.handleChange}
             error={
-              formik.touched.specificAbnormalities && Boolean(formik.errors.specificAbnormalities)
+              formik.touched.specificAbnormalities &&
+              Boolean(formik.errors.specificAbnormalities)
             }
-            helperText={formik.touched.specificAbnormalities && formik.errors.specificAbnormalities}
+            helperText={
+              formik.touched.specificAbnormalities &&
+              formik.errors.specificAbnormalities
+            }
           />
         </Grid>
         <Grid item lg={4}>
@@ -912,23 +1089,31 @@ const OocyteAspirationReportForm: React.FC<OPUReportProps> = ({ report, treatmen
           />
         </Grid>
       </Grid>
-      <Box display={"flex"} justifyContent={"flex-end"} alignItems={"center"} gap={2} mb={2} mt={2}>
+      <Box
+        display={'flex'}
+        justifyContent={'flex-end'}
+        alignItems={'center'}
+        gap={2}
+        mb={2}
+        mt={2}
+      >
         <Button
           variant="contained"
           color="primary"
           type="submit"
           disabled={
             isLoading ||
-            (_.isEqual(formik.values, formik.initialValues) && fileUploadedUrl.length === 0)
+            (_.isEqual(formik.values, formik.initialValues) &&
+              fileUploadedUrl.length === 0)
           }
-          sx={{ width: "fit-content" }}
+          sx={{ width: 'fit-content' }}
         >
           Save
         </Button>
         <Button
           variant="contained"
           color="secondary"
-          sx={{ width: "fit-content" }}
+          sx={{ width: 'fit-content' }}
           onClick={closeModal}
         >
           Cancel

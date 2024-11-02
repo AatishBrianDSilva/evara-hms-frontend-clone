@@ -23,19 +23,27 @@ const MobileHeader: React.FC = () => {
     return pathSegments.some(segment => !isNaN(Number(segment)));
   };
 
-  const pageNameRaw = location.pathname.split("/").pop() || "Home";
+  const pageNameRaw = location.pathname.split('/').pop() || 'Home';
   // If the pageNameRaw is numeric, format it as "Patient ID: [Number]"
   const pageName = !isNaN(Number(pageNameRaw))
     ? `PATIENT ${pageNameRaw}`
-    : pageNameRaw.replace(/-/g, " ").toUpperCase();
+    : pageNameRaw.replace(/-/g, ' ').toUpperCase();
 
   return (
     <Box sx={{ flexGrow: 1 }}>
       <AppBar sx={{ backgroundColor: 'white' }} position="fixed">
         <Toolbar>
-          {shouldHideBackButton() ? (<Avatar className='header-logo' style={{ color: theme.palette.primary.main, backgroundColor: 'transparent' }}>
-            <Dashboard />
-          </Avatar>) : (
+          {shouldHideBackButton() ? (
+            <Avatar
+              className="header-logo"
+              style={{
+                color: theme.palette.primary.main,
+                backgroundColor: 'transparent',
+              }}
+            >
+              <Dashboard />
+            </Avatar>
+          ) : (
             <IconButton
               size="small"
               edge="start"

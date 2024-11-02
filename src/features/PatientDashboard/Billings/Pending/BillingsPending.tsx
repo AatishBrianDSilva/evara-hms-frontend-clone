@@ -1,26 +1,26 @@
-import Box from "@mui/material/Box";
-import React, { useState } from "react";
-import CustomDataGrid from "../../../../components/CustomDataGrid/CustomDataGrid";
+import Box from '@mui/material/Box';
+import React, { useState } from 'react';
+import CustomDataGrid from '../../../../components/CustomDataGrid/CustomDataGrid';
 
-import { GridActionsCellItem, GridColDef } from "@mui/x-data-grid";
+import { GridActionsCellItem, GridColDef } from '@mui/x-data-grid';
 
-import { Button, Chip, Skeleton, Tooltip } from "@mui/material";
-import { Delete, DiscountTwoTone, Print } from "@mui/icons-material";
+import { Button, Chip, Skeleton, Tooltip } from '@mui/material';
+import { Delete, DiscountTwoTone, Print } from '@mui/icons-material';
 import {
   useDeleteBillingMutation,
   useGetBillingsQuery,
-} from "../../../../services/patientDashboardService/billings/billingApi";
-import { useSelector } from "react-redux";
-import { RootState } from "../../../../app/store";
-import { useToast } from "../../../../context/ToastContext";
-import DeleteConfirmationModal from "../../../../components/DeleteConfirmationModal/DeleteConfirmationModal";
-import ProcessPendingModal from "./ProcessPendingModal";
-import PrintPending from "./PrintPending";
-import EditPending from "./EditPending";
-import { formatToIndianCurrencyFormat } from "../../../../utils/formatToIndianCurrencyFormat";
-import { EPatientBillingStatus } from "../../../../types/patientDashboard/billings";
-import { usePrint } from "../../../../context/PrintPDFContext";
-import { sortColumnWithStringPrefix } from "../../../../utils/column";
+} from '../../../../services/patientDashboardService/billings/billingApi';
+import { useSelector } from 'react-redux';
+import { RootState } from '../../../../app/store';
+import { useToast } from '../../../../context/ToastContext';
+import DeleteConfirmationModal from '../../../../components/DeleteConfirmationModal/DeleteConfirmationModal';
+import ProcessPendingModal from './ProcessPendingModal';
+import PrintPending from './PrintPending';
+import EditPending from './EditPending';
+import { formatToIndianCurrencyFormat } from '../../../../utils/formatToIndianCurrencyFormat';
+import { EPatientBillingStatus } from '../../../../types/patientDashboard/billings';
+import { usePrint } from '../../../../context/PrintPDFContext';
+import { sortColumnWithStringPrefix } from '../../../../utils/column';
 
 interface RowType {
   _id: string;
@@ -59,105 +59,106 @@ const BillingsPending: React.FC = () => {
       skip: !patient?.patientId,
       refetchOnFocus: true,
       refetchOnMountOrArgChange: true,
-    }
+    },
   );
   const patientBillingsPending = data?.data?.records || [];
   const patientBillingSummary = data?.data?.summary || {};
   const patientBillingsPagination = data?.data?.pagination;
   const patientBillingsLoading = isLoading || isFetching;
 
-  console.log("Pending Billing Data", patientBillingsPending);
+  console.log('Pending Billing Data', patientBillingsPending);
   const getRowId = (row: RowType) => row._id;
 
   // Delete investigation
-  const [deletePendingBillings, { isLoading: isDeleteLoading }] = useDeleteBillingMutation();
+  const [deletePendingBillings, { isLoading: isDeleteLoading }] =
+    useDeleteBillingMutation();
 
   const handleDelete = async () => {
     const id = selectedRow.id;
     const promise = deletePendingBillings(id).unwrap();
 
     showPromiseToast(promise, {
-      loading: "Deleting Bill...",
-      success: () => "Bill deleted successfully",
-      error: () => "Error deleting Bill",
+      loading: 'Deleting Bill...',
+      success: () => 'Bill deleted successfully',
+      error: () => 'Error deleting Bill',
     });
 
     try {
       await promise;
     } catch (error) {
-      console.error("Error deleting bill", error);
+      console.error('Error deleting bill', error);
     }
     closeDeleteModal();
   };
 
   const columnsConfig: GridColDef[] = [
     {
-      field: "createdAt",
-      headerName: "Date",
-      type: "date",
+      field: 'createdAt',
+      headerName: 'Date',
+      type: 'date',
       flex: 1,
       valueFormatter(params) {
         const date = new Date(params.value);
-        const day = String(date.getDate()).padStart(2, "0");
-        const month = String(date.getMonth() + 1).padStart(2, "0"); // Months are 0-based
+        const day = String(date.getDate()).padStart(2, '0');
+        const month = String(date.getMonth() + 1).padStart(2, '0'); // Months are 0-based
         const year = String(date.getFullYear()).slice(-2); // Get last two digits of the year
         return `${day}/${month}/${year}`;
       },
     },
     {
-      field: "billingId",
-      headerName: "Bill No.",
+      field: 'billingId',
+      headerName: 'Bill No.',
       flex: 1,
       sortComparator: sortColumnWithStringPrefix,
     },
     {
-      field: "billType",
-      headerName: "Category",
+      field: 'billType',
+      headerName: 'Category',
       flex: 1,
     },
     {
-      field: "amount",
-      headerName: "Amount",
+      field: 'amount',
+      headerName: 'Amount',
       flex: 1,
-      valueFormatter: (params) => formatToIndianCurrencyFormat(params.value),
+      valueFormatter: params => formatToIndianCurrencyFormat(params.value),
     },
     {
-      field: "tax",
-      headerName: "Tax",
+      field: 'tax',
+      headerName: 'Tax',
       flex: 1,
-      valueFormatter: (params) =>
-        params.value ? formatToIndianCurrencyFormat(params.value) : "NA",
+      valueFormatter: params =>
+        params.value ? formatToIndianCurrencyFormat(params.value) : 'NA',
     },
     {
-      field: "subTotal",
-      headerName: "Total",
+      field: 'subTotal',
+      headerName: 'Total',
       flex: 1,
-      valueGetter: (params) => formatToIndianCurrencyFormat(params.value),
+      valueGetter: params => formatToIndianCurrencyFormat(params.value),
     },
     {
-      field: "discount",
-      headerName: "Discount",
+      field: 'discount',
+      headerName: 'Discount',
       flex: 1,
-      valueFormatter: (params) => formatToIndianCurrencyFormat(params.value),
+      valueFormatter: params => formatToIndianCurrencyFormat(params.value),
     },
     {
-      field: "totalPaid",
-      headerName: "Paid",
+      field: 'totalPaid',
+      headerName: 'Paid',
       flex: 1,
-      valueFormatter: (params) => formatToIndianCurrencyFormat(params.value),
+      valueFormatter: params => formatToIndianCurrencyFormat(params.value),
     },
     {
-      field: "totalDues",
-      headerName: "Due",
+      field: 'totalDues',
+      headerName: 'Due',
       flex: 1,
-      valueFormatter: (params) => formatToIndianCurrencyFormat(params.value),
+      valueFormatter: params => formatToIndianCurrencyFormat(params.value),
     },
     {
-      field: "actions",
-      headerName: "Actions",
+      field: 'actions',
+      headerName: 'Actions',
       flex: 1,
-      type: "actions",
-      getActions: (params) => {
+      type: 'actions',
+      getActions: params => {
         const row = params.row;
         if (row.totalDues === row.grandTotal) {
           return [
@@ -245,30 +246,51 @@ const BillingsPending: React.FC = () => {
   };
 
   return (
-    <Box p={2} display={"flex"} flexDirection={"column"} flex={1}>
+    <Box p={2} display={'flex'} flexDirection={'column'} flex={1}>
       {patientBillingsLoading ? (
-        <Box display={"flex"} justifyContent="space-between" alignItems="center" mb={3}>
+        <Box
+          display={'flex'}
+          justifyContent="space-between"
+          alignItems="center"
+          mb={3}
+        >
           <Skeleton width={125} height={35} variant="rounded" />
           <Skeleton width={125} height={30} variant="rounded" />
           <Skeleton width={125} height={30} variant="rounded" />
           <Skeleton width={125} height={30} variant="rounded" />
         </Box>
       ) : (
-        <Box display={"flex"} justifyContent="space-between" alignItems="center" mb={3}>
+        <Box
+          display={'flex'}
+          justifyContent="space-between"
+          alignItems="center"
+          mb={3}
+        >
           <Chip
-            label={"Amount: " + formatToIndianCurrencyFormat(patientBillingSummary.amount)}
+            label={
+              'Amount: ' +
+              formatToIndianCurrencyFormat(patientBillingSummary.amount)
+            }
             color="primary"
           />
           <Chip
-            label={"Payment: " + formatToIndianCurrencyFormat(patientBillingSummary.payment)}
+            label={
+              'Payment: ' +
+              formatToIndianCurrencyFormat(patientBillingSummary.payment)
+            }
             color="primary"
           />
           <Chip
-            label={"Discount: " + formatToIndianCurrencyFormat(patientBillingSummary.discount)}
+            label={
+              'Discount: ' +
+              formatToIndianCurrencyFormat(patientBillingSummary.discount)
+            }
             color="primary"
           />
           <Chip
-            label={"Due: " + formatToIndianCurrencyFormat(patientBillingSummary.due)}
+            label={
+              'Due: ' + formatToIndianCurrencyFormat(patientBillingSummary.due)
+            }
             color="primary"
           />
         </Box>
@@ -285,13 +307,18 @@ const BillingsPending: React.FC = () => {
         onPageChange={handlePageChange}
         onPageSizeChange={handlePageSizeChange}
         loading={patientBillingsLoading}
-        sx={{ height: "100%" }}
+        sx={{ height: '100%' }}
         enablePagination={true}
         checkboxSelection={true}
-        onSelectionChange={(newSelection) => setCheckedRows(newSelection)}
+        onSelectionChange={newSelection => setCheckedRows(newSelection)}
       />
 
-      <Box display={"flex"} justifyContent="flex-end" alignItems="center" mt={3}>
+      <Box
+        display={'flex'}
+        justifyContent="flex-end"
+        alignItems="center"
+        mt={3}
+      >
         <Button
           variant="contained"
           color="primary"
@@ -306,16 +333,24 @@ const BillingsPending: React.FC = () => {
         <ProcessPendingModal
           openModal={isProcessModalOpen}
           onClose={closeProcessModal}
-          ids={checkedRows.map((row) => row.toString())}
+          ids={checkedRows.map(row => row.toString())}
         />
       )}
 
       {isEditModalOpen && (
-        <EditPending openModal={isEditModalOpen} onClose={closeEditModal} id={selectedRow._id} />
+        <EditPending
+          openModal={isEditModalOpen}
+          onClose={closeEditModal}
+          id={selectedRow._id}
+        />
       )}
 
       {isPrintModalOpen && (
-        <PrintPending openModal={isPrintModalOpen} onClose={closePrintModal} id={selectedRow._id} />
+        <PrintPending
+          openModal={isPrintModalOpen}
+          onClose={closePrintModal}
+          id={selectedRow._id}
+        />
       )}
 
       {isDeleteModalOpen && (

@@ -1,20 +1,27 @@
-import { Box, Button, Grid, MenuItem, TextField, Typography } from "@mui/material";
-import { useFormik } from "formik";
-import React, { useContext } from "react";
-import ModalContext from "../../../../../context/ModalContext";
-import { IPatientTreatmentCycleReport } from "../../../../../types/patientDashboard/treatmentCycle";
+import {
+  Box,
+  Button,
+  Grid,
+  MenuItem,
+  TextField,
+  Typography,
+} from '@mui/material';
+import { useFormik } from 'formik';
+import React, { useContext } from 'react';
+import ModalContext from '../../../../../context/ModalContext';
+import { IPatientTreatmentCycleReport } from '../../../../../types/patientDashboard/treatmentCycle';
 import {
   useEditTreatmentCycleMutation,
   useGetTreatmentCyclesQuery,
-} from "../../../../../services/patientDashboardService/treatmentCycleApi";
-import { useToast } from "../../../../../context/ToastContext";
-import _ from "lodash";
-import CustomDatePicker from "../../../../../components/CustomDatePicker/CustomDatePicker";
-import CustomTimePicker from "../../../../../components/CustomDatePicker/CustomTimePicker";
-import FileUploadButton from "../../../../../components/FileUploadAndPreview/FileUploadButton";
-import { EBuckets, EDocumentTypes } from "../../../../../types/global";
-import { useSelector } from "react-redux";
-import { RootState } from "../../../../../app/store";
+} from '../../../../../services/patientDashboardService/treatmentCycleApi';
+import { useToast } from '../../../../../context/ToastContext';
+import _ from 'lodash';
+import CustomDatePicker from '../../../../../components/CustomDatePicker/CustomDatePicker';
+import CustomTimePicker from '../../../../../components/CustomDatePicker/CustomTimePicker';
+import FileUploadButton from '../../../../../components/FileUploadAndPreview/FileUploadButton';
+import { EBuckets, EDocumentTypes } from '../../../../../types/global';
+import { useSelector } from 'react-redux';
+import { RootState } from '../../../../../app/store';
 
 interface IFormValues {
   date: Date | null;
@@ -50,12 +57,15 @@ interface IUIDReportProps {
   treatmentCycleId: string;
 }
 
-const IUIDReport: React.FC<IUIDReportProps> = ({ report, treatmentCycleId }) => {
+const IUIDReport: React.FC<IUIDReportProps> = ({
+  report,
+  treatmentCycleId,
+}) => {
   const { closeModal } = useContext(ModalContext);
   const { showPromiseToast } = useToast();
 
   const patient = useSelector((state: RootState) => state.patients.patient);
-  const [fileUploadedUrl, setFileUploadedUrl] = React.useState<string[]>([""]);
+  const [fileUploadedUrl, setFileUploadedUrl] = React.useState<string[]>(['']);
 
   const [updateReport, { isLoading }] = useEditTreatmentCycleMutation();
 
@@ -70,18 +80,20 @@ const IUIDReport: React.FC<IUIDReportProps> = ({ report, treatmentCycleId }) => 
     },
     {
       skip: !patient?.patientId,
-    }
+    },
   );
 
   const patientTreatmentCycles = treatmentCyclesData?.data || [];
 
   // Find the specific treatment cycle by ID
   const currentTreatmentCycle = patientTreatmentCycles.find(
-    (cycle) => cycle._id === treatmentCycleId
+    cycle => cycle._id === treatmentCycleId,
   );
 
   // Find the specific report by category and ID
-  const currentReport = currentTreatmentCycle?.reports.find((r) => r._id === report._id);
+  const currentReport = currentTreatmentCycle?.reports.find(
+    r => r._id === report._id,
+  );
 
   // console.log("Current Cycle", currentTreatmentCycle);
   // console.log("Current Report", currentReport);
@@ -89,7 +101,7 @@ const IUIDReport: React.FC<IUIDReportProps> = ({ report, treatmentCycleId }) => 
   const handleFormSubmit = async (values: IFormValues) => {
     const options = {
       conditions: {
-        editType: "update",
+        editType: 'update',
         category: report.category,
       },
     };
@@ -106,9 +118,9 @@ const IUIDReport: React.FC<IUIDReportProps> = ({ report, treatmentCycleId }) => 
     const promise = updateReport({ payload, options }).unwrap();
 
     showPromiseToast(promise, {
-      loading: "Adding Report...",
-      success: (data) => data.message || "Report Updated Successfully",
-      error: (data) => data.message || "Error Updating Report",
+      loading: 'Adding Report...',
+      success: data => data.message || 'Report Updated Successfully',
+      error: data => data.message || 'Error Updating Report',
     });
 
     try {
@@ -121,30 +133,33 @@ const IUIDReport: React.FC<IUIDReportProps> = ({ report, treatmentCycleId }) => 
   const initialValues: IFormValues = {
     date: currentReport?.details?.date || null,
     timeOfThawing: currentReport?.details?.timeOfThawing || null,
-    donorNo: currentReport?.details?.donorNo || "",
-    donorBloodGroup: currentReport?.details?.donorBloodGroup || "",
-    semenBankDetails: currentReport?.details?.semenBankDetails || "",
-    volume: currentReport?.details?.volume || "",
-    pusCells: currentReport?.details?.pusCells || "",
-    epithilialCells: currentReport?.details?.epithilialCells || "",
-    appearance: currentReport?.details?.appearance || "",
-    agglutination: currentReport?.details?.agglutination || "",
-    consultant: currentReport?.details?.consultant || "",
-    count: currentReport?.details?.count || "",
-    rapidLinearProgression: currentReport?.details?.rapidLinearProgression || "",
-    nonProgressive: currentReport?.details?.nonProgressive || "",
-    immotile: currentReport?.details?.immotile || "",
-    totalMotility: currentReport?.details?.totalMotility || "",
-    totalSpermCount: currentReport?.details?.totalSpermCount || "",
-    countPostWash: currentReport?.details?.countPostWash || "",
-    rapidLinearProgressionPostWash: currentReport?.details?.rapidLinearProgressionPostWash || "",
-    nonProgressivePostWash: currentReport?.details?.nonProgressivePostWash || "",
-    immotilePostWash: currentReport?.details?.immotilePostWash || "",
-    totalMotilityPostWash: currentReport?.details?.totalMotilityPostWash || "",
-    inseminatedVolume: currentReport?.details?.inseminatedVolume || "",
-    impression: currentReport?.details?.impression || "",
-    remarks: currentReport?.details?.remarks || "",
-    description: currentReport?.details?.description || "",
+    donorNo: currentReport?.details?.donorNo || '',
+    donorBloodGroup: currentReport?.details?.donorBloodGroup || '',
+    semenBankDetails: currentReport?.details?.semenBankDetails || '',
+    volume: currentReport?.details?.volume || '',
+    pusCells: currentReport?.details?.pusCells || '',
+    epithilialCells: currentReport?.details?.epithilialCells || '',
+    appearance: currentReport?.details?.appearance || '',
+    agglutination: currentReport?.details?.agglutination || '',
+    consultant: currentReport?.details?.consultant || '',
+    count: currentReport?.details?.count || '',
+    rapidLinearProgression:
+      currentReport?.details?.rapidLinearProgression || '',
+    nonProgressive: currentReport?.details?.nonProgressive || '',
+    immotile: currentReport?.details?.immotile || '',
+    totalMotility: currentReport?.details?.totalMotility || '',
+    totalSpermCount: currentReport?.details?.totalSpermCount || '',
+    countPostWash: currentReport?.details?.countPostWash || '',
+    rapidLinearProgressionPostWash:
+      currentReport?.details?.rapidLinearProgressionPostWash || '',
+    nonProgressivePostWash:
+      currentReport?.details?.nonProgressivePostWash || '',
+    immotilePostWash: currentReport?.details?.immotilePostWash || '',
+    totalMotilityPostWash: currentReport?.details?.totalMotilityPostWash || '',
+    inseminatedVolume: currentReport?.details?.inseminatedVolume || '',
+    impression: currentReport?.details?.impression || '',
+    remarks: currentReport?.details?.remarks || '',
+    description: currentReport?.details?.description || '',
   };
 
   const formik = useFormik({
@@ -155,7 +170,7 @@ const IUIDReport: React.FC<IUIDReportProps> = ({ report, treatmentCycleId }) => 
   });
 
   return (
-    <Box component={"form"} onSubmit={formik.handleSubmit} p={2}>
+    <Box component={'form'} onSubmit={formik.handleSubmit} p={2}>
       <Typography mb={2} variant="button" color="primary">
         IUI-D Report
       </Typography>
@@ -168,7 +183,7 @@ const IUIDReport: React.FC<IUIDReportProps> = ({ report, treatmentCycleId }) => 
           <CustomDatePicker
             label="Date"
             value={formik.values.date}
-            onChange={(date) => formik.setFieldValue("date", date)}
+            onChange={date => formik.setFieldValue('date', date)}
             error={formik.touched.date && Boolean(formik.errors.date)}
             helperText={formik.touched.date && formik.errors.date}
           />
@@ -177,9 +192,14 @@ const IUIDReport: React.FC<IUIDReportProps> = ({ report, treatmentCycleId }) => 
           <CustomTimePicker
             label="Time of Thawing"
             value={formik.values.timeOfThawing}
-            onChange={(date) => formik.setFieldValue("timeOfThawing", date)}
-            error={formik.touched.timeOfThawing && Boolean(formik.errors.timeOfThawing)}
-            helperText={formik.touched.timeOfThawing && formik.errors.timeOfThawing}
+            onChange={date => formik.setFieldValue('timeOfThawing', date)}
+            error={
+              formik.touched.timeOfThawing &&
+              Boolean(formik.errors.timeOfThawing)
+            }
+            helperText={
+              formik.touched.timeOfThawing && formik.errors.timeOfThawing
+            }
           />
         </Grid>
         <Grid item lg={4}>
@@ -190,8 +210,13 @@ const IUIDReport: React.FC<IUIDReportProps> = ({ report, treatmentCycleId }) => 
             label="Donor Blood Group"
             value={formik.values.donorBloodGroup}
             onChange={formik.handleChange}
-            error={formik.touched.donorBloodGroup && Boolean(formik.errors.donorBloodGroup)}
-            helperText={formik.touched.donorBloodGroup && formik.errors.donorBloodGroup}
+            error={
+              formik.touched.donorBloodGroup &&
+              Boolean(formik.errors.donorBloodGroup)
+            }
+            helperText={
+              formik.touched.donorBloodGroup && formik.errors.donorBloodGroup
+            }
           >
             <MenuItem value="A+">A+</MenuItem>
             <MenuItem value="A-">A-</MenuItem>
@@ -221,8 +246,13 @@ const IUIDReport: React.FC<IUIDReportProps> = ({ report, treatmentCycleId }) => 
             name="semenBankDetails"
             value={formik.values.semenBankDetails}
             onChange={formik.handleChange}
-            error={formik.touched.semenBankDetails && Boolean(formik.errors.semenBankDetails)}
-            helperText={formik.touched.semenBankDetails && formik.errors.semenBankDetails}
+            error={
+              formik.touched.semenBankDetails &&
+              Boolean(formik.errors.semenBankDetails)
+            }
+            helperText={
+              formik.touched.semenBankDetails && formik.errors.semenBankDetails
+            }
           />
         </Grid>
         <Grid item lg={4}>
@@ -254,8 +284,13 @@ const IUIDReport: React.FC<IUIDReportProps> = ({ report, treatmentCycleId }) => 
             name="epithilialCells"
             value={formik.values.epithilialCells}
             onChange={formik.handleChange}
-            error={formik.touched.epithilialCells && Boolean(formik.errors.epithilialCells)}
-            helperText={formik.touched.epithilialCells && formik.errors.epithilialCells}
+            error={
+              formik.touched.epithilialCells &&
+              Boolean(formik.errors.epithilialCells)
+            }
+            helperText={
+              formik.touched.epithilialCells && formik.errors.epithilialCells
+            }
           />
         </Grid>
         <Grid item lg={4}>
@@ -265,7 +300,9 @@ const IUIDReport: React.FC<IUIDReportProps> = ({ report, treatmentCycleId }) => 
             name="appearance"
             value={formik.values.appearance}
             onChange={formik.handleChange}
-            error={formik.touched.appearance && Boolean(formik.errors.appearance)}
+            error={
+              formik.touched.appearance && Boolean(formik.errors.appearance)
+            }
             helperText={formik.touched.appearance && formik.errors.appearance}
           />
         </Grid>
@@ -276,8 +313,13 @@ const IUIDReport: React.FC<IUIDReportProps> = ({ report, treatmentCycleId }) => 
             name="agglutination"
             value={formik.values.agglutination}
             onChange={formik.handleChange}
-            error={formik.touched.agglutination && Boolean(formik.errors.agglutination)}
-            helperText={formik.touched.agglutination && formik.errors.agglutination}
+            error={
+              formik.touched.agglutination &&
+              Boolean(formik.errors.agglutination)
+            }
+            helperText={
+              formik.touched.agglutination && formik.errors.agglutination
+            }
           />
         </Grid>
         <Grid item lg={4}>
@@ -287,12 +329,14 @@ const IUIDReport: React.FC<IUIDReportProps> = ({ report, treatmentCycleId }) => 
             name="consultant"
             value={formik.values.consultant}
             onChange={formik.handleChange}
-            error={formik.touched.consultant && Boolean(formik.errors.consultant)}
+            error={
+              formik.touched.consultant && Boolean(formik.errors.consultant)
+            }
             helperText={formik.touched.consultant && formik.errors.consultant}
           />
         </Grid>
       </Grid>
-      <Typography variant="h6" color={"primary"} gutterBottom>
+      <Typography variant="h6" color={'primary'} gutterBottom>
         Pre-Wash Details
       </Typography>
       <Grid container spacing={2} mb={2}>
@@ -315,10 +359,12 @@ const IUIDReport: React.FC<IUIDReportProps> = ({ report, treatmentCycleId }) => 
             value={formik.values.rapidLinearProgression}
             onChange={formik.handleChange}
             error={
-              formik.touched.rapidLinearProgression && Boolean(formik.errors.rapidLinearProgression)
+              formik.touched.rapidLinearProgression &&
+              Boolean(formik.errors.rapidLinearProgression)
             }
             helperText={
-              formik.touched.rapidLinearProgression && formik.errors.rapidLinearProgression
+              formik.touched.rapidLinearProgression &&
+              formik.errors.rapidLinearProgression
             }
           />
         </Grid>
@@ -329,8 +375,13 @@ const IUIDReport: React.FC<IUIDReportProps> = ({ report, treatmentCycleId }) => 
             name="nonProgressive"
             value={formik.values.nonProgressive}
             onChange={formik.handleChange}
-            error={formik.touched.nonProgressive && Boolean(formik.errors.nonProgressive)}
-            helperText={formik.touched.nonProgressive && formik.errors.nonProgressive}
+            error={
+              formik.touched.nonProgressive &&
+              Boolean(formik.errors.nonProgressive)
+            }
+            helperText={
+              formik.touched.nonProgressive && formik.errors.nonProgressive
+            }
           />
         </Grid>
         <Grid item lg={4}>
@@ -351,8 +402,13 @@ const IUIDReport: React.FC<IUIDReportProps> = ({ report, treatmentCycleId }) => 
             name="totalMotility"
             value={formik.values.totalMotility}
             onChange={formik.handleChange}
-            error={formik.touched.totalMotility && Boolean(formik.errors.totalMotility)}
-            helperText={formik.touched.totalMotility && formik.errors.totalMotility}
+            error={
+              formik.touched.totalMotility &&
+              Boolean(formik.errors.totalMotility)
+            }
+            helperText={
+              formik.touched.totalMotility && formik.errors.totalMotility
+            }
           />
         </Grid>
         <Grid item lg={4}>
@@ -362,12 +418,17 @@ const IUIDReport: React.FC<IUIDReportProps> = ({ report, treatmentCycleId }) => 
             name="totalSpermCount"
             value={formik.values.totalSpermCount}
             onChange={formik.handleChange}
-            error={formik.touched.totalSpermCount && Boolean(formik.errors.totalSpermCount)}
-            helperText={formik.touched.totalSpermCount && formik.errors.totalSpermCount}
+            error={
+              formik.touched.totalSpermCount &&
+              Boolean(formik.errors.totalSpermCount)
+            }
+            helperText={
+              formik.touched.totalSpermCount && formik.errors.totalSpermCount
+            }
           />
         </Grid>
       </Grid>
-      <Typography variant="h6" color={"primary"} gutterBottom>
+      <Typography variant="h6" color={'primary'} gutterBottom>
         Post-Wash Details
       </Typography>
       <Grid container spacing={2} mb={2}>
@@ -378,8 +439,13 @@ const IUIDReport: React.FC<IUIDReportProps> = ({ report, treatmentCycleId }) => 
             name="countPostWash"
             value={formik.values.countPostWash}
             onChange={formik.handleChange}
-            error={formik.touched.countPostWash && Boolean(formik.errors.countPostWash)}
-            helperText={formik.touched.countPostWash && formik.errors.countPostWash}
+            error={
+              formik.touched.countPostWash &&
+              Boolean(formik.errors.countPostWash)
+            }
+            helperText={
+              formik.touched.countPostWash && formik.errors.countPostWash
+            }
           />
         </Grid>
         <Grid item lg={4}>
@@ -407,10 +473,12 @@ const IUIDReport: React.FC<IUIDReportProps> = ({ report, treatmentCycleId }) => 
             value={formik.values.nonProgressivePostWash}
             onChange={formik.handleChange}
             error={
-              formik.touched.nonProgressivePostWash && Boolean(formik.errors.nonProgressivePostWash)
+              formik.touched.nonProgressivePostWash &&
+              Boolean(formik.errors.nonProgressivePostWash)
             }
             helperText={
-              formik.touched.nonProgressivePostWash && formik.errors.nonProgressivePostWash
+              formik.touched.nonProgressivePostWash &&
+              formik.errors.nonProgressivePostWash
             }
           />
         </Grid>
@@ -421,8 +489,13 @@ const IUIDReport: React.FC<IUIDReportProps> = ({ report, treatmentCycleId }) => 
             name="immotilePostWash"
             value={formik.values.immotilePostWash}
             onChange={formik.handleChange}
-            error={formik.touched.immotilePostWash && Boolean(formik.errors.immotilePostWash)}
-            helperText={formik.touched.immotilePostWash && formik.errors.immotilePostWash}
+            error={
+              formik.touched.immotilePostWash &&
+              Boolean(formik.errors.immotilePostWash)
+            }
+            helperText={
+              formik.touched.immotilePostWash && formik.errors.immotilePostWash
+            }
           />
         </Grid>
         <Grid item lg={4}>
@@ -433,9 +506,13 @@ const IUIDReport: React.FC<IUIDReportProps> = ({ report, treatmentCycleId }) => 
             value={formik.values.totalMotilityPostWash}
             onChange={formik.handleChange}
             error={
-              formik.touched.totalMotilityPostWash && Boolean(formik.errors.totalMotilityPostWash)
+              formik.touched.totalMotilityPostWash &&
+              Boolean(formik.errors.totalMotilityPostWash)
             }
-            helperText={formik.touched.totalMotilityPostWash && formik.errors.totalMotilityPostWash}
+            helperText={
+              formik.touched.totalMotilityPostWash &&
+              formik.errors.totalMotilityPostWash
+            }
           />
         </Grid>
         <Grid item lg={4}>
@@ -445,8 +522,14 @@ const IUIDReport: React.FC<IUIDReportProps> = ({ report, treatmentCycleId }) => 
             name="inseminatedVolume"
             value={formik.values.inseminatedVolume}
             onChange={formik.handleChange}
-            error={formik.touched.inseminatedVolume && Boolean(formik.errors.inseminatedVolume)}
-            helperText={formik.touched.inseminatedVolume && formik.errors.inseminatedVolume}
+            error={
+              formik.touched.inseminatedVolume &&
+              Boolean(formik.errors.inseminatedVolume)
+            }
+            helperText={
+              formik.touched.inseminatedVolume &&
+              formik.errors.inseminatedVolume
+            }
           />
         </Grid>
         <Grid item lg={12}>
@@ -456,7 +539,9 @@ const IUIDReport: React.FC<IUIDReportProps> = ({ report, treatmentCycleId }) => 
             name="impression"
             value={formik.values.impression}
             onChange={formik.handleChange}
-            error={formik.touched.impression && Boolean(formik.errors.impression)}
+            error={
+              formik.touched.impression && Boolean(formik.errors.impression)
+            }
             helperText={formik.touched.impression && formik.errors.impression}
           />
         </Grid>
@@ -478,7 +563,9 @@ const IUIDReport: React.FC<IUIDReportProps> = ({ report, treatmentCycleId }) => 
             name="description"
             value={formik.values.description}
             onChange={formik.handleChange}
-            error={formik.touched.description && Boolean(formik.errors.description)}
+            error={
+              formik.touched.description && Boolean(formik.errors.description)
+            }
             helperText={formik.touched.description && formik.errors.description}
           />
         </Grid>
@@ -503,23 +590,30 @@ const IUIDReport: React.FC<IUIDReportProps> = ({ report, treatmentCycleId }) => 
           )}
         </Grid>
       </Grid>
-      <Box display={"flex"} justifyContent={"flex-end"} alignItems={"center"} gap={2} mb={2}>
+      <Box
+        display={'flex'}
+        justifyContent={'flex-end'}
+        alignItems={'center'}
+        gap={2}
+        mb={2}
+      >
         <Button
           variant="contained"
           color="primary"
           type="submit"
           disabled={
             isLoading ||
-            (_.isEqual(formik.values, formik.initialValues) && fileUploadedUrl.length === 0)
+            (_.isEqual(formik.values, formik.initialValues) &&
+              fileUploadedUrl.length === 0)
           }
-          sx={{ width: "fit-content" }}
+          sx={{ width: 'fit-content' }}
         >
           Save
         </Button>
         <Button
           variant="contained"
           color="secondary"
-          sx={{ width: "fit-content" }}
+          sx={{ width: 'fit-content' }}
           onClick={closeModal}
         >
           Cancel

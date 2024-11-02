@@ -1,7 +1,11 @@
-import { createApi } from "@reduxjs/toolkit/query/react";
-import { ApiResponse, IQueryOptions, PaginatedResponse } from "../../types/global";
-import generateQueryParams from "../../utils/generateQueryParams";
-import { baseQuery } from "../baseQuery";
+import { createApi } from '@reduxjs/toolkit/query/react';
+import {
+  ApiResponse,
+  IQueryOptions,
+  PaginatedResponse,
+} from '../../types/global';
+import generateQueryParams from '../../utils/generateQueryParams';
+import { baseQuery } from '../baseQuery';
 
 interface IInternalTransferItems {
   item: string | undefined;
@@ -28,20 +32,20 @@ interface IInternalConsumption {
 }
 
 export const internalConsumptionApi = createApi({
-  reducerPath: "internalConsumptionApi",
+  reducerPath: 'internalConsumptionApi',
   baseQuery: baseQuery,
-  tagTypes: ["InternalConsumption", "Stocks"],
-  endpoints: (builder) => ({
+  tagTypes: ['InternalConsumption', 'Stocks'],
+  endpoints: builder => ({
     addInternalConsumption: builder.mutation<
       ApiResponse<IInternalConsumption>,
       AddInternalConsumptionPayload
     >({
-      query: (internalConsumptionData) => ({
-        url: "pharmacy-dashboard/internal-consumption/create",
-        method: "POST",
+      query: internalConsumptionData => ({
+        url: 'pharmacy-dashboard/internal-consumption/create',
+        method: 'POST',
         body: internalConsumptionData,
       }),
-      invalidatesTags: ["InternalConsumption", "Stocks"],
+      invalidatesTags: ['InternalConsumption', 'Stocks'],
     }),
     // editInternalConsumption: builder.mutation<
     //   ApiResponse<IInternalConsumption>,
@@ -65,18 +69,23 @@ export const internalConsumptionApi = createApi({
       ApiResponse<PaginatedResponse<IInternalConsumption>>,
       IQueryOptions
     >({
-      query: (options) => {
+      query: options => {
         const queryParams = generateQueryParams(options);
         return {
           url: `pharmacy-dashboard/internal-consumption?${queryParams}`,
-          method: "GET",
+          method: 'GET',
         };
       },
-      providesTags: (_result, _error, _args) => ["InternalConsumption"],
+      providesTags: (_result, _error, _args) => ['InternalConsumption'],
     }),
-    getInternalConsumptionById: builder.query<ApiResponse<IInternalConsumption>, string>({
-      query: (id) => `pharmacy-dashboard/internal-consumption/${id}`,
-      providesTags: (_result, _error, id) => [{ type: "InternalConsumption", id }],
+    getInternalConsumptionById: builder.query<
+      ApiResponse<IInternalConsumption>,
+      string
+    >({
+      query: id => `pharmacy-dashboard/internal-consumption/${id}`,
+      providesTags: (_result, _error, id) => [
+        { type: 'InternalConsumption', id },
+      ],
     }),
   }),
 });

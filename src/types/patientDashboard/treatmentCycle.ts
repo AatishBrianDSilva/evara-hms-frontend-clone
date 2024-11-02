@@ -1,12 +1,12 @@
-import { IDoctor } from "../doctor";
+import { IDoctor } from '../doctor';
 import {
   ETreatmentCycleCategoryKey,
   ETreatmentCycleMetric,
   ETreatmentCycleReport,
   ETreatmentCycleType,
   IMasterTreatmentCycle,
-} from "../master";
-import { IPatient } from "../patient";
+} from '../master';
+import { IPatient } from '../patient';
 
 export interface IEditTreatmentCycleForm<T> {
   result: T;

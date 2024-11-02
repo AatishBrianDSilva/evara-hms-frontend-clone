@@ -1,9 +1,17 @@
-import React from "react";
-import { Box, Button, Dialog, DialogContent, DialogTitle, Grid, TextField } from "@mui/material";
-import { useFormik } from "formik";
-import _ from "lodash";
-import { useToast } from "../../../../../context/ToastContext";
-import { useAddPatientSourceMutation } from "../../../../../services/masterDashboardService/local/patientSourceApi";
+import React from 'react';
+import {
+  Box,
+  Button,
+  Dialog,
+  DialogContent,
+  DialogTitle,
+  Grid,
+  TextField,
+} from '@mui/material';
+import { useFormik } from 'formik';
+import _ from 'lodash';
+import { useToast } from '../../../../../context/ToastContext';
+import { useAddPatientSourceMutation } from '../../../../../services/masterDashboardService/local/patientSourceApi';
 
 interface AddPatientSourceProps {
   openModal: boolean;
@@ -13,10 +21,14 @@ interface IFormValues {
   name: string;
 }
 
-const AddPatientSource: React.FC<AddPatientSourceProps> = ({ openModal, onClose }) => {
+const AddPatientSource: React.FC<AddPatientSourceProps> = ({
+  openModal,
+  onClose,
+}) => {
   const { showPromiseToast } = useToast();
 
-  const [addPatientSource, { isLoading: PatientSourceLoading }] = useAddPatientSourceMutation();
+  const [addPatientSource, { isLoading: PatientSourceLoading }] =
+    useAddPatientSourceMutation();
 
   const handleFormSubmit = async (values: IFormValues) => {
     const payload = {
@@ -28,9 +40,9 @@ const AddPatientSource: React.FC<AddPatientSourceProps> = ({ openModal, onClose 
     const promise = addPatientSource(payload).unwrap();
 
     showPromiseToast(promise, {
-      loading: "Adding...",
-      success: (data) => data || "Added Successfully",
-      error: (data) => data || "Adding Failed",
+      loading: 'Adding...',
+      success: data => data || 'Added Successfully',
+      error: data => data || 'Adding Failed',
     });
 
     try {
@@ -43,7 +55,7 @@ const AddPatientSource: React.FC<AddPatientSourceProps> = ({ openModal, onClose 
   };
 
   const initialValues: IFormValues = {
-    name: "",
+    name: '',
   };
 
   const formik = useFormik({
@@ -55,9 +67,9 @@ const AddPatientSource: React.FC<AddPatientSourceProps> = ({ openModal, onClose 
 
   return (
     <Dialog open={openModal} onClose={onClose} maxWidth="md" fullWidth>
-      <DialogTitle color={"primary"}>Add Patient Source</DialogTitle>
+      <DialogTitle color={'primary'}>Add Patient Source</DialogTitle>
       <DialogContent>
-        <Box component={"form"} onSubmit={formik.handleSubmit} p={2}>
+        <Box component={'form'} onSubmit={formik.handleSubmit} p={2}>
           <Grid container spacing={1} mb={2} mt={2}>
             <Grid item xs={8} sm={4} lg={3}>
               <TextField
@@ -71,20 +83,28 @@ const AddPatientSource: React.FC<AddPatientSourceProps> = ({ openModal, onClose 
             </Grid>
           </Grid>
 
-          <Box display={"flex"} justifyContent={"flex-end"} alignItems={"center"} gap={2} mb={2}>
+          <Box
+            display={'flex'}
+            justifyContent={'flex-end'}
+            alignItems={'center'}
+            gap={2}
+            mb={2}
+          >
             <Button
               variant="contained"
               color="primary"
               type="submit"
-              disabled={PatientSourceLoading || _.isEqual(initialValues, formik.values)}
-              sx={{ width: "fit-content" }}
+              disabled={
+                PatientSourceLoading || _.isEqual(initialValues, formik.values)
+              }
+              sx={{ width: 'fit-content' }}
             >
               Save
             </Button>
             <Button
               variant="contained"
               color="secondary"
-              sx={{ width: "fit-content" }}
+              sx={{ width: 'fit-content' }}
               onClick={onClose}
             >
               Cancel

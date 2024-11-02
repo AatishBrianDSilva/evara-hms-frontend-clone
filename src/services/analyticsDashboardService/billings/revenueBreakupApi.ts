@@ -1,11 +1,11 @@
-import { createApi } from "@reduxjs/toolkit/query/react";
+import { createApi } from '@reduxjs/toolkit/query/react';
 import {
   ApiResponse,
   IQueryOptions,
   PaginatedResponse,
-} from "../../../types/global";
-import generateQueryParams from "../../../utils/generateQueryParams";
-import { baseQuery } from "../../baseQuery";
+} from '../../../types/global';
+import generateQueryParams from '../../../utils/generateQueryParams';
+import { baseQuery } from '../../baseQuery';
 
 export interface revenueBreakupResponse {
   totalAmount: number;
@@ -14,22 +14,22 @@ export interface revenueBreakupResponse {
   paymentMethod: string;
 }
 export const revenueBreakupApi = createApi({
-  reducerPath: "revenueBreakupApi",
+  reducerPath: 'revenueBreakupApi',
   baseQuery: baseQuery,
-  tagTypes: ["RevenueBreakup"],
-  endpoints: (builder) => ({
+  tagTypes: ['RevenueBreakup'],
+  endpoints: builder => ({
     getRevenueBreakup: builder.query<
       ApiResponse<PaginatedResponse<any>>,
       IQueryOptions
     >({
-      query: (options) => {
+      query: options => {
         const queryParams = generateQueryParams(options);
         return {
           url: `analytics/billings/revenue-breakup?${queryParams}`,
-          method: "GET",
+          method: 'GET',
         };
       },
-      providesTags: (_result, _error, _args) => ["RevenueBreakup"],
+      providesTags: (_result, _error, _args) => ['RevenueBreakup'],
     }),
   }),
 });

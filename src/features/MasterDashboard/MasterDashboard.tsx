@@ -1,18 +1,13 @@
-import React from 'react'
-import { Box } from '@mui/material'
-import MasterDashboardTabs from './MasterDashboardTabs'
+import React from 'react';
+import { Box } from '@mui/material';
+import MasterDashboardTabs from './MasterDashboardTabs';
 
 const MasterDashboard: React.FC = () => {
-
   return (
-    <Box
-      display={'flex'}
-      flexDirection={'column'}
-      flex={'1 1 auto'}
-    >
+    <Box display={'flex'} flexDirection={'column'} flex={'1 1 auto'}>
       <MasterDashboardTabs />
-    </Box >
-  )
-}
+    </Box>
+  );
+};
 
-export default MasterDashboard
+export default MasterDashboard;

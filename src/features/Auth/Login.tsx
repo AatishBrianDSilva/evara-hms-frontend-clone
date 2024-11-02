@@ -1,21 +1,15 @@
-import React from "react";
-import * as Yup from "yup";
-import { useFormik } from "formik";
-import {
-  Button,
-  TextField,
-  Box,
-  Typography,
-  useTheme,
-} from "@mui/material";
-import { grey } from "@mui/material/colors";
-import { useLoginUserMutation } from "../../services/authApi";
-import { useToast } from "../../context/ToastContext";
-import { useNavigate } from "react-router-dom";
-import * as Sentry from "@sentry/react";
-import { jwtDecode } from "jwt-decode";
-import { useGetActiveBranchesQuery } from "../../services/masterDashboardService/global/globalBranch";
-import FieldAutocomplete from "../../components/FieldAutoComplete/FieldAutoComplete";
+import React from 'react';
+import * as Yup from 'yup';
+import { useFormik } from 'formik';
+import { Button, TextField, Box, Typography, useTheme } from '@mui/material';
+import { grey } from '@mui/material/colors';
+import { useLoginUserMutation } from '../../services/authApi';
+import { useToast } from '../../context/ToastContext';
+import { useNavigate } from 'react-router-dom';
+import * as Sentry from '@sentry/react';
+import { jwtDecode } from 'jwt-decode';
+import { useGetActiveBranchesQuery } from '../../services/masterDashboardService/global/globalBranch';
+import FieldAutocomplete from '../../components/FieldAutoComplete/FieldAutoComplete';
 
 interface LoginFormValues {
   email: string;
@@ -25,17 +19,15 @@ interface LoginFormValues {
 
 const validationSchema = Yup.object({
   email: Yup.string()
-    .email("Invalid email address")
-    .required("Email is required"),
-  password: Yup.string().required("Password is required"),
-  branch: Yup.string().required("Branch is required"),
+    .email('Invalid email address')
+    .required('Email is required'),
+  password: Yup.string().required('Password is required'),
+  branch: Yup.string().required('Branch is required'),
 });
 
-export const CLINICID = "EV";
-
+export const CLINICID = 'EV';
 
 const Login: React.FC = () => {
-
   const theme = useTheme();
 
   const navigate = useNavigate();
@@ -62,16 +54,16 @@ const Login: React.FC = () => {
     const promise = loginUser(payload).unwrap();
 
     showPromiseToast(promise, {
-      loading: "Logging in...",
-      success: (response) => response?.message || "Logged in successfully",
-      error: (err) => err || "An error occurred",
+      loading: 'Logging in...',
+      success: response => response?.message || 'Logged in successfully',
+      error: err => err || 'An error occurred',
     });
 
     try {
       const res = await promise;
       if (res?.data?.tokens?.token) {
         const user: { sub: string; name: string; email: string } = jwtDecode(
-          res?.data?.tokens?.token
+          res?.data?.tokens?.token,
         );
         console.log(user);
         Sentry.setUser({
@@ -79,17 +71,17 @@ const Login: React.FC = () => {
           email: user.email,
         });
       }
-      navigate("/");
+      navigate('/');
     } catch (error) {
-      console.error("Error logging in:", error);
+      console.error('Error logging in:', error);
     }
   };
 
   const formik = useFormik<LoginFormValues>({
     initialValues: {
-      email: "",
-      password: "",
-      branch: "",
+      email: '',
+      password: '',
+      branch: '',
     },
     onSubmit: handleSubmit,
     validationSchema: validationSchema,
@@ -100,29 +92,29 @@ const Login: React.FC = () => {
       display="flex"
       flexDirection="column"
       alignItems="center"
-      justifyContent={"center"}
+      justifyContent={'center'}
       minHeight="100vh"
       bgcolor={grey[300]}
     >
       <Box
-        component={"form"}
+        component={'form'}
         onSubmit={formik.handleSubmit}
         sx={{
           p: 4,
-          borderRadius: "16px",
-          width: "20%",
+          borderRadius: '16px',
+          width: '20%',
           bgcolor: theme.palette.background.paper,
         }}
-        display={"flex"}
-        flexDirection={"column"}
+        display={'flex'}
+        flexDirection={'column'}
         gap={4}
-        justifyContent={"center"}
-        alignItems={"center"}
+        justifyContent={'center'}
+        alignItems={'center'}
       >
         <Typography
           variant="h2"
-          color={"primary"}
-          fontFamily={"Montserrat"}
+          color={'primary'}
+          fontFamily={'Montserrat'}
           fontWeight={500}
           gutterBottom
         >
@@ -134,19 +126,21 @@ const Login: React.FC = () => {
         <FieldAutocomplete
           fullWidth
           options={branches}
-          getOptionLabel={(option) => (option ? option.branchName : "")}
-          isOptionEqualToValue={(option, value) => option.branchId === value.branchId}
+          getOptionLabel={option => (option ? option.branchName : '')}
+          isOptionEqualToValue={(option, value) =>
+            option.branchId === value.branchId
+          }
           loading={gettingBranches}
           label="Branch"
           value={
-            branches.find((branch) => branch.branchId === formik.values.branch) || null
+            branches.find(branch => branch.branchId === formik.values.branch) ||
+            null
           }
-          onChange={(value) => {
-            formik.setFieldValue("branch", value?.branchId ?? "", true);
+          onChange={value => {
+            formik.setFieldValue('branch', value?.branchId ?? '', true);
           }}
           error={formik.touched.branch && Boolean(formik.errors.branch)}
           helperText={formik.touched.branch && formik.errors.branch}
-
         />
 
         <TextField
@@ -175,7 +169,13 @@ const Login: React.FC = () => {
           helperText={formik.touched.password && formik.errors.password}
           color="primary"
         />
-        <Button fullWidth type="submit" variant="contained" color="secondary" disabled={loginLoading || gettingBranches}>
+        <Button
+          fullWidth
+          type="submit"
+          variant="contained"
+          color="secondary"
+          disabled={loginLoading || gettingBranches}
+        >
           Sign In
         </Button>
       </Box>

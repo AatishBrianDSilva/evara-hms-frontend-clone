@@ -48,7 +48,7 @@ const Donors: React.FC = () => {
   };
 
   // Filtered data based on selected city and gender
-  const filteredData = patientsData.filter((patient) => {
+  const filteredData = patientsData.filter(patient => {
     return (
       (!filterCity || patient.city === filterCity) &&
       (!filterGender || patient.gender === filterGender)
@@ -75,7 +75,7 @@ const Donors: React.FC = () => {
           value={filterCity || ''}
           onChange={handleCityChange}
         >
-          {cities.map((city) => (
+          {cities.map(city => (
             <MenuItem key={city} value={city}>
               {city}
             </MenuItem>
@@ -90,7 +90,7 @@ const Donors: React.FC = () => {
           value={filterGender || ''}
           onChange={handleGenderChange}
         >
-          {genders.map((gender) => (
+          {genders.map(gender => (
             <MenuItem key={gender} value={gender}>
               {gender}
             </MenuItem>
@@ -110,7 +110,7 @@ const Donors: React.FC = () => {
             { field: 'assignedTo', headerName: 'Assigned To', flex: 1 },
             { field: 'city', headerName: 'City', flex: 1 },
           ]}
-          rows={filteredData.map((patient) => ({
+          rows={filteredData.map(patient => ({
             ...patient,
             id: patient.sNo, // Setting 'id' for data grid (not shown in columns)
           }))}
@@ -120,8 +120,8 @@ const Donors: React.FC = () => {
           loading={false}
           sx={{ height: '100%' }}
           enablePagination={true}
-          onPageChange={() => { }}
-          onPageSizeChange={() => { }}
+          onPageChange={() => {}}
+          onPageSizeChange={() => {}}
         />
       </Box>
     </ContentSection>

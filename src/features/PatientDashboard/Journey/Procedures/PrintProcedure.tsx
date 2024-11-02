@@ -1,5 +1,5 @@
 import { Box, Button, Grid, Modal, Skeleton } from '@mui/material';
-import React from 'react'
+import React from 'react';
 import _ from 'lodash';
 import ReportModalHeader from '../../../../components/ReportModalHeader/ReportModalHeader';
 // import { ETestType } from '../../../types/master';
@@ -9,16 +9,21 @@ import { useGetProcedureByIdQuery } from '../../../../services/patientDashboardS
 
 interface PrintInvestigationProps {
   open: {
-    status: boolean,
-    id: string
-  }
-  onClose: () => void
+    status: boolean;
+    id: string;
+  };
+  onClose: () => void;
 }
 
 const renderSkeletonLoader = () => {
   return (
     <>
-      <Box display={"flex"} justifyContent={"space-between"} borderBottom={1} py={2}>
+      <Box
+        display={'flex'}
+        justifyContent={'space-between'}
+        borderBottom={1}
+        py={2}
+      >
         <Box>
           <Skeleton variant="text" width={100} height={20} />
           <Skeleton variant="text" width={100} height={20} />
@@ -30,11 +35,11 @@ const renderSkeletonLoader = () => {
       </Box>
       <Box pt={2} mt={2}>
         <Box>
-          <Grid container justifyContent={"space-between"}>
+          <Grid container justifyContent={'space-between'}>
             <Grid item md={6} lg={3}>
               <Skeleton variant="text" width={100} height={20} />
             </Grid>
-            <Grid item >
+            <Grid item>
               <Skeleton variant="text" width={100} height={20} />
             </Grid>
           </Grid>
@@ -49,49 +54,77 @@ const renderSkeletonLoader = () => {
         </Box>
       </Box>
     </>
-  )
-}
+  );
+};
 
-const PrintInvestigation: React.FC<PrintInvestigationProps> = ({ open: openPrintModal, onClose }) => {
-
-  const { data: procedureData, isLoading: procedureLoading, isFetching: procedureFetching } = useGetProcedureByIdQuery(openPrintModal.id, {
-    skip: !openPrintModal || !openPrintModal.id
-  })
+const PrintInvestigation: React.FC<PrintInvestigationProps> = ({
+  open: openPrintModal,
+  onClose,
+}) => {
+  const {
+    data: procedureData,
+    isLoading: procedureLoading,
+    isFetching: procedureFetching,
+  } = useGetProcedureByIdQuery(openPrintModal.id, {
+    skip: !openPrintModal || !openPrintModal.id,
+  });
 
   const procedure = procedureData?.data;
   const loading = procedureLoading || procedureFetching;
 
   const date = new Date(procedure?.date || new Date()).toLocaleDateString();
-  const doctor = procedure?.doctor?.firstName + ' ' + procedure?.doctor?.lastName;
+  const doctor =
+    procedure?.doctor?.firstName + ' ' + procedure?.doctor?.lastName;
   const procedureName = procedure?.procedure?.procedure?.procedureName;
 
   const renderInvestigation = () => {
     let component = null;
 
-    switch (procedure?.procedure.procedureType) {
+    switch (
+      procedure?.procedure.procedureType
       // case ETestType.BloodTest:
       //   component = renderBloodTests();
       //   break;
       // case ETestType.UltrasoundScan:
       //   component = renderUltraSoundScan()
+    ) {
     }
 
     return (
       <>
-        <ReportModalHeader date={date} doctor={doctor} reportName={procedureName} />
-        <Box display={"flex"} flexDirection={"column"} pt={2} px={3} mt={2} flex={1}>
+        <ReportModalHeader
+          date={date}
+          doctor={doctor}
+          reportName={procedureName}
+        />
+        <Box
+          display={'flex'}
+          flexDirection={'column'}
+          pt={2}
+          px={3}
+          mt={2}
+          flex={1}
+        >
           {component}
         </Box>
         <Box borderBottom={1} />
-        <div className='print-hide'>
-          <Box display={"flex"} justifyContent={"center"} gap={2} p={2}>
-            <Button variant="contained" color="primary" onClick={() => window.print()}>Print</Button>
-            <Button onClick={() => onClose()} variant="outlined" >Cancel</Button>
+        <div className="print-hide">
+          <Box display={'flex'} justifyContent={'center'} gap={2} p={2}>
+            <Button
+              variant="contained"
+              color="primary"
+              onClick={() => window.print()}
+            >
+              Print
+            </Button>
+            <Button onClick={() => onClose()} variant="outlined">
+              Cancel
+            </Button>
           </Box>
         </div>
       </>
-    )
-  }
+    );
+  };
 
   // const renderBloodTests = () => {
   //   return (
@@ -225,34 +258,31 @@ const PrintInvestigation: React.FC<PrintInvestigationProps> = ({ open: openPrint
   //   }
   // }
 
-
   return (
     <Modal open={openPrintModal.status} onClose={onClose}>
-      <Box sx={{
-        position: 'absolute',
-        display: 'flex',
-        flexDirection: 'column',
-        top: '50%',
-        left: '50%',
-        transform: 'translate(-50%, -50%)',
-        width: '60%',
-        height: '80%',
-        maxHeight: '80%',
-        overflowY: 'auto',
-        borderRadius: 1,
-        boxShadow: 5,
-        px: 8,
-        py: 5,
-        bgcolor: 'background.paper',
-      }}>
-
-        {loading ? renderSkeletonLoader() : (
-          renderInvestigation()
-        )}
-
+      <Box
+        sx={{
+          position: 'absolute',
+          display: 'flex',
+          flexDirection: 'column',
+          top: '50%',
+          left: '50%',
+          transform: 'translate(-50%, -50%)',
+          width: '60%',
+          height: '80%',
+          maxHeight: '80%',
+          overflowY: 'auto',
+          borderRadius: 1,
+          boxShadow: 5,
+          px: 8,
+          py: 5,
+          bgcolor: 'background.paper',
+        }}
+      >
+        {loading ? renderSkeletonLoader() : renderInvestigation()}
       </Box>
     </Modal>
-  )
-}
+  );
+};
 
-export default PrintInvestigation
+export default PrintInvestigation;

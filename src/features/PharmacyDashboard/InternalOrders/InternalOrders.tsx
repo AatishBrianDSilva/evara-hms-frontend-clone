@@ -1,6 +1,6 @@
-import React from "react";
-import ContentSection from "../../../components/ContentSection/ContentSection";
-import OrdersTabs from "./InternalOrdersTabs";
+import React from 'react';
+import ContentSection from '../../../components/ContentSection/ContentSection';
+import OrdersTabs from './InternalOrdersTabs';
 
 const InternalOrders: React.FC = () => {
   return (

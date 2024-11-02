@@ -1,5 +1,5 @@
-import { IDrugLocation } from "./master";
-import { IPharmacyStock } from "./stocks";
+import { IDrugLocation } from './master';
+import { IPharmacyStock } from './stocks';
 
 export interface IInternalConsumptionItems {
   _id: string;

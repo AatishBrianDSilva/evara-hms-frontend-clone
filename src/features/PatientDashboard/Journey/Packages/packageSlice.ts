@@ -1,18 +1,18 @@
-import { createSlice } from "@reduxjs/toolkit";
+import { createSlice } from '@reduxjs/toolkit';
 
 const initialState = {
-  editPackageOpen: { id: "", status: false },
+  editPackageOpen: { id: '', status: false },
 };
 
 export const packageSlice = createSlice({
-  name: "package",
+  name: 'package',
   initialState,
   reducers: {
     openEditPackage: (state, action) => {
       state.editPackageOpen = action.payload;
     },
-    closeEditPackage: (state) => {
-      state.editPackageOpen = { id: "", status: false };
+    closeEditPackage: state => {
+      state.editPackageOpen = { id: '', status: false };
     },
   },
 });

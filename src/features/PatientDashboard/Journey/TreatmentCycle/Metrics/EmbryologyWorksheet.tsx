@@ -8,28 +8,28 @@ import {
   Stepper,
   TextField,
   Typography,
-} from "@mui/material";
-import { useFormik } from "formik";
-import React, { useContext, useEffect, useState } from "react";
-import ModalContext from "../../../../../context/ModalContext";
-import { IPatientTreatmentCycleMetric } from "../../../../../types/patientDashboard/treatmentCycle";
+} from '@mui/material';
+import { useFormik } from 'formik';
+import React, { useContext, useEffect, useState } from 'react';
+import ModalContext from '../../../../../context/ModalContext';
+import { IPatientTreatmentCycleMetric } from '../../../../../types/patientDashboard/treatmentCycle';
 import {
   useEditTreatmentCycleMutation,
   useGetTreatmentCyclesQuery,
-} from "../../../../../services/patientDashboardService/treatmentCycleApi";
-import { useToast } from "../../../../../context/ToastContext";
-import _ from "lodash";
-import FileUploadButton from "../../../../../components/FileUploadAndPreview/FileUploadButton";
-import { EBuckets, EDocumentTypes } from "../../../../../types/global";
-import { useSelector } from "react-redux";
-import { RootState } from "../../../../../app/store";
-import CustomDatePicker from "../../../../../components/CustomDatePicker/CustomDatePicker";
-import CustomTimePicker from "../../../../../components/CustomDatePicker/CustomTimePicker";
-import FieldAutocomplete from "../../../../../components/FieldAutoComplete/FieldAutoComplete";
-import { DoctorSpeciality } from "../../../../../types/masterDashboard/global";
-import { useGetDoctorsQuery } from "../../../../../services/doctorsApi";
+} from '../../../../../services/patientDashboardService/treatmentCycleApi';
+import { useToast } from '../../../../../context/ToastContext';
+import _ from 'lodash';
+import FileUploadButton from '../../../../../components/FileUploadAndPreview/FileUploadButton';
+import { EBuckets, EDocumentTypes } from '../../../../../types/global';
+import { useSelector } from 'react-redux';
+import { RootState } from '../../../../../app/store';
+import CustomDatePicker from '../../../../../components/CustomDatePicker/CustomDatePicker';
+import CustomTimePicker from '../../../../../components/CustomDatePicker/CustomTimePicker';
+import FieldAutocomplete from '../../../../../components/FieldAutoComplete/FieldAutoComplete';
+import { DoctorSpeciality } from '../../../../../types/masterDashboard/global';
+import { useGetDoctorsQuery } from '../../../../../services/doctorsApi';
 
-const steps = ["Day 0", "Day 1", "Day 2", "Day 3", "Day 4", "Day 5", "Day 6"];
+const steps = ['Day 0', 'Day 1', 'Day 2', 'Day 3', 'Day 4', 'Day 5', 'Day 6'];
 
 interface IDayMetrics {
   date: Date | null;
@@ -157,7 +157,10 @@ interface EmbryologyWorksheetProps {
   treatmentCycleId: string;
 }
 
-const EmbryologyWorksheet: React.FC<EmbryologyWorksheetProps> = ({ metric, treatmentCycleId }) => {
+const EmbryologyWorksheet: React.FC<EmbryologyWorksheetProps> = ({
+  metric,
+  treatmentCycleId,
+}) => {
   const { closeModal } = useContext(ModalContext);
   const { showPromiseToast } = useToast();
 
@@ -171,7 +174,7 @@ const EmbryologyWorksheet: React.FC<EmbryologyWorksheetProps> = ({ metric, treat
 
   const [updateMetric, { isLoading }] = useEditTreatmentCycleMutation();
 
-  const [fileUploadedUrl, setFileUploadedUrl] = React.useState<string[]>([""]);
+  const [fileUploadedUrl, setFileUploadedUrl] = React.useState<string[]>(['']);
 
   const {
     data: cyclesData,
@@ -188,20 +191,23 @@ const EmbryologyWorksheet: React.FC<EmbryologyWorksheetProps> = ({ metric, treat
     },
     {
       skip: !patient?.patientId,
-    }
+    },
   );
 
   const patientTreatmentCycles = cyclesData?.data || [];
 
-  const patientTreatmentCyclesLoading = treatmentCycleLoading || treatmentCycleFetching;
+  const patientTreatmentCyclesLoading =
+    treatmentCycleLoading || treatmentCycleFetching;
 
   // Find the specific treatment cycle by ID
   const currentTreatmentCycle = patientTreatmentCycles.find(
-    (cycle) => cycle._id === treatmentCycleId
+    cycle => cycle._id === treatmentCycleId,
   );
 
   // Find the specific metric by category and ID
-  const currentMetric = currentTreatmentCycle?.metrics.find((m) => m._id === metric._id);
+  const currentMetric = currentTreatmentCycle?.metrics.find(
+    m => m._id === metric._id,
+  );
 
   const getDayMetrics = (day: number): IDayMetrics => {
     const key = `day${day}` as keyof IFormValues;
@@ -210,11 +216,11 @@ const EmbryologyWorksheet: React.FC<EmbryologyWorksheetProps> = ({ metric, treat
   };
 
   const handleNext = () => {
-    setActiveStep((prevActiveStep) => prevActiveStep + 1);
+    setActiveStep(prevActiveStep => prevActiveStep + 1);
   };
 
   const handleBack = () => {
-    setActiveStep((prevActiveStep) => prevActiveStep - 1);
+    setActiveStep(prevActiveStep => prevActiveStep - 1);
   };
 
   const handleStep = (step: number) => () => {
@@ -224,7 +230,7 @@ const EmbryologyWorksheet: React.FC<EmbryologyWorksheetProps> = ({ metric, treat
   const handleFormSubmit = async (values: IFormValues) => {
     const options = {
       conditions: {
-        editType: "update",
+        editType: 'update',
         category: metric.category,
       },
     };
@@ -241,9 +247,9 @@ const EmbryologyWorksheet: React.FC<EmbryologyWorksheetProps> = ({ metric, treat
     const promise = updateMetric({ payload, options }).unwrap();
 
     showPromiseToast(promise, {
-      loading: "Adding Metric...",
-      success: (data) => data.message || "Metric Updated Successfully",
-      error: (data) => data.message || "Error Updating Metric",
+      loading: 'Adding Metric...',
+      success: data => data.message || 'Metric Updated Successfully',
+      error: data => data.message || 'Error Updating Metric',
     });
 
     try {
@@ -255,181 +261,193 @@ const EmbryologyWorksheet: React.FC<EmbryologyWorksheetProps> = ({ metric, treat
 
   // Initial values based on the found metric
   const initialValues: IFormValues = {
-    opuNumber: currentMetric?.details?.opuNumber || "",
-    branch: currentMetric?.details?.branch || "",
-    bloodGroupMale: currentMetric?.details?.bloodGroupMale || "",
-    bloodGroupFemale: currentMetric?.details?.bloodGroupFemale || "",
-    treatmentPlan: currentMetric?.details?.treatmentPlan || "",
-    treatmentPlanOocytes: currentMetric?.details?.treatmentPlanOocytes || "",
-    treatmentPlanSperm: currentMetric?.details?.treatmentPlanSperm || "",
-    treatmentPlanEmbryo: currentMetric?.details?.treatmentPlanEmbryo || "",
-    transfer: currentMetric?.details?.transfer || "",
-    notesForEmbryologist: currentMetric?.details?.notesForEmbryologist || "",
-    w: currentMetric?.details?.w || "",
-    h: currentMetric?.details?.h || "",
-    notesBy: currentMetric?.details?.notesBy || "",
+    opuNumber: currentMetric?.details?.opuNumber || '',
+    branch: currentMetric?.details?.branch || '',
+    bloodGroupMale: currentMetric?.details?.bloodGroupMale || '',
+    bloodGroupFemale: currentMetric?.details?.bloodGroupFemale || '',
+    treatmentPlan: currentMetric?.details?.treatmentPlan || '',
+    treatmentPlanOocytes: currentMetric?.details?.treatmentPlanOocytes || '',
+    treatmentPlanSperm: currentMetric?.details?.treatmentPlanSperm || '',
+    treatmentPlanEmbryo: currentMetric?.details?.treatmentPlanEmbryo || '',
+    transfer: currentMetric?.details?.transfer || '',
+    notesForEmbryologist: currentMetric?.details?.notesForEmbryologist || '',
+    w: currentMetric?.details?.w || '',
+    h: currentMetric?.details?.h || '',
+    notesBy: currentMetric?.details?.notesBy || '',
     dateOfTrigger: currentMetric?.details?.dateOfTrigger || null,
     timeOfTrigger: currentMetric?.details?.timeOfTrigger || null,
-    expectedFolliclesRight: currentMetric?.details?.expectedFolliclesRight || "",
-    expectedFolliclesLeft: currentMetric?.details?.expectedFolliclesLeft || "",
-    consentsChecked: currentMetric?.details?.consentsChecked || "",
+    expectedFolliclesRight:
+      currentMetric?.details?.expectedFolliclesRight || '',
+    expectedFolliclesLeft: currentMetric?.details?.expectedFolliclesLeft || '',
+    consentsChecked: currentMetric?.details?.consentsChecked || '',
     opuDate: currentMetric?.details?.opuDate || null,
     opuTime: currentMetric?.details?.opuTime || null,
-    doctor: currentMetric?.details?.doctor || "",
-    assistantDoctor: currentMetric?.details?.assistantDoctor || "",
-    embryologist: currentMetric?.details?.embryologist || "",
-    opuNeedle: currentMetric?.details?.opuNeedle || "",
-    mediaUsed: currentMetric?.details?.mediaUsed || "",
-    mediaBatchNo: currentMetric?.details?.mediaBatchNo || "",
-    checklist: currentMetric?.details?.checklist || "",
-    reports: currentMetric?.details?.reports || "",
-    embryoTransferReport: currentMetric?.details?.embryoTransferReport || "",
-    oocyteAspirationReport: currentMetric?.details?.oocyteAspirationReport || "",
-    ivfCycleSummary: currentMetric?.details?.ivfCycleSummary || "",
-    metrics: currentMetric?.details?.metrics || "",
-    pregnancyOutcomeMetrics: currentMetric?.details?.pregnancyOutcomeMetrics || "",
-    embryologyWorksheet: currentMetric?.details?.embryologyWorksheet || "",
+    doctor: currentMetric?.details?.doctor || '',
+    assistantDoctor: currentMetric?.details?.assistantDoctor || '',
+    embryologist: currentMetric?.details?.embryologist || '',
+    opuNeedle: currentMetric?.details?.opuNeedle || '',
+    mediaUsed: currentMetric?.details?.mediaUsed || '',
+    mediaBatchNo: currentMetric?.details?.mediaBatchNo || '',
+    checklist: currentMetric?.details?.checklist || '',
+    reports: currentMetric?.details?.reports || '',
+    embryoTransferReport: currentMetric?.details?.embryoTransferReport || '',
+    oocyteAspirationReport:
+      currentMetric?.details?.oocyteAspirationReport || '',
+    ivfCycleSummary: currentMetric?.details?.ivfCycleSummary || '',
+    metrics: currentMetric?.details?.metrics || '',
+    pregnancyOutcomeMetrics:
+      currentMetric?.details?.pregnancyOutcomeMetrics || '',
+    embryologyWorksheet: currentMetric?.details?.embryologyWorksheet || '',
     iuiDate: currentMetric?.details?.iuiDate || null,
-    iuiRepeat: currentMetric?.details?.iuiRepeat || "",
+    iuiRepeat: currentMetric?.details?.iuiRepeat || '',
     iuiExpiry: currentMetric?.details?.iuiExpiry || null,
-    patientIdCheck: currentMetric?.details?.patientIdCheck || "",
-    sieveOption: currentMetric?.details?.sieveOption || "",
-    numOocytesRetrievedRight: currentMetric?.details?.numOocytesRetrievedRight || "",
-    numOocytesRetrievedLeft: currentMetric?.details?.numOocytesRetrievedLeft || "",
-    dishPreparationDoneBy: currentMetric?.details?.dishPreparationDoneBy || "",
-    dishPreparationId: currentMetric?.details?.dishPreparationId || "",
-    spermUsed: currentMetric?.details?.spermUsed || "",
-    initialSpermParams: currentMetric?.details?.initialSpermParams || "",
-    preCount: currentMetric?.details?.preCount || "",
-    preTotalMotility: currentMetric?.details?.preTotalMotility || "",
-    preMorphology: currentMetric?.details?.preMorphology || "",
-    spermPreparationTechniques: currentMetric?.details?.spermPreparationTechniques || "",
-    postProcessSpermParams: currentMetric?.details?.postProcessSpermParams || "",
-    postCount: currentMetric?.details?.postCount || "",
-    postTotalProgressiveMotility: currentMetric?.details?.postTotalProgressiveMotility || "",
-    postMorphology: currentMetric?.details?.postMorphology || "",
-    semenFreezingDone: currentMetric?.details?.semenFreezingDone || "",
-    spermIdCheck: currentMetric?.details?.spermIdCheck || "",
-    icsiDish: currentMetric?.details?.icsiDish || "",
-    processedBy: currentMetric?.details?.processedBy || "",
-    witness: currentMetric?.details?.witness || "",
-    expectedOocytes: currentMetric?.details?.expectedOocytes || "",
-    numOocytesCollected: currentMetric?.details?.numOocytesCollected || "",
-    miiOocytes: currentMetric?.details?.miiOocytes || "",
-    miOocytes: currentMetric?.details?.miOocytes || "",
-    gvOocytes: currentMetric?.details?.gvOocytes || "",
-    fertilizationMethod: currentMetric?.details?.fertilizationMethod || "",
-    numOocytesSubjectedToICSI: currentMetric?.details?.numOocytesSubjectedToICSI || "",
+    patientIdCheck: currentMetric?.details?.patientIdCheck || '',
+    sieveOption: currentMetric?.details?.sieveOption || '',
+    numOocytesRetrievedRight:
+      currentMetric?.details?.numOocytesRetrievedRight || '',
+    numOocytesRetrievedLeft:
+      currentMetric?.details?.numOocytesRetrievedLeft || '',
+    dishPreparationDoneBy: currentMetric?.details?.dishPreparationDoneBy || '',
+    dishPreparationId: currentMetric?.details?.dishPreparationId || '',
+    spermUsed: currentMetric?.details?.spermUsed || '',
+    initialSpermParams: currentMetric?.details?.initialSpermParams || '',
+    preCount: currentMetric?.details?.preCount || '',
+    preTotalMotility: currentMetric?.details?.preTotalMotility || '',
+    preMorphology: currentMetric?.details?.preMorphology || '',
+    spermPreparationTechniques:
+      currentMetric?.details?.spermPreparationTechniques || '',
+    postProcessSpermParams:
+      currentMetric?.details?.postProcessSpermParams || '',
+    postCount: currentMetric?.details?.postCount || '',
+    postTotalProgressiveMotility:
+      currentMetric?.details?.postTotalProgressiveMotility || '',
+    postMorphology: currentMetric?.details?.postMorphology || '',
+    semenFreezingDone: currentMetric?.details?.semenFreezingDone || '',
+    spermIdCheck: currentMetric?.details?.spermIdCheck || '',
+    icsiDish: currentMetric?.details?.icsiDish || '',
+    processedBy: currentMetric?.details?.processedBy || '',
+    witness: currentMetric?.details?.witness || '',
+    expectedOocytes: currentMetric?.details?.expectedOocytes || '',
+    numOocytesCollected: currentMetric?.details?.numOocytesCollected || '',
+    miiOocytes: currentMetric?.details?.miiOocytes || '',
+    miOocytes: currentMetric?.details?.miOocytes || '',
+    gvOocytes: currentMetric?.details?.gvOocytes || '',
+    fertilizationMethod: currentMetric?.details?.fertilizationMethod || '',
+    numOocytesSubjectedToICSI:
+      currentMetric?.details?.numOocytesSubjectedToICSI || '',
     timeOfDenudation: currentMetric?.details?.timeOfDenudation || null,
-    denudationDoneBy: currentMetric?.details?.denudationDoneBy || "",
-    timeTakenForDenudation: currentMetric?.details?.timeTakenForDenudation || "",
-    cumulusDispersion: currentMetric?.details?.cumulusDispersion || "",
+    denudationDoneBy: currentMetric?.details?.denudationDoneBy || '',
+    timeTakenForDenudation:
+      currentMetric?.details?.timeTakenForDenudation || '',
+    cumulusDispersion: currentMetric?.details?.cumulusDispersion || '',
     icsiTime: currentMetric?.details?.icsiTime || null,
-    timeFromOPUToICSI: currentMetric?.details?.timeFromOPUToICSI || "",
-    timeTakenForICSI: currentMetric?.details?.timeTakenForICSI || "",
-    icsiDoneBy: currentMetric?.details?.icsiDoneBy || "",
-    inseminationDoneBy: currentMetric?.details?.inseminationDoneBy || "",
-    ionomycin: currentMetric?.details?.ionomycin || "",
-    pentoxiphylline: currentMetric?.details?.pentoxiphylline || "",
-    oocyteQuality: currentMetric?.details?.oocyteQuality || "",
-    notes: currentMetric?.details?.notes || "",
-    spermIdCheck2: currentMetric?.details?.spermIdCheck2 || "",
-    witness2: currentMetric?.details?.witness2 || "",
-    eggIdCheck: currentMetric?.details?.eggIdCheck || "",
-    postICSIDCheck: currentMetric?.details?.postICSIDCheck || "",
-    witness3: currentMetric?.details?.witness3 || "",
-    theophylline: currentMetric?.details?.theophylline || "",
-    noOfFertilizedOoctyes: currentMetric?.details?.noOfFertilizedOoctyes || "",
-    noOfUnfertilizedOocytes: currentMetric?.details?.noOfUnfertilizedOocytes || "",
+    timeFromOPUToICSI: currentMetric?.details?.timeFromOPUToICSI || '',
+    timeTakenForICSI: currentMetric?.details?.timeTakenForICSI || '',
+    icsiDoneBy: currentMetric?.details?.icsiDoneBy || '',
+    inseminationDoneBy: currentMetric?.details?.inseminationDoneBy || '',
+    ionomycin: currentMetric?.details?.ionomycin || '',
+    pentoxiphylline: currentMetric?.details?.pentoxiphylline || '',
+    oocyteQuality: currentMetric?.details?.oocyteQuality || '',
+    notes: currentMetric?.details?.notes || '',
+    spermIdCheck2: currentMetric?.details?.spermIdCheck2 || '',
+    witness2: currentMetric?.details?.witness2 || '',
+    eggIdCheck: currentMetric?.details?.eggIdCheck || '',
+    postICSIDCheck: currentMetric?.details?.postICSIDCheck || '',
+    witness3: currentMetric?.details?.witness3 || '',
+    theophylline: currentMetric?.details?.theophylline || '',
+    noOfFertilizedOoctyes: currentMetric?.details?.noOfFertilizedOoctyes || '',
+    noOfUnfertilizedOocytes:
+      currentMetric?.details?.noOfUnfertilizedOocytes || '',
     day0: currentMetric?.details?.day0 || {
       date: null,
       checkTime: null,
-      checkBy: "",
-      numBlastocystFormed: "",
-      numEarlyBlastocystStageEmbryos: "",
-      numEmbryosArrestedAtCleavageStage: "",
-      numGrade3Embryos: "",
-      numBlastocystFrozen: "",
-      gradeOfEmbryos: "",
-      numBlastocystUtilized: "",
+      checkBy: '',
+      numBlastocystFormed: '',
+      numEarlyBlastocystStageEmbryos: '',
+      numEmbryosArrestedAtCleavageStage: '',
+      numGrade3Embryos: '',
+      numBlastocystFrozen: '',
+      gradeOfEmbryos: '',
+      numBlastocystUtilized: '',
     },
     day1: currentMetric?.details?.day1 || {
       date: null,
       checkTime: null,
-      checkBy: "",
-      numBlastocystFormed: "",
-      numEarlyBlastocystStageEmbryos: "",
-      numEmbryosArrestedAtCleavageStage: "",
-      numGrade3Embryos: "",
-      numBlastocystFrozen: "",
-      gradeOfEmbryos: "",
-      numBlastocystUtilized: "",
+      checkBy: '',
+      numBlastocystFormed: '',
+      numEarlyBlastocystStageEmbryos: '',
+      numEmbryosArrestedAtCleavageStage: '',
+      numGrade3Embryos: '',
+      numBlastocystFrozen: '',
+      gradeOfEmbryos: '',
+      numBlastocystUtilized: '',
     },
     day2: currentMetric?.details?.day2 || {
       date: null,
       checkTime: null,
-      checkBy: "",
-      numBlastocystFormed: "",
-      numEarlyBlastocystStageEmbryos: "",
-      numEmbryosArrestedAtCleavageStage: "",
-      numGrade3Embryos: "",
-      numBlastocystFrozen: "",
-      gradeOfEmbryos: "",
-      numBlastocystUtilized: "",
+      checkBy: '',
+      numBlastocystFormed: '',
+      numEarlyBlastocystStageEmbryos: '',
+      numEmbryosArrestedAtCleavageStage: '',
+      numGrade3Embryos: '',
+      numBlastocystFrozen: '',
+      gradeOfEmbryos: '',
+      numBlastocystUtilized: '',
     },
     day3: currentMetric?.details?.day3 || {
       date: null,
       checkTime: null,
-      checkBy: "",
-      numBlastocystFormed: "",
-      numEarlyBlastocystStageEmbryos: "",
-      numEmbryosArrestedAtCleavageStage: "",
-      numGrade3Embryos: "",
-      numBlastocystFrozen: "",
-      gradeOfEmbryos: "",
-      numBlastocystUtilized: "",
+      checkBy: '',
+      numBlastocystFormed: '',
+      numEarlyBlastocystStageEmbryos: '',
+      numEmbryosArrestedAtCleavageStage: '',
+      numGrade3Embryos: '',
+      numBlastocystFrozen: '',
+      gradeOfEmbryos: '',
+      numBlastocystUtilized: '',
     },
     day4: currentMetric?.details?.day4 || {
       date: null,
       checkTime: null,
-      checkBy: "",
-      numBlastocystFormed: "",
-      numEarlyBlastocystStageEmbryos: "",
-      numEmbryosArrestedAtCleavageStage: "",
-      numGrade3Embryos: "",
-      numBlastocystFrozen: "",
-      gradeOfEmbryos: "",
-      numBlastocystUtilized: "",
+      checkBy: '',
+      numBlastocystFormed: '',
+      numEarlyBlastocystStageEmbryos: '',
+      numEmbryosArrestedAtCleavageStage: '',
+      numGrade3Embryos: '',
+      numBlastocystFrozen: '',
+      gradeOfEmbryos: '',
+      numBlastocystUtilized: '',
     },
     day5: currentMetric?.details?.day5 || {
       date: null,
       checkTime: null,
-      checkBy: "",
-      numBlastocystFormed: "",
-      numEarlyBlastocystStageEmbryos: "",
-      numEmbryosArrestedAtCleavageStage: "",
-      numGrade3Embryos: "",
-      numBlastocystFrozen: "",
-      gradeOfEmbryos: "",
-      numBlastocystUtilized: "",
+      checkBy: '',
+      numBlastocystFormed: '',
+      numEarlyBlastocystStageEmbryos: '',
+      numEmbryosArrestedAtCleavageStage: '',
+      numGrade3Embryos: '',
+      numBlastocystFrozen: '',
+      gradeOfEmbryos: '',
+      numBlastocystUtilized: '',
     },
     day6: currentMetric?.details?.day6 || {
       date: null,
       checkTime: null,
-      checkBy: "",
-      numBlastocystFormed: "",
-      numEarlyBlastocystStageEmbryos: "",
-      numEmbryosArrestedAtCleavageStage: "",
-      numGrade3Embryos: "",
-      numBlastocystFrozen: "",
-      gradeOfEmbryos: "",
-      numBlastocystUtilized: "",
+      checkBy: '',
+      numBlastocystFormed: '',
+      numEarlyBlastocystStageEmbryos: '',
+      numEmbryosArrestedAtCleavageStage: '',
+      numGrade3Embryos: '',
+      numBlastocystFrozen: '',
+      gradeOfEmbryos: '',
+      numBlastocystUtilized: '',
     },
-    totalNumEmbryosFrozen: currentMetric?.details?.totalNumEmbryosFrozen || "",
-    dayOfFreezing: currentMetric?.details?.dayOfFreezing || "",
-    numEmbryosVitrified: currentMetric?.details?.numEmbryosVitrified || "",
-    freezingConsentComplete: currentMetric?.details?.freezingConsentComplete || "",
-    vitrifiedBy: currentMetric?.details?.vitrifiedBy || "",
+    totalNumEmbryosFrozen: currentMetric?.details?.totalNumEmbryosFrozen || '',
+    dayOfFreezing: currentMetric?.details?.dayOfFreezing || '',
+    numEmbryosVitrified: currentMetric?.details?.numEmbryosVitrified || '',
+    freezingConsentComplete:
+      currentMetric?.details?.freezingConsentComplete || '',
+    vitrifiedBy: currentMetric?.details?.vitrifiedBy || '',
   };
   const formik = useFormik({
     initialValues: initialValues,
@@ -446,7 +464,7 @@ const EmbryologyWorksheet: React.FC<EmbryologyWorksheetProps> = ({ metric, treat
 
         if (
           !_.isEmpty(dayData) &&
-          Object.values(dayData).some((value) => value !== null && value !== "")
+          Object.values(dayData).some(value => value !== null && value !== '')
         ) {
           setActiveStep(i + 1);
         }
@@ -457,7 +475,7 @@ const EmbryologyWorksheet: React.FC<EmbryologyWorksheetProps> = ({ metric, treat
   }, []);
 
   return (
-    <Box component={"form"} onSubmit={formik.handleSubmit} p={2}>
+    <Box component={'form'} onSubmit={formik.handleSubmit} p={2}>
       <Typography variant="button" color="primary">
         Add {metric.name}
       </Typography>
@@ -585,14 +603,14 @@ const EmbryologyWorksheet: React.FC<EmbryologyWorksheetProps> = ({ metric, treat
           <CustomDatePicker
             label="Date of Trigger"
             value={formik.values.dateOfTrigger}
-            onChange={(date) => formik.setFieldValue("dateOfTrigger", date, true)}
+            onChange={date => formik.setFieldValue('dateOfTrigger', date, true)}
           />
         </Grid>
         <Grid item lg={4}>
           <CustomTimePicker
             label="Time of Trigger"
             value={formik.values.timeOfTrigger}
-            onChange={(time) => formik.setFieldValue("timeOfTrigger", time, true)}
+            onChange={time => formik.setFieldValue('timeOfTrigger', time, true)}
           />
         </Grid>
         <Grid item lg={4}>
@@ -634,24 +652,26 @@ const EmbryologyWorksheet: React.FC<EmbryologyWorksheetProps> = ({ metric, treat
           <CustomDatePicker
             label="OPU Date"
             value={formik.values.opuDate}
-            onChange={(date) => formik.setFieldValue("opuDate", date, true)}
+            onChange={date => formik.setFieldValue('opuDate', date, true)}
           />
         </Grid>
         <Grid item lg={4}>
           <CustomTimePicker
             label="OPU Time"
             value={formik.values.opuTime}
-            onChange={(time) => formik.setFieldValue("opuTime", time, true)}
+            onChange={time => formik.setFieldValue('opuTime', time, true)}
           />
         </Grid>
         <Grid item lg={4}>
           <FieldAutocomplete
             options={doctors}
-            getOptionLabel={(option) => `${option.firstName || ""} ${option.lastName || ""}`}
+            getOptionLabel={option =>
+              `${option.firstName || ''} ${option.lastName || ''}`
+            }
             isOptionEqualToValue={(option, value) => option._id === value._id}
             value={formik.values.doctor}
-            onChange={(newValue) => {
-              formik.setFieldValue("doctor", newValue);
+            onChange={newValue => {
+              formik.setFieldValue('doctor', newValue);
             }}
             label="doctor"
           />
@@ -659,11 +679,13 @@ const EmbryologyWorksheet: React.FC<EmbryologyWorksheetProps> = ({ metric, treat
         <Grid item lg={4}>
           <FieldAutocomplete
             options={doctors}
-            getOptionLabel={(option) => `${option.firstName || ""} ${option.lastName || ""}`}
+            getOptionLabel={option =>
+              `${option.firstName || ''} ${option.lastName || ''}`
+            }
             isOptionEqualToValue={(option, value) => option._id === value._id}
             value={formik.values.assistantDoctor}
-            onChange={(newValue) => {
-              formik.setFieldValue("assistantDoctor", newValue);
+            onChange={newValue => {
+              formik.setFieldValue('assistantDoctor', newValue);
             }}
             label="assistantDoctor"
           />
@@ -679,16 +701,18 @@ const EmbryologyWorksheet: React.FC<EmbryologyWorksheetProps> = ({ metric, treat
           /> */}
           <FieldAutocomplete
             options={doctors}
-            getOptionLabel={(option) => `${option.firstName || ""} ${option.lastName || ""}`}
+            getOptionLabel={option =>
+              `${option.firstName || ''} ${option.lastName || ''}`
+            }
             filterOptions={(options, _state) => {
               return options.filter(
-                (option) => option.speciality === DoctorSpeciality.Embryologist
+                option => option.speciality === DoctorSpeciality.Embryologist,
               );
             }}
             isOptionEqualToValue={(option, value) => option._id === value._id}
             value={formik.values.embryologist}
-            onChange={(newValue) => {
-              formik.setFieldValue("embryologist", newValue); // Ensure 'embryologist' is a string
+            onChange={newValue => {
+              formik.setFieldValue('embryologist', newValue); // Ensure 'embryologist' is a string
             }}
             label="Embryologist"
           />
@@ -728,7 +752,7 @@ const EmbryologyWorksheet: React.FC<EmbryologyWorksheetProps> = ({ metric, treat
           <CustomDatePicker
             label="Expiry Date"
             value={formik.values.iuiExpiry}
-            onChange={(date) => formik.setFieldValue("iuiExpiry", date, true)}
+            onChange={date => formik.setFieldValue('iuiExpiry', date, true)}
           />
         </Grid>
         <Grid item lg={4}>
@@ -1099,7 +1123,9 @@ const EmbryologyWorksheet: React.FC<EmbryologyWorksheetProps> = ({ metric, treat
                 <CustomTimePicker
                   label="Time of Denudation"
                   value={formik.values.timeOfDenudation}
-                  onChange={(value) => formik.setFieldValue("timeOfDenudation", value)}
+                  onChange={value =>
+                    formik.setFieldValue('timeOfDenudation', value)
+                  }
                 />
               </Grid>
               <Grid item lg={4}>
@@ -1133,7 +1159,7 @@ const EmbryologyWorksheet: React.FC<EmbryologyWorksheetProps> = ({ metric, treat
                 <CustomTimePicker
                   label="ICSI Time"
                   value={formik.values.icsiTime}
-                  onChange={(value) => formik.setFieldValue("icsiTime", value)}
+                  onChange={value => formik.setFieldValue('icsiTime', value)}
                 />
               </Grid>
               <Grid item lg={4}>
@@ -1297,7 +1323,9 @@ const EmbryologyWorksheet: React.FC<EmbryologyWorksheetProps> = ({ metric, treat
                   label="Date"
                   // value={(formik.values[`day${activeStep}`] as IDayMetrics).date}
                   value={getDayMetrics(activeStep).date}
-                  onChange={(value) => formik.setFieldValue(`day${activeStep}.date`, value)}
+                  onChange={value =>
+                    formik.setFieldValue(`day${activeStep}.date`, value)
+                  }
                 />
               </Grid>
 
@@ -1306,7 +1334,9 @@ const EmbryologyWorksheet: React.FC<EmbryologyWorksheetProps> = ({ metric, treat
                   label="Check Time"
                   // value={formik.values[`day${activeStep}`].checkTime}
                   value={getDayMetrics(activeStep).checkTime}
-                  onChange={(value) => formik.setFieldValue(`day${activeStep}.checkTime`, value)}
+                  onChange={value =>
+                    formik.setFieldValue(`day${activeStep}.checkTime`, value)
+                  }
                 />
               </Grid>
               <Grid item lg={4}>
@@ -1335,7 +1365,9 @@ const EmbryologyWorksheet: React.FC<EmbryologyWorksheetProps> = ({ metric, treat
                   label="No. of early blastocyst stage embryos"
                   name={`day${activeStep}.numEarlyBlastocystStageEmbryos`}
                   // value={formik.values[`day${activeStep}`].numEarlyBlastocystStageEmbryos}
-                  value={getDayMetrics(activeStep).numEarlyBlastocystStageEmbryos}
+                  value={
+                    getDayMetrics(activeStep).numEarlyBlastocystStageEmbryos
+                  }
                   onChange={formik.handleChange}
                 />
               </Grid>
@@ -1345,7 +1377,9 @@ const EmbryologyWorksheet: React.FC<EmbryologyWorksheetProps> = ({ metric, treat
                   label="No. of embryos arrested at cleavage stage"
                   name={`day${activeStep}.numEmbryosArrestedAtCleavageStage`}
                   // value={formik.values[`day${activeStep}`].numEmbryosArrestedAtCleavageStage}
-                  value={getDayMetrics(activeStep).numEmbryosArrestedAtCleavageStage}
+                  value={
+                    getDayMetrics(activeStep).numEmbryosArrestedAtCleavageStage
+                  }
                   onChange={formik.handleChange}
                 />
               </Grid>
@@ -1393,16 +1427,24 @@ const EmbryologyWorksheet: React.FC<EmbryologyWorksheetProps> = ({ metric, treat
           </Box>
         )}
         <Box mt={2}>
-          <Button disabled={activeStep === 0} onClick={handleBack} sx={{ mr: 1 }}>
+          <Button
+            disabled={activeStep === 0}
+            onClick={handleBack}
+            sx={{ mr: 1 }}
+          >
             Back
           </Button>
 
           <Button
             variant="contained"
             color="primary"
-            onClick={() => (activeStep === steps.length - 1 ? formik.handleSubmit() : handleNext())}
+            onClick={() =>
+              activeStep === steps.length - 1
+                ? formik.handleSubmit()
+                : handleNext()
+            }
           >
-            {activeStep === steps.length - 1 ? "Finish" : "Next"}
+            {activeStep === steps.length - 1 ? 'Finish' : 'Next'}
           </Button>
         </Box>
       </Box>
@@ -1427,7 +1469,13 @@ const EmbryologyWorksheet: React.FC<EmbryologyWorksheetProps> = ({ metric, treat
           )}
         </Grid>
       </Grid>
-      <Box display={"flex"} justifyContent={"flex-end"} alignItems={"center"} gap={2} mb={2}>
+      <Box
+        display={'flex'}
+        justifyContent={'flex-end'}
+        alignItems={'center'}
+        gap={2}
+        mb={2}
+      >
         <Button
           variant="contained"
           color="primary"
@@ -1435,16 +1483,17 @@ const EmbryologyWorksheet: React.FC<EmbryologyWorksheetProps> = ({ metric, treat
           disabled={
             isLoading ||
             patientTreatmentCyclesLoading ||
-            (_.isEqual(formik.values, formik.initialValues) && fileUploadedUrl.length === 0)
+            (_.isEqual(formik.values, formik.initialValues) &&
+              fileUploadedUrl.length === 0)
           }
-          sx={{ width: "fit-content" }}
+          sx={{ width: 'fit-content' }}
         >
           Save
         </Button>
         <Button
           variant="contained"
           color="secondary"
-          sx={{ width: "fit-content" }}
+          sx={{ width: 'fit-content' }}
           onClick={closeModal}
         >
           Cancel

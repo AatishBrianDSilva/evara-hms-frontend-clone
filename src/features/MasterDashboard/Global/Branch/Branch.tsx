@@ -1,19 +1,23 @@
-import React, { useCallback, useState } from "react";
-import ContentSection from "../../../../components/ContentSection/ContentSection";
-import { Box, Button, Grid, TextField } from "@mui/material";
-import { Add, CheckCircle, Circle, Edit } from "@mui/icons-material";
-import CustomDataGrid from "../../../../components/CustomDataGrid/CustomDataGrid";
-import { GridActionsCellItem, GridColDef, GridRowParams } from "@mui/x-data-grid";
+import React, { useCallback, useState } from 'react';
+import ContentSection from '../../../../components/ContentSection/ContentSection';
+import { Box, Button, Grid, TextField } from '@mui/material';
+import { Add, CheckCircle, Circle, Edit } from '@mui/icons-material';
+import CustomDataGrid from '../../../../components/CustomDataGrid/CustomDataGrid';
+import {
+  GridActionsCellItem,
+  GridColDef,
+  GridRowParams,
+} from '@mui/x-data-grid';
 // import Delete from "@mui/icons-material/Delete";
 // import DeleteConfirmationModal from "../../../../components/DeleteConfirmationModal/DeleteConfirmationModal";
 import {
   useGetGlobalBranchsQuery,
   // useDeleteGlobalBranchMutation,
-} from "../../../../services/masterDashboardService/global/globalBranch";
+} from '../../../../services/masterDashboardService/global/globalBranch';
 // import { useToast } from "../../../../context/ToastContext";
-import _ from "lodash";
-import AddBranch from "./AddBranch";
-import EditBranch from "./EditBranch";
+import _ from 'lodash';
+import AddBranch from './AddBranch';
+import EditBranch from './EditBranch';
 interface RowType {
   _id: string;
 }
@@ -29,10 +33,10 @@ const Branch: React.FC = () => {
   // Debounce the search handling
   const debouncedSearchChange = useCallback(
     _.debounce(handleSearchChange, 500),
-    [handleSearchChange] // Ensure that handleSearchChange is stable
+    [handleSearchChange], // Ensure that handleSearchChange is stable
   );
 
-  const [selectedRow, setSelectedRow] = useState<string>("");
+  const [selectedRow, setSelectedRow] = useState<string>('');
   const [isAddModalOpen, setIsAddModalOpen] = useState<boolean>(false);
   const [isEditModalOpen, setIsEditModalOpen] = useState<boolean>(false);
   // const [isDeleteModalOpen, setIsDeleteModalOpen] = useState<boolean>(false);
@@ -41,43 +45,51 @@ const Branch: React.FC = () => {
     data: BranchData,
     isLoading: BranchLoading,
     isFetching: BranchFetching,
-  } = useGetGlobalBranchsQuery({ paginate: false, filters: { isAdmin: true }, searchQuery });
+  } = useGetGlobalBranchsQuery({
+    paginate: false,
+    filters: { isAdmin: true },
+    searchQuery,
+  });
 
   const Branchs = BranchData?.data || [];
 
-  console.log("Branch Data", Branchs);
+  console.log('Branch Data', Branchs);
 
   const getRowId = (row: RowType) => row._id;
 
   const columnsConfig: GridColDef[] = [
-    { field: "code", headerName: "Branch Code", flex: 1 },
+    { field: 'code', headerName: 'Branch Code', flex: 1 },
     {
-      field: "branchName",
-      headerName: "Branch Name",
+      field: 'branchName',
+      headerName: 'Branch Name',
       flex: 1,
     },
     {
-      field: "isActive",
-      headerName: "Status",
+      field: 'isActive',
+      headerName: 'Status',
       flex: 1,
-      valueGetter: (params) => (params.value ? "Active" : "Inactive"),
+      valueGetter: params => (params.value ? 'Active' : 'Inactive'),
     },
     {
-      field: "stage",
-      headerName: "Is Active",
+      field: 'stage',
+      headerName: 'Is Active',
       renderCell(params) {
         return (
           <Grid container>
-            {params.row.isActive ? <CheckCircle color="success" /> : <Circle color="warning" />}
+            {params.row.isActive ? (
+              <CheckCircle color="success" />
+            ) : (
+              <Circle color="warning" />
+            )}
           </Grid>
         );
       },
     },
     {
-      field: "actions",
-      headerName: "Actions",
+      field: 'actions',
+      headerName: 'Actions',
       flex: 1,
-      type: "actions",
+      type: 'actions',
       getActions: (params: GridRowParams) => {
         const row = params.row;
         return [
@@ -155,7 +167,13 @@ const Branch: React.FC = () => {
   return (
     <ContentSection title="Branchs">
       <Box display="flex" justifyContent="flex-end" gap={2}>
-        <TextField label="Search" placeholder="Name/Code" size="small" variant="outlined" onChange={(e) => debouncedSearchChange(e.target.value)} />
+        <TextField
+          label="Search"
+          placeholder="Name/Code"
+          size="small"
+          variant="outlined"
+          onChange={e => debouncedSearchChange(e.target.value)}
+        />
         <Button
           variant="contained"
           startIcon={<Add />}
@@ -167,21 +185,27 @@ const Branch: React.FC = () => {
         </Button>
       </Box>
 
-      <Box mt={2} flex={"1 1 auto"}>
+      <Box mt={2} flex={'1 1 auto'}>
         <CustomDataGrid
           autoHeight={false}
           columns={columnsConfig}
           rows={Branchs}
           loading={BranchLoading || BranchFetching}
-          sx={{ height: "100%" }}
+          sx={{ height: '100%' }}
           getRowId={getRowId}
         />
       </Box>
 
-      {isAddModalOpen && <AddBranch openModal={isAddModalOpen} onClose={closeAddModal} />}
+      {isAddModalOpen && (
+        <AddBranch openModal={isAddModalOpen} onClose={closeAddModal} />
+      )}
 
       {isEditModalOpen && (
-        <EditBranch openModal={isEditModalOpen} onClose={closeEditModal} id={selectedRow} />
+        <EditBranch
+          openModal={isEditModalOpen}
+          onClose={closeEditModal}
+          id={selectedRow}
+        />
       )}
 
       {/* {isDeleteModalOpen && (

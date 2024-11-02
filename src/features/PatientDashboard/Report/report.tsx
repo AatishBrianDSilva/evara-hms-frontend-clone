@@ -1,12 +1,16 @@
-import React, { useState } from "react";
-import { Box, TextField } from "@mui/material";
-import CustomDataGrid from "../../../components/CustomDataGrid/CustomDataGrid";
-import { GridActionsCellItem, GridColDef, GridRowParams } from "@mui/x-data-grid";
-import { Visibility } from "@mui/icons-material";
-import { useSelector } from "react-redux";
-import { RootState } from "../../../app/store";
-import { useGetReportsQuery } from "../../../services/patientDashboardService/reportApi";
-import { usePrint } from "../../../context/PrintPDFContext";
+import React, { useState } from 'react';
+import { Box, TextField } from '@mui/material';
+import CustomDataGrid from '../../../components/CustomDataGrid/CustomDataGrid';
+import {
+  GridActionsCellItem,
+  GridColDef,
+  GridRowParams,
+} from '@mui/x-data-grid';
+import { Visibility } from '@mui/icons-material';
+import { useSelector } from 'react-redux';
+import { RootState } from '../../../app/store';
+import { useGetReportsQuery } from '../../../services/patientDashboardService/reportApi';
+import { usePrint } from '../../../context/PrintPDFContext';
 
 interface RowType {
   _id: string;
@@ -39,12 +43,12 @@ const Report: React.FC = () => {
         patient: patient?._id,
       },
     },
-    { skip: !patient?._id }
+    { skip: !patient?._id },
   );
 
   const PatientReportLoading = isLoading || isFetching;
 
-  console.log("Report Data", patientReportData);
+  console.log('Report Data', patientReportData);
 
   // const Notes: INote[] = Array.isArray(NotesData?.data) ? NotesData?.data : [];
   const reports = patientReportData?.data || [];
@@ -54,35 +58,35 @@ const Report: React.FC = () => {
   // Columns configuration for the data grid
   const columns: GridColDef[] = [
     {
-      field: "reportName",
-      headerName: "Report",
+      field: 'reportName',
+      headerName: 'Report',
       flex: 1,
     },
     {
-      field: "category",
-      headerName: "Category",
+      field: 'category',
+      headerName: 'Category',
       flex: 1,
     },
 
     {
-      field: "updatedAt",
-      headerName: "UpdatedAt",
+      field: 'updatedAt',
+      headerName: 'UpdatedAt',
       flex: 1,
-      type: "date",
+      type: 'date',
       valueFormatter(params) {
         const date = new Date(params.value);
-        const day = String(date.getDate()).padStart(2, "0");
-        const month = String(date.getMonth() + 1).padStart(2, "0"); // Months are 0-based
+        const day = String(date.getDate()).padStart(2, '0');
+        const month = String(date.getMonth() + 1).padStart(2, '0'); // Months are 0-based
         const year = String(date.getFullYear()).slice(-2); // Get last two digits of the year
         return `${day}/${month}/${year}`;
       },
     },
     {
-      field: "actions",
-      type: "actions",
-      headerName: "Actions",
+      field: 'actions',
+      type: 'actions',
+      headerName: 'Actions',
       flex: 1,
-      cellClassName: "actions",
+      cellClassName: 'actions',
       // custom actions for the actions column
       getActions: (params: GridRowParams) => {
         const row = params.row;
@@ -103,7 +107,7 @@ const Report: React.FC = () => {
         <TextField label="Search" size="small" variant="outlined" />
       </Box>
 
-      <Box mt={2} flex={"1 1 auto"}>
+      <Box mt={2} flex={'1 1 auto'}>
         <CustomDataGrid
           autoHeight={false}
           columns={columns}
@@ -112,7 +116,7 @@ const Report: React.FC = () => {
           pageSize={pageSize}
           getRowId={getRowId}
           loading={PatientReportLoading}
-          sx={{ height: "100%" }}
+          sx={{ height: '100%' }}
           enablePagination={true}
           onPageChange={handlePageChange}
           onPageSizeChange={handlePageSizeChange}

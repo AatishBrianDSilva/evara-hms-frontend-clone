@@ -1,17 +1,17 @@
-import React from "react";
+import React from 'react';
 import {
   IPatientTreatmentCycle,
   IPatientTreatmentCycleChecklist,
   IPatientTreatmentCycleMetric,
   IPatientTreatmentCycleProtocol,
   IPatientTreatmentCycleReport,
-} from "../../types/patientDashboard/treatmentCycle";
-import { Box, IconButton, Typography, useTheme } from "@mui/material";
-import Delete from "@mui/icons-material/Delete";
+} from '../../types/patientDashboard/treatmentCycle';
+import { Box, IconButton, Typography, useTheme } from '@mui/material';
+import Delete from '@mui/icons-material/Delete';
 import {
   ETreatmentCycleMetric,
   ETreatmentCycleReport,
-} from "../../types/master";
+} from '../../types/master';
 import {
   Assessment,
   Assignment,
@@ -19,22 +19,22 @@ import {
   CheckCircle,
   Circle,
   Summarize,
-} from "@mui/icons-material";
-import TreatmentCycleList from "./TreatmentCycleList";
-import IUIProtocol from "../../features/PatientDashboard/Journey/TreatmentCycle/Protocols/IUIProtocol";
-import PregnancyOutcomeBetaHCG from "../../features/PatientDashboard/Journey/TreatmentCycle/Metrics/PregnancyOutcomeBetaHCG";
-import IUIChecklist from "../../features/PatientDashboard/Journey/TreatmentCycle/Checklists/IUIChecklist";
-import DeleteConfirmationModal from "../DeleteConfirmationModal/DeleteConfirmationModal";
-import { useToast } from "../../context/ToastContext";
-import { useDeleteTreatmentCycleMutation } from "../../services/patientDashboardService/treatmentCycleApi";
-import IUIHReport from "../../features/PatientDashboard/Journey/TreatmentCycle/Reports/IUIHReport";
-import IUIDReport from "../../features/PatientDashboard/Journey/TreatmentCycle/Reports/IUIDReport";
-import EmbryoTransferReport from "../../features/PatientDashboard/Journey/TreatmentCycle/Reports/IVFReport";
-import IVFProtocol from "../../features/PatientDashboard/Journey/TreatmentCycle/Protocols/IVFProtocol";
-import IVFChecklist from "../../features/PatientDashboard/Journey/TreatmentCycle/Checklists/IVFChecklist";
-import OocyteAspirationReportForm from "../../features/PatientDashboard/Journey/TreatmentCycle/Reports/OPUReport";
-import IVFCycleSummary from "../../features/PatientDashboard/Journey/TreatmentCycle/Reports/IVFCycleSummary";
-import EmbryologyWorksheet from "../../features/PatientDashboard/Journey/TreatmentCycle/Metrics/EmbryologyWorksheet";
+} from '@mui/icons-material';
+import TreatmentCycleList from './TreatmentCycleList';
+import IUIProtocol from '../../features/PatientDashboard/Journey/TreatmentCycle/Protocols/IUIProtocol';
+import PregnancyOutcomeBetaHCG from '../../features/PatientDashboard/Journey/TreatmentCycle/Metrics/PregnancyOutcomeBetaHCG';
+import IUIChecklist from '../../features/PatientDashboard/Journey/TreatmentCycle/Checklists/IUIChecklist';
+import DeleteConfirmationModal from '../DeleteConfirmationModal/DeleteConfirmationModal';
+import { useToast } from '../../context/ToastContext';
+import { useDeleteTreatmentCycleMutation } from '../../services/patientDashboardService/treatmentCycleApi';
+import IUIHReport from '../../features/PatientDashboard/Journey/TreatmentCycle/Reports/IUIHReport';
+import IUIDReport from '../../features/PatientDashboard/Journey/TreatmentCycle/Reports/IUIDReport';
+import EmbryoTransferReport from '../../features/PatientDashboard/Journey/TreatmentCycle/Reports/IVFReport';
+import IVFProtocol from '../../features/PatientDashboard/Journey/TreatmentCycle/Protocols/IVFProtocol';
+import IVFChecklist from '../../features/PatientDashboard/Journey/TreatmentCycle/Checklists/IVFChecklist';
+import OocyteAspirationReportForm from '../../features/PatientDashboard/Journey/TreatmentCycle/Reports/OPUReport';
+import IVFCycleSummary from '../../features/PatientDashboard/Journey/TreatmentCycle/Reports/IVFCycleSummary';
+import EmbryologyWorksheet from '../../features/PatientDashboard/Journey/TreatmentCycle/Metrics/EmbryologyWorksheet';
 
 interface ITreatmentCycleCardProps {
   treatmentCycle: IPatientTreatmentCycle;
@@ -64,16 +64,16 @@ const TreatmentCycleCard: React.FC<ITreatmentCycleCardProps> = ({
     const id = treatmentCycle._id;
     const promise = deleteTreatmentCycle(id).unwrap();
     showPromiseToast(promise, {
-      loading: "Deleting Treatment Cycle...",
-      success: () => "Treatment Cycle deleted successfully",
-      error: () => "Error Deleting Treatment Cycle",
+      loading: 'Deleting Treatment Cycle...',
+      success: () => 'Treatment Cycle deleted successfully',
+      error: () => 'Error Deleting Treatment Cycle',
     });
 
     try {
       await promise;
       closeDeleteDialog();
     } catch (error) {
-      console.error("Error deleting treatmentCycle", error);
+      console.error('Error deleting treatmentCycle', error);
     }
   };
 
@@ -85,10 +85,10 @@ const TreatmentCycleCard: React.FC<ITreatmentCycleCardProps> = ({
           let contentProps = { protocol, treatmentCycleId: treatmentCycle._id };
 
           switch (protocol.name) {
-            case "IUI Protocol":
+            case 'IUI Protocol':
               content = <IUIProtocol {...contentProps} />;
               break;
-            case "IVF Protocol":
+            case 'IVF Protocol':
               content = <IVFProtocol {...contentProps} />;
               break;
 
@@ -118,10 +118,10 @@ const TreatmentCycleCard: React.FC<ITreatmentCycleCardProps> = ({
             treatmentCycleId: treatmentCycle._id,
           };
           switch (checklist.name) {
-            case "IVF Checklist":
+            case 'IVF Checklist':
               content = <IVFChecklist {...contentProps} />;
               break;
-            case "IUI Checklist":
+            case 'IUI Checklist':
               content = <IUIChecklist {...contentProps} />;
               break;
             default:
@@ -220,7 +220,7 @@ const TreatmentCycleCard: React.FC<ITreatmentCycleCardProps> = ({
   return (
     <>
       <Box
-        width={"60%"}
+        width={'60%'}
         border={1}
         borderRadius={1}
         borderColor={theme.palette.secondary.main}
@@ -229,48 +229,48 @@ const TreatmentCycleCard: React.FC<ITreatmentCycleCardProps> = ({
         <Box
           gap={2}
           p={2}
-          display={"flex"}
-          alignItems={"center"}
+          display={'flex'}
+          alignItems={'center'}
           borderBottom={2}
           borderColor={theme.palette.secondary.main}
         >
           <Box
-            display={"flex"}
+            display={'flex'}
             flex={1}
-            justifyItems={"flex-start"}
-            alignItems={"center"}
+            justifyItems={'flex-start'}
+            alignItems={'center'}
             gap={2}
           >
-            <Typography variant="button" color={"primary"}>
+            <Typography variant="button" color={'primary'}>
               <Typography
-                component={"span"}
+                component={'span'}
                 variant="button"
-                color={"secondary"}
+                color={'secondary'}
               >
-                Cycle:{" "}
+                Cycle:{' '}
               </Typography>
               #{treatmentCycle.cycleNo}
             </Typography>
-            <Typography variant="button" color={"primary"}>
+            <Typography variant="button" color={'primary'}>
               {new Date(treatmentCycle.date).toLocaleDateString()}
             </Typography>
           </Box>
           <Typography
             flex={3}
-            textAlign={"center"}
+            textAlign={'center'}
             variant="button"
-            color={"primary"}
+            color={'primary'}
           >
             {treatmentCycle.cycle?.name}
           </Typography>
           <Box
-            display={"flex"}
+            display={'flex'}
             flex={1}
-            justifyContent={"flex-end"}
-            alignItems={"center"}
+            justifyContent={'flex-end'}
+            alignItems={'center'}
             gap={1}
           >
-            {treatmentCycle.status === "Completed" ? (
+            {treatmentCycle.status === 'Completed' ? (
               <CheckCircle fontSize="small" color="success" />
             ) : (
               <Circle fontSize="small" color="warning" />
@@ -290,33 +290,33 @@ const TreatmentCycleCard: React.FC<ITreatmentCycleCardProps> = ({
         <Box
           gap={2}
           p={2}
-          display={"flex"}
-          alignItems={"center"}
+          display={'flex'}
+          alignItems={'center'}
           borderBottom={1}
           borderColor={theme.palette.secondary.main}
         >
           <Box
-            display={"flex"}
+            display={'flex'}
             flex={1}
-            justifyContent={"flex-start"}
-            alignItems={"center"}
+            justifyContent={'flex-start'}
+            alignItems={'center'}
             gap={1}
           >
-            <Assignment color="primary" />{" "}
-            <Typography fontSize={12} variant="button" color={"secondary"}>
+            <Assignment color="primary" />{' '}
+            <Typography fontSize={12} variant="button" color={'secondary'}>
               Protocols
             </Typography>
           </Box>
           {renderProtocol(treatmentCycle.protocols)}
           <Box
-            display={"flex"}
+            display={'flex'}
             flex={1}
-            justifyContent={"flex-end"}
-            alignItems={"center"}
+            justifyContent={'flex-end'}
+            alignItems={'center'}
             gap={1}
           >
             {treatmentCycle.protocols.every(
-              (cat) => cat.status === "Completed"
+              cat => cat.status === 'Completed',
             ) ? (
               <CheckCircle fontSize="small" color="success" />
             ) : (
@@ -328,33 +328,33 @@ const TreatmentCycleCard: React.FC<ITreatmentCycleCardProps> = ({
         <Box
           gap={2}
           p={2}
-          display={"flex"}
-          alignItems={"center"}
+          display={'flex'}
+          alignItems={'center'}
           borderBottom={1}
           borderColor={theme.palette.secondary.main}
         >
           <Box
-            display={"flex"}
+            display={'flex'}
             flex={1}
-            justifyContent={"flex-start"}
-            alignItems={"center"}
+            justifyContent={'flex-start'}
+            alignItems={'center'}
             gap={1}
           >
-            <AssignmentTurnedIn color="primary" />{" "}
-            <Typography fontSize={12} variant="button" color={"secondary"}>
+            <AssignmentTurnedIn color="primary" />{' '}
+            <Typography fontSize={12} variant="button" color={'secondary'}>
               Checklist
             </Typography>
           </Box>
           {renderChecklist(treatmentCycle.checklists)}
           <Box
-            display={"flex"}
+            display={'flex'}
             flex={1}
-            justifyContent={"flex-end"}
-            alignItems={"center"}
+            justifyContent={'flex-end'}
+            alignItems={'center'}
             gap={1}
           >
             {treatmentCycle.checklists.every(
-              (cat) => cat.status === "Completed"
+              cat => cat.status === 'Completed',
             ) ? (
               <CheckCircle fontSize="small" color="success" />
             ) : (
@@ -366,34 +366,32 @@ const TreatmentCycleCard: React.FC<ITreatmentCycleCardProps> = ({
         <Box
           gap={2}
           p={2}
-          display={"flex"}
-          alignItems={"center"}
+          display={'flex'}
+          alignItems={'center'}
           borderBottom={1}
           borderColor={theme.palette.secondary.main}
         >
           <Box
-            display={"flex"}
+            display={'flex'}
             flex={1}
-            justifyContent={"flex-start"}
-            alignItems={"center"}
+            justifyContent={'flex-start'}
+            alignItems={'center'}
             gap={1}
           >
-            <Summarize color="primary" />{" "}
-            <Typography fontSize={12} variant="button" color={"secondary"}>
+            <Summarize color="primary" />{' '}
+            <Typography fontSize={12} variant="button" color={'secondary'}>
               Reports
             </Typography>
           </Box>
           {renderReport(treatmentCycle.reports)}
           <Box
-            display={"flex"}
+            display={'flex'}
             flex={1}
-            justifyContent={"flex-end"}
-            alignItems={"center"}
+            justifyContent={'flex-end'}
+            alignItems={'center'}
             gap={1}
           >
-            {treatmentCycle.reports.every(
-              (cat) => cat.status === "Completed"
-            ) ? (
+            {treatmentCycle.reports.every(cat => cat.status === 'Completed') ? (
               <CheckCircle fontSize="small" color="success" />
             ) : (
               <Circle fontSize="small" color="warning" />
@@ -404,33 +402,31 @@ const TreatmentCycleCard: React.FC<ITreatmentCycleCardProps> = ({
         <Box
           gap={2}
           p={2}
-          display={"flex"}
-          alignItems={"center"}
+          display={'flex'}
+          alignItems={'center'}
           borderColor={theme.palette.secondary.main}
         >
           <Box
-            display={"flex"}
+            display={'flex'}
             flex={1}
-            justifyContent={"flex-start"}
-            alignItems={"center"}
+            justifyContent={'flex-start'}
+            alignItems={'center'}
             gap={1}
           >
-            <Assessment color="primary" />{" "}
-            <Typography fontSize={12} variant="button" color={"secondary"}>
+            <Assessment color="primary" />{' '}
+            <Typography fontSize={12} variant="button" color={'secondary'}>
               Metrics
             </Typography>
           </Box>
           {renderMetric(treatmentCycle.metrics)}
           <Box
-            display={"flex"}
+            display={'flex'}
             flex={1}
-            justifyContent={"flex-end"}
-            alignItems={"center"}
+            justifyContent={'flex-end'}
+            alignItems={'center'}
             gap={1}
           >
-            {treatmentCycle.metrics.every(
-              (cat) => cat.status === "Completed"
-            ) ? (
+            {treatmentCycle.metrics.every(cat => cat.status === 'Completed') ? (
               <CheckCircle fontSize="small" color="success" />
             ) : (
               <Circle fontSize="small" color="warning" />

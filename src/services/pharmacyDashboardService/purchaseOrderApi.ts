@@ -1,8 +1,12 @@
-import { createApi } from "@reduxjs/toolkit/query/react";
-import { ApiResponse, IQueryOptions, PaginatedResponse } from "../../types/global";
-import { IPurchaseOrder } from "../../types/pharmacyDashboard/purchaseOrder";
-import generateQueryParams from "../../utils/generateQueryParams";
-import { baseQuery } from "../baseQuery";
+import { createApi } from '@reduxjs/toolkit/query/react';
+import {
+  ApiResponse,
+  IQueryOptions,
+  PaginatedResponse,
+} from '../../types/global';
+import { IPurchaseOrder } from '../../types/pharmacyDashboard/purchaseOrder';
+import generateQueryParams from '../../utils/generateQueryParams';
+import { baseQuery } from '../baseQuery';
 
 interface PurchaseOrderRequest {
   items: {
@@ -43,101 +47,112 @@ interface EditPurchaseOrderStatusPayload {
 }
 
 export const purchaseOrderApi = createApi({
-  reducerPath: "purchaseOrderApi",
+  reducerPath: 'purchaseOrderApi',
   baseQuery: baseQuery,
-  tagTypes: ["PurchaseOrder", "Stocks"],
-  endpoints: (builder) => ({
-    addPurchaseOrder: builder.mutation<ApiResponse<IPurchaseOrder>, AddPurchaseOrderPayload>({
-      query: (purchaseOrderData) => ({
-        url: "pharmacy-dashboard/purchase-order/add",
-        method: "POST",
+  tagTypes: ['PurchaseOrder', 'Stocks'],
+  endpoints: builder => ({
+    addPurchaseOrder: builder.mutation<
+      ApiResponse<IPurchaseOrder>,
+      AddPurchaseOrderPayload
+    >({
+      query: purchaseOrderData => ({
+        url: 'pharmacy-dashboard/purchase-order/add',
+        method: 'POST',
         body: purchaseOrderData,
       }),
-      invalidatesTags: ["PurchaseOrder", "Stocks"],
+      invalidatesTags: ['PurchaseOrder', 'Stocks'],
     }),
-    editPurchaseOrder: builder.mutation<ApiResponse<IPurchaseOrder>, EditPurchaseOrderPayload>({
-      query: (purchaseOrderData) => ({
+    editPurchaseOrder: builder.mutation<
+      ApiResponse<IPurchaseOrder>,
+      EditPurchaseOrderPayload
+    >({
+      query: purchaseOrderData => ({
         url: `pharmacy-dashboard/purchase-order/${purchaseOrderData.id}`,
-        method: "PUT",
+        method: 'PUT',
         body: purchaseOrderData,
       }),
-      invalidatesTags: ["PurchaseOrder", "Stocks"],
+      invalidatesTags: ['PurchaseOrder', 'Stocks'],
     }),
-    editDraftPurchaseOrder: builder.mutation<ApiResponse<IPurchaseOrder>, EditPurchaseOrderPayload>(
-      {
-        query: (purchaseOrderData) => ({
-          url: `pharmacy-dashboard/purchase-order/draft/${purchaseOrderData.id}`,
-          method: "PUT",
-          body: purchaseOrderData,
-        }),
-        invalidatesTags: ["PurchaseOrder", "Stocks"],
-      }
-    ),
+    editDraftPurchaseOrder: builder.mutation<
+      ApiResponse<IPurchaseOrder>,
+      EditPurchaseOrderPayload
+    >({
+      query: purchaseOrderData => ({
+        url: `pharmacy-dashboard/purchase-order/draft/${purchaseOrderData.id}`,
+        method: 'PUT',
+        body: purchaseOrderData,
+      }),
+      invalidatesTags: ['PurchaseOrder', 'Stocks'],
+    }),
     editPurchaseOrderStatus: builder.mutation<
       ApiResponse<IPurchaseOrder>,
       EditPurchaseOrderStatusPayload
     >({
-      query: (purchaseOrderData) => ({
+      query: purchaseOrderData => ({
         url: `pharmacy-dashboard/purchase-order/${purchaseOrderData.id}/status`,
-        method: "PATCH",
+        method: 'PATCH',
         body: purchaseOrderData,
       }),
-      invalidatesTags: ["PurchaseOrder", "Stocks"],
+      invalidatesTags: ['PurchaseOrder', 'Stocks'],
     }),
 
     deletePurchaseOrder: builder.mutation<ApiResponse<null>, string>({
       query: (id: string) => ({
         url: `pharmacy-dashboard/purchase-order/${id}`,
-        method: "DELETE",
+        method: 'DELETE',
       }),
-      invalidatesTags: ["PurchaseOrder", "Stocks"],
+      invalidatesTags: ['PurchaseOrder', 'Stocks'],
     }),
-    getPurchaseOrders: builder.query<ApiResponse<PaginatedResponse<IPurchaseOrder>>, IQueryOptions>(
-      {
-        query: (options) => {
-          const queryParams = generateQueryParams(options);
-          return {
-            url: `pharmacy-dashboard/purchase-order?${queryParams}`,
-            method: "GET",
-          };
-        },
-        providesTags: (_result, _error, _args) => ["PurchaseOrder"],
-      }
-    ),
+    getPurchaseOrders: builder.query<
+      ApiResponse<PaginatedResponse<IPurchaseOrder>>,
+      IQueryOptions
+    >({
+      query: options => {
+        const queryParams = generateQueryParams(options);
+        return {
+          url: `pharmacy-dashboard/purchase-order?${queryParams}`,
+          method: 'GET',
+        };
+      },
+      providesTags: (_result, _error, _args) => ['PurchaseOrder'],
+    }),
     getProcessedPurchaseOrders: builder.query<
       ApiResponse<PaginatedResponse<IPurchaseOrder>>,
       IQueryOptions
     >({
-      query: (options) => {
+      query: options => {
         const queryParams = generateQueryParams(options);
         return {
           url: `pharmacy-dashboard/processed-purchase-order?${queryParams}`,
-          method: "GET",
+          method: 'GET',
         };
       },
-      providesTags: (_result, _error, _args) => ["PurchaseOrder"],
+      providesTags: (_result, _error, _args) => ['PurchaseOrder'],
     }),
     getPurchaseOrderById: builder.query<ApiResponse<IPurchaseOrder>, string>({
-      query: (id) => `pharmacy-dashboard/purchase-order/${id}`,
-      providesTags: (_result, _error, id) => [{ type: "PurchaseOrder", id }],
+      query: id => `pharmacy-dashboard/purchase-order/${id}`,
+      providesTags: (_result, _error, id) => [{ type: 'PurchaseOrder', id }],
     }),
-    updateStockFromPurchaseOrder: builder.mutation<ApiResponse<any>, { purchaseOrderId: string }>({
+    updateStockFromPurchaseOrder: builder.mutation<
+      ApiResponse<any>,
+      { purchaseOrderId: string }
+    >({
       query: ({ purchaseOrderId }) => ({
         url: `pharmacy-dashboard/purchase-order/${purchaseOrderId}/update-stock`,
-        method: "PATCH",
+        method: 'PATCH',
       }),
-      invalidatesTags: ["Stocks", "PurchaseOrder"],
+      invalidatesTags: ['Stocks', 'PurchaseOrder'],
     }),
     updatePartialPurchaseOrder: builder.mutation<
       ApiResponse<IPurchaseOrder>,
       EditPurchaseOrderPayload
     >({
-      query: (purchaseOrderData) => ({
+      query: purchaseOrderData => ({
         url: `pharmacy-dashboard/purchase-order/${purchaseOrderData.id}/update-partial`,
-        method: "PATCH",
+        method: 'PATCH',
         body: purchaseOrderData,
       }),
-      invalidatesTags: ["PurchaseOrder", "Stocks"],
+      invalidatesTags: ['PurchaseOrder', 'Stocks'],
     }),
     updateStockFromPartiallyProcessedPurchaseOrder: builder.mutation<
       ApiResponse<any>,
@@ -145,9 +160,9 @@ export const purchaseOrderApi = createApi({
     >({
       query: ({ purchaseOrderId }) => ({
         url: `pharmacy-dashboard/purchase-order/${purchaseOrderId}/update-stock-partial`,
-        method: "PATCH",
+        method: 'PATCH',
       }),
-      invalidatesTags: ["Stocks", "PurchaseOrder"],
+      invalidatesTags: ['Stocks', 'PurchaseOrder'],
     }),
   }),
 });

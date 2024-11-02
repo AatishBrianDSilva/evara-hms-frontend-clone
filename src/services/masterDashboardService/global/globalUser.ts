@@ -1,58 +1,58 @@
-import { createApi } from "@reduxjs/toolkit/query/react";
-import { ApiResponse, IQueryOptions } from "../../../types/global";
-import generateQueryParams from "../../../utils/generateQueryParams";
-import { baseQuery } from "../../baseQuery";
-import { IGlobalUser } from "../../../types/serviceDashboard/user";
+import { createApi } from '@reduxjs/toolkit/query/react';
+import { ApiResponse, IQueryOptions } from '../../../types/global';
+import generateQueryParams from '../../../utils/generateQueryParams';
+import { baseQuery } from '../../baseQuery';
+import { IGlobalUser } from '../../../types/serviceDashboard/user';
 
 export const globalUserApi = createApi({
-  reducerPath: "globalUserApi",
+  reducerPath: 'globalUserApi',
   baseQuery: baseQuery,
-  tagTypes: ["Global User"],
-  endpoints: (builder) => ({
+  tagTypes: ['Global User'],
+  endpoints: builder => ({
     addGlobalUser: builder.mutation<ApiResponse<any>, any>({
-      query: (userData) => ({
-        url: "master/users/add",
-        method: "POST",
+      query: userData => ({
+        url: 'master/users/add',
+        method: 'POST',
         body: userData,
       }),
-      invalidatesTags: ["Global User"],
+      invalidatesTags: ['Global User'],
     }),
     editGlobalUser: builder.mutation<ApiResponse<any>, any>({
-      query: (userData) => ({
-        url: "master/users/",
-        method: "PUT",
+      query: userData => ({
+        url: 'master/users/',
+        method: 'PUT',
         body: userData,
       }),
-      invalidatesTags: ["Global User"],
+      invalidatesTags: ['Global User'],
     }),
     editGlobalUserPassword: builder.mutation<ApiResponse<any>, any>({
-      query: (userData) => ({
-        url: "master/users/change-password",
-        method: "PATCH",
+      query: userData => ({
+        url: 'master/users/change-password',
+        method: 'PATCH',
         body: userData,
       }),
-      invalidatesTags: ["Global User"],
+      invalidatesTags: ['Global User'],
     }),
     deleteGlobalUser: builder.mutation<ApiResponse<null>, string>({
       query: (id: string) => ({
         url: `master/users/${id}`,
-        method: "DELETE",
+        method: 'DELETE',
       }),
-      invalidatesTags: ["Global User"],
+      invalidatesTags: ['Global User'],
     }),
     getGlobalUsers: builder.query<ApiResponse<IGlobalUser[]>, IQueryOptions>({
-      query: (options) => {
+      query: options => {
         const queryParams = generateQueryParams(options);
         return {
           url: `master/users?${queryParams}`,
-          method: "GET",
+          method: 'GET',
         };
       },
-      providesTags: (_result, _error, _args) => ["Global User"],
+      providesTags: (_result, _error, _args) => ['Global User'],
     }),
     getGlobalUserById: builder.query<ApiResponse<IGlobalUser>, string>({
       query: (id: string) => `master/users/${id}`,
-      providesTags: (_result, _error, id) => [{ type: "Global User", id }],
+      providesTags: (_result, _error, id) => [{ type: 'Global User', id }],
     }),
   }),
 });

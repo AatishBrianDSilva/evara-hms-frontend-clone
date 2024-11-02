@@ -1,8 +1,13 @@
-import React from "react";
-import { Button, Dialog, DialogContent, DialogTitle, Grid, TextField } from "@mui/material";
+import React from 'react';
 import {
-  useGetEstimationByIdQuery,
-} from "../../../../services/patientDashboardService/billings/estimationApi";
+  Button,
+  Dialog,
+  DialogContent,
+  DialogTitle,
+  Grid,
+  TextField,
+} from '@mui/material';
+import { useGetEstimationByIdQuery } from '../../../../services/patientDashboardService/billings/estimationApi';
 
 interface EditEstimationProps {
   openModal: boolean;
@@ -15,16 +20,12 @@ const EditEstimation: React.FC<EditEstimationProps> = ({
   onClose,
   id,
 }) => {
-  console.log("Passed id", id);
+  console.log('Passed id', id);
 
-  const {
-    data,
+  const { data } = useGetEstimationByIdQuery(id);
 
-  } = useGetEstimationByIdQuery(id);
-
-  const estimation = data?.data
-  console.log("Estimation", estimation);
-
+  const estimation = data?.data;
+  console.log('Estimation', estimation);
 
   return (
     <Dialog open={openModal} onClose={onClose} maxWidth="sm" fullWidth>
@@ -43,7 +44,7 @@ const EditEstimation: React.FC<EditEstimationProps> = ({
                 fullWidth
                 margin="normal"
                 label="Name"
-                value={data?.data?.serviceName || ""}
+                value={data?.data?.serviceName || ''}
                 disabled
               />
             </Grid>
@@ -52,7 +53,7 @@ const EditEstimation: React.FC<EditEstimationProps> = ({
                 fullWidth
                 margin="normal"
                 label="Status"
-                value={data?.status || ""}
+                value={data?.status || ''}
                 disabled
               />
             </Grid>
@@ -84,13 +85,17 @@ const EditEstimation: React.FC<EditEstimationProps> = ({
                 disabled
               />
             </Grid> */}
-            <Grid item xs={12} style={{ display: "flex", justifyContent: "flex-end" }}>
+            <Grid
+              item
+              xs={12}
+              style={{ display: 'flex', justifyContent: 'flex-end' }}
+            >
               <Button
                 type="submit"
                 variant="contained"
                 color="primary"
-              // onClick={handleEdit}
-              // disabled={isEditing}
+                // onClick={handleEdit}
+                // disabled={isEditing}
               >
                 Save
               </Button>
@@ -98,7 +103,7 @@ const EditEstimation: React.FC<EditEstimationProps> = ({
                 onClick={onClose}
                 variant="contained"
                 color="secondary"
-                style={{ marginLeft: "8px" }}
+                style={{ marginLeft: '8px' }}
               >
                 Cancel
               </Button>

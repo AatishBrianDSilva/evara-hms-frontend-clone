@@ -1,10 +1,10 @@
-import React, { useState } from "react";
-import { Box } from "@mui/material";
-import CustomDataGrid from "../../../components/CustomDataGrid/CustomDataGrid";
-import { GridColDef } from "@mui/x-data-grid";
-import { useSelector } from "react-redux";
-import { RootState } from "../../../app/store";
-import { useGetAppointmentsQuery } from "../../../services/appointmentApi";
+import React, { useState } from 'react';
+import { Box } from '@mui/material';
+import CustomDataGrid from '../../../components/CustomDataGrid/CustomDataGrid';
+import { GridColDef } from '@mui/x-data-grid';
+import { useSelector } from 'react-redux';
+import { RootState } from '../../../app/store';
+import { useGetAppointmentsQuery } from '../../../services/appointmentApi';
 
 interface RowType {
   _id: string;
@@ -36,7 +36,7 @@ const PatientAppointment: React.FC = () => {
         patientId: patient?.patientId,
       },
     },
-    { skip: !patient?.patientId }
+    { skip: !patient?.patientId },
   );
 
   const PatientAppointmentLoading = isLoading || isFetching;
@@ -50,53 +50,54 @@ const PatientAppointment: React.FC = () => {
   // Columns configuration for the data grid
   const columns: GridColDef[] = [
     {
-      field: "date",
-      headerName: "Date",
+      field: 'date',
+      headerName: 'Date',
       flex: 1,
-      type: "date",
+      type: 'date',
       valueFormatter(params) {
         const date = new Date(params.value);
-        const day = String(date.getDate()).padStart(2, "0");
-        const month = String(date.getMonth() + 1).padStart(2, "0"); // Months are 0-based
+        const day = String(date.getDate()).padStart(2, '0');
+        const month = String(date.getMonth() + 1).padStart(2, '0'); // Months are 0-based
         const year = String(date.getFullYear()).slice(-2); // Get last two digits of the year
         return `${day}/${month}/${year}`;
       },
     },
     {
-      field: "time",
-      headerName: "Time",
+      field: 'time',
+      headerName: 'Time',
       flex: 1,
     },
     {
-      field: "fullName",
-      headerName: "Name",
+      field: 'fullName',
+      headerName: 'Name',
       flex: 1,
     },
     {
-      field: "phone",
-      headerName: "Phone",
+      field: 'phone',
+      headerName: 'Phone',
       flex: 1,
     },
     {
-      field: "city",
-      headerName: "City",
+      field: 'city',
+      headerName: 'City',
       flex: 1,
     },
     {
-      field: "reason",
-      headerName: "Reason",
+      field: 'reason',
+      headerName: 'Reason',
       flex: 1,
     },
     {
-      field: "mode",
-      headerName: "Mode",
+      field: 'mode',
+      headerName: 'Mode',
       flex: 1,
     },
     {
-      field: "doctorFullName",
-      headerName: "Doctor",
+      field: 'doctorFullName',
+      headerName: 'Doctor',
       flex: 1,
-      valueGetter: (params) => `${params.row.doctorId.firstName} ${params.row.doctorId.lastName}`, // Alternatively, use this valueGetter to dynamically combine names
+      valueGetter: params =>
+        `${params.row.doctorId.firstName} ${params.row.doctorId.lastName}`, // Alternatively, use this valueGetter to dynamically combine names
     },
   ];
 
@@ -106,7 +107,7 @@ const PatientAppointment: React.FC = () => {
         <TextField label="Search" size="small" variant="outlined" />
       </Box> */}
 
-      <Box mt={2} flex={"1 1 auto"}>
+      <Box mt={2} flex={'1 1 auto'}>
         <CustomDataGrid
           autoHeight={false}
           columns={columns}
@@ -115,7 +116,7 @@ const PatientAppointment: React.FC = () => {
           pageSize={pageSize}
           getRowId={getRowId}
           loading={PatientAppointmentLoading}
-          sx={{ height: "100%" }}
+          sx={{ height: '100%' }}
           enablePagination={true}
           onPageChange={handlePageChange}
           onPageSizeChange={handlePageSizeChange}

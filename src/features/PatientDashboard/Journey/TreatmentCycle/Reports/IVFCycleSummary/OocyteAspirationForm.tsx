@@ -1,7 +1,7 @@
-import React from "react";
-import { Grid, TextField, Typography } from "@mui/material";
-import CustomDatePicker from "../../../../../../components/CustomDatePicker/CustomDatePicker";
-import { FormikProps } from "formik";
+import React from 'react';
+import { Grid, TextField, Typography } from '@mui/material';
+import CustomDatePicker from '../../../../../../components/CustomDatePicker/CustomDatePicker';
+import { FormikProps } from 'formik';
 
 // Define the type for form values
 interface IFormValues {
@@ -20,7 +20,9 @@ interface OocyteAspirationFormProps {
   formik: FormikProps<IFormValues>;
 }
 
-const OocyteAspirationForm: React.FC<OocyteAspirationFormProps> = ({ formik }) => (
+const OocyteAspirationForm: React.FC<OocyteAspirationFormProps> = ({
+  formik,
+}) => (
   <>
     <Typography variant="h6" pt={2} pb={2}>
       Oocyte Aspiration
@@ -48,7 +50,7 @@ const OocyteAspirationForm: React.FC<OocyteAspirationFormProps> = ({ formik }) =
         <CustomDatePicker
           label="OPU Date"
           value={formik.values.opuDate}
-          onChange={(date) => formik.setFieldValue("opuDate", date, true)}
+          onChange={date => formik.setFieldValue('opuDate', date, true)}
         />
       </Grid>
       <Grid item xs={12} sm={4}>

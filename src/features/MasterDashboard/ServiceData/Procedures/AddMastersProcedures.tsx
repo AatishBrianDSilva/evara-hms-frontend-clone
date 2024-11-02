@@ -1,4 +1,4 @@
-import React from "react";
+import React from 'react';
 import {
   Box,
   Button,
@@ -9,17 +9,17 @@ import {
   FormControlLabel,
   Grid,
   TextField,
-} from "@mui/material";
-import { useFormik } from "formik";
-import _ from "lodash";
+} from '@mui/material';
+import { useFormik } from 'formik';
+import _ from 'lodash';
 
-import { useToast } from "../../../../context/ToastContext";
-import CustomDatePicker from "../../../../components/CustomDatePicker/CustomDatePicker";
-import FieldAutocomplete from "../../../../components/FieldAutoComplete/FieldAutoComplete";
+import { useToast } from '../../../../context/ToastContext';
+import CustomDatePicker from '../../../../components/CustomDatePicker/CustomDatePicker';
+import FieldAutocomplete from '../../../../components/FieldAutoComplete/FieldAutoComplete';
 import {
   useAddMasterProcedureMutation,
   useGetMasterDefaultProceduresQuery,
-} from "../../../../services/masterDashboardService/serviceData/masterProceduresApi";
+} from '../../../../services/masterDashboardService/serviceData/masterProceduresApi';
 
 interface AddMasterProcedureProps {
   openModal: boolean;
@@ -72,16 +72,16 @@ const AddMasterProcedure: React.FC<AddMasterProcedureProps> = ({
       validTill: values.validTill,
     };
 
-    console.log("Payload to be submitted:", payload); // Log the payload
+    console.log('Payload to be submitted:', payload); // Log the payload
 
     // Add your submission logic here, including tax
     // Extract tax from values
     const promise = addProcedure(payload).unwrap();
 
     showPromiseToast(promise, {
-      loading: "Adding...",
-      success: (data) => data || "Added Successfully",
-      error: (data) => data || "Adding Failed",
+      loading: 'Adding...',
+      success: data => data || 'Added Successfully',
+      error: data => data || 'Adding Failed',
     });
 
     try {
@@ -95,8 +95,8 @@ const AddMasterProcedure: React.FC<AddMasterProcedureProps> = ({
 
   const initialValues: IFormValues = {
     default: null,
-    procedureName: "",
-    procedureId: "",
+    procedureName: '',
+    procedureId: '',
     price: 0,
     isActive: true,
     validTill: null,
@@ -110,9 +110,9 @@ const AddMasterProcedure: React.FC<AddMasterProcedureProps> = ({
 
   return (
     <Dialog open={openModal} onClose={onClose} maxWidth="md" fullWidth>
-      <DialogTitle color={"primary"}>Add Master Procedure</DialogTitle>
+      <DialogTitle color={'primary'}>Add Master Procedure</DialogTitle>
       <DialogContent>
-        <Box component={"form"} onSubmit={formik.handleSubmit} p={2}>
+        <Box component={'form'} onSubmit={formik.handleSubmit} p={2}>
           <Grid container spacing={2} mb={2} mt={2} alignItems="center">
             <Grid item xs={12} sm={6} lg={4}>
               <FieldAutocomplete
@@ -121,16 +121,16 @@ const AddMasterProcedure: React.FC<AddMasterProcedureProps> = ({
                 isOptionEqualToValue={(option, value) =>
                   option._id === value._id
                 }
-                getOptionLabel={(option) => option.procedureName}
+                getOptionLabel={option => option.procedureName}
                 loading={defaultProceduresLoading}
                 value={formik.values.default}
-                onChange={(value) => {
-                  formik.setFieldValue("default", value);
+                onChange={value => {
+                  formik.setFieldValue('default', value);
                   formik.setFieldValue(
-                    "procedureName",
-                    value?.procedureName || ""
+                    'procedureName',
+                    value?.procedureName || '',
                   );
-                  formik.setFieldValue("procedureId", value?.procedureId || "");
+                  formik.setFieldValue('procedureId', value?.procedureId || '');
                 }}
               />
             </Grid>
@@ -142,7 +142,7 @@ const AddMasterProcedure: React.FC<AddMasterProcedureProps> = ({
                 id="procedureName"
                 name="procedureName"
                 label="Procedure Name"
-                helperText={"Procedure name must be unique"}
+                helperText={'Procedure name must be unique'}
                 value={formik.values.procedureName}
                 onChange={formik.handleChange}
               />
@@ -173,7 +173,7 @@ const AddMasterProcedure: React.FC<AddMasterProcedureProps> = ({
                 name="validTill"
                 label="Valid Till"
                 value={formik.values.validTill}
-                onChange={(value) => formik.setFieldValue("validTill", value)}
+                onChange={value => formik.setFieldValue('validTill', value)}
               />
             </Grid>
             {/* <Grid item xs={6} sm={3} lg={2}>
@@ -200,9 +200,9 @@ const AddMasterProcedure: React.FC<AddMasterProcedureProps> = ({
             </Grid>
           </Grid>
           <Box
-            display={"flex"}
-            justifyContent={"flex-end"}
-            alignItems={"center"}
+            display={'flex'}
+            justifyContent={'flex-end'}
+            alignItems={'center'}
             gap={2}
             mb={2}
           >
@@ -211,14 +211,14 @@ const AddMasterProcedure: React.FC<AddMasterProcedureProps> = ({
               color="primary"
               type="submit"
               disabled={_.isEqual(initialValues, formik.values) || isLoading}
-              sx={{ width: "fit-content" }}
+              sx={{ width: 'fit-content' }}
             >
               Save
             </Button>
             <Button
               variant="contained"
               color="secondary"
-              sx={{ width: "fit-content" }}
+              sx={{ width: 'fit-content' }}
               onClick={onClose}
             >
               Cancel

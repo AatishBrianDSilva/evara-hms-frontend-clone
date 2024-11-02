@@ -3,9 +3,8 @@ import { useDispatch } from 'react-redux';
 import { clearCredentials } from '../../features/Auth/authSlice';
 import { Snackbar, Button } from '@mui/material';
 import { formatDistanceToNow } from 'date-fns';
-import { handlePersistorPurge } from "../../app/store";
+import { handlePersistorPurge } from '../../app/store';
 import { TimeoutId } from '@reduxjs/toolkit/dist/query/core/buildMiddleware/types';
-
 
 interface UserInactivityCheckerProps {
   timeoutInMinutes?: number;
@@ -14,11 +13,13 @@ interface UserInactivityCheckerProps {
 
 const UserInactivityChecker: React.FC<UserInactivityCheckerProps> = ({
   timeoutInMinutes = 15,
-  warningTimeInMinutes = 5
+  warningTimeInMinutes = 5,
 }) => {
   const dispatch = useDispatch();
   const [showWarning, setShowWarning] = useState(false);
-  const [timeBeforeReset, setTimeBeforeReset] = useState<Date>(new Date(Date.now() + timeoutInMinutes * 60 * 1000));
+  const [timeBeforeReset, setTimeBeforeReset] = useState<Date>(
+    new Date(Date.now() + timeoutInMinutes * 60 * 1000),
+  );
 
   let intervalId: TimeoutId;
 
@@ -33,13 +34,16 @@ const UserInactivityChecker: React.FC<UserInactivityCheckerProps> = ({
 
       const remainingTime = timeoutInMinutes * 60 * 1000;
 
-      warningTimeoutId = window.setTimeout(() => {
-        setShowWarning(true);
-        setTimeBeforeReset(new Date(Date.now() + remainingTime));
-        intervalId = setInterval(() => {
+      warningTimeoutId = window.setTimeout(
+        () => {
+          setShowWarning(true);
           setTimeBeforeReset(new Date(Date.now() + remainingTime));
-        }, 1000);
-      }, remainingTime - warningTimeInMinutes * 60 * 1000);
+          intervalId = setInterval(() => {
+            setTimeBeforeReset(new Date(Date.now() + remainingTime));
+          }, 1000);
+        },
+        remainingTime - warningTimeInMinutes * 60 * 1000,
+      );
 
       timeoutId = window.setTimeout(() => {
         dispatch(clearCredentials());

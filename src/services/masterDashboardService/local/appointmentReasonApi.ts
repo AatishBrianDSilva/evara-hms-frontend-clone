@@ -1,49 +1,58 @@
-import { createApi } from "@reduxjs/toolkit/query/react";
-import generateQueryParams from "../../../utils/generateQueryParams";
-import { ApiResponse, IQueryOptions } from "../../../types/global";
-import { IAppointmentReason } from "../../../types/masterDashboard/local";
-import { baseQuery } from "../../baseQuery";
+import { createApi } from '@reduxjs/toolkit/query/react';
+import generateQueryParams from '../../../utils/generateQueryParams';
+import { ApiResponse, IQueryOptions } from '../../../types/global';
+import { IAppointmentReason } from '../../../types/masterDashboard/local';
+import { baseQuery } from '../../baseQuery';
 
 export const appointmentReasonsApi = createApi({
-  reducerPath: "appointmentReasonsApi",
+  reducerPath: 'appointmentReasonsApi',
   baseQuery: baseQuery,
-  tagTypes: ["AppointmentReasons"],
-  endpoints: (builder) => ({
+  tagTypes: ['AppointmentReasons'],
+  endpoints: builder => ({
     addAppointmentReason: builder.mutation({
-      query: (appointmentReasonData) => ({
-        url: "master/appointment/reason/add",
-        method: "POST",
+      query: appointmentReasonData => ({
+        url: 'master/appointment/reason/add',
+        method: 'POST',
         body: appointmentReasonData,
       }),
-      invalidatesTags: ["AppointmentReasons"],
+      invalidatesTags: ['AppointmentReasons'],
     }),
     updateAppointmentReason: builder.mutation({
       query: ({ id, ...updateData }) => ({
         url: `master/appointment/reason/${id}`,
-        method: "PUT",
+        method: 'PUT',
         body: updateData,
       }),
-      invalidatesTags: ["AppointmentReasons"],
+      invalidatesTags: ['AppointmentReasons'],
     }),
-    getAppointmentReasons: builder.query<ApiResponse<IAppointmentReason[]>, IQueryOptions>({
-      query: (options) => {
+    getAppointmentReasons: builder.query<
+      ApiResponse<IAppointmentReason[]>,
+      IQueryOptions
+    >({
+      query: options => {
         const queryParams = generateQueryParams(options);
-        return { url: `master/appointment/reason?${queryParams}`, method: "GET" };
+        return {
+          url: `master/appointment/reason?${queryParams}`,
+          method: 'GET',
+        };
       },
-      providesTags: ["AppointmentReasons"],
+      providesTags: ['AppointmentReasons'],
     }),
-    getAppointmentReasonById: builder.query<ApiResponse<IAppointmentReason>, string>({
-      query: (id) => {
-        return { url: `master/appointment/reason/${id}`, method: "GET" };
+    getAppointmentReasonById: builder.query<
+      ApiResponse<IAppointmentReason>,
+      string
+    >({
+      query: id => {
+        return { url: `master/appointment/reason/${id}`, method: 'GET' };
       },
-      providesTags: ["AppointmentReasons"],
+      providesTags: ['AppointmentReasons'],
     }),
     deleteAppointmentReason: builder.mutation<ApiResponse<null>, string>({
       query: (id: string) => ({
         url: `master/appointment/reason/${id}`,
-        method: "DELETE",
+        method: 'DELETE',
       }),
-      invalidatesTags: ["AppointmentReasons"],
+      invalidatesTags: ['AppointmentReasons'],
     }),
   }),
 });

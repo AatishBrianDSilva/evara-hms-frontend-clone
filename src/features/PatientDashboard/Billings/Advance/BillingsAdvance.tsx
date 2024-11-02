@@ -1,17 +1,17 @@
-import Box from "@mui/material/Box";
-import React, { useState } from "react";
-import CustomDataGrid from "../../../../components/CustomDataGrid/CustomDataGrid";
+import Box from '@mui/material/Box';
+import React, { useState } from 'react';
+import CustomDataGrid from '../../../../components/CustomDataGrid/CustomDataGrid';
 
-import { GridActionsCellItem, GridColDef } from "@mui/x-data-grid";
+import { GridActionsCellItem, GridColDef } from '@mui/x-data-grid';
 
-import { Chip, Skeleton } from "@mui/material";
-import { Print } from "@mui/icons-material";
-import { useGetBillingsQuery } from "../../../../services/patientDashboardService/billings/billingApi";
-import { useSelector } from "react-redux";
-import { RootState } from "../../../../app/store";
-import PrintInvoice from "../PrintInvoice";
-import { formatToIndianCurrencyFormat } from "../../../../utils/formatToIndianCurrencyFormat";
-import { EPatientBillingStatus } from "../../../../types/patientDashboard/billings";
+import { Chip, Skeleton } from '@mui/material';
+import { Print } from '@mui/icons-material';
+import { useGetBillingsQuery } from '../../../../services/patientDashboardService/billings/billingApi';
+import { useSelector } from 'react-redux';
+import { RootState } from '../../../../app/store';
+import PrintInvoice from '../PrintInvoice';
+import { formatToIndianCurrencyFormat } from '../../../../utils/formatToIndianCurrencyFormat';
+import { EPatientBillingStatus } from '../../../../types/patientDashboard/billings';
 
 interface RowType {
   _id: string;
@@ -27,7 +27,9 @@ const BillingsAdvance: React.FC = () => {
     setPageSize(newPageSize);
   };
 
-  const { patient, case: patientCase } = useSelector((state: RootState) => state.patients);
+  const { patient, case: patientCase } = useSelector(
+    (state: RootState) => state.patients,
+  );
 
   const { data, isLoading, isFetching } = useGetBillingsQuery(
     {
@@ -43,7 +45,7 @@ const BillingsAdvance: React.FC = () => {
       skip: !patient?.patientId,
       refetchOnFocus: true,
       refetchOnMountOrArgChange: true,
-    }
+    },
   );
   const patientBillingsAdvance = data?.data?.records || [];
   const patientBillingSummary = data?.data?.summary || {};
@@ -54,61 +56,61 @@ const BillingsAdvance: React.FC = () => {
 
   const columnsConfig: GridColDef[] = [
     {
-      field: "createdAt",
-      headerName: "Date",
-      type: "date",
+      field: 'createdAt',
+      headerName: 'Date',
+      type: 'date',
       flex: 1,
       valueFormatter(params) {
         return new Date(params.value).toLocaleDateString();
       },
     },
     {
-      field: "billingId",
-      headerName: "Bill No.",
+      field: 'billingId',
+      headerName: 'Bill No.',
       flex: 1,
     },
     {
-      field: "amount",
-      headerName: "Amount",
+      field: 'amount',
+      headerName: 'Amount',
       flex: 1,
-      valueFormatter: (params) => formatToIndianCurrencyFormat(params.value),
+      valueFormatter: params => formatToIndianCurrencyFormat(params.value),
     },
     {
-      field: "tax",
-      headerName: "Tax",
+      field: 'tax',
+      headerName: 'Tax',
       flex: 1,
-      valueFormatter: (params) => formatToIndianCurrencyFormat(params.value),
+      valueFormatter: params => formatToIndianCurrencyFormat(params.value),
     },
     {
-      field: "subTotal",
-      headerName: "Total",
+      field: 'subTotal',
+      headerName: 'Total',
       flex: 1,
-      valueGetter: (params) => formatToIndianCurrencyFormat(params.value),
+      valueGetter: params => formatToIndianCurrencyFormat(params.value),
     },
     {
-      field: "discount",
-      headerName: "Discount",
+      field: 'discount',
+      headerName: 'Discount',
       flex: 1,
-      valueFormatter: (params) => formatToIndianCurrencyFormat(params.value),
+      valueFormatter: params => formatToIndianCurrencyFormat(params.value),
     },
     {
-      field: "totalAdvance",
-      headerName: "Advance",
+      field: 'totalAdvance',
+      headerName: 'Advance',
       flex: 1,
-      valueFormatter: (params) => formatToIndianCurrencyFormat(params.value),
+      valueFormatter: params => formatToIndianCurrencyFormat(params.value),
     },
     {
-      field: "totalDues",
-      headerName: "Due",
+      field: 'totalDues',
+      headerName: 'Due',
       flex: 1,
-      valueFormatter: (params) => formatToIndianCurrencyFormat(params.value),
+      valueFormatter: params => formatToIndianCurrencyFormat(params.value),
     },
     {
-      field: "actions",
-      headerName: "Actions",
+      field: 'actions',
+      headerName: 'Actions',
       flex: 1,
-      type: "actions",
-      getActions: (params) => {
+      type: 'actions',
+      getActions: params => {
         const row = params.row;
         return [
           <GridActionsCellItem
@@ -135,30 +137,51 @@ const BillingsAdvance: React.FC = () => {
   };
 
   return (
-    <Box p={2} display={"flex"} flexDirection={"column"} flex={1}>
+    <Box p={2} display={'flex'} flexDirection={'column'} flex={1}>
       {patientBillingsLoading ? (
-        <Box display={"flex"} justifyContent="space-between" alignItems="center" mb={3}>
+        <Box
+          display={'flex'}
+          justifyContent="space-between"
+          alignItems="center"
+          mb={3}
+        >
           <Skeleton width={125} height={35} variant="rounded" />
           <Skeleton width={125} height={30} variant="rounded" />
           <Skeleton width={125} height={30} variant="rounded" />
           <Skeleton width={125} height={30} variant="rounded" />
         </Box>
       ) : (
-        <Box display={"flex"} justifyContent="space-between" alignItems="center" mb={3}>
+        <Box
+          display={'flex'}
+          justifyContent="space-between"
+          alignItems="center"
+          mb={3}
+        >
           <Chip
-            label={"Amount: " + formatToIndianCurrencyFormat(patientBillingSummary.amount)}
+            label={
+              'Amount: ' +
+              formatToIndianCurrencyFormat(patientBillingSummary.amount)
+            }
             color="primary"
           />
           <Chip
-            label={"Payment: " + formatToIndianCurrencyFormat(patientBillingSummary.payment)}
+            label={
+              'Payment: ' +
+              formatToIndianCurrencyFormat(patientBillingSummary.payment)
+            }
             color="primary"
           />
           <Chip
-            label={"Discount: " + formatToIndianCurrencyFormat(patientBillingSummary.discount)}
+            label={
+              'Discount: ' +
+              formatToIndianCurrencyFormat(patientBillingSummary.discount)
+            }
             color="primary"
           />
           <Chip
-            label={"Due: " + formatToIndianCurrencyFormat(patientBillingSummary.due)}
+            label={
+              'Due: ' + formatToIndianCurrencyFormat(patientBillingSummary.due)
+            }
             color="primary"
           />
         </Box>
@@ -175,7 +198,7 @@ const BillingsAdvance: React.FC = () => {
         onPageChange={handlePageChange}
         onPageSizeChange={handlePageSizeChange}
         loading={patientBillingsLoading}
-        sx={{ height: "100%" }}
+        sx={{ height: '100%' }}
         enablePagination={true}
       />
 

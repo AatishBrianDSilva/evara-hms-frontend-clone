@@ -1,20 +1,20 @@
-import Box from "@mui/material/Box";
-import CircularProgress from "@mui/material/CircularProgress";
-import React, { useEffect } from "react";
-import ContentSection from "../../components/ContentSection/ContentSection";
-import { useGetPatientByIdQuery } from "../../services/patientsApi";
-import PatientDetails from "./PatientDetails/PatientDetails";
-import PatientMainTab from "./PatientMainTab";
-import { useDispatch } from "react-redux";
+import Box from '@mui/material/Box';
+import CircularProgress from '@mui/material/CircularProgress';
+import React, { useEffect } from 'react';
+import ContentSection from '../../components/ContentSection/ContentSection';
+import { useGetPatientByIdQuery } from '../../services/patientsApi';
+import PatientDetails from './PatientDetails/PatientDetails';
+import PatientMainTab from './PatientMainTab';
+import { useDispatch } from 'react-redux';
 import {
   setCase,
   setPartnerId,
   setPatientId,
   setPatient,
   setPartner,
-} from "../Patients/patientsSlice";
-import { useParams } from "react-router-dom";
-import BackdropLoader from "../../components/BackdropLoader/BackdropLoader";
+} from '../Patients/patientsSlice';
+import { useParams } from 'react-router-dom';
+import BackdropLoader from '../../components/BackdropLoader/BackdropLoader';
 
 const PatientDashboard: React.FC = () => {
   const dispatch = useDispatch();
@@ -22,7 +22,12 @@ const PatientDashboard: React.FC = () => {
 
   if (!patientId) {
     return (
-      <Box display="flex" justifyContent="center" alignItems="center" height="100vh">
+      <Box
+        display="flex"
+        justifyContent="center"
+        alignItems="center"
+        height="100vh"
+      >
         <CircularProgress />
       </Box>
     );
@@ -33,7 +38,7 @@ const PatientDashboard: React.FC = () => {
   });
 
   useEffect(() => {
-    if (data && data.status === "success") {
+    if (data && data.status === 'success') {
       const { patient, partner, case: patientCase } = data.data;
 
       if (patientCase) {
@@ -68,7 +73,11 @@ const PatientDashboard: React.FC = () => {
     }
   };
 
-  return <ContentSection title="Patient Dashboard">{renderDashboard()}</ContentSection>;
+  return (
+    <ContentSection title="Patient Dashboard">
+      {renderDashboard()}
+    </ContentSection>
+  );
 };
 
 export default PatientDashboard;

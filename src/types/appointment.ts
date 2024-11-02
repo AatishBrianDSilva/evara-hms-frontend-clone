@@ -1,4 +1,4 @@
-import { IDoctor } from "./doctor";
+import { IDoctor } from './doctor';
 
 export interface IAppointment {
   _id: string;

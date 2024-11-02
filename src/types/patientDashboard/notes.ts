@@ -1,5 +1,5 @@
-import { IDoctor } from "../doctor";
-import { IPatient } from "../patient";
+import { IDoctor } from '../doctor';
+import { IPatient } from '../patient';
 
 export interface IPatientNotes {
   _id: string;

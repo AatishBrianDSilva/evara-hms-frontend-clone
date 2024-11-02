@@ -7,34 +7,39 @@ import {
   Skeleton,
   TextField,
   Typography,
-} from "@mui/material";
-import React from "react";
-import ReportModalHeader from "../../../../../components/ReportModalHeader/ReportModalHeader";
-import { useDispatch, useSelector } from "react-redux";
-import { useToast } from "../../../../../context/ToastContext";
-import { RootState } from "../../../../../app/store";
+} from '@mui/material';
+import React from 'react';
+import ReportModalHeader from '../../../../../components/ReportModalHeader/ReportModalHeader';
+import { useDispatch, useSelector } from 'react-redux';
+import { useToast } from '../../../../../context/ToastContext';
+import { RootState } from '../../../../../app/store';
 import {
   useEditProcedureMutation,
   useGetProcedureByIdQuery,
-} from "../../../../../services/patientDashboardService/procedureApi";
-import { IDoctor } from "../../../../../types/doctor";
+} from '../../../../../services/patientDashboardService/procedureApi';
+import { IDoctor } from '../../../../../types/doctor';
 import {
   IEditProcedureForm,
   IEditProcedurePayload,
-} from "../../../../../types/patientDashboard/procedures";
-import { ILaparoscopyForm } from "../../../../../types/patientDashboard/investigation";
-import { useFormik } from "formik";
-import { EProcedureType } from "../../../../../types/master";
-import _ from "lodash";
-import { closeEditProcedure } from "../procedureSlice";
-import CustomDatePicker from "../../../../../components/CustomDatePicker/CustomDatePicker";
-import FileUploadButton from "../../../../../components/FileUploadAndPreview/FileUploadButton";
-import { EBuckets, EDocumentTypes } from "../../../../../types/global";
+} from '../../../../../types/patientDashboard/procedures';
+import { ILaparoscopyForm } from '../../../../../types/patientDashboard/investigation';
+import { useFormik } from 'formik';
+import { EProcedureType } from '../../../../../types/master';
+import _ from 'lodash';
+import { closeEditProcedure } from '../procedureSlice';
+import CustomDatePicker from '../../../../../components/CustomDatePicker/CustomDatePicker';
+import FileUploadButton from '../../../../../components/FileUploadAndPreview/FileUploadButton';
+import { EBuckets, EDocumentTypes } from '../../../../../types/global';
 
 const renderSkeletonLoader = () => {
   return (
     <>
-      <Box display={"flex"} justifyContent={"space-between"} borderBottom={1} py={2}>
+      <Box
+        display={'flex'}
+        justifyContent={'space-between'}
+        borderBottom={1}
+        py={2}
+      >
         <Box>
           <Skeleton variant="text" width={100} height={20} />
           <Skeleton variant="text" width={100} height={20} />
@@ -46,7 +51,7 @@ const renderSkeletonLoader = () => {
       </Box>
       <Box pt={2} mt={2}>
         <Box>
-          <Grid container justifyContent={"space-between"}>
+          <Grid container justifyContent={'space-between'}>
             <Grid item md={6} lg={3}>
               <Skeleton variant="text" width={100} height={20} />
             </Grid>
@@ -77,7 +82,9 @@ const Laparoscopy: React.FC<LaparoscopyProps> = () => {
   const dispatch = useDispatch();
   const { showPromiseToast } = useToast();
 
-  const openEditDialog = useSelector((state: RootState) => state.procedure.editProcedureOpen);
+  const openEditDialog = useSelector(
+    (state: RootState) => state.procedure.editProcedureOpen,
+  );
 
   const {
     data: procedureData,
@@ -94,39 +101,41 @@ const Laparoscopy: React.FC<LaparoscopyProps> = () => {
 
   const patient = useSelector((state: RootState) => state.patients.patient);
 
-  const [fileUploadedUrl, setFileUploadedUrl] = React.useState<string[]>([""]);
+  const [fileUploadedUrl, setFileUploadedUrl] = React.useState<string[]>(['']);
 
   const date = new Date(procedure?.date || new Date()).toLocaleDateString();
-  const doctor = procedure?.doctor?.firstName + " " + procedure?.doctor?.lastName;
+  const doctor =
+    procedure?.doctor?.firstName + ' ' + procedure?.doctor?.lastName;
   const procedureName = procedure?.procedure?.procedure?.procedureName;
   const actualProcedureName = procedure?.procedure?.name;
 
-  const [editProcedure, { isLoading: editingProcedure }] = useEditProcedureMutation();
+  const [editProcedure, { isLoading: editingProcedure }] =
+    useEditProcedureMutation();
 
   const initialVaules: IEditProcedureForm<ILaparoscopyForm> = {
-    status: procedure?.status || "",
+    status: procedure?.status || '',
     result: {
       dateOfAdmission: procedure?.result?.details?.dateOfAdmission || null,
       dateOfOperation: procedure?.result?.details?.dateOfOperation || null,
       dateOfDischarge: procedure?.result?.details?.dateOfDischarge || null,
-      complaintHistory: procedure?.result?.details?.complaintHistory || "",
-      indication: procedure?.result?.details?.indication || "",
-      operationDetails: procedure?.result?.details?.operationDetails || "",
-      findings: procedure?.result?.details?.findings || "",
-      impressionSummary: procedure?.result?.details?.impressionSummary || "",
-      postOP: procedure?.result?.details?.postOP || "",
-      investigationsSent: procedure?.result?.details?.investigationsSent || "",
+      complaintHistory: procedure?.result?.details?.complaintHistory || '',
+      indication: procedure?.result?.details?.indication || '',
+      operationDetails: procedure?.result?.details?.operationDetails || '',
+      findings: procedure?.result?.details?.findings || '',
+      impressionSummary: procedure?.result?.details?.impressionSummary || '',
+      postOP: procedure?.result?.details?.postOP || '',
+      investigationsSent: procedure?.result?.details?.investigationsSent || '',
       reviewDate: procedure?.result?.details?.reviewDate || null,
-      description: procedure?.result?.details?.description || "",
+      description: procedure?.result?.details?.description || '',
     },
     files: [],
-    notes: procedure?.result?.notes || "",
+    notes: procedure?.result?.notes || '',
   };
 
   const handleSubmit = async (values: IEditProcedureForm<ILaparoscopyForm>) => {
-    console.log("Formik values", values);
+    console.log('Formik values', values);
 
-    const actualName = actualProcedureName || "Default Procedure Name"; // Use a fallback if procedureName is null/undefined
+    const actualName = actualProcedureName || 'Default Procedure Name'; // Use a fallback if procedureName is null/undefined
 
     const payload: IEditProcedurePayload = {
       status: values.status,
@@ -140,20 +149,23 @@ const Laparoscopy: React.FC<LaparoscopyProps> = () => {
       actualName: actualName, // New field added to the payload
     };
 
-    console.log("Payload", payload);
+    console.log('Payload', payload);
 
-    const promise = editProcedure({ _id: openEditDialog.id, ...payload }).unwrap();
+    const promise = editProcedure({
+      _id: openEditDialog.id,
+      ...payload,
+    }).unwrap();
 
     showPromiseToast(promise, {
-      loading: "Updating procedure...",
-      success: () => "Procedure updated successfully",
-      error: () => "An error occurred while updating procedure",
+      loading: 'Updating procedure...',
+      success: () => 'Procedure updated successfully',
+      error: () => 'An error occurred while updating procedure',
     });
 
     try {
       await promise;
     } catch (error) {
-      console.error("Failed to update procedure", error);
+      console.error('Failed to update procedure', error);
     }
   };
 
@@ -172,7 +184,11 @@ const Laparoscopy: React.FC<LaparoscopyProps> = () => {
 
   return (
     <form onSubmit={formik.handleSubmit}>
-      <ReportModalHeader date={date} doctor={doctor} reportName={procedureName} />
+      <ReportModalHeader
+        date={date}
+        doctor={doctor}
+        reportName={procedureName}
+      />
       {/* <Grid container spacing={2} direction="column" mt={2}> */}
       <Grid container spacing={2} marginBottom={2} mt={2} flex={1}>
         {/* dateOfAdmission */}
@@ -180,7 +196,9 @@ const Laparoscopy: React.FC<LaparoscopyProps> = () => {
           <CustomDatePicker
             label="Date Of Admission"
             value={formik.values.result.dateOfAdmission}
-            onChange={(date) => formik.setFieldValue("result.dateOfAdmission", date)}
+            onChange={date =>
+              formik.setFieldValue('result.dateOfAdmission', date)
+            }
           />
         </Grid>
 
@@ -189,7 +207,9 @@ const Laparoscopy: React.FC<LaparoscopyProps> = () => {
           <CustomDatePicker
             label="Date of Operation"
             value={formik.values.result.dateOfOperation}
-            onChange={(date) => formik.setFieldValue("result.dateOfOperation", date)}
+            onChange={date =>
+              formik.setFieldValue('result.dateOfOperation', date)
+            }
           />
         </Grid>
 
@@ -198,7 +218,9 @@ const Laparoscopy: React.FC<LaparoscopyProps> = () => {
           <CustomDatePicker
             label="Date of Discharge"
             value={formik.values.result.dateOfDischarge}
-            onChange={(date) => formik.setFieldValue("result.dateOfDischarge", date)}
+            onChange={date =>
+              formik.setFieldValue('result.dateOfDischarge', date)
+            }
           />
         </Grid>
 
@@ -314,7 +336,7 @@ const Laparoscopy: React.FC<LaparoscopyProps> = () => {
           <CustomDatePicker
             label="Review Date"
             value={formik.values.result.reviewDate}
-            onChange={(date) => formik.setFieldValue("result.reviewDate", date)}
+            onChange={date => formik.setFieldValue('result.reviewDate', date)}
           />
         </Grid>
 
@@ -354,15 +376,24 @@ const Laparoscopy: React.FC<LaparoscopyProps> = () => {
           </Grid>
         </Grid>
 
-        <Grid container pl={2} justifyContent={"center"} alignItems={"center"}>
-          <Box display={"flex"} justifyContent={"center"} alignItems={"center"} gap={2} mb={2}>
+        <Grid container pl={2} justifyContent={'center'} alignItems={'center'}>
+          <Box
+            display={'flex'}
+            justifyContent={'center'}
+            alignItems={'center'}
+            gap={2}
+            mb={2}
+          >
             <Grid item xs={12} pl={2}>
               <FormControlLabel
                 control={
                   <Checkbox
-                    checked={formik.values.status === "Completed"}
-                    onChange={(e) =>
-                      formik.setFieldValue("status", e.target.checked ? "Completed" : "Scheduled")
+                    checked={formik.values.status === 'Completed'}
+                    onChange={e =>
+                      formik.setFieldValue(
+                        'status',
+                        e.target.checked ? 'Completed' : 'Scheduled',
+                      )
                     }
                     color="primary"
                   />
@@ -375,12 +406,13 @@ const Laparoscopy: React.FC<LaparoscopyProps> = () => {
 
         {/* Action Buttons */}
         <Grid container spacing={2} direction="column" mt={2}>
-          <Box display={"flex"} justifyContent={"center"} gap={2} p={2}>
+          <Box display={'flex'} justifyContent={'center'} gap={2} p={2}>
             <Button
               variant="contained"
               disabled={
                 editingProcedure ||
-                (_.isEqual(formik.values, formik.initialValues) && fileUploadedUrl.length === 0)
+                (_.isEqual(formik.values, formik.initialValues) &&
+                  fileUploadedUrl.length === 0)
               }
               color="primary"
               type="submit"

@@ -32,14 +32,17 @@ const Patient: React.FC = () => {
   const cities = ['New York', 'Los Angeles'];
   const clinics = ['ABC Clinic', 'XYZ Hospital'];
 
-  const handleSearchChange = (_event: React.ChangeEvent<HTMLInputElement>) => {
-  };
+  const handleSearchChange = (
+    _event: React.ChangeEvent<HTMLInputElement>,
+  ) => {};
 
-  const handleCityChange = (_event: React.ChangeEvent<{ value: unknown }>) => {
-  };
+  const handleCityChange = (
+    _event: React.ChangeEvent<{ value: unknown }>,
+  ) => {};
 
-  const handleClinicChange = (_event: React.ChangeEvent<{ value: unknown }>) => {
-  };
+  const handleClinicChange = (
+    _event: React.ChangeEvent<{ value: unknown }>,
+  ) => {};
 
   return (
     <ContentSection title="Patient">
@@ -60,7 +63,7 @@ const Patient: React.FC = () => {
           onChange={handleCityChange}
           defaultValue=""
         >
-          {cities.map((city) => (
+          {cities.map(city => (
             <MenuItem key={city} value={city}>
               {city}
             </MenuItem>
@@ -75,7 +78,7 @@ const Patient: React.FC = () => {
           onChange={handleClinicChange}
           defaultValue=""
         >
-          {clinics.map((clinic) => (
+          {clinics.map(clinic => (
             <MenuItem key={clinic} value={clinic}>
               {clinic}
             </MenuItem>
@@ -103,8 +106,8 @@ const Patient: React.FC = () => {
           loading={false}
           sx={{ height: '100%' }}
           enablePagination={true}
-          onPageChange={() => { }}
-          onPageSizeChange={() => { }}
+          onPageChange={() => {}}
+          onPageSizeChange={() => {}}
         />
       </Box>
     </ContentSection>

@@ -1,6 +1,6 @@
-import * as React from "react";
-import { Box, Typography, Button, IconButton } from "@mui/material";
-import { ArrowForward, Assessment } from "@mui/icons-material"; // Importing icons
+import * as React from 'react';
+import { Box, Typography, Button, IconButton } from '@mui/material';
+import { ArrowForward, Assessment } from '@mui/icons-material'; // Importing icons
 
 export interface AnalyticsPharmacyCardProps {
   title: string;
@@ -30,8 +30,8 @@ const AnalyticsPharmacyCard: React.FC<AnalyticsPharmacyCardProps> = ({
       border="1px solid"
       borderColor="#D8D8D8"
       flex={1}
-      width={"95%"}
-      overflow={"hidden"}
+      width={'95%'}
+      overflow={'hidden'}
       bgcolor="#FFFFFF"
       height="358px" // Full height
     >
@@ -59,7 +59,12 @@ const AnalyticsPharmacyCard: React.FC<AnalyticsPharmacyCardProps> = ({
       {/* Content Section */}
       <Box display="flex" alignItems="center" flex={1} pl={3}>
         {/* Main Value - Centered and Larger Size */}
-        <Typography color="primary" variant="h3" align="center" sx={{ fontWeight: "bold" }}>
+        <Typography
+          color="primary"
+          variant="h3"
+          align="center"
+          sx={{ fontWeight: 'bold' }}
+        >
           {mainValue}
         </Typography>
       </Box>
@@ -67,7 +72,12 @@ const AnalyticsPharmacyCard: React.FC<AnalyticsPharmacyCardProps> = ({
       {/* Link Button */}
       {linkUrl && linkText && (
         <Box display="flex" justifyContent="flex-end" p={2}>
-          <Button variant="text" color="primary" endIcon={<ArrowForward />} href={linkUrl}>
+          <Button
+            variant="text"
+            color="primary"
+            endIcon={<ArrowForward />}
+            href={linkUrl}
+          >
             {linkText}
           </Button>
         </Box>

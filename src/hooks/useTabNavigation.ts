@@ -1,5 +1,5 @@
-import { useEffect, useState } from "react";
-import { useLocation, useNavigate } from "react-router-dom";
+import { useEffect, useState } from 'react';
+import { useLocation, useNavigate } from 'react-router-dom';
 
 interface UseTabNavigationReturn {
   activeTab: number;
@@ -14,7 +14,7 @@ interface UseTabNavigationReturn {
  */
 const useTabNavigation = (
   basePath: string,
-  tabPaths: string[]
+  tabPaths: string[],
 ): UseTabNavigationReturn => {
   const navigate = useNavigate();
   const location = useLocation();
@@ -22,8 +22,8 @@ const useTabNavigation = (
 
   useEffect(() => {
     // Find the active tab based on the current URL
-    const currentPath = location.pathname.replace(basePath, "");
-    const currentTab = tabPaths.findIndex((path) => currentPath.includes(path));
+    const currentPath = location.pathname.replace(basePath, '');
+    const currentTab = tabPaths.findIndex(path => currentPath.includes(path));
     setActiveTab(currentTab >= 0 ? currentTab : 0);
   }, [location.pathname, tabPaths, basePath]);
 

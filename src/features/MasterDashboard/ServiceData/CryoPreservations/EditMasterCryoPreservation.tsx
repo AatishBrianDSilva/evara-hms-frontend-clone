@@ -1,4 +1,4 @@
-import React from "react";
+import React from 'react';
 import {
   Box,
   Button,
@@ -10,15 +10,15 @@ import {
   FormControlLabel,
   Grid,
   TextField,
-} from "@mui/material";
-import { useFormik } from "formik";
+} from '@mui/material';
+import { useFormik } from 'formik';
 
-import CustomDatePicker from "../../../../components/CustomDatePicker/CustomDatePicker";
-import { useToast } from "../../../../context/ToastContext";
+import CustomDatePicker from '../../../../components/CustomDatePicker/CustomDatePicker';
+import { useToast } from '../../../../context/ToastContext';
 import {
   useEditMasterCryoPreservationMutation,
   useGetMasterCryoPreservationByIdQuery,
-} from "../../../../services/masterDashboardService/serviceData/masterCryoPreservationApi";
+} from '../../../../services/masterDashboardService/serviceData/masterCryoPreservationApi';
 
 interface EditMasterCryoPreservationProps {
   openModal: boolean;
@@ -51,10 +51,10 @@ const EditMasterCryoPreservation: React.FC<EditMasterCryoPreservationProps> = ({
   const isCryoPreservationLoading =
     CryoPreservationLoading || CryoPreservationFetching;
 
-  console.log("Data at edit Masters", data);
+  console.log('Data at edit Masters', data);
 
   const initialValues: IFormValues = {
-    cryoPreservationName: data?.name || "",
+    cryoPreservationName: data?.name || '',
     price: data?.cost || 0,
     validTill: data?.validTill ? new Date(data.validTill) : null,
     isActive: data?.active || false,
@@ -65,7 +65,7 @@ const EditMasterCryoPreservation: React.FC<EditMasterCryoPreservationProps> = ({
 
   const formik = useFormik({
     initialValues: initialValues,
-    onSubmit: async (values) => {
+    onSubmit: async values => {
       try {
         const cost = values.price || 0;
 
@@ -81,18 +81,18 @@ const EditMasterCryoPreservation: React.FC<EditMasterCryoPreservationProps> = ({
         };
 
         const promise = editCryoPreservationMutation(payload).unwrap();
-        console.log("Payload", payload);
+        console.log('Payload', payload);
 
         showPromiseToast(promise, {
-          loading: "Editing CryoPreservation...",
-          success: (data) => data || "CryoPreservation Edited Successfully",
-          error: (data) => data || "Failed to Edit CryoPreservation",
+          loading: 'Editing CryoPreservation...',
+          success: data => data || 'CryoPreservation Edited Successfully',
+          error: data => data || 'Failed to Edit CryoPreservation',
         });
 
         await promise;
         onClose();
       } catch (error) {
-        console.error("Edit failed:", error);
+        console.error('Edit failed:', error);
       }
     },
     // validationSchema: validationSchema,
@@ -101,12 +101,12 @@ const EditMasterCryoPreservation: React.FC<EditMasterCryoPreservationProps> = ({
 
   return (
     <Dialog open={openModal} onClose={onClose} maxWidth="md" fullWidth>
-      <DialogTitle color={"primary"}>Edit CryoPreservation</DialogTitle>
+      <DialogTitle color={'primary'}>Edit CryoPreservation</DialogTitle>
       <DialogContent>
         {isCryoPreservationLoading ? (
           <CircularProgress />
         ) : (
-          <Box component={"form"} onSubmit={formik.handleSubmit} p={2}>
+          <Box component={'form'} onSubmit={formik.handleSubmit} p={2}>
             <Grid container spacing={2} mb={2} mt={2}>
               <Grid item lg={4}>
                 <TextField
@@ -146,7 +146,7 @@ const EditMasterCryoPreservation: React.FC<EditMasterCryoPreservationProps> = ({
                   name="validTill"
                   label="Valid Till"
                   value={formik.values.validTill}
-                  onChange={(value) => formik.setFieldValue("validTill", value)}
+                  onChange={value => formik.setFieldValue('validTill', value)}
                 />
               </Grid>
               <Grid item lg={4}>
@@ -163,9 +163,9 @@ const EditMasterCryoPreservation: React.FC<EditMasterCryoPreservationProps> = ({
               </Grid>
             </Grid>
             <Box
-              display={"flex"}
-              justifyContent={"flex-end"}
-              alignItems={"center"}
+              display={'flex'}
+              justifyContent={'flex-end'}
+              alignItems={'center'}
               gap={2}
               mb={2}
             >
@@ -175,7 +175,7 @@ const EditMasterCryoPreservation: React.FC<EditMasterCryoPreservationProps> = ({
                 type="submit"
                 disabled={isEditing || isCryoPreservationLoading}
               >
-                {isEditing ? "Saving..." : "Save"}
+                {isEditing ? 'Saving...' : 'Save'}
               </Button>
               <Button variant="contained" color="secondary" onClick={onClose}>
                 Cancel

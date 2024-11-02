@@ -1,4 +1,4 @@
-import React from "react";
+import React from 'react';
 import {
   Box,
   Button,
@@ -9,12 +9,12 @@ import {
   FormControlLabel,
   Grid,
   TextField,
-} from "@mui/material";
-import { useFormik } from "formik";
-import { useAddGlobalBranchMutation } from "../../../../services/masterDashboardService/global/globalBranch";
-import _ from "lodash";
-import { useToast } from "../../../../context/ToastContext";
-import FieldAutocomplete from "../../../../components/FieldAutoComplete/FieldAutoComplete";
+} from '@mui/material';
+import { useFormik } from 'formik';
+import { useAddGlobalBranchMutation } from '../../../../services/masterDashboardService/global/globalBranch';
+import _ from 'lodash';
+import { useToast } from '../../../../context/ToastContext';
+import FieldAutocomplete from '../../../../components/FieldAutoComplete/FieldAutoComplete';
 
 interface AddBranchProps {
   openModal: boolean;
@@ -40,42 +40,42 @@ const AddBranch: React.FC<AddBranchProps> = ({ openModal, onClose }) => {
   const [addUser, { isLoading: BranchLoading }] = useAddGlobalBranchMutation();
 
   const indianStates = [
-    "Andhra Pradesh",
-    "Arunachal Pradesh",
-    "Assam",
-    "Bihar",
-    "Chhattisgarh",
-    "Goa",
-    "Gujarat",
-    "Haryana",
-    "Himachal Pradesh",
-    "Jharkhand",
-    "Karnataka",
-    "Kerala",
-    "Madhya Pradesh",
-    "Maharashtra",
-    "Manipur",
-    "Meghalaya",
-    "Mizoram",
-    "Nagaland",
-    "Odisha",
-    "Punjab",
-    "Rajasthan",
-    "Sikkim",
-    "Tamil Nadu",
-    "Telangana",
-    "Tripura",
-    "Uttar Pradesh",
-    "Uttarakhand",
-    "West Bengal",
-    "Andaman and Nicobar Islands",
-    "Chandigarh",
-    "Dadra and Nagar Haveli and Daman and Diu",
-    "Lakshadweep",
-    "Delhi",
-    "Puducherry",
-    "Ladakh",
-    "Jammu and Kashmir",
+    'Andhra Pradesh',
+    'Arunachal Pradesh',
+    'Assam',
+    'Bihar',
+    'Chhattisgarh',
+    'Goa',
+    'Gujarat',
+    'Haryana',
+    'Himachal Pradesh',
+    'Jharkhand',
+    'Karnataka',
+    'Kerala',
+    'Madhya Pradesh',
+    'Maharashtra',
+    'Manipur',
+    'Meghalaya',
+    'Mizoram',
+    'Nagaland',
+    'Odisha',
+    'Punjab',
+    'Rajasthan',
+    'Sikkim',
+    'Tamil Nadu',
+    'Telangana',
+    'Tripura',
+    'Uttar Pradesh',
+    'Uttarakhand',
+    'West Bengal',
+    'Andaman and Nicobar Islands',
+    'Chandigarh',
+    'Dadra and Nagar Haveli and Daman and Diu',
+    'Lakshadweep',
+    'Delhi',
+    'Puducherry',
+    'Ladakh',
+    'Jammu and Kashmir',
   ];
 
   const handleFormSubmit = async (values: IFormValues) => {
@@ -99,9 +99,9 @@ const AddBranch: React.FC<AddBranchProps> = ({ openModal, onClose }) => {
     const promise = addUser(payload).unwrap();
 
     showPromiseToast(promise, {
-      loading: "Adding...",
-      success: (data) => data || "Added Successfully",
-      error: (data) => data || "Adding Failed",
+      loading: 'Adding...',
+      success: data => data || 'Added Successfully',
+      error: data => data || 'Adding Failed',
     });
 
     try {
@@ -114,17 +114,17 @@ const AddBranch: React.FC<AddBranchProps> = ({ openModal, onClose }) => {
   };
 
   const initialValues: IFormValues = {
-    code: "",
-    branchName: "",
+    code: '',
+    branchName: '',
 
-    street: "",
-    city: "",
-    state: "",
-    zip: "",
+    street: '',
+    city: '',
+    state: '',
+    zip: '',
 
-    manager: "",
-    phone: "",
-    email: "",
+    manager: '',
+    phone: '',
+    email: '',
     isActive: false,
   };
 
@@ -136,9 +136,9 @@ const AddBranch: React.FC<AddBranchProps> = ({ openModal, onClose }) => {
 
   return (
     <Dialog open={openModal} onClose={onClose} maxWidth="md" fullWidth>
-      <DialogTitle color={"primary"}>Add Branch</DialogTitle>
+      <DialogTitle color={'primary'}>Add Branch</DialogTitle>
       <DialogContent>
-        <Box component={"form"} onSubmit={formik.handleSubmit} p={2}>
+        <Box component={'form'} onSubmit={formik.handleSubmit} p={2}>
           <Grid container spacing={2} mb={2} mt={2}>
             <Grid item xs={8} sm={4} lg={3}>
               <TextField
@@ -189,10 +189,10 @@ const AddBranch: React.FC<AddBranchProps> = ({ openModal, onClose }) => {
                 label="State"
                 options={indianStates}
                 isOptionEqualToValue={(option, value) => option === value}
-                getOptionLabel={(option) => option}
+                getOptionLabel={option => option}
                 value={formik.values.state}
-                onChange={(value) => {
-                  formik.setFieldValue("state", value);
+                onChange={value => {
+                  formik.setFieldValue('state', value);
                 }}
               />
             </Grid>
@@ -254,20 +254,28 @@ const AddBranch: React.FC<AddBranchProps> = ({ openModal, onClose }) => {
               />
             </Grid>
           </Grid>
-          <Box display={"flex"} justifyContent={"flex-end"} alignItems={"center"} gap={2} mb={2}>
+          <Box
+            display={'flex'}
+            justifyContent={'flex-end'}
+            alignItems={'center'}
+            gap={2}
+            mb={2}
+          >
             <Button
               variant="contained"
               color="primary"
               type="submit"
-              disabled={_.isEqual(initialValues, formik.values) || BranchLoading}
-              sx={{ width: "fit-content" }}
+              disabled={
+                _.isEqual(initialValues, formik.values) || BranchLoading
+              }
+              sx={{ width: 'fit-content' }}
             >
               Save
             </Button>
             <Button
               variant="contained"
               color="secondary"
-              sx={{ width: "fit-content" }}
+              sx={{ width: 'fit-content' }}
               onClick={onClose}
             >
               Cancel

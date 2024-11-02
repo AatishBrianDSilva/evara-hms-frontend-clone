@@ -1,4 +1,4 @@
-import React from "react";
+import React from 'react';
 import {
   Box,
   Button,
@@ -10,17 +10,20 @@ import {
   Grid,
   Skeleton,
   TextField,
-} from "@mui/material";
-import { useFormik } from "formik";
-import { useToast } from "../../../../context/ToastContext";
+} from '@mui/material';
+import { useFormik } from 'formik';
+import { useToast } from '../../../../context/ToastContext';
 import {
   useEditDrugManufacturerMutation,
   useGetDrugManufacturerByIdQuery,
-} from "../../../../services/pharmacyDashboardService/master/drugManufacturerApi";
-import _ from "lodash";
-import { AddDrugManufacturerValidationSchema } from "../../../../yup/pharmacyDashboard";
-import FieldAutocomplete from "../../../../components/FieldAutoComplete/FieldAutoComplete";
-import { IDrugCategory, ITaxRate } from "../../../../types/pharmacyDashboard/master";
+} from '../../../../services/pharmacyDashboardService/master/drugManufacturerApi';
+import _ from 'lodash';
+import { AddDrugManufacturerValidationSchema } from '../../../../yup/pharmacyDashboard';
+import FieldAutocomplete from '../../../../components/FieldAutoComplete/FieldAutoComplete';
+import {
+  IDrugCategory,
+  ITaxRate,
+} from '../../../../types/pharmacyDashboard/master';
 
 interface EditDrugManufacturerProps {
   openModal: boolean;
@@ -67,7 +70,13 @@ const skeletonLoader = () => {
             <Skeleton variant="rectangular" width="100%" height={56} />
           </Grid>
         </Grid>
-        <Box display={"flex"} justifyContent={"flex-end"} alignItems={"center"} gap={2} mb={2}>
+        <Box
+          display={'flex'}
+          justifyContent={'flex-end'}
+          alignItems={'center'}
+          gap={2}
+          mb={2}
+        >
           <Skeleton variant="rectangular" width={90} height={36} />
           <Skeleton variant="rectangular" width={90} height={36} />
         </Box>
@@ -89,12 +98,13 @@ const EditDrugManufacturer: React.FC<EditDrugManufacturerProps> = ({
   const manufacturer = data?.data;
   const loading = isFetching || isLoading;
 
-  const [editDrugManufacturer, { isLoading: editLoading }] = useEditDrugManufacturerMutation();
+  const [editDrugManufacturer, { isLoading: editLoading }] =
+    useEditDrugManufacturerMutation();
   const handleFormSubmit = async (values: IFormValues) => {
     const payload = {
       id: id,
       name: values.name,
-      category: values.category?.map((category) => category._id),
+      category: values.category?.map(category => category._id),
       taxRate: values.taxRate?._id,
       cst: values.cst,
       apgst: values.apgst,
@@ -114,15 +124,15 @@ const EditDrugManufacturer: React.FC<EditDrugManufacturerProps> = ({
         state: values.address.state,
         country: values.address.country,
       },
-      status: values.status ? "Active" : "Inactive",
+      status: values.status ? 'Active' : 'Inactive',
     };
 
     const promise = editDrugManufacturer(payload).unwrap();
 
     showPromiseToast(promise, {
-      loading: "Editing Drug Manufacturer...",
-      success: (data) => data || "Drug Manufacturer Edited Successfully",
-      error: (data) => data || "Failed to Edit Drug Manufacturer",
+      loading: 'Editing Drug Manufacturer...',
+      success: data => data || 'Drug Manufacturer Edited Successfully',
+      error: data => data || 'Failed to Edit Drug Manufacturer',
     });
 
     try {
@@ -134,29 +144,29 @@ const EditDrugManufacturer: React.FC<EditDrugManufacturerProps> = ({
     onClose();
   };
 
-  const manufacturerStatus = manufacturer?.status === "Active" ? true : false;
+  const manufacturerStatus = manufacturer?.status === 'Active' ? true : false;
 
   const initialValues: IFormValues = {
-    name: manufacturer?.name || "",
+    name: manufacturer?.name || '',
     category: manufacturer?.category || null,
     taxRate: manufacturer?.taxRate || null,
-    cst: manufacturer?.cst || "",
-    apgst: manufacturer?.apgst || "",
-    pan: manufacturer?.pan || "",
-    tin: manufacturer?.tin || "",
+    cst: manufacturer?.cst || '',
+    apgst: manufacturer?.apgst || '',
+    pan: manufacturer?.pan || '',
+    tin: manufacturer?.tin || '',
     contact: {
-      person: manufacturer?.contact?.person || "",
-      phone: manufacturer?.contact?.phone || "",
-      email: manufacturer?.contact?.email || "",
-      website: manufacturer?.contact?.website || "",
+      person: manufacturer?.contact?.person || '',
+      phone: manufacturer?.contact?.phone || '',
+      email: manufacturer?.contact?.email || '',
+      website: manufacturer?.contact?.website || '',
     },
     address: {
-      addressLine1: manufacturer?.address?.addressLine1 || "",
-      addressLine2: manufacturer?.address?.addressLine2 || "",
-      pincode: manufacturer?.address?.pincode || "",
-      city: manufacturer?.address?.city || "",
-      state: manufacturer?.address?.state || "",
-      country: manufacturer?.address?.country || "",
+      addressLine1: manufacturer?.address?.addressLine1 || '',
+      addressLine2: manufacturer?.address?.addressLine2 || '',
+      pincode: manufacturer?.address?.pincode || '',
+      city: manufacturer?.address?.city || '',
+      state: manufacturer?.address?.state || '',
+      country: manufacturer?.address?.country || '',
     },
     status: manufacturerStatus,
   };
@@ -170,12 +180,12 @@ const EditDrugManufacturer: React.FC<EditDrugManufacturerProps> = ({
 
   return (
     <Dialog open={openModal} onClose={onClose} maxWidth="md" fullWidth>
-      <DialogTitle color={"primary"}>Edit Drug Manufacturer</DialogTitle>
+      <DialogTitle color={'primary'}>Edit Drug Manufacturer</DialogTitle>
       {loading ? (
         skeletonLoader()
       ) : (
         <DialogContent>
-          <Box component={"form"} onSubmit={formik.handleSubmit} p={2}>
+          <Box component={'form'} onSubmit={formik.handleSubmit} p={2}>
             <Grid container spacing={2} mb={2} mt={2}>
               <Grid item xs={12} sm={6} lg={4}>
                 <TextField
@@ -192,28 +202,38 @@ const EditDrugManufacturer: React.FC<EditDrugManufacturerProps> = ({
                 <FieldAutocomplete
                   multiple
                   options={drugCategories}
-                  isOptionEqualToValue={(option, value) => option._id === value._id}
-                  getOptionLabel={(option) => {
+                  isOptionEqualToValue={(option, value) =>
+                    option._id === value._id
+                  }
+                  getOptionLabel={option => {
                     return option.name;
                   }}
                   label="Category"
                   value={formik.values?.category || []}
-                  onChange={(newValue) => {
-                    formik.setFieldValue("category", newValue);
+                  onChange={newValue => {
+                    formik.setFieldValue('category', newValue);
                   }}
-                  error={formik.touched.category && Boolean(formik.errors.category)}
+                  error={
+                    formik.touched.category && Boolean(formik.errors.category)
+                  }
                   helperText={formik.touched.category && formik.errors.category}
                 />
               </Grid>
               <Grid item xs={12} sm={6} lg={4}>
                 <FieldAutocomplete
                   options={taxRates}
-                  isOptionEqualToValue={(option, value) => option._id === value._id}
-                  getOptionLabel={(option) => option.taxRate.toString()}
+                  isOptionEqualToValue={(option, value) =>
+                    option._id === value._id
+                  }
+                  getOptionLabel={option => option.taxRate.toString()}
                   label="Tax Rate"
                   value={formik.values?.taxRate}
-                  onChange={(newValue) => formik.setFieldValue("taxRate", newValue)}
-                  error={formik.touched.taxRate && Boolean(formik.errors.taxRate)}
+                  onChange={newValue =>
+                    formik.setFieldValue('taxRate', newValue)
+                  }
+                  error={
+                    formik.touched.taxRate && Boolean(formik.errors.taxRate)
+                  }
                   helperText={formik.touched.taxRate && formik.errors.taxRate}
                 />
               </Grid>
@@ -271,8 +291,14 @@ const EditDrugManufacturer: React.FC<EditDrugManufacturerProps> = ({
                   label="Contact Person"
                   value={formik.values.contact.person}
                   onChange={formik.handleChange}
-                  error={formik.touched.contact?.person && Boolean(formik.errors.contact?.person)}
-                  helperText={formik.touched.contact?.person && formik.errors.contact?.person}
+                  error={
+                    formik.touched.contact?.person &&
+                    Boolean(formik.errors.contact?.person)
+                  }
+                  helperText={
+                    formik.touched.contact?.person &&
+                    formik.errors.contact?.person
+                  }
                 />
               </Grid>
               <Grid item xs={12} sm={6} lg={4}>
@@ -282,8 +308,14 @@ const EditDrugManufacturer: React.FC<EditDrugManufacturerProps> = ({
                   label="Phone"
                   value={formik.values.contact.phone}
                   onChange={formik.handleChange}
-                  error={formik.touched.contact?.phone && Boolean(formik.errors.contact?.phone)}
-                  helperText={formik.touched.contact?.phone && formik.errors.contact?.phone}
+                  error={
+                    formik.touched.contact?.phone &&
+                    Boolean(formik.errors.contact?.phone)
+                  }
+                  helperText={
+                    formik.touched.contact?.phone &&
+                    formik.errors.contact?.phone
+                  }
                 />
               </Grid>
               <Grid item xs={12} sm={6} lg={4}>
@@ -293,8 +325,14 @@ const EditDrugManufacturer: React.FC<EditDrugManufacturerProps> = ({
                   label="Email"
                   value={formik.values.contact.email}
                   onChange={formik.handleChange}
-                  error={formik.touched.contact?.email && Boolean(formik.errors.contact?.email)}
-                  helperText={formik.touched.contact?.email && formik.errors.contact?.email}
+                  error={
+                    formik.touched.contact?.email &&
+                    Boolean(formik.errors.contact?.email)
+                  }
+                  helperText={
+                    formik.touched.contact?.email &&
+                    formik.errors.contact?.email
+                  }
                 />
               </Grid>
               <Grid item xs={12} sm={6} lg={4}>
@@ -304,8 +342,14 @@ const EditDrugManufacturer: React.FC<EditDrugManufacturerProps> = ({
                   label="Website"
                   value={formik.values.contact.website}
                   onChange={formik.handleChange}
-                  error={formik.touched.contact?.website && Boolean(formik.errors.contact?.website)}
-                  helperText={formik.touched.contact?.website && formik.errors.contact?.website}
+                  error={
+                    formik.touched.contact?.website &&
+                    Boolean(formik.errors.contact?.website)
+                  }
+                  helperText={
+                    formik.touched.contact?.website &&
+                    formik.errors.contact?.website
+                  }
                 />
               </Grid>
             </Grid>
@@ -322,7 +366,8 @@ const EditDrugManufacturer: React.FC<EditDrugManufacturerProps> = ({
                     Boolean(formik.errors.address?.addressLine1)
                   }
                   helperText={
-                    formik.touched.address?.addressLine1 && formik.errors.address?.addressLine1
+                    formik.touched.address?.addressLine1 &&
+                    formik.errors.address?.addressLine1
                   }
                 />
               </Grid>
@@ -338,7 +383,8 @@ const EditDrugManufacturer: React.FC<EditDrugManufacturerProps> = ({
                     Boolean(formik.errors.address?.addressLine2)
                   }
                   helperText={
-                    formik.touched.address?.addressLine2 && formik.errors.address?.addressLine2
+                    formik.touched.address?.addressLine2 &&
+                    formik.errors.address?.addressLine2
                   }
                 />
               </Grid>
@@ -349,8 +395,14 @@ const EditDrugManufacturer: React.FC<EditDrugManufacturerProps> = ({
                   label="Pincode"
                   value={formik.values.address.pincode}
                   onChange={formik.handleChange}
-                  error={formik.touched.address?.pincode && Boolean(formik.errors.address?.pincode)}
-                  helperText={formik.touched.address?.pincode && formik.errors.address?.pincode}
+                  error={
+                    formik.touched.address?.pincode &&
+                    Boolean(formik.errors.address?.pincode)
+                  }
+                  helperText={
+                    formik.touched.address?.pincode &&
+                    formik.errors.address?.pincode
+                  }
                 />
               </Grid>
               <Grid item xs={12} sm={6} lg={4}>
@@ -360,8 +412,13 @@ const EditDrugManufacturer: React.FC<EditDrugManufacturerProps> = ({
                   label="City"
                   value={formik.values.address.city}
                   onChange={formik.handleChange}
-                  error={formik.touched.address?.city && Boolean(formik.errors.address?.city)}
-                  helperText={formik.touched.address?.city && formik.errors.address?.city}
+                  error={
+                    formik.touched.address?.city &&
+                    Boolean(formik.errors.address?.city)
+                  }
+                  helperText={
+                    formik.touched.address?.city && formik.errors.address?.city
+                  }
                 />
               </Grid>
               <Grid item xs={12} sm={6} lg={4}>
@@ -371,8 +428,14 @@ const EditDrugManufacturer: React.FC<EditDrugManufacturerProps> = ({
                   label="State"
                   value={formik.values.address.state}
                   onChange={formik.handleChange}
-                  error={formik.touched.address?.state && Boolean(formik.errors.address?.state)}
-                  helperText={formik.touched.address?.state && formik.errors.address?.state}
+                  error={
+                    formik.touched.address?.state &&
+                    Boolean(formik.errors.address?.state)
+                  }
+                  helperText={
+                    formik.touched.address?.state &&
+                    formik.errors.address?.state
+                  }
                 />
               </Grid>
               <Grid item xs={12} sm={6} lg={4}>
@@ -382,12 +445,18 @@ const EditDrugManufacturer: React.FC<EditDrugManufacturerProps> = ({
                   label="Country"
                   value={formik.values.address.country}
                   onChange={formik.handleChange}
-                  error={formik.touched.address?.country && Boolean(formik.errors.address?.country)}
-                  helperText={formik.touched.address?.country && formik.errors.address?.country}
+                  error={
+                    formik.touched.address?.country &&
+                    Boolean(formik.errors.address?.country)
+                  }
+                  helperText={
+                    formik.touched.address?.country &&
+                    formik.errors.address?.country
+                  }
                 />
               </Grid>
               <Grid item lg={12}></Grid>
-              <Grid item lg={12} display={"flex"} justifyContent={"center"}>
+              <Grid item lg={12} display={'flex'} justifyContent={'center'}>
                 <FormControlLabel
                   label="Active ?"
                   control={
@@ -401,20 +470,28 @@ const EditDrugManufacturer: React.FC<EditDrugManufacturerProps> = ({
                 />
               </Grid>
             </Grid>
-            <Box display={"flex"} justifyContent={"flex-end"} alignItems={"center"} gap={2} mb={2}>
+            <Box
+              display={'flex'}
+              justifyContent={'flex-end'}
+              alignItems={'center'}
+              gap={2}
+              mb={2}
+            >
               <Button
                 variant="contained"
                 color="primary"
                 type="submit"
-                disabled={editLoading || _.isEqual(initialValues, formik.values)}
-                sx={{ width: "fit-content" }}
+                disabled={
+                  editLoading || _.isEqual(initialValues, formik.values)
+                }
+                sx={{ width: 'fit-content' }}
               >
                 Save
               </Button>
               <Button
                 variant="contained"
                 color="secondary"
-                sx={{ width: "fit-content" }}
+                sx={{ width: 'fit-content' }}
                 onClick={onClose}
               >
                 Cancel

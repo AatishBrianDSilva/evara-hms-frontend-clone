@@ -1,6 +1,6 @@
-import * as React from "react";
-import { Box, Typography, IconButton } from "@mui/material";
-import { ArrowForward } from "@mui/icons-material";
+import * as React from 'react';
+import { Box, Typography, IconButton } from '@mui/material';
+import { ArrowForward } from '@mui/icons-material';
 
 interface PharmacyCardProps {
   title: string;
@@ -10,7 +10,12 @@ interface PharmacyCardProps {
   linkText?: string;
 }
 
-const PharmacyCard: React.FC<PharmacyCardProps> = ({ title, mainValue, amountValue, linkUrl }) => {
+const PharmacyCard: React.FC<PharmacyCardProps> = ({
+  title,
+  mainValue,
+  amountValue,
+  linkUrl,
+}) => {
   const handleArrowClick = () => {
     if (linkUrl) {
       window.location.href = linkUrl; // Redirect to the provided link URL
@@ -23,9 +28,9 @@ const PharmacyCard: React.FC<PharmacyCardProps> = ({ title, mainValue, amountVal
       flexDirection="column"
       justifyContent="space-between"
       borderRadius={4}
-      width={"100%"}
-      height={"358px"} // Ensure total height is 358px
-      overflow={"hidden"}
+      width={'100%'}
+      height={'358px'} // Ensure total height is 358px
+      overflow={'hidden'}
       border="1px solid"
       borderColor="#D8D8D8"
       bgcolor="#FFFFFF"
@@ -46,12 +51,18 @@ const PharmacyCard: React.FC<PharmacyCardProps> = ({ title, mainValue, amountVal
       </Box>
 
       {/* Content Section */}
-      <Box display="flex" flexDirection="column" flex={1} justifyContent="center" p={2}>
-        <Typography color={"primary"} variant="h3" sx={{ fontWeight: "bold" }}>
+      <Box
+        display="flex"
+        flexDirection="column"
+        flex={1}
+        justifyContent="center"
+        p={2}
+      >
+        <Typography color={'primary'} variant="h3" sx={{ fontWeight: 'bold' }}>
           {mainValue}
         </Typography>
         {amountValue && (
-          <Typography variant="body1" color={"textSecondary"}>
+          <Typography variant="body1" color={'textSecondary'}>
             {amountValue}
           </Typography>
         )}

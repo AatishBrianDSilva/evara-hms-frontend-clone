@@ -1,4 +1,4 @@
-import React from "react";
+import React from 'react';
 import {
   Box,
   Button,
@@ -10,15 +10,15 @@ import {
   Grid,
   Skeleton,
   TextField,
-} from "@mui/material";
-import { useFormik } from "formik";
-import _ from "lodash";
+} from '@mui/material';
+import { useFormik } from 'formik';
+import _ from 'lodash';
 import {
   useGetGlobalBranchByIdQuery,
   useEditGlobalBranchMutation,
-} from "../../../../services/masterDashboardService/global/globalBranch";
-import { useToast } from "../../../../context/ToastContext";
-import FieldAutocomplete from "../../../../components/FieldAutoComplete/FieldAutoComplete";
+} from '../../../../services/masterDashboardService/global/globalBranch';
+import { useToast } from '../../../../context/ToastContext';
+import FieldAutocomplete from '../../../../components/FieldAutoComplete/FieldAutoComplete';
 
 interface EditBranchProps {
   openModal: boolean;
@@ -51,7 +51,13 @@ const skeletonLoader = () => {
             <Skeleton variant="rectangular" width="100%" height={56} />
           </Grid>
         </Grid>
-        <Box display={"flex"} justifyContent={"flex-end"} alignItems={"center"} gap={2} mb={2}>
+        <Box
+          display={'flex'}
+          justifyContent={'flex-end'}
+          alignItems={'center'}
+          gap={2}
+          mb={2}
+        >
           <Skeleton variant="rectangular" width={90} height={36} />
           <Skeleton variant="rectangular" width={90} height={36} />
         </Box>
@@ -72,42 +78,42 @@ const EditBranch: React.FC<EditBranchProps> = ({ openModal, onClose, id }) => {
   // console.log("Id prop", id);
 
   const indianStates = [
-    "Andhra Pradesh",
-    "Arunachal Pradesh",
-    "Assam",
-    "Bihar",
-    "Chhattisgarh",
-    "Goa",
-    "Gujarat",
-    "Haryana",
-    "Himachal Pradesh",
-    "Jharkhand",
-    "Karnataka",
-    "Kerala",
-    "Madhya Pradesh",
-    "Maharashtra",
-    "Manipur",
-    "Meghalaya",
-    "Mizoram",
-    "Nagaland",
-    "Odisha",
-    "Punjab",
-    "Rajasthan",
-    "Sikkim",
-    "Tamil Nadu",
-    "Telangana",
-    "Tripura",
-    "Uttar Pradesh",
-    "Uttarakhand",
-    "West Bengal",
-    "Andaman and Nicobar Islands",
-    "Chandigarh",
-    "Dadra and Nagar Haveli and Daman and Diu",
-    "Lakshadweep",
-    "Delhi",
-    "Puducherry",
-    "Ladakh",
-    "Jammu and Kashmir",
+    'Andhra Pradesh',
+    'Arunachal Pradesh',
+    'Assam',
+    'Bihar',
+    'Chhattisgarh',
+    'Goa',
+    'Gujarat',
+    'Haryana',
+    'Himachal Pradesh',
+    'Jharkhand',
+    'Karnataka',
+    'Kerala',
+    'Madhya Pradesh',
+    'Maharashtra',
+    'Manipur',
+    'Meghalaya',
+    'Mizoram',
+    'Nagaland',
+    'Odisha',
+    'Punjab',
+    'Rajasthan',
+    'Sikkim',
+    'Tamil Nadu',
+    'Telangana',
+    'Tripura',
+    'Uttar Pradesh',
+    'Uttarakhand',
+    'West Bengal',
+    'Andaman and Nicobar Islands',
+    'Chandigarh',
+    'Dadra and Nagar Haveli and Daman and Diu',
+    'Lakshadweep',
+    'Delhi',
+    'Puducherry',
+    'Ladakh',
+    'Jammu and Kashmir',
   ];
 
   const data = BranchData ? BranchData.data : null;
@@ -117,23 +123,24 @@ const EditBranch: React.FC<EditBranchProps> = ({ openModal, onClose, id }) => {
   // console.log("Data at edit Masters", data);
 
   const initialValues: IFormValues = {
-    code: data?.code || "",
-    branchName: data?.branchName || "",
-    street: data?.address?.street || "",
-    city: data?.address?.city || "",
-    state: data?.address?.state || "",
-    zip: data?.address?.zip || "",
-    manager: data?.manager || "",
-    phone: data?.phone || "",
-    email: data?.email || "",
+    code: data?.code || '',
+    branchName: data?.branchName || '',
+    street: data?.address?.street || '',
+    city: data?.address?.city || '',
+    state: data?.address?.state || '',
+    zip: data?.address?.zip || '',
+    manager: data?.manager || '',
+    phone: data?.phone || '',
+    email: data?.email || '',
     isActive: data?.isActive || false,
   };
 
-  const [editBranchMutation, { isLoading: isEditing }] = useEditGlobalBranchMutation();
+  const [editBranchMutation, { isLoading: isEditing }] =
+    useEditGlobalBranchMutation();
 
   const formik = useFormik({
     initialValues: initialValues,
-    onSubmit: async (values) => {
+    onSubmit: async values => {
       try {
         const branchData = {
           _id: id,
@@ -153,18 +160,18 @@ const EditBranch: React.FC<EditBranchProps> = ({ openModal, onClose, id }) => {
         };
 
         const promise = editBranchMutation({ id, branchData }).unwrap();
-        console.log("Payload", branchData);
+        console.log('Payload', branchData);
 
         showPromiseToast(promise, {
-          loading: "Editing Branch...",
-          success: (data) => data || "Branch Edited Successfully",
-          error: (data) => data || "Failed to Edit Branch",
+          loading: 'Editing Branch...',
+          success: data => data || 'Branch Edited Successfully',
+          error: data => data || 'Failed to Edit Branch',
         });
 
         await promise;
         onClose();
       } catch (error) {
-        console.error("Edit failed:", error);
+        console.error('Edit failed:', error);
       }
     },
     // validationSchema: validationSchema,
@@ -173,12 +180,12 @@ const EditBranch: React.FC<EditBranchProps> = ({ openModal, onClose, id }) => {
 
   return (
     <Dialog open={openModal} onClose={onClose} maxWidth="md" fullWidth>
-      <DialogTitle color={"primary"}>Edit Branch </DialogTitle>
+      <DialogTitle color={'primary'}>Edit Branch </DialogTitle>
       {isBranchLoading ? (
         skeletonLoader()
       ) : (
         <DialogContent>
-          <Box component={"form"} onSubmit={formik.handleSubmit} p={2}>
+          <Box component={'form'} onSubmit={formik.handleSubmit} p={2}>
             <Grid container spacing={2} mb={2} mt={2}>
               <Grid item xs={8} sm={4} lg={3}>
                 <TextField
@@ -230,10 +237,10 @@ const EditBranch: React.FC<EditBranchProps> = ({ openModal, onClose, id }) => {
                   label="State"
                   options={indianStates}
                   isOptionEqualToValue={(option, value) => option === value}
-                  getOptionLabel={(option) => option}
+                  getOptionLabel={option => option}
                   value={formik.values.state}
-                  onChange={(value) => {
-                    formik.setFieldValue("state", value);
+                  onChange={value => {
+                    formik.setFieldValue('state', value);
                   }}
                 />
               </Grid>
@@ -294,14 +301,20 @@ const EditBranch: React.FC<EditBranchProps> = ({ openModal, onClose, id }) => {
                 />
               </Grid>
             </Grid>
-            <Box display={"flex"} justifyContent={"flex-end"} alignItems={"center"} gap={2} mb={2}>
+            <Box
+              display={'flex'}
+              justifyContent={'flex-end'}
+              alignItems={'center'}
+              gap={2}
+              mb={2}
+            >
               <Button
                 variant="contained"
                 color="primary"
                 type="submit"
                 disabled={isEditing || isBranchLoading}
               >
-                {isEditing ? "Saving..." : "Save"}
+                {isEditing ? 'Saving...' : 'Save'}
               </Button>
               <Button variant="contained" color="secondary" onClick={onClose}>
                 Cancel

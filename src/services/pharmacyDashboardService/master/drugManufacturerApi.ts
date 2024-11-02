@@ -1,8 +1,12 @@
-import { createApi } from "@reduxjs/toolkit/query/react";
-import { ApiResponse, IQueryOptions, PaginatedResponse } from "../../../types/global";
-import generateQueryParams from "../../../utils/generateQueryParams";
-import { IDrugManufacturer } from "../../../types/pharmacyDashboard/master";
-import { baseQuery } from "../../baseQuery";
+import { createApi } from '@reduxjs/toolkit/query/react';
+import {
+  ApiResponse,
+  IQueryOptions,
+  PaginatedResponse,
+} from '../../../types/global';
+import generateQueryParams from '../../../utils/generateQueryParams';
+import { IDrugManufacturer } from '../../../types/pharmacyDashboard/master';
+import { baseQuery } from '../../baseQuery';
 
 interface AddDrugManufacturerPayload {
   name: string;
@@ -56,55 +60,58 @@ interface EditDrugManufacturerPayload {
 }
 
 export const drugManufacturerApi = createApi({
-  reducerPath: "drugManufacturerApi",
+  reducerPath: 'drugManufacturerApi',
   baseQuery: baseQuery,
-  tagTypes: ["DrugManufacturer"],
-  endpoints: (builder) => ({
+  tagTypes: ['DrugManufacturer'],
+  endpoints: builder => ({
     addDrugManufacturer: builder.mutation<
       ApiResponse<IDrugManufacturer>,
       AddDrugManufacturerPayload
     >({
-      query: (drugManufacturerData) => ({
-        url: "pharmacy-dashboard/master/drug-manufacturers/add",
-        method: "POST",
+      query: drugManufacturerData => ({
+        url: 'pharmacy-dashboard/master/drug-manufacturers/add',
+        method: 'POST',
         body: drugManufacturerData,
       }),
-      invalidatesTags: ["DrugManufacturer"],
+      invalidatesTags: ['DrugManufacturer'],
     }),
     editDrugManufacturer: builder.mutation<
       ApiResponse<IDrugManufacturer>,
       EditDrugManufacturerPayload
     >({
-      query: (drugManufacturerData) => ({
+      query: drugManufacturerData => ({
         url: `pharmacy-dashboard/master/drug-manufacturers/${drugManufacturerData.id}`,
-        method: "PUT",
+        method: 'PUT',
         body: drugManufacturerData,
       }),
-      invalidatesTags: ["DrugManufacturer"],
+      invalidatesTags: ['DrugManufacturer'],
     }),
     deleteDrugManufacturer: builder.mutation<ApiResponse<null>, string>({
       query: (id: string) => ({
         url: `pharmacy-dashboard/master/drug-manufacturers/${id}`,
-        method: "PATCH",
+        method: 'PATCH',
       }),
-      invalidatesTags: ["DrugManufacturer"],
+      invalidatesTags: ['DrugManufacturer'],
     }),
     getDrugManufacturers: builder.query<
       ApiResponse<PaginatedResponse<IDrugManufacturer>>,
       IQueryOptions
     >({
-      query: (options) => {
+      query: options => {
         const queryParams = generateQueryParams(options);
         return {
           url: `pharmacy-dashboard/master/drug-manufacturers?${queryParams}`,
-          method: "GET",
+          method: 'GET',
         };
       },
-      providesTags: (_result, _error, _args) => ["DrugManufacturer"],
+      providesTags: (_result, _error, _args) => ['DrugManufacturer'],
     }),
-    getDrugManufacturerById: builder.query<ApiResponse<IDrugManufacturer>, string>({
-      query: (id) => `pharmacy-dashboard/master/drug-manufacturers/${id}`,
-      providesTags: (_result, _error, id) => [{ type: "DrugManufacturer", id }],
+    getDrugManufacturerById: builder.query<
+      ApiResponse<IDrugManufacturer>,
+      string
+    >({
+      query: id => `pharmacy-dashboard/master/drug-manufacturers/${id}`,
+      providesTags: (_result, _error, id) => [{ type: 'DrugManufacturer', id }],
     }),
   }),
 });

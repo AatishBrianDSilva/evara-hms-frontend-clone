@@ -1,26 +1,30 @@
-import React, { useCallback, useState } from "react";
-import ContentSection from "../../../../components/ContentSection/ContentSection";
-import { Box, Button, TextField } from "@mui/material";
-import { Add, Edit } from "@mui/icons-material";
-import CustomDataGrid from "../../../../components/CustomDataGrid/CustomDataGrid";
-import { GridActionsCellItem, GridColDef, GridRowParams } from "@mui/x-data-grid";
-import AddDrugManufacturer from "./AddDrugManufacturer";
-import Delete from "@mui/icons-material/Delete";
-import EditDrugManufacturer from "./EditDrugManufacturer";
-import DeleteConfirmationModal from "../../../../components/DeleteConfirmationModal/DeleteConfirmationModal";
+import React, { useCallback, useState } from 'react';
+import ContentSection from '../../../../components/ContentSection/ContentSection';
+import { Box, Button, TextField } from '@mui/material';
+import { Add, Edit } from '@mui/icons-material';
+import CustomDataGrid from '../../../../components/CustomDataGrid/CustomDataGrid';
+import {
+  GridActionsCellItem,
+  GridColDef,
+  GridRowParams,
+} from '@mui/x-data-grid';
+import AddDrugManufacturer from './AddDrugManufacturer';
+import Delete from '@mui/icons-material/Delete';
+import EditDrugManufacturer from './EditDrugManufacturer';
+import DeleteConfirmationModal from '../../../../components/DeleteConfirmationModal/DeleteConfirmationModal';
 import {
   useDeleteDrugManufacturerMutation,
   useGetDrugManufacturersQuery,
-} from "../../../../services/pharmacyDashboardService/master/drugManufacturerApi";
-import { useToast } from "../../../../context/ToastContext";
-import { useGetDrugCategoriesQuery } from "../../../../services/pharmacyDashboardService/master/drugCategoryApi";
-import { useGetTaxBracketsQuery } from "../../../../services/pharmacyDashboardService/master/taxBracketApi";
-import _ from "lodash";
+} from '../../../../services/pharmacyDashboardService/master/drugManufacturerApi';
+import { useToast } from '../../../../context/ToastContext';
+import { useGetDrugCategoriesQuery } from '../../../../services/pharmacyDashboardService/master/drugCategoryApi';
+import { useGetTaxBracketsQuery } from '../../../../services/pharmacyDashboardService/master/taxBracketApi';
+import _ from 'lodash';
 
 const DrugManufacturer: React.FC = () => {
   const { showPromiseToast } = useToast();
 
-  const [searchQuery, setSearchQuery] = useState("");
+  const [searchQuery, setSearchQuery] = useState('');
   const [page, setPage] = useState<number>(1);
   const [pageSize, setPageSize] = React.useState(25);
 
@@ -32,10 +36,10 @@ const DrugManufacturer: React.FC = () => {
   // Debounce the search handling
   const debouncedSearchChange = useCallback(
     _.debounce(handleSearchChange, 500),
-    [handleSearchChange] // Ensure that handleSearchChange is stable
+    [handleSearchChange], // Ensure that handleSearchChange is stable
   );
 
-  const [selectedRow, setSelectedRow] = useState<string>("");
+  const [selectedRow, setSelectedRow] = useState<string>('');
   const [isAddModalOpen, setIsAddModalOpen] = useState<boolean>(false);
   const [isEditModalOpen, setIsEditModalOpen] = useState<boolean>(false);
   const [isDeleteModalOpen, setIsDeleteModalOpen] = useState<boolean>(false);
@@ -69,7 +73,10 @@ const DrugManufacturer: React.FC = () => {
   const taxRates = taxRatesData?.data?.records || [];
 
   const addDrugManufactureLoading =
-    drugCategoriesLoading || drugCategoriesFetching || taxRatesLoading || taxRatesFetching;
+    drugCategoriesLoading ||
+    drugCategoriesFetching ||
+    taxRatesLoading ||
+    taxRatesFetching;
 
   const {
     data: drugManufacturerData,
@@ -84,16 +91,18 @@ const DrugManufacturer: React.FC = () => {
   });
   const drugManufacturers = drugManufacturerData?.data?.records || [];
   const drugManufacturersPagination = drugManufacturerData?.data?.pagination;
-  const drugManufacturersLoading = drugManufacturerLoading || drugManufacturerFetching;
+  const drugManufacturersLoading =
+    drugManufacturerLoading || drugManufacturerFetching;
 
-  const [deleteDrugManufacturer, { isLoading }] = useDeleteDrugManufacturerMutation();
+  const [deleteDrugManufacturer, { isLoading }] =
+    useDeleteDrugManufacturerMutation();
   const handleDelete = async () => {
     const promise = deleteDrugManufacturer(selectedRow).unwrap();
 
     showPromiseToast(promise, {
-      loading: "Deleting...",
-      success: (data) => data || "Deleted Successfully",
-      error: (data) => data || "Failed to Delete",
+      loading: 'Deleting...',
+      success: data => data || 'Deleted Successfully',
+      error: data => data || 'Failed to Delete',
     });
 
     try {
@@ -106,42 +115,42 @@ const DrugManufacturer: React.FC = () => {
   };
 
   const columnsConfig: GridColDef[] = [
-    { field: "name", headerName: "Manufacturer Name", flex: 2 },
+    { field: 'name', headerName: 'Manufacturer Name', flex: 2 },
     {
-      field: "person",
-      headerName: "Contact Person",
+      field: 'person',
+      headerName: 'Contact Person',
       flex: 1,
       valueGetter(params) {
         return `${params.row.contact.person}`;
       },
     },
     {
-      field: "phone",
-      headerName: "Phone",
+      field: 'phone',
+      headerName: 'Phone',
       flex: 1,
       valueGetter(params) {
         return `${params.row.contact.phone}`;
       },
     },
     {
-      field: "email",
-      headerName: "Email",
+      field: 'email',
+      headerName: 'Email',
       flex: 2,
       valueGetter(params) {
         return `${params.row.contact.email}`;
       },
     },
     {
-      field: "address",
-      headerName: "Address",
+      field: 'address',
+      headerName: 'Address',
       flex: 2,
       valueGetter(params) {
         return `${params.row.address.city}, ${params.row.address.state}`;
       },
     },
     {
-      field: "taxRate",
-      headerName: "Tax Rate",
+      field: 'taxRate',
+      headerName: 'Tax Rate',
       flex: 1,
       valueGetter(params) {
         return `${params.row?.taxRate?.taxRate}`;
@@ -152,12 +161,12 @@ const DrugManufacturer: React.FC = () => {
     //     return params.row.category.map((category: any) => category.name).join(', ')
     //   }
     // },
-    { field: "status", headerName: "Status", flex: 0.5 },
+    { field: 'status', headerName: 'Status', flex: 0.5 },
     {
-      field: "actions",
-      headerName: "Actions",
+      field: 'actions',
+      headerName: 'Actions',
       flex: 0.5,
-      type: "actions",
+      type: 'actions',
       getActions: (params: GridRowParams) => {
         const row = params.row;
         return [
@@ -218,7 +227,7 @@ const DrugManufacturer: React.FC = () => {
           placeholder="Name"
           size="small"
           variant="outlined"
-          onChange={(e) => debouncedSearchChange(e.target.value)}
+          onChange={e => debouncedSearchChange(e.target.value)}
         />
         <Button
           variant="contained"
@@ -231,7 +240,7 @@ const DrugManufacturer: React.FC = () => {
         </Button>
       </Box>
 
-      <Box mt={2} flex={"1 1 auto"}>
+      <Box mt={2} flex={'1 1 auto'}>
         <CustomDataGrid
           autoHeight={false}
           columns={columnsConfig}
@@ -240,7 +249,7 @@ const DrugManufacturer: React.FC = () => {
           pageSize={pageSize}
           totalRows={drugManufacturersPagination?.totalDocs || 0}
           loading={drugManufacturersLoading}
-          sx={{ height: "100%" }}
+          sx={{ height: '100%' }}
           enablePagination={true}
           onPageChange={handlePageChange}
           onPageSizeChange={handlePageSizeChange}

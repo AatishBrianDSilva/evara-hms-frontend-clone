@@ -1,6 +1,6 @@
-import React from "react";
-import { Grid, TextField, Typography } from "@mui/material";
-import { FormikProps } from "formik";
+import React from 'react';
+import { Grid, TextField, Typography } from '@mui/material';
+import { FormikProps } from 'formik';
 
 // Define the type for form values
 interface IFormValues {
@@ -12,7 +12,9 @@ interface PreviousTreatmentsFormProps {
   formik: FormikProps<IFormValues>;
 }
 
-const PreviousTreatmentsForm: React.FC<PreviousTreatmentsFormProps> = ({ formik }) => (
+const PreviousTreatmentsForm: React.FC<PreviousTreatmentsFormProps> = ({
+  formik,
+}) => (
   <>
     <Typography variant="h6" pt={2} pb={2}>
       Previous Treatments

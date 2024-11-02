@@ -14,7 +14,12 @@ const SkeletonAppointmentSummaryCard: React.FC = () => {
     >
       <Box display="flex" flexDirection="column" flex={1}>
         <Skeleton variant="text" width="60%" height={30} />
-        <Box display="flex" flexDirection="column" flex={1} justifyContent={"center"}>
+        <Box
+          display="flex"
+          flexDirection="column"
+          flex={1}
+          justifyContent={'center'}
+        >
           <Skeleton variant="text" width="80%" height={40} />
         </Box>
       </Box>

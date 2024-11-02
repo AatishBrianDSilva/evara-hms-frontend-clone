@@ -1,4 +1,4 @@
-import React from "react";
+import React from 'react';
 import {
   Box,
   Button,
@@ -8,11 +8,11 @@ import {
   Grid,
   MenuItem,
   TextField,
-} from "@mui/material";
-import { useFormik } from "formik";
-import _ from "lodash";
-import { useToast } from "../../../../../context/ToastContext";
-import { useAddReferralDoctorMutation } from "../../../../../services/masterDashboardService/local/referralDoctorApi";
+} from '@mui/material';
+import { useFormik } from 'formik';
+import _ from 'lodash';
+import { useToast } from '../../../../../context/ToastContext';
+import { useAddReferralDoctorMutation } from '../../../../../services/masterDashboardService/local/referralDoctorApi';
 
 interface AddDoctorProps {
   openModal: boolean;
@@ -25,10 +25,14 @@ interface IFormValues {
   speciality: string;
 }
 
-const AddLocalReferralDoctor: React.FC<AddDoctorProps> = ({ openModal, onClose }) => {
+const AddLocalReferralDoctor: React.FC<AddDoctorProps> = ({
+  openModal,
+  onClose,
+}) => {
   const { showPromiseToast } = useToast();
 
-  const [addDoctor, { isLoading: DoctorLoading }] = useAddReferralDoctorMutation();
+  const [addDoctor, { isLoading: DoctorLoading }] =
+    useAddReferralDoctorMutation();
 
   const handleFormSubmit = async (values: IFormValues) => {
     const payload = {
@@ -44,9 +48,9 @@ const AddLocalReferralDoctor: React.FC<AddDoctorProps> = ({ openModal, onClose }
     const promise = addDoctor(payload).unwrap();
 
     showPromiseToast(promise, {
-      loading: "Adding...",
-      success: (data) => data || "Added Successfully",
-      error: (data) => data || "Adding Failed",
+      loading: 'Adding...',
+      success: data => data || 'Added Successfully',
+      error: data => data || 'Adding Failed',
     });
 
     try {
@@ -59,10 +63,10 @@ const AddLocalReferralDoctor: React.FC<AddDoctorProps> = ({ openModal, onClose }
   };
 
   const initialValues: IFormValues = {
-    name: "",
-    phone: "",
-    city: "",
-    speciality: "",
+    name: '',
+    phone: '',
+    city: '',
+    speciality: '',
   };
 
   const formik = useFormik({
@@ -74,9 +78,9 @@ const AddLocalReferralDoctor: React.FC<AddDoctorProps> = ({ openModal, onClose }
 
   return (
     <Dialog open={openModal} onClose={onClose} maxWidth="md" fullWidth>
-      <DialogTitle color={"primary"}>Add Referral Doctors</DialogTitle>
+      <DialogTitle color={'primary'}>Add Referral Doctors</DialogTitle>
       <DialogContent>
-        <Box component={"form"} onSubmit={formik.handleSubmit} p={2}>
+        <Box component={'form'} onSubmit={formik.handleSubmit} p={2}>
           <Grid container spacing={1} mb={2} mt={2}>
             <Grid item xs={8} sm={4} lg={3}>
               <TextField
@@ -124,9 +128,13 @@ const AddLocalReferralDoctor: React.FC<AddDoctorProps> = ({ openModal, onClose }
                 <MenuItem value="Andrologist">Andrologist</MenuItem>
                 <MenuItem value="Embryologist">Embryologist</MenuItem>
                 <MenuItem value="Urologist">Urologist</MenuItem>
-                <MenuItem value="Reproductive Surgeon">Reproductive Surgeon</MenuItem>
+                <MenuItem value="Reproductive Surgeon">
+                  Reproductive Surgeon
+                </MenuItem>
                 <MenuItem value="Gynecologist">Gynecologist</MenuItem>
-                <MenuItem value="Fertility Counselor">Fertility Counselor</MenuItem>
+                <MenuItem value="Fertility Counselor">
+                  Fertility Counselor
+                </MenuItem>
                 <MenuItem value="Genetic Counselor">Genetic Counselor</MenuItem>
                 <MenuItem value="Nurse Practitioner/Registered Nurse">
                   Nurse Practitioner/Registered Nurse
@@ -136,20 +144,28 @@ const AddLocalReferralDoctor: React.FC<AddDoctorProps> = ({ openModal, onClose }
             </Grid>
           </Grid>
 
-          <Box display={"flex"} justifyContent={"flex-end"} alignItems={"center"} gap={2} mb={2}>
+          <Box
+            display={'flex'}
+            justifyContent={'flex-end'}
+            alignItems={'center'}
+            gap={2}
+            mb={2}
+          >
             <Button
               variant="contained"
               color="primary"
               type="submit"
-              disabled={DoctorLoading || _.isEqual(initialValues, formik.values)}
-              sx={{ width: "fit-content" }}
+              disabled={
+                DoctorLoading || _.isEqual(initialValues, formik.values)
+              }
+              sx={{ width: 'fit-content' }}
             >
               Save
             </Button>
             <Button
               variant="contained"
               color="secondary"
-              sx={{ width: "fit-content" }}
+              sx={{ width: 'fit-content' }}
               onClick={onClose}
             >
               Cancel

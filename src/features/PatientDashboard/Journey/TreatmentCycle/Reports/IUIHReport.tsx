@@ -1,23 +1,23 @@
-import { Box, Button, Grid, TextField, Typography } from "@mui/material";
-import { useFormik } from "formik";
-import React, { useContext } from "react";
-import ModalContext from "../../../../../context/ModalContext";
-import { IPatientTreatmentCycleReport } from "../../../../../types/patientDashboard/treatmentCycle";
+import { Box, Button, Grid, TextField, Typography } from '@mui/material';
+import { useFormik } from 'formik';
+import React, { useContext } from 'react';
+import ModalContext from '../../../../../context/ModalContext';
+import { IPatientTreatmentCycleReport } from '../../../../../types/patientDashboard/treatmentCycle';
 import {
   useEditTreatmentCycleMutation,
   useGetTreatmentCyclesQuery,
-} from "../../../../../services/patientDashboardService/treatmentCycleApi";
-import { useToast } from "../../../../../context/ToastContext";
-import _ from "lodash";
-import CustomTimePicker from "../../../../../components/CustomDatePicker/CustomTimePicker";
-import CustomDatePicker from "../../../../../components/CustomDatePicker/CustomDatePicker";
-import FileUploadButton from "../../../../../components/FileUploadAndPreview/FileUploadButton";
-import { EBuckets, EDocumentTypes } from "../../../../../types/global";
-import { useSelector } from "react-redux";
-import { RootState } from "../../../../../app/store";
-import FieldAutocomplete from "../../../../../components/FieldAutoComplete/FieldAutoComplete";
-import { DoctorSpeciality } from "../../../../../types/masterDashboard/global";
-import { useGetDoctorsQuery } from "../../../../../services/doctorsApi";
+} from '../../../../../services/patientDashboardService/treatmentCycleApi';
+import { useToast } from '../../../../../context/ToastContext';
+import _ from 'lodash';
+import CustomTimePicker from '../../../../../components/CustomDatePicker/CustomTimePicker';
+import CustomDatePicker from '../../../../../components/CustomDatePicker/CustomDatePicker';
+import FileUploadButton from '../../../../../components/FileUploadAndPreview/FileUploadButton';
+import { EBuckets, EDocumentTypes } from '../../../../../types/global';
+import { useSelector } from 'react-redux';
+import { RootState } from '../../../../../app/store';
+import FieldAutocomplete from '../../../../../components/FieldAutoComplete/FieldAutoComplete';
+import { DoctorSpeciality } from '../../../../../types/masterDashboard/global';
+import { useGetDoctorsQuery } from '../../../../../services/doctorsApi';
 
 interface IFormValues {
   volume: string;
@@ -64,12 +64,15 @@ interface IUIHReportProps {
   treatmentCycleId: string;
 }
 
-const IUIHReport: React.FC<IUIHReportProps> = ({ report, treatmentCycleId }) => {
+const IUIHReport: React.FC<IUIHReportProps> = ({
+  report,
+  treatmentCycleId,
+}) => {
   const { closeModal } = useContext(ModalContext);
   const { showPromiseToast } = useToast();
 
   const patient = useSelector((state: RootState) => state.patients.patient);
-  const [fileUploadedUrl, setFileUploadedUrl] = React.useState<string[]>([""]);
+  const [fileUploadedUrl, setFileUploadedUrl] = React.useState<string[]>(['']);
 
   const [updateReport, { isLoading }] = useEditTreatmentCycleMutation();
 
@@ -88,25 +91,27 @@ const IUIHReport: React.FC<IUIHReportProps> = ({ report, treatmentCycleId }) => 
     },
     {
       skip: !patient?.patientId,
-    }
+    },
   );
 
   const patientTreatmentCycles = treatmentCyclesData?.data || [];
 
-  console.log("Treatment Cycle iuih data", treatmentCyclesData);
+  console.log('Treatment Cycle iuih data', treatmentCyclesData);
 
   // Find the specific treatment cycle by ID
   const currentTreatmentCycle = patientTreatmentCycles.find(
-    (cycle) => cycle._id === treatmentCycleId
+    cycle => cycle._id === treatmentCycleId,
   );
 
   // Find the specific report by category and ID
-  const currentReport = currentTreatmentCycle?.reports.find((r) => r._id === report._id);
+  const currentReport = currentTreatmentCycle?.reports.find(
+    r => r._id === report._id,
+  );
 
   const handleFormSubmit = async (values: IFormValues) => {
     const options = {
       conditions: {
-        editType: "update",
+        editType: 'update',
         category: report.category,
       },
     };
@@ -123,9 +128,9 @@ const IUIHReport: React.FC<IUIHReportProps> = ({ report, treatmentCycleId }) => 
     const promise = updateReport({ payload, options }).unwrap();
 
     showPromiseToast(promise, {
-      loading: "Adding Report...",
-      success: (data) => data.message || "Report Updated Successfully",
-      error: (data) => data.message || "Error Updating Report",
+      loading: 'Adding Report...',
+      success: data => data.message || 'Report Updated Successfully',
+      error: data => data.message || 'Error Updating Report',
     });
 
     try {
@@ -136,43 +141,45 @@ const IUIHReport: React.FC<IUIHReportProps> = ({ report, treatmentCycleId }) => 
   };
 
   const initialValues: IFormValues = {
-    volume: currentReport?.details?.volume || "",
-    abstinence: currentReport?.details?.abstinence || "",
+    volume: currentReport?.details?.volume || '',
+    abstinence: currentReport?.details?.abstinence || '',
     timeOfCollection: currentReport?.details?.timeOfCollection || null,
-    liquefaction: currentReport?.details?.liquefaction || "",
-    spermConcentration: currentReport?.details?.spermConcentration || "",
-    totalEjaculate: currentReport?.details?.totalEjaculate || "",
+    liquefaction: currentReport?.details?.liquefaction || '',
+    spermConcentration: currentReport?.details?.spermConcentration || '',
+    totalEjaculate: currentReport?.details?.totalEjaculate || '',
     timeOfDispatch: currentReport?.details?.timeOfDispatch || null,
-    ph: currentReport?.details?.ph || "",
-    rbc: currentReport?.details?.rbc || "",
-    color: currentReport?.details?.color || "",
-    viscosity: currentReport?.details?.viscosity || "",
-    pusCells: currentReport?.details?.pusCells || "",
-    totalMotiliy: currentReport?.details?.totalMotiliy || "",
-    progression: currentReport?.details?.progression || "",
-    nonProgression: currentReport?.details?.nonProgression || "",
-    immotile: currentReport?.details?.immotile || "",
-    morphology: currentReport?.details?.morphology || "",
-    normalForms: currentReport?.details?.normalForms || "",
-    epithilialCells: currentReport?.details?.epithilialCells || "",
-    spermPreparationMethod: currentReport?.details?.spermPreparationMethod || "",
-    volumePrepared: currentReport?.details?.volumePrepared || "",
-    spermRecovery: currentReport?.details?.spermRecovery || "",
+    ph: currentReport?.details?.ph || '',
+    rbc: currentReport?.details?.rbc || '',
+    color: currentReport?.details?.color || '',
+    viscosity: currentReport?.details?.viscosity || '',
+    pusCells: currentReport?.details?.pusCells || '',
+    totalMotiliy: currentReport?.details?.totalMotiliy || '',
+    progression: currentReport?.details?.progression || '',
+    nonProgression: currentReport?.details?.nonProgression || '',
+    immotile: currentReport?.details?.immotile || '',
+    morphology: currentReport?.details?.morphology || '',
+    normalForms: currentReport?.details?.normalForms || '',
+    epithilialCells: currentReport?.details?.epithilialCells || '',
+    spermPreparationMethod:
+      currentReport?.details?.spermPreparationMethod || '',
+    volumePrepared: currentReport?.details?.volumePrepared || '',
+    spermRecovery: currentReport?.details?.spermRecovery || '',
     expiryDate: currentReport?.details?.expiryDate || null,
-    totalMotileSperm: currentReport?.details?.totalMotileSperm || "",
-    nonProgressivePostWash: currentReport?.details?.nonProgressivePostWash || "",
-    immotilePostWash: currentReport?.details?.immotilePostWash || "",
-    totalMotilePostWash: currentReport?.details?.totalMotilePostWash || "",
-    normalFormsPostWash: currentReport?.details?.normalFormsPostWash || "",
+    totalMotileSperm: currentReport?.details?.totalMotileSperm || '',
+    nonProgressivePostWash:
+      currentReport?.details?.nonProgressivePostWash || '',
+    immotilePostWash: currentReport?.details?.immotilePostWash || '',
+    totalMotilePostWash: currentReport?.details?.totalMotilePostWash || '',
+    normalFormsPostWash: currentReport?.details?.normalFormsPostWash || '',
     date: currentReport?.details?.date || null,
-    impression: currentReport?.details?.impression || "",
-    embryologist1: currentReport?.details?.embryologist1 || "",
-    embryologist2: currentReport?.details?.embryologist2 || "",
-    gyneacologist1: currentReport?.details?.gyneacologist1 || "",
-    gyneacologist2: currentReport?.details?.gyneacologist2 || "",
-    processingMethod: currentReport?.details?.processingMethod || "",
-    comments: currentReport?.details?.comments || "",
-    description: currentReport?.details?.description || "",
+    impression: currentReport?.details?.impression || '',
+    embryologist1: currentReport?.details?.embryologist1 || '',
+    embryologist2: currentReport?.details?.embryologist2 || '',
+    gyneacologist1: currentReport?.details?.gyneacologist1 || '',
+    gyneacologist2: currentReport?.details?.gyneacologist2 || '',
+    processingMethod: currentReport?.details?.processingMethod || '',
+    comments: currentReport?.details?.comments || '',
+    description: currentReport?.details?.description || '',
   };
 
   const formik = useFormik({
@@ -183,8 +190,8 @@ const IUIHReport: React.FC<IUIHReportProps> = ({ report, treatmentCycleId }) => 
   });
 
   return (
-    <Box component={"form"} onSubmit={formik.handleSubmit} p={2}>
-      <Typography mb={2} variant="button" textAlign={"center"} color="primary">
+    <Box component={'form'} onSubmit={formik.handleSubmit} p={2}>
+      <Typography mb={2} variant="button" textAlign={'center'} color="primary">
         IUI-H Report
       </Typography>
 
@@ -210,7 +217,9 @@ const IUIHReport: React.FC<IUIHReportProps> = ({ report, treatmentCycleId }) => 
             label="Abstinence"
             value={formik.values.abstinence}
             onChange={formik.handleChange}
-            error={formik.touched.abstinence && Boolean(formik.errors.abstinence)}
+            error={
+              formik.touched.abstinence && Boolean(formik.errors.abstinence)
+            }
             helperText={formik.touched.abstinence && formik.errors.abstinence}
           />
         </Grid>
@@ -220,9 +229,14 @@ const IUIHReport: React.FC<IUIHReportProps> = ({ report, treatmentCycleId }) => 
             name="timeOfCollection"
             label="Time of Collection"
             value={formik.values.timeOfCollection}
-            onChange={(date) => formik.setFieldValue("timeOfCollection", date)}
-            error={formik.touched.timeOfCollection && Boolean(formik.errors.timeOfCollection)}
-            helperText={formik.touched.timeOfCollection && formik.errors.timeOfCollection}
+            onChange={date => formik.setFieldValue('timeOfCollection', date)}
+            error={
+              formik.touched.timeOfCollection &&
+              Boolean(formik.errors.timeOfCollection)
+            }
+            helperText={
+              formik.touched.timeOfCollection && formik.errors.timeOfCollection
+            }
           />
         </Grid>
         <Grid item lg={4}>
@@ -232,8 +246,12 @@ const IUIHReport: React.FC<IUIHReportProps> = ({ report, treatmentCycleId }) => 
             label="Liquefaction"
             value={formik.values.liquefaction}
             onChange={formik.handleChange}
-            error={formik.touched.liquefaction && Boolean(formik.errors.liquefaction)}
-            helperText={formik.touched.liquefaction && formik.errors.liquefaction}
+            error={
+              formik.touched.liquefaction && Boolean(formik.errors.liquefaction)
+            }
+            helperText={
+              formik.touched.liquefaction && formik.errors.liquefaction
+            }
           />
         </Grid>
         <Grid item lg={4}>
@@ -243,8 +261,14 @@ const IUIHReport: React.FC<IUIHReportProps> = ({ report, treatmentCycleId }) => 
             label="Sperm Concentration"
             value={formik.values.spermConcentration}
             onChange={formik.handleChange}
-            error={formik.touched.spermConcentration && Boolean(formik.errors.spermConcentration)}
-            helperText={formik.touched.spermConcentration && formik.errors.spermConcentration}
+            error={
+              formik.touched.spermConcentration &&
+              Boolean(formik.errors.spermConcentration)
+            }
+            helperText={
+              formik.touched.spermConcentration &&
+              formik.errors.spermConcentration
+            }
           />
         </Grid>
         <Grid item lg={4}>
@@ -254,8 +278,13 @@ const IUIHReport: React.FC<IUIHReportProps> = ({ report, treatmentCycleId }) => 
             label="Total Ejaculate"
             value={formik.values.totalEjaculate}
             onChange={formik.handleChange}
-            error={formik.touched.totalEjaculate && Boolean(formik.errors.totalEjaculate)}
-            helperText={formik.touched.totalEjaculate && formik.errors.totalEjaculate}
+            error={
+              formik.touched.totalEjaculate &&
+              Boolean(formik.errors.totalEjaculate)
+            }
+            helperText={
+              formik.touched.totalEjaculate && formik.errors.totalEjaculate
+            }
           />
         </Grid>
         <Grid item lg={4}>
@@ -264,9 +293,14 @@ const IUIHReport: React.FC<IUIHReportProps> = ({ report, treatmentCycleId }) => 
             name="timeOfDispatch"
             label="Time of Dispatch"
             value={formik.values.timeOfDispatch}
-            onChange={(date) => formik.setFieldValue("timeOfDispatch", date)}
-            error={formik.touched.timeOfDispatch && Boolean(formik.errors.timeOfDispatch)}
-            helperText={formik.touched.timeOfDispatch && formik.errors.timeOfDispatch}
+            onChange={date => formik.setFieldValue('timeOfDispatch', date)}
+            error={
+              formik.touched.timeOfDispatch &&
+              Boolean(formik.errors.timeOfDispatch)
+            }
+            helperText={
+              formik.touched.timeOfDispatch && formik.errors.timeOfDispatch
+            }
           />
         </Grid>
         <Grid item lg={4}>
@@ -331,8 +365,12 @@ const IUIHReport: React.FC<IUIHReportProps> = ({ report, treatmentCycleId }) => 
             label="Total Motility"
             value={formik.values.totalMotiliy}
             onChange={formik.handleChange}
-            error={formik.touched.totalMotiliy && Boolean(formik.errors.totalMotiliy)}
-            helperText={formik.touched.totalMotiliy && formik.errors.totalMotiliy}
+            error={
+              formik.touched.totalMotiliy && Boolean(formik.errors.totalMotiliy)
+            }
+            helperText={
+              formik.touched.totalMotiliy && formik.errors.totalMotiliy
+            }
           />
         </Grid>
         <Grid item lg={4}>
@@ -342,7 +380,9 @@ const IUIHReport: React.FC<IUIHReportProps> = ({ report, treatmentCycleId }) => 
             label="Progression"
             value={formik.values.progression}
             onChange={formik.handleChange}
-            error={formik.touched.progression && Boolean(formik.errors.progression)}
+            error={
+              formik.touched.progression && Boolean(formik.errors.progression)
+            }
             helperText={formik.touched.progression && formik.errors.progression}
           />
         </Grid>
@@ -353,8 +393,13 @@ const IUIHReport: React.FC<IUIHReportProps> = ({ report, treatmentCycleId }) => 
             label="Non Progression"
             value={formik.values.nonProgression}
             onChange={formik.handleChange}
-            error={formik.touched.nonProgression && Boolean(formik.errors.nonProgression)}
-            helperText={formik.touched.nonProgression && formik.errors.nonProgression}
+            error={
+              formik.touched.nonProgression &&
+              Boolean(formik.errors.nonProgression)
+            }
+            helperText={
+              formik.touched.nonProgression && formik.errors.nonProgression
+            }
           />
         </Grid>
         <Grid item lg={4}>
@@ -375,7 +420,9 @@ const IUIHReport: React.FC<IUIHReportProps> = ({ report, treatmentCycleId }) => 
             label="Morphology"
             value={formik.values.morphology}
             onChange={formik.handleChange}
-            error={formik.touched.morphology && Boolean(formik.errors.morphology)}
+            error={
+              formik.touched.morphology && Boolean(formik.errors.morphology)
+            }
             helperText={formik.touched.morphology && formik.errors.morphology}
           />
         </Grid>
@@ -386,7 +433,9 @@ const IUIHReport: React.FC<IUIHReportProps> = ({ report, treatmentCycleId }) => 
             label="Normal Forms"
             value={formik.values.normalForms}
             onChange={formik.handleChange}
-            error={formik.touched.normalForms && Boolean(formik.errors.normalForms)}
+            error={
+              formik.touched.normalForms && Boolean(formik.errors.normalForms)
+            }
             helperText={formik.touched.normalForms && formik.errors.normalForms}
           />
         </Grid>
@@ -397,8 +446,13 @@ const IUIHReport: React.FC<IUIHReportProps> = ({ report, treatmentCycleId }) => 
             label="Epithilial Cells"
             value={formik.values.epithilialCells}
             onChange={formik.handleChange}
-            error={formik.touched.epithilialCells && Boolean(formik.errors.epithilialCells)}
-            helperText={formik.touched.epithilialCells && formik.errors.epithilialCells}
+            error={
+              formik.touched.epithilialCells &&
+              Boolean(formik.errors.epithilialCells)
+            }
+            helperText={
+              formik.touched.epithilialCells && formik.errors.epithilialCells
+            }
           />
         </Grid>
       </Grid>
@@ -414,10 +468,12 @@ const IUIHReport: React.FC<IUIHReportProps> = ({ report, treatmentCycleId }) => 
             value={formik.values.spermPreparationMethod}
             onChange={formik.handleChange}
             error={
-              formik.touched.spermPreparationMethod && Boolean(formik.errors.spermPreparationMethod)
+              formik.touched.spermPreparationMethod &&
+              Boolean(formik.errors.spermPreparationMethod)
             }
             helperText={
-              formik.touched.spermPreparationMethod && formik.errors.spermPreparationMethod
+              formik.touched.spermPreparationMethod &&
+              formik.errors.spermPreparationMethod
             }
           />
         </Grid>
@@ -428,8 +484,13 @@ const IUIHReport: React.FC<IUIHReportProps> = ({ report, treatmentCycleId }) => 
             label="Volume Prepared"
             value={formik.values.volumePrepared}
             onChange={formik.handleChange}
-            error={formik.touched.volumePrepared && Boolean(formik.errors.volumePrepared)}
-            helperText={formik.touched.volumePrepared && formik.errors.volumePrepared}
+            error={
+              formik.touched.volumePrepared &&
+              Boolean(formik.errors.volumePrepared)
+            }
+            helperText={
+              formik.touched.volumePrepared && formik.errors.volumePrepared
+            }
           />
         </Grid>
         <Grid item lg={4}>
@@ -439,8 +500,13 @@ const IUIHReport: React.FC<IUIHReportProps> = ({ report, treatmentCycleId }) => 
             label="Sperm Recovery"
             value={formik.values.spermRecovery}
             onChange={formik.handleChange}
-            error={formik.touched.spermRecovery && Boolean(formik.errors.spermRecovery)}
-            helperText={formik.touched.spermRecovery && formik.errors.spermRecovery}
+            error={
+              formik.touched.spermRecovery &&
+              Boolean(formik.errors.spermRecovery)
+            }
+            helperText={
+              formik.touched.spermRecovery && formik.errors.spermRecovery
+            }
           />
         </Grid>
         <Grid item lg={4}>
@@ -449,8 +515,10 @@ const IUIHReport: React.FC<IUIHReportProps> = ({ report, treatmentCycleId }) => 
             name="expiryDate"
             label="Expiry Date"
             value={formik.values.expiryDate}
-            onChange={(date) => formik.setFieldValue("expiryDate", date)}
-            error={formik.touched.expiryDate && Boolean(formik.errors.expiryDate)}
+            onChange={date => formik.setFieldValue('expiryDate', date)}
+            error={
+              formik.touched.expiryDate && Boolean(formik.errors.expiryDate)
+            }
             helperText={formik.touched.expiryDate && formik.errors.expiryDate}
           />
         </Grid>
@@ -461,8 +529,13 @@ const IUIHReport: React.FC<IUIHReportProps> = ({ report, treatmentCycleId }) => 
             label="Total Motile Sperm"
             value={formik.values.totalMotileSperm}
             onChange={formik.handleChange}
-            error={formik.touched.totalMotileSperm && Boolean(formik.errors.totalMotileSperm)}
-            helperText={formik.touched.totalMotileSperm && formik.errors.totalMotileSperm}
+            error={
+              formik.touched.totalMotileSperm &&
+              Boolean(formik.errors.totalMotileSperm)
+            }
+            helperText={
+              formik.touched.totalMotileSperm && formik.errors.totalMotileSperm
+            }
           />
         </Grid>
         <Grid item lg={4}>
@@ -473,10 +546,12 @@ const IUIHReport: React.FC<IUIHReportProps> = ({ report, treatmentCycleId }) => 
             value={formik.values.nonProgressivePostWash}
             onChange={formik.handleChange}
             error={
-              formik.touched.nonProgressivePostWash && Boolean(formik.errors.nonProgressivePostWash)
+              formik.touched.nonProgressivePostWash &&
+              Boolean(formik.errors.nonProgressivePostWash)
             }
             helperText={
-              formik.touched.nonProgressivePostWash && formik.errors.nonProgressivePostWash
+              formik.touched.nonProgressivePostWash &&
+              formik.errors.nonProgressivePostWash
             }
           />
         </Grid>
@@ -487,8 +562,13 @@ const IUIHReport: React.FC<IUIHReportProps> = ({ report, treatmentCycleId }) => 
             label="Immotile Post Wash"
             value={formik.values.immotilePostWash}
             onChange={formik.handleChange}
-            error={formik.touched.immotilePostWash && Boolean(formik.errors.immotilePostWash)}
-            helperText={formik.touched.immotilePostWash && formik.errors.immotilePostWash}
+            error={
+              formik.touched.immotilePostWash &&
+              Boolean(formik.errors.immotilePostWash)
+            }
+            helperText={
+              formik.touched.immotilePostWash && formik.errors.immotilePostWash
+            }
           />
         </Grid>
         <Grid item lg={4}>
@@ -498,8 +578,14 @@ const IUIHReport: React.FC<IUIHReportProps> = ({ report, treatmentCycleId }) => 
             label="Total Motile Post Wash"
             value={formik.values.totalMotilePostWash}
             onChange={formik.handleChange}
-            error={formik.touched.totalMotilePostWash && Boolean(formik.errors.totalMotilePostWash)}
-            helperText={formik.touched.totalMotilePostWash && formik.errors.totalMotilePostWash}
+            error={
+              formik.touched.totalMotilePostWash &&
+              Boolean(formik.errors.totalMotilePostWash)
+            }
+            helperText={
+              formik.touched.totalMotilePostWash &&
+              formik.errors.totalMotilePostWash
+            }
           />
         </Grid>
         <Grid item lg={4}>
@@ -509,8 +595,14 @@ const IUIHReport: React.FC<IUIHReportProps> = ({ report, treatmentCycleId }) => 
             label="Normal Forms Post Wash"
             value={formik.values.normalFormsPostWash}
             onChange={formik.handleChange}
-            error={formik.touched.normalFormsPostWash && Boolean(formik.errors.normalFormsPostWash)}
-            helperText={formik.touched.normalFormsPostWash && formik.errors.normalFormsPostWash}
+            error={
+              formik.touched.normalFormsPostWash &&
+              Boolean(formik.errors.normalFormsPostWash)
+            }
+            helperText={
+              formik.touched.normalFormsPostWash &&
+              formik.errors.normalFormsPostWash
+            }
           />
         </Grid>
         <Grid item lg={4}>
@@ -519,7 +611,7 @@ const IUIHReport: React.FC<IUIHReportProps> = ({ report, treatmentCycleId }) => 
             name="date"
             label="Date"
             value={formik.values.date}
-            onChange={(date) => formik.setFieldValue("date", date)}
+            onChange={date => formik.setFieldValue('date', date)}
             error={formik.touched.date && Boolean(formik.errors.date)}
             helperText={formik.touched.date && formik.errors.date}
           />
@@ -531,7 +623,9 @@ const IUIHReport: React.FC<IUIHReportProps> = ({ report, treatmentCycleId }) => 
             label="Impression"
             value={formik.values.impression}
             onChange={formik.handleChange}
-            error={formik.touched.impression && Boolean(formik.errors.impression)}
+            error={
+              formik.touched.impression && Boolean(formik.errors.impression)
+            }
             helperText={formik.touched.impression && formik.errors.impression}
           />
         </Grid>
@@ -547,16 +641,18 @@ const IUIHReport: React.FC<IUIHReportProps> = ({ report, treatmentCycleId }) => 
           /> */}
           <FieldAutocomplete
             options={doctors}
-            getOptionLabel={(option) => `${option.firstName || ""} ${option.lastName || ""}`}
+            getOptionLabel={option =>
+              `${option.firstName || ''} ${option.lastName || ''}`
+            }
             filterOptions={(options, _state) => {
               return options.filter(
-                (option) => option.speciality === DoctorSpeciality.Embryologist
+                option => option.speciality === DoctorSpeciality.Embryologist,
               );
             }}
             isOptionEqualToValue={(option, value) => option._id === value._id}
             value={formik.values.embryologist1}
-            onChange={(newValue) => {
-              formik.setFieldValue("embryologist1", newValue);
+            onChange={newValue => {
+              formik.setFieldValue('embryologist1', newValue);
             }}
             label="Embryologist 1"
           />
@@ -564,16 +660,18 @@ const IUIHReport: React.FC<IUIHReportProps> = ({ report, treatmentCycleId }) => 
         <Grid item lg={4}>
           <FieldAutocomplete
             options={doctors}
-            getOptionLabel={(option) => `${option.firstName || ""} ${option.lastName || ""}`}
+            getOptionLabel={option =>
+              `${option.firstName || ''} ${option.lastName || ''}`
+            }
             filterOptions={(options, _state) => {
               return options.filter(
-                (option) => option.speciality === DoctorSpeciality.Embryologist
+                option => option.speciality === DoctorSpeciality.Embryologist,
               );
             }}
             isOptionEqualToValue={(option, value) => option._id === value._id}
             value={formik.values.embryologist2}
-            onChange={(newValue) => {
-              formik.setFieldValue("embryologist2", newValue);
+            onChange={newValue => {
+              formik.setFieldValue('embryologist2', newValue);
             }}
             label="Embryologist 2"
           />
@@ -581,16 +679,18 @@ const IUIHReport: React.FC<IUIHReportProps> = ({ report, treatmentCycleId }) => 
         <Grid item lg={4}>
           <FieldAutocomplete
             options={doctors}
-            getOptionLabel={(option) => `${option.firstName || ""} ${option.lastName || ""}`}
+            getOptionLabel={option =>
+              `${option.firstName || ''} ${option.lastName || ''}`
+            }
             filterOptions={(options, _state) => {
               return options.filter(
-                (option) => option.speciality === DoctorSpeciality.Gynecologist
+                option => option.speciality === DoctorSpeciality.Gynecologist,
               );
             }}
             isOptionEqualToValue={(option, value) => option._id === value._id}
             value={formik.values.gyneacologist1}
-            onChange={(newValue) => {
-              formik.setFieldValue("gyneacologist1", newValue);
+            onChange={newValue => {
+              formik.setFieldValue('gyneacologist1', newValue);
             }}
             label="Gyneacologist 1"
           />
@@ -598,16 +698,18 @@ const IUIHReport: React.FC<IUIHReportProps> = ({ report, treatmentCycleId }) => 
         <Grid item lg={4}>
           <FieldAutocomplete
             options={doctors}
-            getOptionLabel={(option) => `${option.firstName || ""} ${option.lastName || ""}`}
+            getOptionLabel={option =>
+              `${option.firstName || ''} ${option.lastName || ''}`
+            }
             filterOptions={(options, _state) => {
               return options.filter(
-                (option) => option.speciality === DoctorSpeciality.Gynecologist
+                option => option.speciality === DoctorSpeciality.Gynecologist,
               );
             }}
             isOptionEqualToValue={(option, value) => option._id === value._id}
             value={formik.values.gyneacologist2}
-            onChange={(newValue) => {
-              formik.setFieldValue("gyneacologist2", newValue);
+            onChange={newValue => {
+              formik.setFieldValue('gyneacologist2', newValue);
             }}
             label="Gyneacologist 2"
           />
@@ -619,8 +721,13 @@ const IUIHReport: React.FC<IUIHReportProps> = ({ report, treatmentCycleId }) => 
             label="Processing Method"
             value={formik.values.processingMethod}
             onChange={formik.handleChange}
-            error={formik.touched.processingMethod && Boolean(formik.errors.processingMethod)}
-            helperText={formik.touched.processingMethod && formik.errors.processingMethod}
+            error={
+              formik.touched.processingMethod &&
+              Boolean(formik.errors.processingMethod)
+            }
+            helperText={
+              formik.touched.processingMethod && formik.errors.processingMethod
+            }
           />
         </Grid>
         <Grid item lg={12}>
@@ -641,7 +748,9 @@ const IUIHReport: React.FC<IUIHReportProps> = ({ report, treatmentCycleId }) => 
             label="Description"
             value={formik.values.description}
             onChange={formik.handleChange}
-            error={formik.touched.description && Boolean(formik.errors.description)}
+            error={
+              formik.touched.description && Boolean(formik.errors.description)
+            }
             helperText={formik.touched.description && formik.errors.description}
           />
         </Grid>
@@ -666,23 +775,30 @@ const IUIHReport: React.FC<IUIHReportProps> = ({ report, treatmentCycleId }) => 
           )}
         </Grid>
       </Grid>
-      <Box display={"flex"} justifyContent={"flex-end"} alignItems={"center"} gap={2} mb={2}>
+      <Box
+        display={'flex'}
+        justifyContent={'flex-end'}
+        alignItems={'center'}
+        gap={2}
+        mb={2}
+      >
         <Button
           variant="contained"
           color="primary"
           type="submit"
           disabled={
             isLoading ||
-            (_.isEqual(formik.values, formik.initialValues) && fileUploadedUrl.length === 0)
+            (_.isEqual(formik.values, formik.initialValues) &&
+              fileUploadedUrl.length === 0)
           }
-          sx={{ width: "fit-content" }}
+          sx={{ width: 'fit-content' }}
         >
           Save
         </Button>
         <Button
           variant="contained"
           color="secondary"
-          sx={{ width: "fit-content" }}
+          sx={{ width: 'fit-content' }}
           onClick={closeModal}
         >
           Cancel

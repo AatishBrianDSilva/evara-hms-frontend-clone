@@ -1,4 +1,4 @@
-import React from "react";
+import React from 'react';
 import {
   Box,
   Button,
@@ -8,15 +8,15 @@ import {
   Grid,
   Skeleton,
   TextField,
-} from "@mui/material";
-import { useFormik } from "formik";
-import _ from "lodash";
+} from '@mui/material';
+import { useFormik } from 'formik';
+import _ from 'lodash';
 // import { useGetDoctorByIdQuery, useUpdateDoctorMutation } from "../../../../services/doctorsApi";
 import {
   useEditGlobalUserPasswordMutation,
   useGetGlobalUserByIdQuery,
-} from "../../../../services/masterDashboardService/global/globalUser";
-import { useToast } from "../../../../context/ToastContext";
+} from '../../../../services/masterDashboardService/global/globalUser';
+import { useToast } from '../../../../context/ToastContext';
 
 interface ChangePasswordProps {
   openModal: boolean;
@@ -42,7 +42,13 @@ const skeletonLoader = () => {
             <Skeleton variant="rectangular" width="100%" height={56} />
           </Grid>
         </Grid>
-        <Box display={"flex"} justifyContent={"flex-end"} alignItems={"center"} gap={2} mb={2}>
+        <Box
+          display={'flex'}
+          justifyContent={'flex-end'}
+          alignItems={'center'}
+          gap={2}
+          mb={2}
+        >
           <Skeleton variant="rectangular" width={90} height={36} />
           <Skeleton variant="rectangular" width={90} height={36} />
         </Box>
@@ -51,7 +57,11 @@ const skeletonLoader = () => {
   );
 };
 
-const ChangePassword: React.FC<ChangePasswordProps> = ({ openModal, onClose, id }) => {
+const ChangePassword: React.FC<ChangePasswordProps> = ({
+  openModal,
+  onClose,
+  id,
+}) => {
   const { showPromiseToast } = useToast();
 
   const {
@@ -60,18 +70,18 @@ const ChangePassword: React.FC<ChangePasswordProps> = ({ openModal, onClose, id 
     isFetching: UserFetching,
   } = useGetGlobalUserByIdQuery(id);
 
-  console.log("Id prop", id);
+  console.log('Id prop', id);
 
   const data = UserData ? UserData.data : null;
 
   const isUserLoading = UserLoading || UserFetching;
 
-  console.log("Data at change password", data);
+  console.log('Data at change password', data);
 
   const initialValues: IFormValues = {
-    email: data?.email || "",
-    currentPassword: data?.currentPassword || "",
-    newPassword: data?.newPassword || "",
+    email: data?.email || '',
+    currentPassword: data?.currentPassword || '',
+    newPassword: data?.newPassword || '',
   };
 
   const [editChangePasswordMutation, { isLoading: isEditing }] =
@@ -79,7 +89,7 @@ const ChangePassword: React.FC<ChangePasswordProps> = ({ openModal, onClose, id 
 
   const formik = useFormik({
     initialValues: initialValues,
-    onSubmit: async (values) => {
+    onSubmit: async values => {
       try {
         const payload = {
           userId: id,
@@ -92,15 +102,15 @@ const ChangePassword: React.FC<ChangePasswordProps> = ({ openModal, onClose, id 
         // console.log("Payload", payload);
 
         showPromiseToast(promise, {
-          loading: "Changing Password...",
-          success: (data) => data || "Password Changed Successfully",
-          error: (data) => data || "Failed to Change Password",
+          loading: 'Changing Password...',
+          success: data => data || 'Password Changed Successfully',
+          error: data => data || 'Failed to Change Password',
         });
 
         await promise;
         onClose();
       } catch (error) {
-        console.error("Changing failed:", error);
+        console.error('Changing failed:', error);
       }
     },
     // validationSchema: validationSchema,
@@ -109,12 +119,12 @@ const ChangePassword: React.FC<ChangePasswordProps> = ({ openModal, onClose, id 
 
   return (
     <Dialog open={openModal} onClose={onClose} maxWidth="md" fullWidth>
-      <DialogTitle color={"primary"}>Change User Password</DialogTitle>
+      <DialogTitle color={'primary'}>Change User Password</DialogTitle>
       {UserLoading ? (
         skeletonLoader()
       ) : (
         <DialogContent>
-          <Box component={"form"} onSubmit={formik.handleSubmit} p={2}>
+          <Box component={'form'} onSubmit={formik.handleSubmit} p={2}>
             <Grid container spacing={1} mb={2} mt={2}>
               <Grid item xs={8} sm={4} lg={3}>
                 <TextField
@@ -147,14 +157,20 @@ const ChangePassword: React.FC<ChangePasswordProps> = ({ openModal, onClose, id 
                 />
               </Grid>
             </Grid>
-            <Box display={"flex"} justifyContent={"flex-end"} alignItems={"center"} gap={2} mb={2}>
+            <Box
+              display={'flex'}
+              justifyContent={'flex-end'}
+              alignItems={'center'}
+              gap={2}
+              mb={2}
+            >
               <Button
                 variant="contained"
                 color="primary"
                 type="submit"
                 disabled={isEditing || isUserLoading}
               >
-                {isEditing ? "Saving..." : "Save"}
+                {isEditing ? 'Saving...' : 'Save'}
               </Button>
               <Button variant="contained" color="secondary" onClick={onClose}>
                 Cancel

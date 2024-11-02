@@ -1,6 +1,6 @@
-import Box from "@mui/material/Box";
-import Tab from "@mui/material/Tab";
-import Tabs from "@mui/material/Tabs";
+import Box from '@mui/material/Box';
+import Tab from '@mui/material/Tab';
+import Tabs from '@mui/material/Tabs';
 import {
   AcUnit,
   HomeRepairService,
@@ -10,10 +10,10 @@ import {
   NoteAdd,
   Timeline,
   LocalHospital,
-} from "@mui/icons-material";
-import { EJourneyTabPaths } from "../../../types/global";
-import { Outlet, useParams } from "react-router-dom";
-import useTabNavigation from "../../../hooks/useTabNavigation";
+} from '@mui/icons-material';
+import { EJourneyTabPaths } from '../../../types/global';
+import { Outlet, useParams } from 'react-router-dom';
+import useTabNavigation from '../../../hooks/useTabNavigation';
 
 const PatientJourneyTabs = () => {
   const { id } = useParams<{ id: string }>();
@@ -21,7 +21,7 @@ const PatientJourneyTabs = () => {
   const basePath = `/patient/${id}/journey`;
   const { activeTab, handleTabChange } = useTabNavigation(
     basePath,
-    Object.values(EJourneyTabPaths)
+    Object.values(EJourneyTabPaths),
   );
 
   return (
@@ -88,7 +88,7 @@ const PatientJourneyTabs = () => {
         />
       </Tabs>
 
-      <Box p={2} display={"flex"} flexDirection={"column"} flex={1}>
+      <Box p={2} display={'flex'} flexDirection={'column'} flex={1}>
         <Outlet />
       </Box>
     </>

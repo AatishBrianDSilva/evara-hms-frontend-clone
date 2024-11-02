@@ -1,4 +1,4 @@
-import React from "react";
+import React from 'react';
 import {
   Box,
   Button,
@@ -10,14 +10,14 @@ import {
   FormControlLabel,
   Grid,
   TextField,
-} from "@mui/material";
-import { useFormik } from "formik";
+} from '@mui/material';
+import { useFormik } from 'formik';
 import {
   useGetMasterInvestigationByIdQuery,
   useEditMasterInvestigationMutation,
-} from "../../../../services/masterDashboardService/serviceData/masterInvestigationApi";
-import CustomDatePicker from "../../../../components/CustomDatePicker/CustomDatePicker";
-import { useToast } from "../../../../context/ToastContext";
+} from '../../../../services/masterDashboardService/serviceData/masterInvestigationApi';
+import CustomDatePicker from '../../../../components/CustomDatePicker/CustomDatePicker';
+import { useToast } from '../../../../context/ToastContext';
 
 interface EditMasterInvestigationProps {
   openModal: boolean;
@@ -49,10 +49,10 @@ const EditMasterInvestigation: React.FC<EditMasterInvestigationProps> = ({
 
   const isInvestigationLoading = investigationLoading || investigationFetching;
 
-  console.log("Data at edit Masters", data);
+  console.log('Data at edit Masters', data);
 
   const initialValues: IFormValues = {
-    itemName: data?.name || "",
+    itemName: data?.name || '',
     price: data?.cost || 0,
     validTill: data?.validTill ? new Date(data.validTill) : null,
     isActive: data?.active || false,
@@ -63,7 +63,7 @@ const EditMasterInvestigation: React.FC<EditMasterInvestigationProps> = ({
 
   const formik = useFormik({
     initialValues: initialValues,
-    onSubmit: async (values) => {
+    onSubmit: async values => {
       try {
         const cost = values.price || 0;
 
@@ -79,18 +79,18 @@ const EditMasterInvestigation: React.FC<EditMasterInvestigationProps> = ({
         };
 
         const promise = editInvestigationMutation(payload).unwrap();
-        console.log("Payload", payload);
+        console.log('Payload', payload);
 
         showPromiseToast(promise, {
-          loading: "Editing Investigation...",
-          success: (data) => data || "Investigation Edited Successfully",
-          error: (data) => data || "Failed to Edit Investigation",
+          loading: 'Editing Investigation...',
+          success: data => data || 'Investigation Edited Successfully',
+          error: data => data || 'Failed to Edit Investigation',
         });
 
         await promise;
         onClose();
       } catch (error) {
-        console.error("Edit failed:", error);
+        console.error('Edit failed:', error);
       }
     },
     // validationSchema: validationSchema,
@@ -99,12 +99,12 @@ const EditMasterInvestigation: React.FC<EditMasterInvestigationProps> = ({
 
   return (
     <Dialog open={openModal} onClose={onClose} maxWidth="md" fullWidth>
-      <DialogTitle color={"primary"}>Edit Investigation</DialogTitle>
+      <DialogTitle color={'primary'}>Edit Investigation</DialogTitle>
       <DialogContent>
         {isInvestigationLoading ? (
           <CircularProgress />
         ) : (
-          <Box component={"form"} onSubmit={formik.handleSubmit} p={2}>
+          <Box component={'form'} onSubmit={formik.handleSubmit} p={2}>
             <Grid container spacing={2} mb={2} mt={2}>
               <Grid item lg={12}>
                 <TextField
@@ -114,7 +114,6 @@ const EditMasterInvestigation: React.FC<EditMasterInvestigationProps> = ({
                   name="masterService"
                   label="Master Investigation"
                   value={data?.test.testName}
-
                 />
               </Grid>
               <Grid item lg={4}>
@@ -151,7 +150,7 @@ const EditMasterInvestigation: React.FC<EditMasterInvestigationProps> = ({
                   name="validTill"
                   label="Valid Till"
                   value={formik.values.validTill}
-                  onChange={(value) => formik.setFieldValue("validTill", value)}
+                  onChange={value => formik.setFieldValue('validTill', value)}
                 />
               </Grid>
               <Grid item lg={4}>
@@ -168,9 +167,9 @@ const EditMasterInvestigation: React.FC<EditMasterInvestigationProps> = ({
               </Grid>
             </Grid>
             <Box
-              display={"flex"}
-              justifyContent={"flex-end"}
-              alignItems={"center"}
+              display={'flex'}
+              justifyContent={'flex-end'}
+              alignItems={'center'}
               gap={2}
               mb={2}
             >
@@ -180,7 +179,7 @@ const EditMasterInvestigation: React.FC<EditMasterInvestigationProps> = ({
                 type="submit"
                 disabled={isEditing || isInvestigationLoading}
               >
-                {isEditing ? "Saving..." : "Save"}
+                {isEditing ? 'Saving...' : 'Save'}
               </Button>
               <Button variant="contained" color="secondary" onClick={onClose}>
                 Cancel

@@ -8,12 +8,11 @@ import { useSelector } from 'react-redux';
 import { RootState } from '../../app/store';
 
 const PatientSidebar: React.FC = () => {
-
   const navigate = useNavigate();
   const patientId = useSelector((state: RootState) => state.patients.patientId);
 
   // Create a new array with updated nav items
-  const updatedNavList = patientNavList.map((navItem) => ({
+  const updatedNavList = patientNavList.map(navItem => ({
     ...navItem,
     path: `/patients/dashboard/${patientId}${navItem.path}`,
     onSelect: () => {
@@ -24,17 +23,17 @@ const PatientSidebar: React.FC = () => {
       path: `/patients/dashboard/${patientId}${accItem.path}`,
       onSelect: () => {
         navigate(`/patients/dashboard/${patientId}${accItem.path}`);
-      }
-    }))
+      },
+    })),
   }));
 
   return (
     <aside className="sidebar">
       {/* Sidebar content */}
-      <div className='clinic-logo'>
+      <div className="clinic-logo">
         <img src={clinicLogo} alt="logo" />
       </div>
-      <div className='sidebar-nav-list'>
+      <div className="sidebar-nav-list">
         {updatedNavList.map((navItem, index) => (
           <SideBarNavTab
             isAccordion={navItem.isAccordion || false}
@@ -52,4 +51,3 @@ const PatientSidebar: React.FC = () => {
 };
 
 export default PatientSidebar;
-

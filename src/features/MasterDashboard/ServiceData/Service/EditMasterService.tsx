@@ -1,4 +1,4 @@
-import React from "react";
+import React from 'react';
 import {
   Box,
   Button,
@@ -10,15 +10,15 @@ import {
   FormControlLabel,
   Grid,
   TextField,
-} from "@mui/material";
-import { useFormik } from "formik";
+} from '@mui/material';
+import { useFormik } from 'formik';
 
-import CustomDatePicker from "../../../../components/CustomDatePicker/CustomDatePicker";
-import { useToast } from "../../../../context/ToastContext";
+import CustomDatePicker from '../../../../components/CustomDatePicker/CustomDatePicker';
+import { useToast } from '../../../../context/ToastContext';
 import {
   useEditMasterServiceMutation,
   useGetMasterServiceByIdQuery,
-} from "../../../../services/masterDashboardService/serviceData/masterServicesApi";
+} from '../../../../services/masterDashboardService/serviceData/masterServicesApi';
 
 interface EditMasterServiceProps {
   openModal: boolean;
@@ -50,10 +50,10 @@ const EditMasterService: React.FC<EditMasterServiceProps> = ({
 
   const isServiceLoading = ServiceLoading || ServiceFetching;
 
-  console.log("Data at edit Masters", data);
+  console.log('Data at edit Masters', data);
 
   const initialValues: IFormValues = {
-    serviceName: data?.name || "",
+    serviceName: data?.name || '',
     price: data?.cost || 0,
     validTill: data?.validTill ? new Date(data.validTill) : null,
     isActive: data?.active || false,
@@ -64,7 +64,7 @@ const EditMasterService: React.FC<EditMasterServiceProps> = ({
 
   const formik = useFormik({
     initialValues: initialValues,
-    onSubmit: async (values) => {
+    onSubmit: async values => {
       try {
         const cost = values.price || 0;
 
@@ -80,18 +80,18 @@ const EditMasterService: React.FC<EditMasterServiceProps> = ({
         };
 
         const promise = editServiceMutation(payload).unwrap();
-        console.log("Payload", payload);
+        console.log('Payload', payload);
 
         showPromiseToast(promise, {
-          loading: "Editing Service...",
-          success: (data) => data || "Service Edited Successfully",
-          error: (data) => data || "Failed to Edit Service",
+          loading: 'Editing Service...',
+          success: data => data || 'Service Edited Successfully',
+          error: data => data || 'Failed to Edit Service',
         });
 
         await promise;
         onClose();
       } catch (error) {
-        console.error("Edit failed:", error);
+        console.error('Edit failed:', error);
       }
     },
     // validationSchema: validationSchema,
@@ -100,12 +100,12 @@ const EditMasterService: React.FC<EditMasterServiceProps> = ({
 
   return (
     <Dialog open={openModal} onClose={onClose} maxWidth="md" fullWidth>
-      <DialogTitle color={"primary"}>Edit Service</DialogTitle>
+      <DialogTitle color={'primary'}>Edit Service</DialogTitle>
       <DialogContent>
         {isServiceLoading ? (
           <CircularProgress />
         ) : (
-          <Box component={"form"} onSubmit={formik.handleSubmit} p={2}>
+          <Box component={'form'} onSubmit={formik.handleSubmit} p={2}>
             <Grid container spacing={2} mb={2} mt={2}>
               <Grid item lg={4}>
                 <TextField
@@ -144,7 +144,7 @@ const EditMasterService: React.FC<EditMasterServiceProps> = ({
                   name="validTill"
                   label="Valid Till"
                   value={formik.values.validTill}
-                  onChange={(value) => formik.setFieldValue("validTill", value)}
+                  onChange={value => formik.setFieldValue('validTill', value)}
                 />
               </Grid>
               <Grid item lg={4}>
@@ -161,9 +161,9 @@ const EditMasterService: React.FC<EditMasterServiceProps> = ({
               </Grid>
             </Grid>
             <Box
-              display={"flex"}
-              justifyContent={"flex-end"}
-              alignItems={"center"}
+              display={'flex'}
+              justifyContent={'flex-end'}
+              alignItems={'center'}
               gap={2}
               mb={2}
             >
@@ -173,7 +173,7 @@ const EditMasterService: React.FC<EditMasterServiceProps> = ({
                 type="submit"
                 disabled={isEditing || isServiceLoading}
               >
-                {isEditing ? "Saving..." : "Save"}
+                {isEditing ? 'Saving...' : 'Save'}
               </Button>
               <Button variant="contained" color="secondary" onClick={onClose}>
                 Cancel

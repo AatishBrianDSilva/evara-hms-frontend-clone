@@ -4,7 +4,7 @@ export interface IDrugCategory {
   notes: string;
   createdAt: Date;
   updatedAt: Date;
-  status: "Active" | "Inactive";
+  status: 'Active' | 'Inactive';
 }
 
 export interface IDrugType {
@@ -14,7 +14,7 @@ export interface IDrugType {
   notes?: string;
   createdAt: Date;
   updatedAt: Date;
-  status: "Active" | "Inactive";
+  status: 'Active' | 'Inactive';
 }
 
 export interface ITaxRate {
@@ -22,7 +22,7 @@ export interface ITaxRate {
   taxRate: number;
   notes: string;
   createdAt: Date;
-  status: "Active" | "Inactive";
+  status: 'Active' | 'Inactive';
 }
 
 export interface IDrugManufacturer {
@@ -48,7 +48,7 @@ export interface IDrugManufacturer {
     state: string;
     country: string;
   };
-  status: "Active" | "Inactive";
+  status: 'Active' | 'Inactive';
 }
 
 export interface IDrugItem {
@@ -66,7 +66,7 @@ export interface IDrugItem {
   rate: number;
   freeQuantity: number;
   manufacturer: IDrugManufacturer;
-  status: "Active" | "Inactive";
+  status: 'Active' | 'Inactive';
   criticalCount?: number;
 }
 
@@ -76,7 +76,7 @@ export interface IDrugLocation {
   location: string;
   notes: string;
   main: boolean;
-  status: "Active" | "Inactive";
+  status: 'Active' | 'Inactive';
 }
 
 export interface IDrugVendor {
@@ -102,7 +102,7 @@ export interface IDrugVendor {
     country: string;
   };
   remarks: string;
-  status: "Active" | "Inactive";
+  status: 'Active' | 'Inactive';
   createdAt: Date;
   updatedAt: Date;
 }
@@ -116,14 +116,14 @@ export interface ILocationQuantity {
 }
 
 export enum EDrugClass {
-  ScheduleH1 = "Schedule H1",
-  Gas = "Gas",
-  ScheduleH = "Schedule H",
-  ScheduleX = "Schedule X",
-  General = "General",
-  ScheduleH2 = "Schedule H2",
-  ScheduleII = "Schedule II",
-  Surgical = "Surgical",
-  IVF = "IVF",
-  ScheduleG = "Schedule G",
+  ScheduleH1 = 'Schedule H1',
+  Gas = 'Gas',
+  ScheduleH = 'Schedule H',
+  ScheduleX = 'Schedule X',
+  General = 'General',
+  ScheduleH2 = 'Schedule H2',
+  ScheduleII = 'Schedule II',
+  Surgical = 'Surgical',
+  IVF = 'IVF',
+  ScheduleG = 'Schedule G',
 }

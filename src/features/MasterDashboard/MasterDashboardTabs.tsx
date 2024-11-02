@@ -1,16 +1,16 @@
-import React from 'react'
-import useTabNavigation from '../../hooks/useTabNavigation'
-import { EMasterDashboardTabPaths } from '../../types/global'
-import { Box, Tab, Tabs } from '@mui/material'
-import { Outlet } from 'react-router-dom'
+import React from 'react';
+import useTabNavigation from '../../hooks/useTabNavigation';
+import { EMasterDashboardTabPaths } from '../../types/global';
+import { Box, Tab, Tabs } from '@mui/material';
+import { Outlet } from 'react-router-dom';
 
 const MasterDashboardTabs: React.FC = () => {
-  const basePath = `/master`
+  const basePath = `/master`;
 
   const { activeTab, handleTabChange } = useTabNavigation(
     basePath,
-    Object.values(EMasterDashboardTabPaths)
-  )
+    Object.values(EMasterDashboardTabPaths),
+  );
 
   return (
     <>
@@ -26,16 +26,11 @@ const MasterDashboardTabs: React.FC = () => {
         <Tab label="Global" id="purchase-order-main-tabpanel-1" />
         <Tab label="Service Data" id="purchase-order-main-tabpanel-2" />
       </Tabs>
-      <Box
-        display={'flex'}
-        mt={2}
-        overflow={"hidden"}
-        flex={1}
-      >
+      <Box display={'flex'} mt={2} overflow={'hidden'} flex={1}>
         <Outlet />
       </Box>
     </>
-  )
-}
+  );
+};
 
-export default MasterDashboardTabs
+export default MasterDashboardTabs;

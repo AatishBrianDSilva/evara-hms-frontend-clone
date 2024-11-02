@@ -1,24 +1,24 @@
-import React, { useCallback, useState } from "react";
-import ContentSection from "../../../../components/ContentSection/ContentSection";
-import { Box, Button, Grid, TextField } from "@mui/material";
-import { Add, CheckCircle, Circle, Edit, Password } from "@mui/icons-material";
-import CustomDataGrid from "../../../../components/CustomDataGrid/CustomDataGrid";
+import React, { useCallback, useState } from 'react';
+import ContentSection from '../../../../components/ContentSection/ContentSection';
+import { Box, Button, Grid, TextField } from '@mui/material';
+import { Add, CheckCircle, Circle, Edit, Password } from '@mui/icons-material';
+import CustomDataGrid from '../../../../components/CustomDataGrid/CustomDataGrid';
 import {
   GridActionsCellItem,
   GridColDef,
   GridRowParams,
-} from "@mui/x-data-grid";
-import Delete from "@mui/icons-material/Delete";
-import DeleteConfirmationModal from "../../../../components/DeleteConfirmationModal/DeleteConfirmationModal";
-import { useToast } from "../../../../context/ToastContext";
-import _ from "lodash";
-import AddUser from "./AddUser";
-import EditUser from "./EditUser";
+} from '@mui/x-data-grid';
+import Delete from '@mui/icons-material/Delete';
+import DeleteConfirmationModal from '../../../../components/DeleteConfirmationModal/DeleteConfirmationModal';
+import { useToast } from '../../../../context/ToastContext';
+import _ from 'lodash';
+import AddUser from './AddUser';
+import EditUser from './EditUser';
 import {
   useGetGlobalUsersQuery,
   useDeleteGlobalUserMutation,
-} from "../../../../services/masterDashboardService/global/globalUser";
-import ChangePassword from "./ChangePassword";
+} from '../../../../services/masterDashboardService/global/globalUser';
+import ChangePassword from './ChangePassword';
 
 interface RowType {
   _id: string;
@@ -27,14 +27,14 @@ interface RowType {
 const User: React.FC = () => {
   const { showPromiseToast } = useToast();
 
-  const [selectedRow, setSelectedRow] = useState<string>("");
+  const [selectedRow, setSelectedRow] = useState<string>('');
   const [isAddModalOpen, setIsAddModalOpen] = useState<boolean>(false);
   const [isEditModalOpen, setIsEditModalOpen] = useState<boolean>(false);
   const [isDeleteModalOpen, setIsDeleteModalOpen] = useState<boolean>(false);
   const [isChangePasswordModalOpen, setIsChangePasswordModalOpen] =
     useState<boolean>(false);
 
-  const [searchQuery, setSearchQuery] = useState("");
+  const [searchQuery, setSearchQuery] = useState('');
   const handleSearchChange = useCallback((query: string) => {
     setSearchQuery(query);
   }, []);
@@ -42,7 +42,7 @@ const User: React.FC = () => {
   // Debounce the search handling
   const debouncedSearchChange = useCallback(
     _.debounce(handleSearchChange, 500),
-    [handleSearchChange] // Ensure that handleSearchChange is stable
+    [handleSearchChange], // Ensure that handleSearchChange is stable
   );
 
   const {
@@ -63,39 +63,39 @@ const User: React.FC = () => {
 
   const columnsConfig: GridColDef[] = [
     {
-      field: "branchId",
-      headerName: "Branch Name",
+      field: 'branchId',
+      headerName: 'Branch Name',
       flex: 1,
     },
-    { field: "username", headerName: "User Name", flex: 1 },
+    { field: 'username', headerName: 'User Name', flex: 1 },
     {
-      field: "email",
-      headerName: "User Email",
-      flex: 1,
-    },
-    {
-      field: "phone",
-      headerName: "User Phone",
+      field: 'email',
+      headerName: 'User Email',
       flex: 1,
     },
     {
-      field: "role",
-      headerName: "Role",
+      field: 'phone',
+      headerName: 'User Phone',
       flex: 1,
-      valueGetter: (params) => {
-        return _.upperFirst(params.value)
+    },
+    {
+      field: 'role',
+      headerName: 'Role',
+      flex: 1,
+      valueGetter: params => {
+        return _.upperFirst(params.value);
       },
     },
     {
-      field: "isActive",
-      headerName: "Status",
+      field: 'isActive',
+      headerName: 'Status',
       flex: 1,
-      valueGetter: (params) => (params.value ? "Active" : "Inactive"),
+      valueGetter: params => (params.value ? 'Active' : 'Inactive'),
     },
 
     {
-      field: "stage",
-      headerName: "Is Active",
+      field: 'stage',
+      headerName: 'Is Active',
       renderCell(params) {
         return (
           <Grid container>
@@ -109,10 +109,10 @@ const User: React.FC = () => {
       },
     },
     {
-      field: "actions",
-      headerName: "Actions",
+      field: 'actions',
+      headerName: 'Actions',
       flex: 1,
-      type: "actions",
+      type: 'actions',
       getActions: (params: GridRowParams) => {
         const row = params.row;
         return [
@@ -143,9 +143,9 @@ const User: React.FC = () => {
     const promise = deleteUser(selectedRow).unwrap();
 
     showPromiseToast(promise, {
-      loading: "Deleting...",
-      success: (data) => data || "Deleted Successfully",
-      error: (data) => data || "Failed to Delete",
+      loading: 'Deleting...',
+      success: data => data || 'Deleted Successfully',
+      error: data => data || 'Failed to Delete',
     });
 
     try {
@@ -211,7 +211,7 @@ const User: React.FC = () => {
           placeholder="Name/Email/Phone/Role"
           size="small"
           variant="outlined"
-          onChange={(e) => debouncedSearchChange(e.target.value)}
+          onChange={e => debouncedSearchChange(e.target.value)}
         />
 
         <Button
@@ -225,13 +225,13 @@ const User: React.FC = () => {
         </Button>
       </Box>
 
-      <Box mt={2} flex={"1 1 auto"}>
+      <Box mt={2} flex={'1 1 auto'}>
         <CustomDataGrid
           autoHeight={false}
           columns={columnsConfig}
           rows={Users}
           loading={UserLoading || UserFetching}
-          sx={{ height: "100%" }}
+          sx={{ height: '100%' }}
           getRowId={getRowId}
         />
       </Box>

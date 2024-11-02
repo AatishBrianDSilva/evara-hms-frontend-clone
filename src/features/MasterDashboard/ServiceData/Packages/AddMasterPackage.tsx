@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import React, { useState } from 'react';
 import {
   Box,
   Button,
@@ -11,20 +11,20 @@ import {
   IconButton,
   TextField,
   MenuItem,
-} from "@mui/material";
-import { Add as AddIcon, Delete as DeleteIcon } from "@mui/icons-material";
-import { useFormik } from "formik";
-import _ from "lodash";
+} from '@mui/material';
+import { Add as AddIcon, Delete as DeleteIcon } from '@mui/icons-material';
+import { useFormik } from 'formik';
+import _ from 'lodash';
 
-import { useToast } from "../../../../context/ToastContext";
-import CustomDatePicker from "../../../../components/CustomDatePicker/CustomDatePicker";
-import FieldAutocomplete from "../../../../components/FieldAutoComplete/FieldAutoComplete";
-import { useAddMasterPackageMutation } from "../../../../services/masterDashboardService/serviceData/masterPackagesApi";
-import { useGetMasterDefaultProceduresQuery } from "../../../../services/masterDashboardService/serviceData/masterProceduresApi";
-import { useGetMasterDefaultCryoPreservationQuery } from "../../../../services/masterDashboardService/serviceData/masterCryoPreservationApi";
-import { useGetMasterDefaultInvestigationsQuery } from "../../../../services/masterDashboardService/serviceData/masterInvestigationApi";
-import { useGetMasterDefaultServicesQuery } from "../../../../services/masterDashboardService/serviceData/masterServicesApi";
-import { useGetMasterDefaultTreatmentCycleQuery } from "../../../../services/masterDashboardService/serviceData/cycles/masterTreatmentCycleApi";
+import { useToast } from '../../../../context/ToastContext';
+import CustomDatePicker from '../../../../components/CustomDatePicker/CustomDatePicker';
+import FieldAutocomplete from '../../../../components/FieldAutoComplete/FieldAutoComplete';
+import { useAddMasterPackageMutation } from '../../../../services/masterDashboardService/serviceData/masterPackagesApi';
+import { useGetMasterDefaultProceduresQuery } from '../../../../services/masterDashboardService/serviceData/masterProceduresApi';
+import { useGetMasterDefaultCryoPreservationQuery } from '../../../../services/masterDashboardService/serviceData/masterCryoPreservationApi';
+import { useGetMasterDefaultInvestigationsQuery } from '../../../../services/masterDashboardService/serviceData/masterInvestigationApi';
+import { useGetMasterDefaultServicesQuery } from '../../../../services/masterDashboardService/serviceData/masterServicesApi';
+import { useGetMasterDefaultTreatmentCycleQuery } from '../../../../services/masterDashboardService/serviceData/cycles/masterTreatmentCycleApi';
 
 interface AddMasterPackageProps {
   openModal: boolean;
@@ -89,7 +89,10 @@ interface IFormValues {
   cycles: ICycleRow[];
 }
 
-const AddMasterPackage: React.FC<AddMasterPackageProps> = ({ openModal, onClose }) => {
+const AddMasterPackage: React.FC<AddMasterPackageProps> = ({
+  openModal,
+  onClose,
+}) => {
   const { showPromiseToast } = useToast();
 
   // Fetching master procedures data
@@ -98,17 +101,30 @@ const AddMasterPackage: React.FC<AddMasterPackageProps> = ({ openModal, onClose 
       paginate: false,
       filters: { isAdmin: true },
     });
-  const { data: defaultInvestigationsData, isLoading: isDefaultInvestigationsLoading } =
-    useGetMasterDefaultInvestigationsQuery({ paginate: false, filters: { isAdmin: true } });
+  const {
+    data: defaultInvestigationsData,
+    isLoading: isDefaultInvestigationsLoading,
+  } = useGetMasterDefaultInvestigationsQuery({
+    paginate: false,
+    filters: { isAdmin: true },
+  });
   const { data: defaultServicesData, isLoading: isDefaultServicesLoading } =
     useGetMasterDefaultServicesQuery({
       paginate: false,
       filters: { isAdmin: true },
     });
-  const { data: defaultCryoPreservationsData, isLoading: isDefaultCryoPreservationsLoading } =
-    useGetMasterDefaultCryoPreservationQuery({ paginate: false, filters: { isAdmin: true } });
+  const {
+    data: defaultCryoPreservationsData,
+    isLoading: isDefaultCryoPreservationsLoading,
+  } = useGetMasterDefaultCryoPreservationQuery({
+    paginate: false,
+    filters: { isAdmin: true },
+  });
   const { data: defaultCyclesData, isLoading: isDefaultCyclesLoading } =
-    useGetMasterDefaultTreatmentCycleQuery({ paginate: false, filters: { isAdmin: true } });
+    useGetMasterDefaultTreatmentCycleQuery({
+      paginate: false,
+      filters: { isAdmin: true },
+    });
 
   const defaultProcedures = defaultProceduresData?.data || [];
   const defaultInvestigations = defaultInvestigationsData?.data || [];
@@ -120,9 +136,13 @@ const AddMasterPackage: React.FC<AddMasterPackageProps> = ({ openModal, onClose 
 
   // State to manage the dynamically added rows
   const [procedureRows, setProcedureRows] = useState<IProcedureRow[]>([]);
-  const [investigationRows, setInvestigationRows] = useState<IInvestigationRow[]>([]);
+  const [investigationRows, setInvestigationRows] = useState<
+    IInvestigationRow[]
+  >([]);
   const [serviceRows, setServiceRows] = useState<IServiceRow[]>([]);
-  const [cryoPreservationRows, setCryoPreservationRows] = useState<ICryoPreservationRow[]>([]);
+  const [cryoPreservationRows, setCryoPreservationRows] = useState<
+    ICryoPreservationRow[]
+  >([]);
   const [cycleRows, setCycleRows] = useState<ICycleRow[]>([]);
 
   // Handle form submission
@@ -136,7 +156,7 @@ const AddMasterPackage: React.FC<AddMasterPackageProps> = ({ openModal, onClose 
       active: values.isActive,
 
       // Payload for Procedures
-      procedures: values.procedures.map((p) => ({
+      procedures: values.procedures.map(p => ({
         procedure: p.procedure._id,
         name: appendPackageName(p.procedureName),
         validTill: values.validTill, // Use master valid date for each procedure
@@ -147,7 +167,7 @@ const AddMasterPackage: React.FC<AddMasterPackageProps> = ({ openModal, onClose 
       })),
 
       // Payload for Investigations
-      investigations: investigationRows.map((i) => ({
+      investigations: investigationRows.map(i => ({
         investigation: i.investigation._id,
         name: appendPackageName(i.testName),
         validTill: values.validTill, // Use master valid date for each investigation
@@ -158,7 +178,7 @@ const AddMasterPackage: React.FC<AddMasterPackageProps> = ({ openModal, onClose 
       })),
 
       // Payload for Services
-      services: serviceRows.map((s) => ({
+      services: serviceRows.map(s => ({
         service: s.service._id,
         name: appendPackageName(s.name),
         validTill: values.validTill, // Use master valid date for each service
@@ -169,7 +189,7 @@ const AddMasterPackage: React.FC<AddMasterPackageProps> = ({ openModal, onClose 
       })),
 
       // Payload for Cryo Preservations
-      cryoPreservations: cryoPreservationRows.map((c) => ({
+      cryoPreservations: cryoPreservationRows.map(c => ({
         cryoPreservation: c.cryoPreservation._id,
         name: appendPackageName(c.cryoPreservationName),
         validTill: values.validTill, // Use master valid date for each cryo preservation
@@ -180,7 +200,7 @@ const AddMasterPackage: React.FC<AddMasterPackageProps> = ({ openModal, onClose 
       })),
 
       // Payload for Cycles
-      cycles: cycleRows.map((c) => ({
+      cycles: cycleRows.map(c => ({
         cycle: c.cycle._id,
         name: appendPackageName(c.cycleName),
         validTill: values.validTill, // Use master valid date for each cycle
@@ -191,14 +211,14 @@ const AddMasterPackage: React.FC<AddMasterPackageProps> = ({ openModal, onClose 
       })),
     };
 
-    console.log("Payload to be submitted:", payload); // Log the payload
+    console.log('Payload to be submitted:', payload); // Log the payload
 
     const promise = addPackage(payload).unwrap();
 
     showPromiseToast(promise, {
-      loading: "Adding...",
-      success: (data) => data || "Added Successfully",
-      error: (data) => data || "Adding Failed",
+      loading: 'Adding...',
+      success: data => data || 'Added Successfully',
+      error: data => data || 'Adding Failed',
     });
 
     try {
@@ -211,10 +231,10 @@ const AddMasterPackage: React.FC<AddMasterPackageProps> = ({ openModal, onClose 
   };
 
   const initialValues: IFormValues = {
-    packageName: "",
+    packageName: '',
     price: 0,
     validTill: null,
-    gender: "",
+    gender: '',
     isActive: true,
     procedures: [],
     investigations: [],
@@ -239,11 +259,11 @@ const AddMasterPackage: React.FC<AddMasterPackageProps> = ({ openModal, onClose 
       ...procedureRows,
       {
         procedure: null,
-        procedureName: "",
-        procedureId: "",
-        description: "",
-        procedureType: "",
-        gender: "",
+        procedureName: '',
+        procedureId: '',
+        description: '',
+        procedureType: '',
+        gender: '',
       },
     ]);
   };
@@ -259,34 +279,48 @@ const AddMasterPackage: React.FC<AddMasterPackageProps> = ({ openModal, onClose 
       ...investigationRows,
       {
         investigation: null,
-        testName: "",
-        investigationId: "",
-        description: "",
-        gender: "",
-        testType: "",
+        testName: '',
+        investigationId: '',
+        description: '',
+        gender: '',
+        testType: '',
       },
     ]);
   const addServiceRow = () =>
     setServiceRows([
       ...serviceRows,
-      { service: null, name: "", serviceId: "", description: "", gender: "", serviceType: "" },
+      {
+        service: null,
+        name: '',
+        serviceId: '',
+        description: '',
+        gender: '',
+        serviceType: '',
+      },
     ]);
   const addCryoPreservationRow = () =>
     setCryoPreservationRows([
       ...cryoPreservationRows,
       {
         cryoPreservation: null,
-        cryoPreservationName: "",
-        cryoPreservationId: "",
-        description: "",
-        gender: "",
-        cryoPreservationType: "",
+        cryoPreservationName: '',
+        cryoPreservationId: '',
+        description: '',
+        gender: '',
+        cryoPreservationType: '',
       },
     ]);
   const addCycleRow = () =>
     setCycleRows([
       ...cycleRows,
-      { cycle: null, cycleName: "", cycleId: "", description: "", gender: "", cycleType: "" },
+      {
+        cycle: null,
+        cycleName: '',
+        cycleId: '',
+        description: '',
+        gender: '',
+        cycleType: '',
+      },
     ]);
 
   // Removing rows
@@ -296,7 +330,8 @@ const AddMasterPackage: React.FC<AddMasterPackageProps> = ({ openModal, onClose 
     setServiceRows(serviceRows.filter((_, i) => i !== index));
   const removeCryoPreservationRow = (index: number) =>
     setCryoPreservationRows(cryoPreservationRows.filter((_, i) => i !== index));
-  const removeCycleRow = (index: number) => setCycleRows(cycleRows.filter((_, i) => i !== index));
+  const removeCycleRow = (index: number) =>
+    setCycleRows(cycleRows.filter((_, i) => i !== index));
 
   // Function to check if required fields are filled
   const isFormComplete =
@@ -307,9 +342,9 @@ const AddMasterPackage: React.FC<AddMasterPackageProps> = ({ openModal, onClose 
 
   return (
     <Dialog open={openModal} onClose={onClose} maxWidth="md" fullWidth>
-      <DialogTitle color={"primary"}>Add Master Package</DialogTitle>
+      <DialogTitle color={'primary'}>Add Master Package</DialogTitle>
       <DialogContent>
-        <Box component={"form"} onSubmit={formik.handleSubmit} p={2}>
+        <Box component={'form'} onSubmit={formik.handleSubmit} p={2}>
           {/* Package details */}
           <Grid container spacing={2} mb={2} mt={2} alignItems="center">
             <Grid item xs={12} sm={6} lg={3}>
@@ -338,7 +373,7 @@ const AddMasterPackage: React.FC<AddMasterPackageProps> = ({ openModal, onClose 
                 label="Valid Till"
                 minDate={new Date()}
                 value={formik.values.validTill}
-                onChange={(value) => formik.setFieldValue("validTill", value)}
+                onChange={value => formik.setFieldValue('validTill', value)}
               />
             </Grid>
             <Grid item xs={12} sm={6} lg={3}>
@@ -351,8 +386,8 @@ const AddMasterPackage: React.FC<AddMasterPackageProps> = ({ openModal, onClose 
                 value={formik.values.gender}
                 onChange={formik.handleChange}
               >
-                <MenuItem value={"male"}>Male</MenuItem>
-                <MenuItem value={"female"}>Female</MenuItem>
+                <MenuItem value={'male'}>Male</MenuItem>
+                <MenuItem value={'female'}>Female</MenuItem>
               </TextField>
             </Grid>
           </Grid>
@@ -400,9 +435,13 @@ const AddMasterPackage: React.FC<AddMasterPackageProps> = ({ openModal, onClose 
               </Button>
             </Grid>
             {/* Conditionally render "Add Cycle" button */}
-            {formik.values.gender === "female" && (
+            {formik.values.gender === 'female' && (
               <Grid item xs="auto">
-                <Button variant="outlined" startIcon={<AddIcon />} onClick={addCycleRow}>
+                <Button
+                  variant="outlined"
+                  startIcon={<AddIcon />}
+                  onClick={addCycleRow}
+                >
                   Add Cycle
                 </Button>
               </Grid>
@@ -416,22 +455,24 @@ const AddMasterPackage: React.FC<AddMasterPackageProps> = ({ openModal, onClose 
                 <FieldAutocomplete
                   label="Master Procedure"
                   options={defaultProcedures}
-                  isOptionEqualToValue={(option, value) => option._id === value._id}
-                  getOptionLabel={(option) => option.procedureName}
+                  isOptionEqualToValue={(option, value) =>
+                    option._id === value._id
+                  }
+                  getOptionLabel={option => option.procedureName}
                   loading={isDefaultProceduresLoading}
                   value={row.procedure}
-                  onChange={(value) => {
+                  onChange={value => {
                     const updatedRows = [...procedureRows];
                     updatedRows[index] = {
                       procedure: value,
-                      procedureName: value?.procedureName || "",
-                      procedureId: value?.procedureId || "",
-                      description: value?.description || "",
-                      procedureType: value?.procedureType || "",
-                      gender: value?.gender || "",
+                      procedureName: value?.procedureName || '',
+                      procedureId: value?.procedureId || '',
+                      description: value?.description || '',
+                      procedureType: value?.procedureType || '',
+                      gender: value?.gender || '',
                     };
                     setProcedureRows(updatedRows);
-                    formik.setFieldValue("procedures", updatedRows);
+                    formik.setFieldValue('procedures', updatedRows);
                   }}
                 />
               </Grid>
@@ -443,11 +484,11 @@ const AddMasterPackage: React.FC<AddMasterPackageProps> = ({ openModal, onClose 
                   label="Procedure Name"
                   helperText={`Procedure name : ${appendPackageName(row.procedureName)}`}
                   value={row.procedureName}
-                  onChange={(e) => {
+                  onChange={e => {
                     const updatedRows = [...procedureRows];
                     updatedRows[index].procedureName = e.target.value;
                     setProcedureRows(updatedRows);
-                    formik.setFieldValue("procedures", updatedRows);
+                    formik.setFieldValue('procedures', updatedRows);
                   }}
                 />
               </Grid>
@@ -462,7 +503,14 @@ const AddMasterPackage: React.FC<AddMasterPackageProps> = ({ openModal, onClose 
                   disabled
                 />
               </Grid>
-              <Grid item xs={12} sm={2} lg={2} display="flex" alignItems="center">
+              <Grid
+                item
+                xs={12}
+                sm={2}
+                lg={2}
+                display="flex"
+                alignItems="center"
+              >
                 <IconButton onClick={() => removeProcedureRow(index)}>
                   <DeleteIcon />
                 </IconButton>
@@ -477,24 +525,26 @@ const AddMasterPackage: React.FC<AddMasterPackageProps> = ({ openModal, onClose 
                 <FieldAutocomplete
                   label="Master Investigation"
                   options={defaultInvestigations}
-                  isOptionEqualToValue={(option, value) => option._id === value._id}
-                  getOptionLabel={(option) => option.testName}
+                  isOptionEqualToValue={(option, value) =>
+                    option._id === value._id
+                  }
+                  getOptionLabel={option => option.testName}
                   loading={isDefaultInvestigationsLoading}
                   value={row.investigation}
-                  onChange={(value) => {
+                  onChange={value => {
                     const updatedRows = [...investigationRows];
                     updatedRows[index] = {
                       investigation: value,
-                      testName: value?.testName || "",
-                      investigationId: value?.testId || "",
-                      description: value?.description || "",
-                      gender: value?.gender || "",
-                      testType: value?.testType || "",
+                      testName: value?.testName || '',
+                      investigationId: value?.testId || '',
+                      description: value?.description || '',
+                      gender: value?.gender || '',
+                      testType: value?.testType || '',
                     };
                     setInvestigationRows(updatedRows);
-                    formik.setFieldValue("investigations", updatedRows);
+                    formik.setFieldValue('investigations', updatedRows);
                   }}
-                />{" "}
+                />{' '}
               </Grid>
               <Grid item xs={12} sm={4} lg={4}>
                 <TextField
@@ -502,11 +552,11 @@ const AddMasterPackage: React.FC<AddMasterPackageProps> = ({ openModal, onClose 
                   label="Investigation Name"
                   value={row.testName}
                   helperText={`Investigation name : ${appendPackageName(row.testName)}`}
-                  onChange={(e) => {
+                  onChange={e => {
                     const updatedRows = [...investigationRows];
                     updatedRows[index].testName = e.target.value;
                     setInvestigationRows(updatedRows);
-                    formik.setFieldValue("investigations", updatedRows);
+                    formik.setFieldValue('investigations', updatedRows);
                   }}
                 />
               </Grid>
@@ -518,7 +568,14 @@ const AddMasterPackage: React.FC<AddMasterPackageProps> = ({ openModal, onClose 
                   disabled
                 />
               </Grid>
-              <Grid item xs={12} sm={2} lg={2} display="flex" alignItems="center">
+              <Grid
+                item
+                xs={12}
+                sm={2}
+                lg={2}
+                display="flex"
+                alignItems="center"
+              >
                 <IconButton onClick={() => removeInvestigationRow(index)}>
                   <DeleteIcon />
                 </IconButton>
@@ -533,24 +590,26 @@ const AddMasterPackage: React.FC<AddMasterPackageProps> = ({ openModal, onClose 
                 <FieldAutocomplete
                   label="Service"
                   options={defaultServices}
-                  isOptionEqualToValue={(option, value) => option._id === value._id}
-                  getOptionLabel={(option) => option.name}
+                  isOptionEqualToValue={(option, value) =>
+                    option._id === value._id
+                  }
+                  getOptionLabel={option => option.name}
                   loading={isDefaultServicesLoading}
                   value={row.service}
-                  onChange={(value) => {
+                  onChange={value => {
                     const updatedRows = [...serviceRows];
                     updatedRows[index] = {
                       service: value,
-                      name: value?.name || "",
-                      serviceId: value?.serviceId || "",
-                      description: value?.description || "",
-                      gender: value?.gender || "",
-                      serviceType: value?.serviceType || "",
+                      name: value?.name || '',
+                      serviceId: value?.serviceId || '',
+                      description: value?.description || '',
+                      gender: value?.gender || '',
+                      serviceType: value?.serviceType || '',
                     };
                     setServiceRows(updatedRows);
-                    formik.setFieldValue("services", updatedRows);
+                    formik.setFieldValue('services', updatedRows);
                   }}
-                />{" "}
+                />{' '}
               </Grid>
               <Grid item xs={12} sm={4} lg={4}>
                 <TextField
@@ -558,18 +617,30 @@ const AddMasterPackage: React.FC<AddMasterPackageProps> = ({ openModal, onClose 
                   label="Master Service Name"
                   value={row.name}
                   helperText={`Service name : ${appendPackageName(row.name)}`}
-                  onChange={(e) => {
+                  onChange={e => {
                     const updatedRows = [...serviceRows];
                     updatedRows[index].name = e.target.value;
                     setServiceRows(updatedRows);
-                    formik.setFieldValue("services", updatedRows);
+                    formik.setFieldValue('services', updatedRows);
                   }}
                 />
               </Grid>
               <Grid item xs={12} sm={4} lg={2}>
-                <TextField fullWidth label="Service ID" value={row.serviceId} disabled />
+                <TextField
+                  fullWidth
+                  label="Service ID"
+                  value={row.serviceId}
+                  disabled
+                />
               </Grid>
-              <Grid item xs={12} sm={2} lg={2} display="flex" alignItems="center">
+              <Grid
+                item
+                xs={12}
+                sm={2}
+                lg={2}
+                display="flex"
+                alignItems="center"
+              >
                 <IconButton onClick={() => removeServiceRow(index)}>
                   <DeleteIcon />
                 </IconButton>
@@ -579,29 +650,36 @@ const AddMasterPackage: React.FC<AddMasterPackageProps> = ({ openModal, onClose 
 
           {/* Cryo preservastion row */}
           {cryoPreservationRows.map((row, index) => (
-            <Grid container spacing={2} mt={2} key={`cryoPreservation-${index}`}>
+            <Grid
+              container
+              spacing={2}
+              mt={2}
+              key={`cryoPreservation-${index}`}
+            >
               <Grid item xs={12} sm={4} lg={4}>
                 <FieldAutocomplete
                   label="Cryo Preservation"
                   options={defaultCryoPreservation}
-                  isOptionEqualToValue={(option, value) => option._id === value._id}
-                  getOptionLabel={(option) => option.cryoPreservationName}
+                  isOptionEqualToValue={(option, value) =>
+                    option._id === value._id
+                  }
+                  getOptionLabel={option => option.cryoPreservationName}
                   loading={isDefaultCryoPreservationsLoading}
                   value={row.cryoPreservation}
-                  onChange={(value) => {
+                  onChange={value => {
                     const updatedRows = [...cryoPreservationRows];
                     updatedRows[index] = {
                       cryoPreservation: value,
-                      cryoPreservationName: value?.cryoPreservationName || "",
-                      cryoPreservationId: value?.cryoPreservationId || "",
-                      description: value?.description || "",
-                      gender: value?.gender || "",
-                      cryoPreservationType: value?.cryoPreservationType || "",
+                      cryoPreservationName: value?.cryoPreservationName || '',
+                      cryoPreservationId: value?.cryoPreservationId || '',
+                      description: value?.description || '',
+                      gender: value?.gender || '',
+                      cryoPreservationType: value?.cryoPreservationType || '',
                     };
                     setCryoPreservationRows(updatedRows);
-                    formik.setFieldValue("cryoPreservation", updatedRows);
+                    formik.setFieldValue('cryoPreservation', updatedRows);
                   }}
-                />{" "}
+                />{' '}
               </Grid>
               <Grid item xs={12} sm={4} lg={4}>
                 <TextField
@@ -609,13 +687,13 @@ const AddMasterPackage: React.FC<AddMasterPackageProps> = ({ openModal, onClose 
                   label="Master Cryo Preservation Name"
                   value={row.cryoPreservationName}
                   helperText={`Cryo Preservation name : ${appendPackageName(
-                    row.cryoPreservationName
+                    row.cryoPreservationName,
                   )}`}
-                  onChange={(e) => {
+                  onChange={e => {
                     const updatedRows = [...cryoPreservationRows];
                     updatedRows[index].cryoPreservationName = e.target.value;
                     setCryoPreservationRows(updatedRows);
-                    formik.setFieldValue("cryoPreservation", updatedRows);
+                    formik.setFieldValue('cryoPreservation', updatedRows);
                   }}
                 />
               </Grid>
@@ -627,7 +705,14 @@ const AddMasterPackage: React.FC<AddMasterPackageProps> = ({ openModal, onClose 
                   disabled
                 />
               </Grid>
-              <Grid item xs={12} sm={2} lg={2} display="flex" alignItems="center">
+              <Grid
+                item
+                xs={12}
+                sm={2}
+                lg={2}
+                display="flex"
+                alignItems="center"
+              >
                 <IconButton onClick={() => removeCryoPreservationRow(index)}>
                   <DeleteIcon />
                 </IconButton>
@@ -642,24 +727,26 @@ const AddMasterPackage: React.FC<AddMasterPackageProps> = ({ openModal, onClose 
                 <FieldAutocomplete
                   label="Cycle"
                   options={defaultCycles}
-                  isOptionEqualToValue={(option, value) => option._id === value._id}
-                  getOptionLabel={(option) => option.cycleName}
+                  isOptionEqualToValue={(option, value) =>
+                    option._id === value._id
+                  }
+                  getOptionLabel={option => option.cycleName}
                   loading={isDefaultCyclesLoading}
                   value={row.cycle}
-                  onChange={(value) => {
+                  onChange={value => {
                     const updatedRows = [...cycleRows];
                     updatedRows[index] = {
                       cycle: value,
-                      cycleName: value?.cycleName || "",
-                      cycleId: value?.cycleId || "",
-                      description: value?.description || "",
-                      gender: value?.gender || "",
-                      cycleType: value?.cycleType || "",
+                      cycleName: value?.cycleName || '',
+                      cycleId: value?.cycleId || '',
+                      description: value?.description || '',
+                      gender: value?.gender || '',
+                      cycleType: value?.cycleType || '',
                     };
                     setCycleRows(updatedRows);
-                    formik.setFieldValue("cycles", updatedRows);
+                    formik.setFieldValue('cycles', updatedRows);
                   }}
-                />{" "}
+                />{' '}
               </Grid>
               <Grid item xs={12} sm={4} lg={4}>
                 <TextField
@@ -667,18 +754,30 @@ const AddMasterPackage: React.FC<AddMasterPackageProps> = ({ openModal, onClose 
                   label="Master Cycle Name"
                   value={row.cycleName}
                   helperText={`Cycle name : ${appendPackageName(row.cycleName)}`}
-                  onChange={(e) => {
+                  onChange={e => {
                     const updatedRows = [...cycleRows];
                     updatedRows[index].cycleName = e.target.value;
                     setCycleRows(updatedRows);
-                    formik.setFieldValue("cycle", updatedRows);
+                    formik.setFieldValue('cycle', updatedRows);
                   }}
                 />
               </Grid>
               <Grid item xs={12} sm={4} lg={2}>
-                <TextField fullWidth label="Cycle ID" value={row.cycleId} disabled />
+                <TextField
+                  fullWidth
+                  label="Cycle ID"
+                  value={row.cycleId}
+                  disabled
+                />
               </Grid>
-              <Grid item xs={12} sm={2} lg={2} display="flex" alignItems="center">
+              <Grid
+                item
+                xs={12}
+                sm={2}
+                lg={2}
+                display="flex"
+                alignItems="center"
+              >
                 <IconButton onClick={() => removeCycleRow(index)}>
                   <DeleteIcon />
                 </IconButton>
@@ -701,20 +800,26 @@ const AddMasterPackage: React.FC<AddMasterPackageProps> = ({ openModal, onClose 
           </Grid>
 
           {/* Save and Cancel buttons */}
-          <Box display={"flex"} justifyContent={"flex-end"} alignItems={"center"} gap={2} mb={2}>
+          <Box
+            display={'flex'}
+            justifyContent={'flex-end'}
+            alignItems={'center'}
+            gap={2}
+            mb={2}
+          >
             <Button
               variant="contained"
               color="primary"
               type="submit"
               disabled={!isFormComplete || isLoading}
-              sx={{ width: "fit-content" }}
+              sx={{ width: 'fit-content' }}
             >
               Save
             </Button>
             <Button
               variant="contained"
               color="secondary"
-              sx={{ width: "fit-content" }}
+              sx={{ width: 'fit-content' }}
               onClick={onClose}
             >
               Cancel

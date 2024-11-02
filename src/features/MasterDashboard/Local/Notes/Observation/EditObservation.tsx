@@ -1,4 +1,4 @@
-import React from "react";
+import React from 'react';
 import {
   Box,
   Button,
@@ -8,14 +8,14 @@ import {
   Grid,
   Skeleton,
   TextField,
-} from "@mui/material";
-import { useFormik } from "formik";
-import _ from "lodash";
+} from '@mui/material';
+import { useFormik } from 'formik';
+import _ from 'lodash';
 import {
   useGetNotesObservationByIdQuery,
   useUpdateNotesObservationMutation,
-} from "../../../../../services/masterDashboardService/local/notesObservationApi";
-import { useToast } from "../../../../../context/ToastContext";
+} from '../../../../../services/masterDashboardService/local/notesObservationApi';
+import { useToast } from '../../../../../context/ToastContext';
 
 interface EditObservationProps {
   openModal: boolean;
@@ -39,7 +39,13 @@ const skeletonLoader = () => {
             <Skeleton variant="rectangular" width="100%" height={56} />
           </Grid>
         </Grid>
-        <Box display={"flex"} justifyContent={"flex-end"} alignItems={"center"} gap={2} mb={2}>
+        <Box
+          display={'flex'}
+          justifyContent={'flex-end'}
+          alignItems={'center'}
+          gap={2}
+          mb={2}
+        >
           <Skeleton variant="rectangular" width={90} height={36} />
           <Skeleton variant="rectangular" width={90} height={36} />
         </Box>
@@ -48,7 +54,11 @@ const skeletonLoader = () => {
   );
 };
 
-const EditObservation: React.FC<EditObservationProps> = ({ openModal, onClose, id }) => {
+const EditObservation: React.FC<EditObservationProps> = ({
+  openModal,
+  onClose,
+  id,
+}) => {
   const { showPromiseToast } = useToast();
 
   const {
@@ -66,14 +76,15 @@ const EditObservation: React.FC<EditObservationProps> = ({ openModal, onClose, i
   // console.log("Data at Observation", data);
 
   const initialValues: IFormValues = {
-    name: data?.name || "",
+    name: data?.name || '',
   };
 
-  const [editObservationMutation, { isLoading: isEditing }] = useUpdateNotesObservationMutation();
+  const [editObservationMutation, { isLoading: isEditing }] =
+    useUpdateNotesObservationMutation();
 
   const formik = useFormik({
     initialValues: initialValues,
-    onSubmit: async (values) => {
+    onSubmit: async values => {
       try {
         const payload = {
           id: id,
@@ -84,15 +95,15 @@ const EditObservation: React.FC<EditObservationProps> = ({ openModal, onClose, i
         // console.log("Payload", payload);
 
         showPromiseToast(promise, {
-          loading: "Editing Observation...",
-          success: (data) => data || "Observation Edited Successfully",
-          error: (data) => data || "Failed to Edit Observation",
+          loading: 'Editing Observation...',
+          success: data => data || 'Observation Edited Successfully',
+          error: data => data || 'Failed to Edit Observation',
         });
 
         await promise;
         onClose();
       } catch (error) {
-        console.error("Edit failed:", error);
+        console.error('Edit failed:', error);
       }
     },
     // validationSchema: validationSchema,
@@ -101,12 +112,12 @@ const EditObservation: React.FC<EditObservationProps> = ({ openModal, onClose, i
 
   return (
     <Dialog open={openModal} onClose={onClose} maxWidth="md" fullWidth>
-      <DialogTitle color={"primary"}>Edit Observation</DialogTitle>
+      <DialogTitle color={'primary'}>Edit Observation</DialogTitle>
       {ObservationLoading ? (
         skeletonLoader()
       ) : (
         <DialogContent>
-          <Box component={"form"} onSubmit={formik.handleSubmit} p={2}>
+          <Box component={'form'} onSubmit={formik.handleSubmit} p={2}>
             <Grid container spacing={1} mb={2} mt={2}>
               <Grid item xs={8} sm={4} lg={3}>
                 <TextField
@@ -119,14 +130,20 @@ const EditObservation: React.FC<EditObservationProps> = ({ openModal, onClose, i
                 />
               </Grid>
             </Grid>
-            <Box display={"flex"} justifyContent={"flex-end"} alignItems={"center"} gap={2} mb={2}>
+            <Box
+              display={'flex'}
+              justifyContent={'flex-end'}
+              alignItems={'center'}
+              gap={2}
+              mb={2}
+            >
               <Button
                 variant="contained"
                 color="primary"
                 type="submit"
                 disabled={isEditing || isObservationLoading}
               >
-                {isEditing ? "Saving..." : "Save"}
+                {isEditing ? 'Saving...' : 'Save'}
               </Button>
               <Button variant="contained" color="secondary" onClick={onClose}>
                 Cancel

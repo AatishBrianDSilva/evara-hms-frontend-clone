@@ -1,10 +1,10 @@
-import React from 'react'
-import { Drawer, List, Typography } from '@mui/material'
-import NestedList, { NestedListItem } from './NestedList'
+import React from 'react';
+import { Drawer, List, Typography } from '@mui/material';
+import NestedList, { NestedListItem } from './NestedList';
 
 interface MasterSidebarProps {
-  menuItems: NestedListItem[]
-  heading: string
+  menuItems: NestedListItem[];
+  heading: string;
 }
 
 const MasterSidebar: React.FC<MasterSidebarProps> = ({
@@ -54,7 +54,7 @@ const MasterSidebar: React.FC<MasterSidebarProps> = ({
         <NestedList items={menuItems} />
       </List>
     </Drawer>
-  )
-}
+  );
+};
 
-export default MasterSidebar
+export default MasterSidebar;

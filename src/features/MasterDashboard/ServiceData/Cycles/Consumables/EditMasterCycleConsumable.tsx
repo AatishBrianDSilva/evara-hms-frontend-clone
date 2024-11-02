@@ -1,4 +1,4 @@
-import React from "react";
+import React from 'react';
 import {
   Box,
   Button,
@@ -8,14 +8,13 @@ import {
   DialogTitle,
   Grid,
   TextField,
-} from "@mui/material";
-import { useFormik } from "formik";
+} from '@mui/material';
+import { useFormik } from 'formik';
 import {
   useGetServiceCycleConsumableByIdQuery,
   useEditServiceCycleConsumableMutation,
-} from "../../../../../services/masterDashboardService/serviceData/cycles/masterCyclesConsumablesApi";
-import { useToast } from "../../../../../context/ToastContext";
-
+} from '../../../../../services/masterDashboardService/serviceData/cycles/masterCyclesConsumablesApi';
+import { useToast } from '../../../../../context/ToastContext';
 
 interface EditMasterCycleConsumableProps {
   openModal: boolean;
@@ -42,15 +41,16 @@ const EditMasterCycleConsumable: React.FC<EditMasterCycleConsumableProps> = ({
 
   const data = cycleConsumableData ? cycleConsumableData.data : null;
 
-  const isCycleConsumableLoading = cycleConsumableLoading || cycleConsumableFetching;
+  const isCycleConsumableLoading =
+    cycleConsumableLoading || cycleConsumableFetching;
 
   const initialValues: IFormValues = {
-    treatment: data?.treatment || "",
+    treatment: data?.treatment || '',
   };
 
   const formik = useFormik({
     initialValues: initialValues,
-    onSubmit: async (values) => {
+    onSubmit: async values => {
       try {
         const payload = {
           id: data._id,
@@ -60,50 +60,60 @@ const EditMasterCycleConsumable: React.FC<EditMasterCycleConsumableProps> = ({
         const promise = editCycleConsumableMutation(payload).unwrap();
 
         showPromiseToast(promise, {
-          loading: "Editing CycleConsumable...",
-          success: (data) => data || "CycleConsumable Edited Successfully",
-          error: (data) => data || "Failed to Edit CycleConsumable",
+          loading: 'Editing CycleConsumable...',
+          success: data => data || 'CycleConsumable Edited Successfully',
+          error: data => data || 'Failed to Edit CycleConsumable',
         });
 
         await promise;
         onClose();
       } catch (error) {
-        console.error("Edit failed:", error);
+        console.error('Edit failed:', error);
       }
     },
     // validationSchema: validationSchema,
     enableReinitialize: true,
   });
-  console.log("testing", id);
+  console.log('testing', id);
 
   const [editCycleConsumableMutation, { isLoading: isEditing }] =
     useEditServiceCycleConsumableMutation();
 
   return (
     <Dialog open={openModal} onClose={onClose} maxWidth="md" fullWidth>
-      <DialogTitle color={"primary"}>Edit CycleConsumable</DialogTitle>
+      <DialogTitle color={'primary'}>Edit CycleConsumable</DialogTitle>
       <DialogContent>
-        <Box component={"form"} onSubmit={formik.handleSubmit} p={2}>
-          {isCycleConsumableLoading ? <CircularProgress /> : (<Grid container spacing={2} mt={2}>
-            <Grid item xs={6} sm={3} lg={3}>
-              <TextField
-                fullWidth
-                id="treatment"
-                name="treatment"
-                label="Treatment"
-                value={formik.values.treatment}
-                onChange={formik.handleChange}
-              />
+        <Box component={'form'} onSubmit={formik.handleSubmit} p={2}>
+          {isCycleConsumableLoading ? (
+            <CircularProgress />
+          ) : (
+            <Grid container spacing={2} mt={2}>
+              <Grid item xs={6} sm={3} lg={3}>
+                <TextField
+                  fullWidth
+                  id="treatment"
+                  name="treatment"
+                  label="Treatment"
+                  value={formik.values.treatment}
+                  onChange={formik.handleChange}
+                />
+              </Grid>
             </Grid>
-          </Grid>)}
-          <Box display={"flex"} justifyContent={"flex-end"} alignItems={"center"} gap={2} mb={2}>
+          )}
+          <Box
+            display={'flex'}
+            justifyContent={'flex-end'}
+            alignItems={'center'}
+            gap={2}
+            mb={2}
+          >
             <Button
               variant="contained"
               color="primary"
               type="submit"
               disabled={isEditing || isCycleConsumableLoading}
             >
-              {isEditing ? "Saving..." : "Save"}
+              {isEditing ? 'Saving...' : 'Save'}
             </Button>
             <Button variant="contained" color="secondary" onClick={onClose}>
               Cancel

@@ -1,5 +1,5 @@
-import { configureStore, combineReducers } from "@reduxjs/toolkit";
-import storage from "redux-persist/lib/storage/session"; // defaults to localStorage for web
+import { configureStore, combineReducers } from '@reduxjs/toolkit';
+import storage from 'redux-persist/lib/storage/session'; // defaults to localStorage for web
 import {
   persistReducer,
   persistStore,
@@ -9,88 +9,88 @@ import {
   PERSIST,
   PURGE,
   REGISTER,
-} from "redux-persist";
+} from 'redux-persist';
 
-import patientsReducer from "../features/Patients/patientsSlice";
-import appointmentReducer from "../features/Appointment/appointmentSlice";
-import investigationReducer from "../features/PatientDashboard/Journey/Investigations/investigationSlice";
-import procedureReducer from "../features/PatientDashboard/Journey/Procedures/procedureSlice";
-import cryoPreservationReducer from "../features/PatientDashboard/Journey/CryoPreservation/cryoPreservationSlice";
-import treatmentCycleReducer from "../features/PatientDashboard/Journey/TreatmentCycle/treatmentCycleSlice";
-import authReducer from "../features/Auth/authSlice";
+import patientsReducer from '../features/Patients/patientsSlice';
+import appointmentReducer from '../features/Appointment/appointmentSlice';
+import investigationReducer from '../features/PatientDashboard/Journey/Investigations/investigationSlice';
+import procedureReducer from '../features/PatientDashboard/Journey/Procedures/procedureSlice';
+import cryoPreservationReducer from '../features/PatientDashboard/Journey/CryoPreservation/cryoPreservationSlice';
+import treatmentCycleReducer from '../features/PatientDashboard/Journey/TreatmentCycle/treatmentCycleSlice';
+import authReducer from '../features/Auth/authSlice';
 
-import { homeApi } from "../services/homeApi";
-import { fileApi } from "../services/filesApi";
-import { patientsApi } from "../services/patientsApi";
-import { doctorsApi } from "../services/doctorsApi";
-import { appointmentsApi } from "../services/appointmentApi";
-import { investigationApi } from "../services/patientDashboardService/investigationApi";
-import { serviceApi } from "../services/patientDashboardService/serviceApi";
-import { procedureApi } from "../services/patientDashboardService/procedureApi";
-import { cryoPreservationApi } from "../services/patientDashboardService/cryoPreservationApi";
-import { treatmentCycleApi } from "../services/patientDashboardService/treatmentCycleApi";
-import { taxBracketApi } from "../services/pharmacyDashboardService/master/taxBracketApi";
-import { drugLocationApi } from "../services/pharmacyDashboardService/master/drugLocationApi";
-import { drugVendorApi } from "../services/pharmacyDashboardService/master/drugVendorApi";
-import { drugManufacturerApi } from "../services/pharmacyDashboardService/master/drugManufacturerApi";
-import { drugCategoryApi } from "../services/pharmacyDashboardService/master/drugCategoryApi";
-import { drugTypeApi } from "../services/pharmacyDashboardService/master/drugTypeApi";
-import { drugItemApi } from "../services/pharmacyDashboardService/master/drugItemApi";
-import { purchaseOrderApi } from "../services/pharmacyDashboardService/purchaseOrderApi";
-import { stocksApi } from "../services/pharmacyDashboardService/stocksApi";
-import { internalOrderApi } from "../services/pharmacyDashboardService/internalOrderApi";
-import { patientHistoryApi } from "../services/patientDashboardService/patientHistoryApi";
-import { billingApi } from "../services/patientDashboardService/billings/billingApi";
-import { estimationApi } from "../services/patientDashboardService/billings/estimationApi";
-import { patientPharmacyApi } from "../services/patientDashboardService/patientPharmacyApi";
-import { masterInvestigationApi } from "../services/masterDashboardService/serviceData/masterInvestigationApi";
-import { masterProceduresApi } from "../services/masterDashboardService/serviceData/masterProceduresApi";
-import { masterServicesApi } from "../services/masterDashboardService/serviceData/masterServicesApi";
-import { masterTreatmentCycleApi } from "../services/masterDashboardService/serviceData/cycles/masterTreatmentCycleApi";
-import { serviceCyclesStagesApi } from "../services/masterDashboardService/serviceData/cycles/masterCyclesStagesApi";
-import { serviceCyclesConsumablesApi } from "../services/masterDashboardService/serviceData/cycles/masterCyclesConsumablesApi";
-import { masterCryoPreservationApi } from "../services/masterDashboardService/serviceData/masterCryoPreservationApi";
-import { masterPackagesApi } from "../services/masterDashboardService/serviceData/masterPackagesApi";
-import { authApi } from "../services/authApi";
-import { donorApi } from "../services/donorApi";
-import { globalUserApi } from "../services/masterDashboardService/global/globalUser";
-import { globalBranchApi } from "../services/masterDashboardService/global/globalBranch";
-import { appointmentSourcesApi } from "../services/masterDashboardService/local/appointmentSourceApi";
-import { appointmentReasonsApi } from "../services/masterDashboardService/local/appointmentReasonApi";
-import { patientSourcesApi } from "../services/masterDashboardService/local/patientSourceApi";
-import { referralDoctorsApi } from "../services/masterDashboardService/local/referralDoctorApi";
-import { patientIdTypesApi } from "../services/masterDashboardService/local/patientIdTypeApi";
-import { notesTreatmentAdvicesApi } from "../services/masterDashboardService/local/notesTreatmentAdviceApi";
-import { notesObservationsApi } from "../services/masterDashboardService/local/notesObservationApi";
-import { consentsApi } from "../services/masterDashboardService/local/consentApi";
-import { notesApi } from "../services/patientDashboardService/notesApi";
-import { patientReportsApi } from "../services/patientDashboardService/reportApi";
-import { invoiceApi } from "../services/pharmacyDashboardService/invoiceApi";
-import { analyticsPatientBillingsApi } from "../services/analyticsDashboardService/billings/analyticsPatientBillingsApi";
-import { patientTimelineApi } from "../services/patientDashboardService/patientTimelineApi";
-import { internalConsumptionApi } from "../services/pharmacyDashboardService/internalConsumptionApi";
-import { treatmentAdviceApi } from "../services/patientDashboardService/treatmentAdviceApi";
-import { packageApi } from "../services/patientDashboardService/packageApi";
-import { salesByScheduleApi } from "../services/analyticsDashboardService/pharmacy/salesByScheduleApi";
-import { stockSummaryApi } from "../services/analyticsDashboardService/pharmacy/stockSummaryApi";
-import { expiryDetailsApi } from "../services/analyticsDashboardService/pharmacy/expiryDetailaApi";
-import { drugsAndVendorApi } from "../services/analyticsDashboardService/pharmacy/drugsAndVendorApi";
-import { internalConsumptionReportApi } from "../services/analyticsDashboardService/pharmacy/internalConsumptionReportApi";
-import { patientReturnApi } from "../services/analyticsDashboardService/pharmacy/patientReturnApi";
-import { criticalStocksApi } from "../services/analyticsDashboardService/pharmacy/criticalStocksApi";
-import { pharmacyReportApi } from "../services/analyticsDashboardService/pharmacy/PharmacyReportApi";
-import { purchaseOrderReportApi } from "../services/analyticsDashboardService/pharmacy/purchaseOrderReportApi";
-import { refundReportsApi } from "../services/analyticsDashboardService/billings/refundReports";
+import { homeApi } from '../services/homeApi';
+import { fileApi } from '../services/filesApi';
+import { patientsApi } from '../services/patientsApi';
+import { doctorsApi } from '../services/doctorsApi';
+import { appointmentsApi } from '../services/appointmentApi';
+import { investigationApi } from '../services/patientDashboardService/investigationApi';
+import { serviceApi } from '../services/patientDashboardService/serviceApi';
+import { procedureApi } from '../services/patientDashboardService/procedureApi';
+import { cryoPreservationApi } from '../services/patientDashboardService/cryoPreservationApi';
+import { treatmentCycleApi } from '../services/patientDashboardService/treatmentCycleApi';
+import { taxBracketApi } from '../services/pharmacyDashboardService/master/taxBracketApi';
+import { drugLocationApi } from '../services/pharmacyDashboardService/master/drugLocationApi';
+import { drugVendorApi } from '../services/pharmacyDashboardService/master/drugVendorApi';
+import { drugManufacturerApi } from '../services/pharmacyDashboardService/master/drugManufacturerApi';
+import { drugCategoryApi } from '../services/pharmacyDashboardService/master/drugCategoryApi';
+import { drugTypeApi } from '../services/pharmacyDashboardService/master/drugTypeApi';
+import { drugItemApi } from '../services/pharmacyDashboardService/master/drugItemApi';
+import { purchaseOrderApi } from '../services/pharmacyDashboardService/purchaseOrderApi';
+import { stocksApi } from '../services/pharmacyDashboardService/stocksApi';
+import { internalOrderApi } from '../services/pharmacyDashboardService/internalOrderApi';
+import { patientHistoryApi } from '../services/patientDashboardService/patientHistoryApi';
+import { billingApi } from '../services/patientDashboardService/billings/billingApi';
+import { estimationApi } from '../services/patientDashboardService/billings/estimationApi';
+import { patientPharmacyApi } from '../services/patientDashboardService/patientPharmacyApi';
+import { masterInvestigationApi } from '../services/masterDashboardService/serviceData/masterInvestigationApi';
+import { masterProceduresApi } from '../services/masterDashboardService/serviceData/masterProceduresApi';
+import { masterServicesApi } from '../services/masterDashboardService/serviceData/masterServicesApi';
+import { masterTreatmentCycleApi } from '../services/masterDashboardService/serviceData/cycles/masterTreatmentCycleApi';
+import { serviceCyclesStagesApi } from '../services/masterDashboardService/serviceData/cycles/masterCyclesStagesApi';
+import { serviceCyclesConsumablesApi } from '../services/masterDashboardService/serviceData/cycles/masterCyclesConsumablesApi';
+import { masterCryoPreservationApi } from '../services/masterDashboardService/serviceData/masterCryoPreservationApi';
+import { masterPackagesApi } from '../services/masterDashboardService/serviceData/masterPackagesApi';
+import { authApi } from '../services/authApi';
+import { donorApi } from '../services/donorApi';
+import { globalUserApi } from '../services/masterDashboardService/global/globalUser';
+import { globalBranchApi } from '../services/masterDashboardService/global/globalBranch';
+import { appointmentSourcesApi } from '../services/masterDashboardService/local/appointmentSourceApi';
+import { appointmentReasonsApi } from '../services/masterDashboardService/local/appointmentReasonApi';
+import { patientSourcesApi } from '../services/masterDashboardService/local/patientSourceApi';
+import { referralDoctorsApi } from '../services/masterDashboardService/local/referralDoctorApi';
+import { patientIdTypesApi } from '../services/masterDashboardService/local/patientIdTypeApi';
+import { notesTreatmentAdvicesApi } from '../services/masterDashboardService/local/notesTreatmentAdviceApi';
+import { notesObservationsApi } from '../services/masterDashboardService/local/notesObservationApi';
+import { consentsApi } from '../services/masterDashboardService/local/consentApi';
+import { notesApi } from '../services/patientDashboardService/notesApi';
+import { patientReportsApi } from '../services/patientDashboardService/reportApi';
+import { invoiceApi } from '../services/pharmacyDashboardService/invoiceApi';
+import { analyticsPatientBillingsApi } from '../services/analyticsDashboardService/billings/analyticsPatientBillingsApi';
+import { patientTimelineApi } from '../services/patientDashboardService/patientTimelineApi';
+import { internalConsumptionApi } from '../services/pharmacyDashboardService/internalConsumptionApi';
+import { treatmentAdviceApi } from '../services/patientDashboardService/treatmentAdviceApi';
+import { packageApi } from '../services/patientDashboardService/packageApi';
+import { salesByScheduleApi } from '../services/analyticsDashboardService/pharmacy/salesByScheduleApi';
+import { stockSummaryApi } from '../services/analyticsDashboardService/pharmacy/stockSummaryApi';
+import { expiryDetailsApi } from '../services/analyticsDashboardService/pharmacy/expiryDetailaApi';
+import { drugsAndVendorApi } from '../services/analyticsDashboardService/pharmacy/drugsAndVendorApi';
+import { internalConsumptionReportApi } from '../services/analyticsDashboardService/pharmacy/internalConsumptionReportApi';
+import { patientReturnApi } from '../services/analyticsDashboardService/pharmacy/patientReturnApi';
+import { criticalStocksApi } from '../services/analyticsDashboardService/pharmacy/criticalStocksApi';
+import { pharmacyReportApi } from '../services/analyticsDashboardService/pharmacy/PharmacyReportApi';
+import { purchaseOrderReportApi } from '../services/analyticsDashboardService/pharmacy/purchaseOrderReportApi';
+import { refundReportsApi } from '../services/analyticsDashboardService/billings/refundReports';
 
-import * as Sentry from "@sentry/react";
-import { revenueBreakupApi } from "../services/analyticsDashboardService/billings/revenueBreakupApi";
+import * as Sentry from '@sentry/react';
+import { revenueBreakupApi } from '../services/analyticsDashboardService/billings/revenueBreakupApi';
 
 // ...
 
 const sentryReduxEnhancer = Sentry.createReduxEnhancer();
 
 const persistConfig = {
-  key: "root",
+  key: 'root',
   storage,
   blacklist: [
     patientsApi.reducerPath,
@@ -156,12 +156,12 @@ const persistConfig = {
     purchaseOrderApi.reducerPath,
     refundReportsApi.reducerPath,
     revenueBreakupApi.reducerPath,
-    "patients",
-    "appointments",
-    "investigation",
-    "procedure",
-    "cryoPreservation",
-    "treatmentCycle",
+    'patients',
+    'appointments',
+    'investigation',
+    'procedure',
+    'cryoPreservation',
+    'treatmentCycle',
   ],
 };
 
@@ -246,7 +246,7 @@ const persistedReducer = persistReducer(persistConfig, rootReducer);
 
 export const store = configureStore({
   reducer: persistedReducer,
-  middleware: (getDefaultMiddleware) =>
+  middleware: getDefaultMiddleware =>
     getDefaultMiddleware({
       serializableCheck: {
         ignoredActions: [FLUSH, REHYDRATE, PAUSE, PERSIST, PURGE, REGISTER], // These actions are ignored during serializability checks. It's required by redux-persist

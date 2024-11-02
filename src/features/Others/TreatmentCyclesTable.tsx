@@ -1,8 +1,8 @@
 import Box from '@mui/material/Box';
 import Button from '@mui/material/Button';
 import Typography from '@mui/material/Typography';
-import { GridColDef } from '@mui/x-data-grid'
-import React from 'react'
+import { GridColDef } from '@mui/x-data-grid';
+import React from 'react';
 import CustomDataGrid from '../../components/CustomDataGrid/CustomDataGrid';
 
 const columns: GridColDef[] = [
@@ -32,30 +32,27 @@ const columns: GridColDef[] = [
     width: 200,
   },
   {
-    field: "reason",
-    headerName: "Reason",
+    field: 'reason',
+    headerName: 'Reason',
     sortable: false,
     width: 200,
-  }
+  },
 ];
 
 const TreatmentCyclesTable: React.FC = () => {
   return (
     <>
-      <Typography variant='h6' sx={{ mt: 4, mb: 2 }}>Treatment Cycles</Typography>
-      <Button variant='outlined' sx={{ width: 'fit-content' }}>
+      <Typography variant="h6" sx={{ mt: 4, mb: 2 }}>
+        Treatment Cycles
+      </Typography>
+      <Button variant="outlined" sx={{ width: 'fit-content' }}>
         Export
       </Button>
       <Box sx={{ mt: 1 }}>
-        <CustomDataGrid
-          rows={[]}
-          columns={columns}
-        />
+        <CustomDataGrid rows={[]} columns={columns} />
       </Box>
     </>
+  );
+};
 
-
-  )
-}
-
-export default TreatmentCyclesTable
+export default TreatmentCyclesTable;

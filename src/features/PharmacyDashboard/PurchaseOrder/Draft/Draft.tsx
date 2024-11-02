@@ -1,4 +1,4 @@
-import { Add, Edit, Print } from "@mui/icons-material";
+import { Add, Edit, Print } from '@mui/icons-material';
 import {
   Box,
   Button,
@@ -9,27 +9,31 @@ import {
   TextField,
   Tooltip,
   Typography,
-} from "@mui/material";
-import React, { useCallback, useState } from "react";
-import CustomDataGrid from "../../../../components/CustomDataGrid/CustomDataGrid";
-import { GridActionsCellItem, GridColDef, GridRowParams } from "@mui/x-data-grid";
-import CheckCircle from "@mui/icons-material/CheckCircle";
-import Cancel from "@mui/icons-material/Cancel";
-import EditPurchaseOrderDraft from "./EditDraft";
-import AddPurchaseOrderDraft from "./AddDraft";
-import { useGetDrugItemsQuery } from "../../../../services/pharmacyDashboardService/master/drugItemApi";
-import { useGetDrugVendorsQuery } from "../../../../services/pharmacyDashboardService/master/drugVendorApi";
+} from '@mui/material';
+import React, { useCallback, useState } from 'react';
+import CustomDataGrid from '../../../../components/CustomDataGrid/CustomDataGrid';
+import {
+  GridActionsCellItem,
+  GridColDef,
+  GridRowParams,
+} from '@mui/x-data-grid';
+import CheckCircle from '@mui/icons-material/CheckCircle';
+import Cancel from '@mui/icons-material/Cancel';
+import EditPurchaseOrderDraft from './EditDraft';
+import AddPurchaseOrderDraft from './AddDraft';
+import { useGetDrugItemsQuery } from '../../../../services/pharmacyDashboardService/master/drugItemApi';
+import { useGetDrugVendorsQuery } from '../../../../services/pharmacyDashboardService/master/drugVendorApi';
 import {
   useEditPurchaseOrderStatusMutation,
   useGetPurchaseOrdersQuery,
-} from "../../../../services/pharmacyDashboardService/purchaseOrderApi";
-import { useToast } from "../../../../context/ToastContext";
+} from '../../../../services/pharmacyDashboardService/purchaseOrderApi';
+import { useToast } from '../../../../context/ToastContext';
 import {
   EPurchaseOrderStatus,
   IPurchaseOrder,
-} from "../../../../types/pharmacyDashboard/purchaseOrder";
-import _ from "lodash";
-import { usePrint } from "../../../../context/PrintPDFContext";
+} from '../../../../types/pharmacyDashboard/purchaseOrder';
+import _ from 'lodash';
+import { usePrint } from '../../../../context/PrintPDFContext';
 
 const Draft: React.FC = () => {
   const { showPromiseToast } = useToast();
@@ -44,7 +48,7 @@ const Draft: React.FC = () => {
   } = useGetDrugItemsQuery({
     paginate: false,
     sort: { name: 1 },
-    filters: { status: "Active" }, // Send only "Active" status
+    filters: { status: 'Active' }, // Send only "Active" status
   });
   const drugItems = drugItemsData?.data?.records || [];
 
@@ -56,18 +60,21 @@ const Draft: React.FC = () => {
   } = useGetDrugVendorsQuery({
     paginate: false,
     sort: { name: 1 },
-    filters: { status: "Active" }, // Send only "Active" status
+    filters: { status: 'Active' }, // Send only "Active" status
   });
 
   const drugVendors = drugVendorsData?.data?.records || [];
 
-  console.log("Drug Items", drugItems);
+  console.log('Drug Items', drugItems);
 
   const addButtonLoading =
-    drugItemsLoading || drugItemsFetching || drugVendorsFetching || drugVendorsLoading;
+    drugItemsLoading ||
+    drugItemsFetching ||
+    drugVendorsFetching ||
+    drugVendorsLoading;
 
   // Purchase Orders
-  const [searchQuery, setSearchQuery] = useState("");
+  const [searchQuery, setSearchQuery] = useState('');
   const [page, setPage] = useState<number>(1);
   const [pageSize, setPageSize] = React.useState(25);
 
@@ -79,7 +86,7 @@ const Draft: React.FC = () => {
   // Debounce the search handling
   const debouncedSearchChange = useCallback(
     _.debounce(handleSearchChange, 500),
-    [handleSearchChange] // Ensure that handleSearchChange is stable
+    [handleSearchChange], // Ensure that handleSearchChange is stable
   );
   const handlePageChange = (newPage: number) => {
     setPage(newPage);
@@ -106,18 +113,19 @@ const Draft: React.FC = () => {
   console.log("Draft PO's", purchaseOrders);
 
   // Approve/Reject Purchase Order
-  const [updatePurchaseOrderStatus, { isLoading }] = useEditPurchaseOrderStatusMutation();
+  const [updatePurchaseOrderStatus, { isLoading }] =
+    useEditPurchaseOrderStatusMutation();
   const handleUpdatePurchaseOrderStatus = async (status: string) => {
     const id = selectedRow?._id;
-    console.log("Selected Row:", selectedRow);
+    console.log('Selected Row:', selectedRow);
 
     if (id) {
       const promise = updatePurchaseOrderStatus({ id, status }).unwrap();
 
       showPromiseToast(promise, {
-        loading: "Updating Purchase Order Status",
-        success: (msg) => msg || "Purchase Order Status Updated Successfully",
-        error: (msg) => msg || "Error in updating Purchase Order Status",
+        loading: 'Updating Purchase Order Status',
+        success: msg => msg || 'Purchase Order Status Updated Successfully',
+        error: msg => msg || 'Error in updating Purchase Order Status',
       });
 
       try {
@@ -187,72 +195,74 @@ const Draft: React.FC = () => {
   };
 
   const columnsConfig: GridColDef[] = [
-    { field: "poNumber", headerName: "PO Number", flex: 1.5 },
+    { field: 'poNumber', headerName: 'PO Number', flex: 1.5 },
     {
-      field: "date",
-      type: "date",
-      headerName: "PO Date",
+      field: 'date',
+      type: 'date',
+      headerName: 'PO Date',
       flex: 1,
       valueFormatter(params) {
         const date = new Date(params.value);
-        const day = String(date.getDate()).padStart(2, "0");
-        const month = String(date.getMonth() + 1).padStart(2, "0"); // Months are 0-based
+        const day = String(date.getDate()).padStart(2, '0');
+        const month = String(date.getMonth() + 1).padStart(2, '0'); // Months are 0-based
         const year = String(date.getFullYear()).slice(-2); // Get last two digits of the year
         return `${day}/${month}/${year}`;
       },
     },
     {
-      field: "vendor",
-      headerName: "Vendor Name",
+      field: 'vendor',
+      headerName: 'Vendor Name',
       flex: 1,
-      valueGetter: (params) => params.value.name,
+      valueGetter: params => params.value.name,
     },
     {
-      field: "itemName",
-      headerName: "Item Name",
+      field: 'itemName',
+      headerName: 'Item Name',
       flex: 1,
-      valueGetter: (params) =>
-        params.row.request.items.map((item: any) => item.item?.name).join(", "),
-    },
-
-    {
-      field: "packSize",
-      headerName: "Pack Size",
-      flex: 1,
-      valueGetter: (params) =>
-        params.row.request.items.map((item: any) => item.packSize).join(", "),
+      valueGetter: params =>
+        params.row.request.items.map((item: any) => item.item?.name).join(', '),
     },
 
     {
-      field: "packs",
-      headerName: "Packs",
+      field: 'packSize',
+      headerName: 'Pack Size',
       flex: 1,
-      valueGetter: (params) =>
-        params.row.request.items.map((item: any) => item.noOfPacks).join(", "),
+      valueGetter: params =>
+        params.row.request.items.map((item: any) => item.packSize).join(', '),
     },
 
     {
-      field: "freeQty",
-      headerName: "Free Quantity",
+      field: 'packs',
+      headerName: 'Packs',
       flex: 1,
-      valueGetter: (params) =>
-        params.row.request.items.map((item: any) => item.freeQuantity).join(", "),
+      valueGetter: params =>
+        params.row.request.items.map((item: any) => item.noOfPacks).join(', '),
     },
 
     {
-      field: "cost",
-      headerName: "cost",
+      field: 'freeQty',
+      headerName: 'Free Quantity',
       flex: 1,
-      valueGetter: (params) =>
-        params.row.request.items.map((item: any) => item.buyPrice).join(", "),
+      valueGetter: params =>
+        params.row.request.items
+          .map((item: any) => item.freeQuantity)
+          .join(', '),
     },
 
     {
-      field: "mrp",
-      headerName: "MRP",
+      field: 'cost',
+      headerName: 'cost',
       flex: 1,
-      valueGetter: (params) =>
-        params.row.request.items.map((item: any) => item.mrpPerPack).join(", "),
+      valueGetter: params =>
+        params.row.request.items.map((item: any) => item.buyPrice).join(', '),
+    },
+
+    {
+      field: 'mrp',
+      headerName: 'MRP',
+      flex: 1,
+      valueGetter: params =>
+        params.row.request.items.map((item: any) => item.mrpPerPack).join(', '),
     },
 
     // {
@@ -263,16 +273,16 @@ const Draft: React.FC = () => {
     // },
 
     {
-      field: "netAmount",
-      headerName: "Total",
+      field: 'netAmount',
+      headerName: 'Total',
       flex: 1,
-      valueGetter: (params) => params.row.request.netAmount,
+      valueGetter: params => params.row.request.netAmount,
     },
     {
-      field: "actions",
-      headerName: "Actions",
+      field: 'actions',
+      headerName: 'Actions',
       flex: 2,
-      type: "actions",
+      type: 'actions',
       getActions: (params: GridRowParams) => {
         const row = params.row;
         const actions = [
@@ -291,7 +301,11 @@ const Draft: React.FC = () => {
             />
           </Tooltip>,
           <Tooltip title="Edit">
-            <GridActionsCellItem icon={<Edit />} label="Edit" onClick={() => openEditModal(row)} />
+            <GridActionsCellItem
+              icon={<Edit />}
+              label="Edit"
+              onClick={() => openEditModal(row)}
+            />
           </Tooltip>,
         ];
 
@@ -302,9 +316,11 @@ const Draft: React.FC = () => {
               <GridActionsCellItem
                 icon={<Print />}
                 label="Print"
-                onClick={() => fetchAndPrintPdf(row._id, "POInvoice", "pharmacy")}
+                onClick={() =>
+                  fetchAndPrintPdf(row._id, 'POInvoice', 'pharmacy')
+                }
               />
-            </Tooltip>
+            </Tooltip>,
           );
         }
 
@@ -373,14 +389,14 @@ const Draft: React.FC = () => {
   // ];
 
   return (
-    <Box height={"100%"} display={"flex"} flexDirection={"column"}>
+    <Box height={'100%'} display={'flex'} flexDirection={'column'}>
       <Box display="flex" justifyContent="flex-end" gap={2}>
         <TextField
           label="Search"
           placeholder="ID"
           size="small"
           variant="outlined"
-          onChange={(e) => debouncedSearchChange(e.target.value)}
+          onChange={e => debouncedSearchChange(e.target.value)}
         />
         <Button
           disabled={addButtonLoading}
@@ -395,7 +411,7 @@ const Draft: React.FC = () => {
 
       {/* Render the CustomDataGrid only if there's no error */}
 
-      <Box mt={2} flex={"1 1 auto"}>
+      <Box mt={2} flex={'1 1 auto'}>
         <CustomDataGrid
           autoHeight={false}
           columns={columnsConfig}
@@ -404,7 +420,7 @@ const Draft: React.FC = () => {
           pageSize={pageSize}
           totalRows={purchaseOrdersPagination?.totalDocs || 0}
           loading={purchaseOrderLoading}
-          sx={{ height: "100%" }}
+          sx={{ height: '100%' }}
           enablePagination={true}
           onPageChange={handlePageChange}
           onPageSizeChange={handlePageSizeChange}
@@ -413,10 +429,17 @@ const Draft: React.FC = () => {
 
       {/* Approve Modal */}
       {isApproveModalOpen && (
-        <Dialog open={isApproveModalOpen} onClose={closeApproveModal} maxWidth="sm" fullWidth>
-          <DialogTitle color={"primary"}>Approve Draft</DialogTitle>
+        <Dialog
+          open={isApproveModalOpen}
+          onClose={closeApproveModal}
+          maxWidth="sm"
+          fullWidth
+        >
+          <DialogTitle color={'primary'}>Approve Draft</DialogTitle>
           <DialogContent>
-            <Typography>Are you sure you want to approve {selectedRow?.poNumber}?</Typography>
+            <Typography>
+              Are you sure you want to approve {selectedRow?.poNumber}?
+            </Typography>
           </DialogContent>
           <DialogActions>
             <Button color="secondary" onClick={closeApproveModal}>
@@ -425,7 +448,9 @@ const Draft: React.FC = () => {
             <Button
               color="success"
               disabled={isLoading}
-              onClick={() => handleUpdatePurchaseOrderStatus(EPurchaseOrderStatus.Approved)}
+              onClick={() =>
+                handleUpdatePurchaseOrderStatus(EPurchaseOrderStatus.Approved)
+              }
             >
               Approve
             </Button>
@@ -435,10 +460,17 @@ const Draft: React.FC = () => {
 
       {/* Reject Modal */}
       {isRejectModalOpen && (
-        <Dialog open={isRejectModalOpen} onClose={closeRejectModal} maxWidth="sm" fullWidth>
-          <DialogTitle color={"primary"}>Reject Draft</DialogTitle>
+        <Dialog
+          open={isRejectModalOpen}
+          onClose={closeRejectModal}
+          maxWidth="sm"
+          fullWidth
+        >
+          <DialogTitle color={'primary'}>Reject Draft</DialogTitle>
           <DialogContent>
-            <Typography>Are you sure you want to reject {selectedRow?.poNumber}?</Typography>
+            <Typography>
+              Are you sure you want to reject {selectedRow?.poNumber}?
+            </Typography>
           </DialogContent>
           <DialogActions>
             <Button color="secondary" onClick={closeRejectModal}>
@@ -447,7 +479,9 @@ const Draft: React.FC = () => {
             <Button
               color="error"
               disabled={isLoading}
-              onClick={() => handleUpdatePurchaseOrderStatus(EPurchaseOrderStatus.Rejected)}
+              onClick={() =>
+                handleUpdatePurchaseOrderStatus(EPurchaseOrderStatus.Rejected)
+              }
             >
               Reject
             </Button>
@@ -460,7 +494,7 @@ const Draft: React.FC = () => {
         <EditPurchaseOrderDraft
           openModal={isEditModalOpen}
           onClose={closeEditModal}
-          id={selectedRow?._id || ""}
+          id={selectedRow?._id || ''}
           drugItems={drugItems}
           drugVendors={drugVendors}
         />
