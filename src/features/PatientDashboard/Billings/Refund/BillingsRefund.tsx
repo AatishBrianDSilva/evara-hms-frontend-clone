@@ -2,8 +2,17 @@ import Box from '@mui/material/Box';
 import React, { useState } from 'react';
 import CustomDataGrid from '../../../../components/CustomDataGrid/CustomDataGrid';
 import { GridActionsCellItem, GridColDef } from '@mui/x-data-grid';
-import { Chip, Skeleton } from '@mui/material';
-import { Print, Visibility } from '@mui/icons-material';
+import {
+  Chip,
+  IconButton,
+  List,
+  ListItem,
+  ListItemText,
+  Popover,
+  Skeleton,
+  Typography,
+} from '@mui/material';
+import { Info, Print, Visibility } from '@mui/icons-material';
 import { useGetRefundsQuery } from '../../../../services/patientDashboardService/billings/billingApi';
 import { useSelector } from 'react-redux';
 import { RootState } from '../../../../app/store';
@@ -11,20 +20,13 @@ import { formatToIndianCurrencyFormat } from '../../../../utils/formatToIndianCu
 import ViewReports from '../../Journey/ViewReports';
 import { usePrint } from '../../../../context/PrintPDFContext';
 
-interface RowType {
-  _id: string;
-  createdAt: string;
-  serviceName: string;
-  itemName: string;
-  batchNo: string;
-  quantity: number;
-  amount: number;
-  reason: string;
-  files: string[]; // Add this field for storing the uploaded invoice files
-}
-
 const BillingsRefund: React.FC = () => {
   const { fetchAndPrintPdf } = usePrint(); // Adding usePrint to handle the printing
+
+  const [isViewInvoicesModalOpen, setIsViewInvoicesModalOpen] =
+    useState<boolean>(false);
+  const [selectedFiles, setSelectedFiles] = useState<string[]>([]);
+
   const [page, setPage] = useState<number>(1);
   const [pageSize, setPageSize] = useState<number>(25);
 
@@ -57,32 +59,10 @@ const BillingsRefund: React.FC = () => {
     },
   );
 
-  console.log('Current Refund', data);
-
-  // Flatten refund details into rows for the table
-  const patientBillingsRefund: RowType[] =
-    (data?.message as unknown as any[])?.flatMap(
-      (refund: any) =>
-        refund.refundDetails?.items?.map((item: any) => ({
-          _id: refund._id,
-          createdAt: item.refundDate || refund.createdAt,
-          serviceName: item.serviceName || '',
-          itemName: item.itemName || '',
-          batchNo: item.batchNo || '',
-          quantity: item.qtyToRefund || 0,
-          amount: refund.refundDetails.refundAmount || 0,
-          reason: refund.refundDetails.reason || '',
-          files: refund.refundDetails.files || [], // Include files here
-        })) || [],
-    ) || [];
-
-  patientBillingsRefund.sort(
-    (a, b) => new Date(b.createdAt).getTime() - new Date(a.createdAt).getTime(),
-  );
-
-  const [isViewInvoicesModalOpen, setIsViewInvoicesModalOpen] =
-    useState<boolean>(false);
-  const [selectedFiles, setSelectedFiles] = useState<string[]>([]);
+  const patientBillingsRefund = data?.data?.records || [];
+  const summary = data?.data?.summary;
+  const patientBillingsPagination = data?.data?.pagination;
+  const patientBillingsLoading = isLoading || isFetching;
 
   const handleViewInvoices = (files: string[]) => {
     setSelectedFiles(files);
@@ -93,13 +73,6 @@ const BillingsRefund: React.FC = () => {
     setIsViewInvoicesModalOpen(false);
   };
 
-  const patientBillingsPagination = data?.data?.pagination;
-  const patientBillingsLoading = isLoading || isFetching;
-
-  console.log('Refund Data', patientBillingsRefund);
-
-  const getRowId = (row: RowType) => row._id;
-
   const columnsConfig: GridColDef[] = [
     {
       field: 'createdAt',
@@ -107,39 +80,122 @@ const BillingsRefund: React.FC = () => {
       type: 'date',
       flex: 1,
       valueFormatter(params) {
-        const date = new Date(params.value);
-        const day = String(date.getDate()).padStart(2, '0');
-        const month = String(date.getMonth() + 1).padStart(2, '0'); // Months are 0-based
-        const year = String(date.getFullYear()).slice(-2); // Get last two digits of the year
-        return `${day}/${month}/${year}`;
+        return new Date(params.value).toLocaleDateString('en-IN');
       },
     },
     {
-      field: 'itemName',
-      headerName: 'Item',
+      field: 'billingId',
+      headerName: 'Bill ID',
       flex: 1,
+      valueFormatter(params) {
+        return params.value.billingId;
+      },
     },
     {
-      field: 'batchNo',
-      headerName: 'Batch',
+      field: 'billType',
+      headerName: 'Bill Type',
       flex: 1,
+      valueGetter(params) {
+        const row = params.row;
+        return row.billingId.billType;
+      },
     },
     {
-      field: 'quantity',
-      headerName: 'Qty',
+      field: 'items',
+      headerName: 'Items',
       flex: 1,
+      renderCell: params => {
+        const row = params.row;
+        const items = row.refundDetails.items;
+        const [anchorEl, setAnchorEl] = useState(null);
+
+        const handlePopoverOpen = (event: any) => {
+          setAnchorEl(event.currentTarget);
+        };
+
+        const handlePopoverClose = () => {
+          setAnchorEl(null);
+        };
+
+        const open = Boolean(anchorEl);
+
+        return (
+          <Box display="flex" alignItems="center">
+            <Box>{items.length}</Box>
+            <IconButton
+              onMouseEnter={handlePopoverOpen}
+              onMouseLeave={handlePopoverClose}
+              aria-owns={open ? 'mouse-over-popover' : undefined}
+              aria-haspopup="true"
+              size="small"
+              style={{ marginLeft: '8px' }}
+            >
+              <Info fontSize="small" sx={{ fontSize: '16px' }} />
+            </IconButton>
+            <Popover
+              id="mouse-over-popover"
+              sx={{
+                pointerEvents: 'none',
+              }}
+              open={open}
+              anchorEl={anchorEl}
+              anchorOrigin={{
+                vertical: 'bottom',
+                horizontal: 'right',
+              }}
+              transformOrigin={{
+                vertical: 'top',
+                horizontal: 'left',
+              }}
+              onClose={handlePopoverClose}
+              disableRestoreFocus
+            >
+              <Box p={2}>
+                <Typography variant="subtitle1">Item Details</Typography>
+                <List>
+                  {items.map((item: any, index: number) => (
+                    <ListItem key={item.id || index}>
+                      <ListItemText
+                        primary={`${item.itemName || 'N/A'} (Batch: ${item.batchNo || 'N/A'})`}
+                        secondary={`Quantity: ${item.qtyToRefund}, Amount: ${formatToIndianCurrencyFormat(item.amountToRefund)}`}
+                      />
+                    </ListItem>
+                  ))}
+                </List>
+              </Box>
+            </Popover>
+          </Box>
+        );
+      },
+    },
+    {
+      field: 'method',
+      headerName: 'Method',
+      flex: 1,
+      valueGetter: params => {
+        const row = params.row;
+        return row.refundDetails.method;
+      },
     },
     {
       field: 'amount',
       headerName: 'Amount',
       flex: 1,
-      valueFormatter: params => formatToIndianCurrencyFormat(params.value),
+      valueGetter: params => {
+        const row = params.row;
+        return formatToIndianCurrencyFormat(row.refundDetails.refundAmount);
+      },
     },
     {
       field: 'reason',
-      headerName: 'Reason for Refund',
-      flex: 2,
+      headerName: 'Reason',
+      flex: 1,
+      valueGetter: params => {
+        const row = params.row;
+        return row.refundDetails.reason;
+      },
     },
+
     {
       field: 'actions',
       headerName: 'Actions',
@@ -151,7 +207,7 @@ const BillingsRefund: React.FC = () => {
           <GridActionsCellItem
             icon={<Visibility />}
             label="View Invoices"
-            onClick={() => handleViewInvoices(row.files)}
+            onClick={() => handleViewInvoices(row.refundDetails.files)}
           />,
           <GridActionsCellItem
             icon={<Print />}
@@ -168,14 +224,11 @@ const BillingsRefund: React.FC = () => {
       {patientBillingsLoading ? (
         <Box
           display={'flex'}
-          justifyContent="space-between"
+          justifyContent="flex-start"
           alignItems="center"
           mb={3}
         >
           <Skeleton width={125} height={35} variant="rounded" />
-          <Skeleton width={125} height={30} variant="rounded" />
-          <Skeleton width={125} height={30} variant="rounded" />
-          <Skeleton width={125} height={30} variant="rounded" />
         </Box>
       ) : (
         <Box
@@ -187,12 +240,7 @@ const BillingsRefund: React.FC = () => {
           <Chip
             label={
               'Total Refunds: ' +
-              formatToIndianCurrencyFormat(
-                patientBillingsRefund.reduce(
-                  (acc, refund) => acc + refund.amount,
-                  0,
-                ),
-              )
+              formatToIndianCurrencyFormat(summary?.totalRefunded)
             }
             color="primary"
           />
@@ -204,7 +252,6 @@ const BillingsRefund: React.FC = () => {
         columns={columnsConfig}
         rows={patientBillingsRefund}
         page={page}
-        getRowId={getRowId}
         pageSize={pageSize}
         totalRows={patientBillingsPagination?.totalDocs || 0}
         onPageChange={handlePageChange}

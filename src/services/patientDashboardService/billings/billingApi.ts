@@ -4,7 +4,10 @@ import {
   IQueryOptions,
   PaginatedResponse,
 } from '../../../types/global';
-import { IPatientBilling } from '../../../types/patientDashboard/billings';
+import {
+  IPatientBilling,
+  IPatientRefund,
+} from '../../../types/patientDashboard/billings';
 import generateQueryParams from '../../../utils/generateQueryParams';
 import { baseQuery } from '../../baseQuery';
 
@@ -138,7 +141,7 @@ export const billingApi = createApi({
       },
     ),
     getRefunds: builder.query<
-      ApiResponse<PaginatedResponse<any>>,
+      ApiResponse<PaginatedResponse<IPatientRefund>>,
       IQueryOptions
     >({
       query: options => {
@@ -147,7 +150,7 @@ export const billingApi = createApi({
       },
       providesTags: (_result, _error, _args) => ['Refund'],
     }),
-    getRefundById: builder.query<ApiResponse<any>, string>({
+    getRefundById: builder.query<ApiResponse<IPatientRefund>, string>({
       query: (id: string) => {
         return { url: `billings/refunds/${id}`, method: 'GET' };
       },

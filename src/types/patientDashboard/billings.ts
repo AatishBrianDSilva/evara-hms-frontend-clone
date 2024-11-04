@@ -101,3 +101,29 @@ export interface IPatientBillingEstimation {
   estimatedTotal: number;
   status: string;
 }
+
+export interface IPatientRefund {
+  billingId: string;
+  patientCode: string;
+  refundDetails: {
+    refundAmount: number;
+    method: string;
+    reason: string;
+    refundDate?: Date;
+    charges?: number;
+    refundNumber?: string;
+    items?: {
+      serviceName?: string;
+      itemName?: string;
+      batchNo?: string;
+      qtyToRefund?: number;
+      amountToRefund?: number;
+    }[];
+    files?: string[];
+  };
+  createdBy: string;
+  branchId: string;
+  clinicId: string;
+  createdAt: Date;
+  updatedAt: Date;
+}

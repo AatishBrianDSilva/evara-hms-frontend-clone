@@ -43,7 +43,7 @@ const PrintRefund: React.FC<RefundInvoiceProps> = ({
   // Fetch the refund data by ID
   const { data, isLoading, error } = useGetRefundByIdQuery(id);
 
-  const refund = data?.message as any; // Adjusted to access refund data under 'message'
+  const refund = data?.data; // Adjusted to access refund data under 'message'
 
   const printInvoice = () => {
     window.print();
