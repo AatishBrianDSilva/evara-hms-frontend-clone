@@ -52,9 +52,6 @@ const PatientReturnReports: React.FC = () => {
 
   const handlePageSizeChange = (newPageSize: number) => {
     setPageSize(newPageSize);
-    if (newPageSize !== -1) {
-      setPage(1);
-    }
   };
 
   const handleDownloadCSV = useCallback(() => {

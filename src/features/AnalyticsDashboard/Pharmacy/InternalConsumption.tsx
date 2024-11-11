@@ -53,9 +53,6 @@ const InternalConsumptionReports: React.FC = () => {
 
   const handlePageSizeChange = (newPageSize: number) => {
     setPageSize(newPageSize);
-    if (newPageSize !== -1) {
-      setPage(1); // Reset to page 1 when changing page size
-    }
   };
 
   const handleDownloadCSV = () => {

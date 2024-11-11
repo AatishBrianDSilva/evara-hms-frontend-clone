@@ -1,6 +1,6 @@
 // AppRoutes.tsx
 import React from 'react';
-import { Navigate, Outlet, Route } from 'react-router-dom';
+import { Navigate, Outlet, Route, Routes } from 'react-router-dom';
 import Layout from '../components/Layout/Layout';
 import Home from '../features/Home/Home';
 import Patients from '../features/Patients/Patients';
@@ -113,7 +113,6 @@ import PurchaseOrderReports from '../features/AnalyticsDashboard/Pharmacy/Purcha
 import Timeline from '../features/PatientDashboard/Journey/Timeline/Timeline';
 import InternalConsumption from '../features/PharmacyDashboard/InternalConsumption/InternalConsumption';
 import BillingsRefund from '../features/PatientDashboard/Billings/Refund/BillingsRefund';
-import { SentryRoutes } from '../main';
 import SaleBySchedule from '../features/AnalyticsDashboard/Pharmacy/SaleBySchedule';
 import InternalConsumptionReports from '../features/AnalyticsDashboard/Pharmacy/InternalConsumption';
 import DrugsAndVendorReports from '../features/AnalyticsDashboard/Pharmacy/DrugsAndVendor';
@@ -123,6 +122,13 @@ import ExpiryDetails from '../features/AnalyticsDashboard/Pharmacy/ExpiryDetails
 import CriticalStocksReport from '../features/AnalyticsDashboard/Pharmacy/criticalStocks';
 import RefundsReport from '../features/AnalyticsDashboard/AnalyticsBillings/RefundsReport';
 import RevenueBreakupReport from '../features/AnalyticsDashboard/AnalyticsBillings/RevenueBreakupReport';
+import AnalyticsInvestigations from '../features/AnalyticsDashboard/Treatments&Testing/Investigations';
+import AnalyticsProcedures from '../features/AnalyticsDashboard/Treatments&Testing/Procedures';
+import AnalyticsCryoPreservation from '../features/AnalyticsDashboard/Treatments&Testing/CryoPreservation';
+import AnalyticsTreatmentCycle from '../features/AnalyticsDashboard/Treatments&Testing/TreatmentCycle';
+import AnalyticsServices from '../features/AnalyticsDashboard/Treatments&Testing/Services';
+import AnalyticsPatientPackages from '../features/AnalyticsDashboard/Treatments&Testing/PatientPackages';
+import AnalyticsMasterPackages from '../features/AnalyticsDashboard/Treatments&Testing/MasterPackages';
 
 interface ProtectedRouteProps {
   allowedRoles: string[];
@@ -146,7 +152,7 @@ const ProtectedRoute: React.FC<ProtectedRouteProps> = ({
 };
 
 const AppRoutes: React.FC = () => (
-  <SentryRoutes>
+  <Routes>
     <Route path="/login" element={<Login />} />
 
     <Route element={<Layout />}>
@@ -566,6 +572,38 @@ const AppRoutes: React.FC = () => (
                 element={<CriticalStocksReport />}
               />
             </Route>
+
+            <Route path="treatments-testing">
+              <Route index element={<Navigate to="investigation-reports" />} />
+              <Route
+                path="investigation-reports"
+                element={<AnalyticsInvestigations />}
+              />
+              <Route
+                path="procedure-reports"
+                element={<AnalyticsProcedures />}
+              />
+              <Route
+                path="treatment-reports"
+                element={<AnalyticsTreatmentCycle />}
+              />
+              <Route
+                path="cryo-preservation-reports"
+                element={<AnalyticsCryoPreservation />}
+              />
+              <Route path="service-reports" element={<AnalyticsServices />} />
+              <Route path="packages">
+                <Route index element={<Navigate to="patient-reports" />} />
+                <Route
+                  path="patient-reports"
+                  element={<AnalyticsPatientPackages />}
+                />
+                <Route
+                  path="master-reports"
+                  element={<AnalyticsMasterPackages />}
+                />
+              </Route>
+            </Route>
           </Route>
         </Route>
 
@@ -573,7 +611,7 @@ const AppRoutes: React.FC = () => (
         <Route path="*" element={<Navigate to="/" />} />
       </Route>
     </Route>
-  </SentryRoutes>
+  </Routes>
 );
 
 export default AppRoutes;

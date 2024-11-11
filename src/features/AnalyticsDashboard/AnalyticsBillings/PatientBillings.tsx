@@ -106,7 +106,6 @@ const PatientBillings: React.FC = () => {
 
   const handlePageSizeChange = (newPageSize: number) => {
     setPageSize(newPageSize);
-    setPage(1); // Reset to first page when page size changes
   };
 
   const handleStatusChange = (

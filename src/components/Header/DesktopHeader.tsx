@@ -31,7 +31,6 @@ import { useGetPatientsQuery } from '../../services/patientsApi';
 import PatientCard from '../PatientCard/PatientCard';
 import { CircularProgress, ListItemIcon, Popover } from '@mui/material';
 import { calculateAge } from '../../utils/calculateAge';
-import * as Sentry from '@sentry/react';
 import { ENVIRONMENT } from '../../utils/apiConfig';
 
 const Search = styled('div')(({ theme }) => ({
@@ -206,7 +205,6 @@ const DesktopHeader: React.FC = () => {
         onClick={() => {
           dispatch(clearCredentials());
           handlePersistorPurge();
-          Sentry.setUser(null);
           sessionStorage.clear();
           localStorage.clear();
           window.location.reload();

@@ -136,6 +136,53 @@ const AnalyticsSidebar: React.FC = () => {
         },
       ],
     },
+    {
+      icon: CorporateFareIcon,
+      primaryText: 'Treatments & Testing',
+      children: [
+        {
+          icon: FiberManualRecordIcon,
+          primaryText: 'Investigation Reports',
+          path: '/analytics/treatments-testing/investigation-reports',
+        },
+        {
+          icon: FiberManualRecordIcon,
+          primaryText: 'Procedure Reports',
+          path: '/analytics/treatments-testing/procedure-reports',
+        },
+        {
+          icon: FiberManualRecordIcon,
+          primaryText: 'Cryo-Preservation Reports',
+          path: '/analytics/treatments-testing/cryo-preservation-reports',
+        },
+        {
+          icon: FiberManualRecordIcon,
+          primaryText: 'Service Reports',
+          path: '/analytics/treatments-testing/service-reports',
+        },
+        {
+          icon: FiberManualRecordIcon,
+          primaryText: 'Treatment Reports',
+          path: '/analytics/treatments-testing/treatment-reports',
+        },
+        {
+          icon: FiberManualRecordIcon,
+          primaryText: 'Packages',
+          children: [
+            {
+              icon: FiberManualRecordIcon,
+              primaryText: 'Patient Package Reports',
+              path: '/analytics/treatments-testing/packages/patient-reports',
+            },
+            {
+              icon: FiberManualRecordIcon,
+              primaryText: 'Master Package Reports',
+              path: '/analytics/treatments-testing/packages/master-reports',
+            },
+          ],
+        },
+      ],
+    },
   ];
 
   return (

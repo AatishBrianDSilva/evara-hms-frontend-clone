@@ -6,8 +6,6 @@ import { grey } from '@mui/material/colors';
 import { useLoginUserMutation } from '../../services/authApi';
 import { useToast } from '../../context/ToastContext';
 import { useNavigate } from 'react-router-dom';
-import * as Sentry from '@sentry/react';
-import { jwtDecode } from 'jwt-decode';
 import { useGetActiveBranchesQuery } from '../../services/masterDashboardService/global/globalBranch';
 import FieldAutocomplete from '../../components/FieldAutoComplete/FieldAutoComplete';
 
@@ -60,17 +58,7 @@ const Login: React.FC = () => {
     });
 
     try {
-      const res = await promise;
-      if (res?.data?.tokens?.token) {
-        const user: { sub: string; name: string; email: string } = jwtDecode(
-          res?.data?.tokens?.token,
-        );
-        console.log(user);
-        Sentry.setUser({
-          id: user.sub,
-          email: user.email,
-        });
-      }
+      await promise;
       navigate('/');
     } catch (error) {
       console.error('Error logging in:', error);

@@ -56,7 +56,6 @@ const RefundsReport: React.FC = () => {
 
   const handlePageSizeChange = (newPageSize: number) => {
     setPageSize(newPageSize);
-    setPage(1); // Reset to page 1 when page size changes
   };
 
   const { data, isLoading, isFetching } = useGetRefundReportsQuery({

@@ -82,12 +82,8 @@ import { pharmacyReportApi } from '../services/analyticsDashboardService/pharmac
 import { purchaseOrderReportApi } from '../services/analyticsDashboardService/pharmacy/purchaseOrderReportApi';
 import { refundReportsApi } from '../services/analyticsDashboardService/billings/refundReports';
 
-import * as Sentry from '@sentry/react';
 import { revenueBreakupApi } from '../services/analyticsDashboardService/billings/revenueBreakupApi';
-
-// ...
-
-const sentryReduxEnhancer = Sentry.createReduxEnhancer();
+import { treatmentTestingApi } from '../services/analyticsDashboardService/treatment&testing/treatmentTestingApi';
 
 const persistConfig = {
   key: 'root',
@@ -156,6 +152,7 @@ const persistConfig = {
     purchaseOrderApi.reducerPath,
     refundReportsApi.reducerPath,
     revenueBreakupApi.reducerPath,
+    treatmentTestingApi.reducerPath,
     'patients',
     'appointments',
     'investigation',
@@ -232,7 +229,7 @@ const rootReducer = combineReducers({
   [purchaseOrderReportApi.reducerPath]: purchaseOrderReportApi.reducer,
   [refundReportsApi.reducerPath]: refundReportsApi.reducer,
   [revenueBreakupApi.reducerPath]: revenueBreakupApi.reducer,
-
+  [treatmentTestingApi.reducerPath]: treatmentTestingApi.reducer,
   patients: patientsReducer,
   appointments: appointmentReducer,
   investigation: investigationReducer,
@@ -315,9 +312,10 @@ export const store = configureStore({
       .concat(pharmacyReportApi.middleware)
       .concat(purchaseOrderReportApi.middleware)
       .concat(refundReportsApi.middleware)
-      .concat(revenueBreakupApi.middleware),
+      .concat(revenueBreakupApi.middleware)
+      .concat(treatmentTestingApi.middleware),
   enhancers(getDefaultEnhancers) {
-    return getDefaultEnhancers().concat(sentryReduxEnhancer);
+    return getDefaultEnhancers();
   },
 });
 
