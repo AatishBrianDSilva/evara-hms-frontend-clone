@@ -28,7 +28,7 @@ const ToastContext = createContext({
     _toastId?: Id,
     _options?: ToastOptions,
   ): Id => {
-    return '' || 0;
+    return '';
   },
 });
 
