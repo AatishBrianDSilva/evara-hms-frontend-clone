@@ -156,6 +156,8 @@ const DesktopHeader: React.FC = () => {
         return 'Kanpur';
       case 'LK':
         return 'Lucknow';
+      case 'JH':
+        return 'Jhansi';
       default:
         break;
     }
