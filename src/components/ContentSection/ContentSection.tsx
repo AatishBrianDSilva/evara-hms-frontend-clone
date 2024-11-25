@@ -11,6 +11,7 @@ interface ContentSectionProps {
   icon?: React.ReactElement<SvgIconProps>;
   children: ReactNode;
   titleSx?: SxProps<Theme>;
+  scrollRef?: React.RefObject<HTMLDivElement>;
 }
 
 const ContentSection: React.FC<ContentSectionProps> = ({
@@ -18,6 +19,7 @@ const ContentSection: React.FC<ContentSectionProps> = ({
   icon,
   children,
   titleSx,
+  scrollRef,
 }) => {
   return (
     <Box
@@ -32,6 +34,7 @@ const ContentSection: React.FC<ContentSectionProps> = ({
       <Paper sx={{ height: '100%', display: 'flex', maxWidth: '100%' }}>
         <Box
           padding={2}
+          ref={scrollRef}
           sx={{
             display: 'flex',
             flexDirection: 'column',

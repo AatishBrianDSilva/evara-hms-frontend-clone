@@ -1,5 +1,5 @@
 import Box from '@mui/material/Box';
-import React, { useState, useEffect, useCallback } from 'react';
+import React, { useState, useCallback, useRef } from 'react';
 import CustomDataGrid from '../../../components/CustomDataGrid/CustomDataGrid';
 import { GridColDef } from '@mui/x-data-grid';
 import {
@@ -8,55 +8,60 @@ import {
   FormControl,
   InputLabel,
   Select,
-  SelectChangeEvent,
   Typography,
+  Dialog,
+  DialogTitle,
+  DialogContent,
+  DialogActions,
   Button,
+  Table,
+  TableHead,
+  TableRow,
+  TableCell,
+  TableBody,
+  IconButton,
+  Tooltip,
 } from '@mui/material';
+import InfoIcon from '@mui/icons-material/Info';
 import { formatToIndianCurrencyFormat } from '../../../utils/formatToIndianCurrencyFormat';
-import { EPatientBillingStatus } from '../../../types/patientDashboard/billings';
+import {
+  EPatientBillingServiceType,
+  EPatientBillingStatus,
+  EPaymentMethod,
+} from '../../../types/patientDashboard/billings';
 import ContentSection from '../../../components/ContentSection/ContentSection';
 import { useGetAnalyticsPatientBillingsQuery } from '../../../services/analyticsDashboardService/billings/analyticsPatientBillingsApi';
 import { debounce } from 'lodash';
 import CustomeDateRangePicker from '../../../components/CustomDateRangePicker/CustomDateRangePicker';
-import { exportToCSV } from '../../../utils/exportCSV'; // Import the CSV utility
-
-interface RowType {
-  _id: string;
-}
-
-enum EPaymentMethod {
-  Cash = 'Cash',
-  CreditCard = 'CreditCard',
-  BankTransfer = 'BankTransfer',
-  Online = 'Online',
-  UPI = 'UPI',
-}
-
-enum EBillType {
-  Investigation = 'Investigation',
-  Procedure = 'Procedure',
-  Pharmacy = 'Pharmacy',
-  Service = 'Service',
-  CryoPreservation = 'Cryo Preservation',
-  TreatmentCycle = 'Treatment Cycle',
-  Package = 'Package',
-}
+import { endOfWeek, startOfWeek } from 'date-fns';
 
 const PatientBillings: React.FC = () => {
-  const [page, setPage] = useState<number>(1); // Ensure the page is set correctly
-  const [pageSize, setPageSize] = useState<number>(25); // Default to 25 rows per page
+  const [page, setPage] = useState<number>(1);
+  const [pageSize, setPageSize] = useState<number>(25);
   const [selectedStatus, setSelectedStatus] = useState<
-    EPatientBillingStatus | ''
-  >('');
-  const [patientIdQuery, setPatientIdQuery] = useState<string>('');
-  const [patientNameQuery, setPatientNameQuery] = useState<string>('');
+    EPatientBillingStatus | 'All'
+  >('All');
+
   const [searchQuery, setSearchQuery] = useState<string>('');
 
-  const [selectedMethod, setSelectedMethod] = useState<EPaymentMethod | ''>('');
-  const [selectedBillType, setSelectedBillType] = useState<EBillType | ''>('');
+  const [selectedMethod, setSelectedMethod] = useState<EPaymentMethod | 'All'>(
+    'All',
+  );
+  const [selectedBillType, setSelectedBillType] = useState<
+    EPatientBillingServiceType | 'All'
+  >('All');
 
-  const [startDate, setStartDate] = useState<Date | null>(null);
-  const [endDate, setEndDate] = useState<Date | null>(null);
+  const [startDate, setStartDate] = useState<Date | null>(
+    startOfWeek(new Date(), { weekStartsOn: 1 }),
+  );
+  const [endDate, setEndDate] = useState<Date | null>(
+    endOfWeek(new Date(), { weekStartsOn: 1 }),
+  );
+
+  // Modal state
+  const [open, setOpen] = useState<boolean>(false);
+  const [selectedPayments, setSelectedPayments] = useState<any[]>([]);
+  const [selectedBillId, setSelectedBillId] = useState<string>('');
 
   // Handle the date range change
   const handleDateChange = (ranges: any) => {
@@ -70,181 +75,77 @@ const PatientBillings: React.FC = () => {
   const startDateUTC = startDate;
   const endDateUTC = endDate;
 
-  const debounceSetSearchQuery = useCallback(
+  const handleSearchQuery = useCallback(
     debounce((query: string) => {
       setSearchQuery(query);
     }, 500),
     [],
   );
 
-  useEffect(() => {
-    const queryParts = [];
-    if (patientIdQuery) queryParts.push(`patientCode:${patientIdQuery}`);
-    if (patientNameQuery) queryParts.push(`patientName:${patientNameQuery}`);
-    if (selectedMethod) queryParts.push(`paymentMethod:${selectedMethod}`);
-    if (selectedBillType) queryParts.push(`billType:${selectedBillType}`);
-
-    const combinedQuery = queryParts.join(' ');
-
-    debounceSetSearchQuery(combinedQuery);
-    setPage(1); // Reset page to 1 on query change
-
-    return () => {
-      debounceSetSearchQuery.cancel();
-    };
-  }, [
-    patientIdQuery,
-    patientNameQuery,
-    selectedMethod,
-    selectedBillType,
-    debounceSetSearchQuery,
-  ]);
+  const scrollRef = useRef<HTMLDivElement>(null);
 
   const handlePageChange = (newPage: number) => {
     setPage(newPage);
+    scrollRef.current?.scrollTo(0, 0);
   };
 
   const handlePageSizeChange = (newPageSize: number) => {
     setPageSize(newPageSize);
+    scrollRef.current?.scrollTo(0, 0);
   };
 
-  const handleStatusChange = (
-    event: SelectChangeEvent<EPatientBillingStatus>,
-  ) => {
-    setSelectedStatus(event.target.value as EPatientBillingStatus);
-  };
-
-  const handlePatientIdChange = (
-    event: React.ChangeEvent<HTMLInputElement>,
-  ) => {
-    setPatientIdQuery(event.target.value);
-  };
-
-  const handlePatientNameChange = (
-    event: React.ChangeEvent<HTMLInputElement>,
-  ) => {
-    setPatientNameQuery(event.target.value);
-  };
-
-  const handleMethodChange = (
-    event: SelectChangeEvent<EPaymentMethod | ''>,
-  ) => {
-    setSelectedMethod(event.target.value as EPaymentMethod);
-  };
-
-  const { data, isLoading, isFetching } = useGetAnalyticsPatientBillingsQuery(
-    {
-      paginate: pageSize !== -1, // Disable pagination if "All" is selected
-      page: pageSize === -1 ? undefined : page, // Send undefined for page if "All" is selected
-      limit: pageSize === -1 ? undefined : pageSize, // Send undefined for limit if "All" is selected
-      filters: {
-        status: selectedStatus,
-        searchQuery,
-        saleStartDate: startDateUTC || undefined,
-        saleEndDate: endDateUTC || undefined,
-        paymentMethod: selectedMethod,
-        billType: selectedBillType,
-      },
+  const { data, isLoading, isFetching } = useGetAnalyticsPatientBillingsQuery({
+    paginate: pageSize !== -1, // Disable pagination if "All" is selected
+    page: pageSize === -1 ? undefined : page, // Send undefined for page if "All" is selected
+    limit: pageSize === -1 ? undefined : pageSize, // Send undefined for limit if "All" is selected
+    dateRange: {
+      startDate: startDateUTC?.toISOString(),
+      endDate: endDateUTC?.toISOString(),
     },
-    {
-      refetchOnFocus: true,
-      refetchOnMountOrArgChange: true,
+    filters: {
+      status: selectedStatus === 'All' ? undefined : selectedStatus,
+      searchQuery,
+      paymentMethod: selectedMethod === 'All' ? undefined : selectedMethod,
+      billType: selectedBillType === 'All' ? undefined : selectedBillType,
     },
-  );
+  });
 
   const patientBillingsData = data?.data?.records || [];
   const patientBillingsPagination = data?.data?.pagination;
+  const summary = data?.data?.summary;
+
   const patientBillingsLoading = isLoading || isFetching;
 
-  const roundToTwo = (num: any) => Math.round(num * 100) / 100;
+  const handleOpen = (payments: any[], billId: string) => {
+    setSelectedPayments(payments);
+    setSelectedBillId(billId);
+    setOpen(true);
+  };
 
-  // Update the calculation of totalPaid and totalDues with rounding
-  const totalPaid = patientBillingsData.reduce(
-    (sum, row) => roundToTwo(sum + roundToTwo((row as any).paymentAmount)),
-    0,
-  );
-
-  const totalDues = patientBillingsData.reduce(
-    (sum, row) => roundToTwo(sum + roundToTwo((row as any).totalDues)),
-    0,
-  );
-
-  // Calculate the total discount
-  const processedBillingIds = new Set<string>();
-  const totalDiscount = patientBillingsData.reduce((sum, row) => {
-    const billingId = (row as any).billingId;
-    // Check if the discount for this billing ID has already been added
-    if (!processedBillingIds.has(billingId)) {
-      processedBillingIds.add(billingId); // Mark this billing ID as processed
-      return roundToTwo(sum + roundToTwo((row as any).discount));
-    }
-    return sum;
-  }, 0);
-
-  // Handle CSV download
-  const handleDownloadCSV = () => {
-    if (patientBillingsData.length > 0) {
-      const headers = [
-        'Bill No',
-        'Patient ID',
-        'Patient Name',
-        'Service',
-        'Tax',
-        'Total',
-        'Discount',
-        'Paid',
-        'Due',
-        'Payment Method',
-        'Payment Amount',
-        'Created At',
-      ];
-
-      const formattedData = patientBillingsData.map((record: any) => [
-        record.billingId,
-        record.patientCode,
-        record.patientName,
-        record.billType,
-        formatToIndianCurrencyFormat(record.tax),
-        formatToIndianCurrencyFormat(record.subTotal),
-        formatToIndianCurrencyFormat(record.discount),
-        formatToIndianCurrencyFormat(record.totalPaid),
-        formatToIndianCurrencyFormat(record.totalDues),
-        record.paymentMethod,
-        formatToIndianCurrencyFormat(record.paymentAmount),
-        new Date(record.createdAt).toLocaleDateString('en-GB', {
-          day: '2-digit',
-          month: '2-digit',
-          year: 'numeric',
-        }),
-      ]);
-
-      exportToCSV([headers, ...formattedData], 'PatientBillings_Report');
-    } else {
-      console.log('No data to export');
-    }
+  const handleClose = () => {
+    setOpen(false);
+    setSelectedPayments([]);
+    setSelectedBillId('');
   };
 
   const columnsConfig: GridColDef[] = [
     {
       field: 'createdAt',
-      headerName: 'Created At',
+      headerName: 'Date',
       type: 'date',
-      flex: 1,
+      flex: 0.5,
       valueFormatter: params =>
-        new Date(params.value).toLocaleDateString('en-GB', {
-          day: '2-digit',
-          month: '2-digit',
-          year: 'numeric',
-        }),
+        new Date(params.value).toLocaleDateString('en-IN'),
     },
-    { field: 'patientCode', headerName: 'Patient ID', flex: 1 },
+    { field: 'billingId', headerName: 'Bill No.', flex: 0.5 },
+    { field: 'caseId', headerName: 'Case ID', flex: 0.5 },
+    { field: 'patientCode', headerName: 'Patient ID', flex: 0.75 },
     { field: 'patientName', headerName: 'Patient Name', flex: 1 },
-    { field: 'billingId', headerName: 'Bill No.', flex: 1 },
     { field: 'billType', headerName: 'Service', flex: 1 },
     {
       field: 'tax',
       headerName: 'Tax',
-      flex: 1,
+      flex: 0.5,
       valueFormatter: params => formatToIndianCurrencyFormat(params.value),
     },
     {
@@ -256,7 +157,7 @@ const PatientBillings: React.FC = () => {
     {
       field: 'discount',
       headerName: 'Discount',
-      flex: 1,
+      flex: 0.5,
       valueFormatter: params => formatToIndianCurrencyFormat(params.value),
     },
     {
@@ -271,32 +172,50 @@ const PatientBillings: React.FC = () => {
       flex: 1,
       valueFormatter: params => formatToIndianCurrencyFormat(params.value),
     },
-    { field: 'paymentMethod', headerName: 'Method', flex: 1 },
     {
-      field: 'paymentAmount',
-      headerName: 'Payment Amount',
-      flex: 1,
-      valueFormatter: params => formatToIndianCurrencyFormat(params.value),
+      field: 'payments',
+      headerName: 'Transactions',
+      flex: 0.5,
+      sortable: false,
+      filterable: false,
+      renderCell: params => (
+        <Tooltip title="View Transactions">
+          <IconButton
+            color="primary"
+            onClick={() =>
+              handleOpen(params.row.payments, params.row.billingId)
+            }
+          >
+            <InfoIcon />
+          </IconButton>
+        </Tooltip>
+      ),
     },
   ];
 
-  const getRowId = (row: RowType & { paymentMethod: string }) =>
-    `${row._id}-${row.paymentMethod}`;
+  const getRowId = (row: any) => `${row._id}`;
 
   return (
-    <ContentSection title="Patient Billings">
+    <ContentSection title="Patient Billings" scrollRef={scrollRef}>
       <Box display="flex" justifyContent="flex-end" gap={2} mb={2}>
+        <CustomeDateRangePicker onChange={handleDateChange} />
+
         <FormControl variant="outlined" size="small">
           <InputLabel>Service</InputLabel>
           <Select
             label="Bill Type"
             value={selectedBillType}
-            onChange={(event: SelectChangeEvent<EBillType | ''>) => {
-              setSelectedBillType(event.target.value as EBillType);
+            onChange={event => {
+              setSelectedBillType(
+                event.target.value as EPatientBillingServiceType,
+              );
             }}
             style={{ minWidth: 150 }}
           >
-            {Object.values(EBillType).map(type => (
+            <MenuItem key={'All'} value={'All'}>
+              All
+            </MenuItem>
+            {Object.values(EPatientBillingServiceType).map(type => (
               <MenuItem key={type} value={type}>
                 {type}
               </MenuItem>
@@ -308,9 +227,14 @@ const PatientBillings: React.FC = () => {
           <Select
             label="Payment Method"
             value={selectedMethod}
-            onChange={handleMethodChange}
+            onChange={event => {
+              setSelectedMethod(event.target.value as EPaymentMethod);
+            }}
             style={{ minWidth: 150 }}
           >
+            <MenuItem key={'All'} value={'All'}>
+              All
+            </MenuItem>
             {Object.values(EPaymentMethod).map(method => (
               <MenuItem key={method} value={method}>
                 {method}
@@ -318,30 +242,18 @@ const PatientBillings: React.FC = () => {
             ))}
           </Select>
         </FormControl>
-        <FormControl variant="outlined" size="small">
-          <InputLabel>Payment Method</InputLabel>
-          <Select
-            label="Payment Method"
-            value={selectedMethod}
-            onChange={handleMethodChange}
-            style={{ minWidth: 150 }}
-          >
-            {Object.values(EPaymentMethod).map(method => (
-              <MenuItem key={method} value={method}>
-                {method}
-              </MenuItem>
-            ))}
-          </Select>
-        </FormControl>
+
         <FormControl variant="outlined" size="small">
           <InputLabel>Status</InputLabel>
           <Select
             label="Status"
             value={selectedStatus}
-            onChange={handleStatusChange}
+            onChange={event => {
+              setSelectedStatus(event.target.value as EPatientBillingStatus);
+            }}
             style={{ minWidth: 150 }}
           >
-            <MenuItem value="">All</MenuItem>
+            <MenuItem value="All">All</MenuItem>
             {Object.values(EPatientBillingStatus).map(status => (
               <MenuItem key={status} value={status}>
                 {status}
@@ -349,26 +261,17 @@ const PatientBillings: React.FC = () => {
             ))}
           </Select>
         </FormControl>
-      </Box>
-      <Box display="flex" justifyContent="flex-end" gap={2} mb={2}>
-        <CustomeDateRangePicker onChange={handleDateChange} />
         <TextField
-          label="Search by Patient ID"
+          label="Search"
           size="small"
           variant="outlined"
-          onChange={handlePatientIdChange}
-          placeholder="Enter patient ID"
+          onChange={event => handleSearchQuery(event.target.value)}
+          placeholder="Case ID/Patient ID/Name "
+          sx={{ width: '250px' }}
         />
-        <TextField
-          label="Search by Patient Name"
-          size="small"
-          variant="outlined"
-          onChange={handlePatientNameChange}
-          placeholder="Enter patient name"
-        />
-        <Button variant="contained" color="primary" onClick={handleDownloadCSV}>
+        {/* <Button variant="contained" color="primary" onClick={handleDownloadCSV}>
           Download CSV
-        </Button>
+        </Button> */}
       </Box>
 
       <CustomDataGrid
@@ -386,6 +289,63 @@ const PatientBillings: React.FC = () => {
         enablePagination={pageSize !== -1} // Disable pagination when "All" is selected
         extendedPageSizeOptions={[25, 50, 100, { label: 'All', value: -1 }]} // Add the "All" option
       />
+
+      {/* Payments Modal */}
+      <Dialog
+        open={open}
+        onClose={handleClose}
+        fullWidth
+        maxWidth="sm"
+        aria-labelledby="payments-dialog-title"
+      >
+        <DialogTitle id="payments-dialog-title">
+          Transactions for Bill {selectedBillId}
+        </DialogTitle>
+        <DialogContent dividers>
+          {selectedPayments.length > 0 ? (
+            <Table>
+              <TableHead>
+                <TableRow>
+                  <TableCell>Type</TableCell>
+                  <TableCell>Amount</TableCell>
+                  <TableCell>Method</TableCell>
+                  <TableCell>Payment Date</TableCell>
+                  <TableCell>Details</TableCell>
+                </TableRow>
+              </TableHead>
+              <TableBody>
+                {selectedPayments.map(payment => (
+                  <TableRow key={payment._id}>
+                    <TableCell>{payment.type}</TableCell>
+                    <TableCell>
+                      {formatToIndianCurrencyFormat(payment.amount)}
+                    </TableCell>
+                    <TableCell>{payment.method}</TableCell>
+                    <TableCell>
+                      {new Date(payment.paymentDate).toLocaleDateString(
+                        'en-IN',
+                        {
+                          day: '2-digit',
+                          month: '2-digit',
+                          year: 'numeric',
+                        },
+                      )}
+                    </TableCell>
+                    <TableCell>{payment.details || '-'}</TableCell>
+                  </TableRow>
+                ))}
+              </TableBody>
+            </Table>
+          ) : (
+            <Typography>No payments found for this bill.</Typography>
+          )}
+        </DialogContent>
+        <DialogActions>
+          <Button onClick={handleClose} color="primary">
+            Close
+          </Button>
+        </DialogActions>
+      </Dialog>
 
       {/* Summary Section */}
       <Box
@@ -405,7 +365,7 @@ const PatientBillings: React.FC = () => {
               Total Paid
             </Typography>
             <Typography variant="body1" color="textSecondary">
-              {formatToIndianCurrencyFormat(totalPaid)}
+              {formatToIndianCurrencyFormat(summary?.payment)}
             </Typography>
           </Box>
           <Box display="flex" justifyContent="space-between" width="100%">
@@ -413,7 +373,7 @@ const PatientBillings: React.FC = () => {
               Total Due
             </Typography>
             <Typography variant="body1" color="textSecondary">
-              {formatToIndianCurrencyFormat(totalDues)}
+              {formatToIndianCurrencyFormat(summary?.due)}
             </Typography>
           </Box>
           <Box display="flex" justifyContent="space-between" width="100%">
@@ -421,7 +381,7 @@ const PatientBillings: React.FC = () => {
               Total Discount
             </Typography>
             <Typography variant="body1" color="textSecondary">
-              {formatToIndianCurrencyFormat(totalDiscount)}
+              {formatToIndianCurrencyFormat(summary?.discount)}
             </Typography>
           </Box>
         </Box>
