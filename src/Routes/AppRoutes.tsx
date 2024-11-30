@@ -176,6 +176,8 @@ const AppRoutes: React.FC = () => (
                 EUserRole.Doctor,
                 EUserRole.Nurse,
                 EUserRole.Reception,
+                EUserRole.Embryologist,
+                EUserRole.CenterManager,
               ]}
               navigateTo="/not-authorized"
             />
@@ -316,6 +318,7 @@ const AppRoutes: React.FC = () => (
                 EUserRole.Billing,
                 EUserRole.Pharmacist,
                 EUserRole.PharmacyManager,
+                EUserRole.CenterManager,
               ]}
               navigateTo={'/not-authorized'}
             />
@@ -400,7 +403,7 @@ const AppRoutes: React.FC = () => (
           path="master"
           element={
             <ProtectedRoute
-              allowedRoles={[EUserRole.Admin]}
+              allowedRoles={[EUserRole.Admin, EUserRole.CenterManager]}
               navigateTo={'/not-authorized'}
             />
           }
@@ -488,7 +491,7 @@ const AppRoutes: React.FC = () => (
           path="analytics"
           element={
             <ProtectedRoute
-              allowedRoles={[EUserRole.Admin]}
+              allowedRoles={[EUserRole.Admin, EUserRole.CenterManager]}
               navigateTo={'/not-authorized'}
             />
           }

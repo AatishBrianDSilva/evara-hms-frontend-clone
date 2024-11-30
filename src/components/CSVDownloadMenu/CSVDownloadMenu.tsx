@@ -10,7 +10,9 @@ import { DocumentScanner, Download as DownloadIcon } from '@mui/icons-material';
 import SummarizeIcon from '@mui/icons-material/Summarize';
 
 interface DownloadMenuProps {
-  handleDownload: (allData: boolean) => void;
+  handleDownload: (
+    downloadType: 'currentPage' | 'currentFilters' | 'allData',
+  ) => void;
 }
 
 const DownloadMenu: React.FC<DownloadMenuProps> = ({ handleDownload }) => {
@@ -25,9 +27,11 @@ const DownloadMenu: React.FC<DownloadMenuProps> = ({ handleDownload }) => {
     setAnchorEl(null);
   };
 
-  const onDownloadClick = (allData: boolean) => {
+  const onDownloadClick = (
+    downloadType: 'currentPage' | 'currentFilters' | 'allData',
+  ) => {
     handleMenuClose();
-    handleDownload(allData);
+    handleDownload(downloadType);
   };
 
   return (
@@ -51,13 +55,19 @@ const DownloadMenu: React.FC<DownloadMenuProps> = ({ handleDownload }) => {
           'aria-labelledby': 'download-button',
         }}
       >
-        <MenuItem onClick={() => onDownloadClick(false)}>
+        <MenuItem onClick={() => onDownloadClick('currentPage')}>
           <ListItemIcon>
             <DocumentScanner fontSize="small" />
           </ListItemIcon>
           <ListItemText primary="Current page" />
         </MenuItem>
-        <MenuItem onClick={() => onDownloadClick(true)}>
+        <MenuItem onClick={() => onDownloadClick('currentFilters')}>
+          <ListItemIcon>
+            <SummarizeIcon fontSize="small" />
+          </ListItemIcon>
+          <ListItemText primary="Filtered Data" />
+        </MenuItem>
+        <MenuItem onClick={() => onDownloadClick('allData')}>
           <ListItemIcon>
             <SummarizeIcon fontSize="small" />
           </ListItemIcon>

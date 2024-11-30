@@ -19,7 +19,10 @@ export const analyticsPatientBillingsApi = createApi({
     >({
       query: options => {
         const queryParams = generateQueryParams(options);
-        return { url: `analytics/billings?${queryParams}`, method: 'GET' };
+        return {
+          url: `analytics/billings/patient-billings?${queryParams}`,
+          method: 'GET',
+        };
       },
       providesTags: (_result, _error, _args) => ['Billing'],
     }),

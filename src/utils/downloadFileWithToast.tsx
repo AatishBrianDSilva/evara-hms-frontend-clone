@@ -5,7 +5,7 @@ import { store } from '../app/store';
 
 interface DownloadFileOptions {
   endpoint: string;
-  params?: Record<string, any>;
+  params?: string;
   fileName?: string;
   successMessage?: string;
   errorMessage?: string;
@@ -14,7 +14,7 @@ interface DownloadFileOptions {
 
 export const downloadFileWithToast = async ({
   endpoint,
-  params = {},
+  params = '',
   fileName = 'download.csv',
   successMessage = 'Download successful!',
   errorMessage = 'Download failed.',
@@ -23,7 +23,7 @@ export const downloadFileWithToast = async ({
   toast.info(startMessage, { autoClose: 2000 });
 
   const baseUrl = API_BASE_URL;
-  const url = `${baseUrl}/${endpoint}`;
+  const url = `${baseUrl}/${endpoint}?${params}`;
 
   try {
     // Access the Redux store to get the token
@@ -35,9 +35,7 @@ export const downloadFileWithToast = async ({
     if (token) {
       headers['Authorization'] = `Bearer ${token}`;
     }
-
     const response = await axios.get(url, {
-      params,
       headers,
       responseType: 'blob',
     });

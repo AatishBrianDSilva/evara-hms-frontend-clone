@@ -34,6 +34,9 @@ import { useGetAnalyticsPatientBillingsQuery } from '../../../services/analytics
 import { debounce } from 'lodash';
 import CustomeDateRangePicker from '../../../components/CustomDateRangePicker/CustomDateRangePicker';
 import { endOfWeek, startOfWeek } from 'date-fns';
+import { downloadFileWithToast } from '../../../utils/downloadFileWithToast';
+import DownloadMenu from '../../../components/CSVDownloadMenu/CSVDownloadMenu';
+import generateQueryParams from '../../../utils/generateQueryParams';
 
 const PatientBillings: React.FC = () => {
   const [page, setPage] = useState<number>(1);
@@ -95,9 +98,9 @@ const PatientBillings: React.FC = () => {
   };
 
   const { data, isLoading, isFetching } = useGetAnalyticsPatientBillingsQuery({
-    paginate: pageSize !== -1, // Disable pagination if "All" is selected
-    page: pageSize === -1 ? undefined : page, // Send undefined for page if "All" is selected
-    limit: pageSize === -1 ? undefined : pageSize, // Send undefined for limit if "All" is selected
+    paginate: false,
+    page: page,
+    limit: pageSize,
     dateRange: {
       startDate: startDateUTC?.toISOString(),
       endDate: endDateUTC?.toISOString(),
@@ -126,6 +129,75 @@ const PatientBillings: React.FC = () => {
     setOpen(false);
     setSelectedPayments([]);
     setSelectedBillId('');
+  };
+
+  const handleDownload = async (
+    downloadType: 'currentPage' | 'currentFilters' | 'allData',
+  ) => {
+    let params: any = {};
+    let action = '';
+    const date = new Date().toLocaleDateString('en-IN');
+    let filename = '';
+
+    switch (downloadType) {
+      case 'currentPage':
+        action = 'current page';
+        params = generateQueryParams({
+          paginate: false,
+          page,
+          limit: pageSize,
+          dateRange: {
+            startDate: startDateUTC?.toISOString(),
+            endDate: endDateUTC?.toISOString(),
+          },
+          filters: {
+            status: selectedStatus === 'All' ? undefined : selectedStatus,
+            searchQuery,
+            paymentMethod:
+              selectedMethod === 'All' ? undefined : selectedMethod,
+            billType: selectedBillType === 'All' ? undefined : selectedBillType,
+          },
+        });
+        filename = `patient_billings_page_${page}-${date}.csv`;
+        break;
+
+      case 'currentFilters':
+        action = 'filtered data';
+        params = generateQueryParams({
+          paginate: false,
+          dateRange: {
+            startDate: startDateUTC?.toISOString(),
+            endDate: endDateUTC?.toISOString(),
+          },
+          filters: {
+            status: selectedStatus === 'All' ? undefined : selectedStatus,
+            searchQuery,
+            paymentMethod:
+              selectedMethod === 'All' ? undefined : selectedMethod,
+            billType: selectedBillType === 'All' ? undefined : selectedBillType,
+          },
+        });
+        filename = `patient_billings_filtered-${date}.csv`;
+        break;
+
+      case 'allData':
+        action = 'all data';
+        params = { allData: 'true' };
+        filename = `patient_billings_all-${date}.csv`;
+        break;
+
+      default:
+        throw new Error('Invalid download type');
+    }
+
+    await downloadFileWithToast({
+      endpoint: 'analytics/billings/patient-billings/download',
+      params,
+      fileName: filename,
+      successMessage: `Successfully downloaded ${action}!`,
+      errorMessage: `Failed to download ${action}.`,
+      startMessage: `Preparing to download ${action}...`,
+    });
   };
 
   const columnsConfig: GridColDef[] = [
@@ -272,6 +344,7 @@ const PatientBillings: React.FC = () => {
         {/* <Button variant="contained" color="primary" onClick={handleDownloadCSV}>
           Download CSV
         </Button> */}
+        <DownloadMenu handleDownload={handleDownload} />
       </Box>
 
       <CustomDataGrid
@@ -365,7 +438,7 @@ const PatientBillings: React.FC = () => {
               Total Paid
             </Typography>
             <Typography variant="body1" color="textSecondary">
-              {formatToIndianCurrencyFormat(summary?.payment)}
+              {formatToIndianCurrencyFormat(summary?.payment || 0)}
             </Typography>
           </Box>
           <Box display="flex" justifyContent="space-between" width="100%">
@@ -373,7 +446,7 @@ const PatientBillings: React.FC = () => {
               Total Due
             </Typography>
             <Typography variant="body1" color="textSecondary">
-              {formatToIndianCurrencyFormat(summary?.due)}
+              {formatToIndianCurrencyFormat(summary?.due || 0)}
             </Typography>
           </Box>
           <Box display="flex" justifyContent="space-between" width="100%">
@@ -381,7 +454,7 @@ const PatientBillings: React.FC = () => {
               Total Discount
             </Typography>
             <Typography variant="body1" color="textSecondary">
-              {formatToIndianCurrencyFormat(summary?.discount)}
+              {formatToIndianCurrencyFormat(summary?.discount || 0)}
             </Typography>
           </Box>
         </Box>

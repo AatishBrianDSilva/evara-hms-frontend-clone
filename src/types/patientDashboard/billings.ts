@@ -15,10 +15,11 @@ export enum EPaitentBillingPaymentType {
 export enum EPatientBillingServiceType {
   Investigation = 'Investigation',
   Procedure = 'Procedure',
-  Medicine = 'Medicine',
+  Pharmacy = 'Pharmacy',
   Service = 'Service',
-  CryoPreservation = 'CryoPreservation',
-  TreatmentCycle = 'TreatmentCycle',
+  CryoPreservation = 'Cryo Preservation',
+  TreatmentCycle = 'Treatment Cycle',
+  Package = 'Package',
 }
 
 export enum EPaymentMethod {

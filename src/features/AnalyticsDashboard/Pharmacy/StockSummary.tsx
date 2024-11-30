@@ -7,6 +7,7 @@ import { useGetStockSummaryQuery } from '../../../services/analyticsDashboardSer
 import _ from 'lodash';
 import { downloadFileWithToast } from '../../../utils/downloadFileWithToast';
 import DownloadMenu from '../../../components/CSVDownloadMenu/CSVDownloadMenu';
+import generateQueryParams from '../../../utils/generateQueryParams';
 
 const StockSummaryReports: React.FC = () => {
   const [page, setPage] = useState<number>(1);
@@ -33,20 +34,51 @@ const StockSummaryReports: React.FC = () => {
     [],
   );
 
-  const handleDownload = async (allData: boolean) => {
-    const action = allData ? 'all data' : 'current page';
-    const params = allData
-      ? { allData: 'true' }
-      : { search, page, limit: pageSize };
-
+  const handleDownload = async (
+    downloadType: 'currentPage' | 'currentFilters' | 'allData',
+  ) => {
+    let params: any = {};
+    let action = '';
     const date = new Date().toLocaleDateString('en-IN');
+    let filename = '';
 
-    const filename = allData
-      ? `stock_report-${date}.csv`
-      : `stock_report_page_${params.page}-${date}.csv`;
+    switch (downloadType) {
+      case 'currentPage':
+        action = 'current page';
+        params = generateQueryParams({
+          paginate: false,
+          page,
+          limit: pageSize,
+          filters: {
+            search,
+          },
+        });
+        filename = `stock_report_page_${page}-${date}.csv`;
+        break;
+
+      case 'currentFilters':
+        action = 'filtered data';
+        params = generateQueryParams({
+          paginate: false,
+          filters: {
+            search,
+          },
+        });
+        filename = `stock_report_filtered-${date}.csv`;
+        break;
+
+      case 'allData':
+        action = 'all data';
+        params = { allData: 'true' };
+        filename = `stock_report-${date}.csv`;
+        break;
+
+      default:
+        throw new Error('Invalid download type');
+    }
 
     await downloadFileWithToast({
-      endpoint: '/analytics/pharmacy/stock-summary/download',
+      endpoint: 'analytics/pharmacy/stock-summary/download',
       params,
       fileName: filename,
       successMessage: `Successfully downloaded ${action}!`,
