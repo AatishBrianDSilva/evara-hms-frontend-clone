@@ -65,6 +65,14 @@ const Branch: React.FC = () => {
       flex: 1,
     },
     {
+      field: 'city',
+      headerName: 'City',
+      flex: 1,
+      valueGetter(params) {
+        return params.row.address?.city;
+      },
+    },
+    {
       field: 'isActive',
       headerName: 'Status',
       flex: 1,
