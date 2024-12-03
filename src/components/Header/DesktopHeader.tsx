@@ -29,9 +29,16 @@ import { handlePersistorPurge, RootState } from '../../app/store';
 import _, { debounce } from 'lodash';
 import { useGetPatientsQuery } from '../../services/patientsApi';
 import PatientCard from '../PatientCard/PatientCard';
-import { CircularProgress, ListItemIcon, Popover } from '@mui/material';
+import {
+  CircularProgress,
+  ListItemIcon,
+  Popover,
+  Skeleton,
+} from '@mui/material';
 import { calculateAge } from '../../utils/calculateAge';
 import { ENVIRONMENT } from '../../utils/apiConfig';
+import { useGetActiveBranchesQuery } from '../../services/masterDashboardService/global/globalBranch';
+import { CLINICID } from '../../features/Auth/Login';
 
 const Search = styled('div')(({ theme }) => ({
   position: 'relative',
@@ -79,6 +86,10 @@ const DesktopHeader: React.FC = () => {
   const location = useLocation();
 
   const { user } = useSelector((state: RootState) => state.auth);
+
+  const { data, isLoading, isFetching } = useGetActiveBranchesQuery(CLINICID);
+  const branches = data?.data || [];
+  const gettingBranches = isLoading || isFetching;
 
   const hideSearchMenu =
     location.pathname.startsWith('/master') ||
@@ -151,18 +162,10 @@ const DesktopHeader: React.FC = () => {
   };
 
   const renderBranchName = () => {
-    switch (user?.branchId.trim()) {
-      case 'KN':
-        return 'Kanpur';
-      case 'LK':
-        return 'Lucknow';
-      case 'JH':
-        return 'Jhansi';
-      case 'RA':
-        return 'Ranchi';
-      default:
-        break;
-    }
+    const branch = branches.find(
+      branch => branch.branchId.trim() === user?.branchId.trim(),
+    );
+    return branch?.city;
   };
 
   const accountMenuId = 'desktop-header-account-menu';
@@ -465,10 +468,15 @@ const DesktopHeader: React.FC = () => {
               paddingX={1}
               bgcolor={'background.paper'}
               borderRadius={2}
+              minWidth={80}
               sx={{ mr: 2 }}
             >
-              <Typography color={'secondary.main'}>
-                {renderBranchName()}
+              <Typography align="center" color={'secondary.main'}>
+                {gettingBranches ? (
+                  <Skeleton variant="text" width={80} />
+                ) : (
+                  renderBranchName()
+                )}
               </Typography>
             </Box>
             <IconButton

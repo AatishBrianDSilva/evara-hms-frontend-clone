@@ -49,7 +49,7 @@ export const globalBranchApi = createApi({
       providesTags: (_result, _error, _args) => ['Global Branch'],
     }),
     getActiveBranches: builder.query<
-      ApiResponse<{ branchId: string; branchName: string }[]>,
+      ApiResponse<{ branchId: string; branchName: string; city: string }[]>,
       string
     >({
       query: clinicId => {

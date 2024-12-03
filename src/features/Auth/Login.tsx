@@ -8,6 +8,7 @@ import { useToast } from '../../context/ToastContext';
 import { useNavigate } from 'react-router-dom';
 import { useGetActiveBranchesQuery } from '../../services/masterDashboardService/global/globalBranch';
 import FieldAutocomplete from '../../components/FieldAutoComplete/FieldAutoComplete';
+import _ from 'lodash';
 
 interface LoginFormValues {
   email: string;
@@ -114,7 +115,9 @@ const Login: React.FC = () => {
         <FieldAutocomplete
           fullWidth
           options={branches}
-          getOptionLabel={option => (option ? option.branchName : '')}
+          getOptionLabel={option =>
+            option ? _.toUpper(option.city).trim() : ''
+          }
           isOptionEqualToValue={(option, value) =>
             option.branchId === value.branchId
           }
