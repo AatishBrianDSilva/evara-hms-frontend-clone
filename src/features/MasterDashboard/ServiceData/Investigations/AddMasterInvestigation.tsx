@@ -86,11 +86,10 @@ const AddMasterInvestigation: React.FC<AddMasterInvestigationProps> = ({
 
     try {
       await promise;
+      onClose();
     } catch (error) {
       console.log(error);
     }
-
-    onClose();
   };
 
   const initialValues: IFormValues = {
