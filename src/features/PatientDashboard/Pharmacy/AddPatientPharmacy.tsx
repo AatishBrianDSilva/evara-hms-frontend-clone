@@ -89,10 +89,25 @@ const AddPatientPharmacy: React.FC<AddPatientPharmacyProps> = ({
       location: values.location?._id,
       date: values.date,
       items: values.items.map(item => {
-        return {
+        // Find the selected batch to extract the sellPrice
+        const selectedBatch = item.stock?.locations
+          .find(location => location.location._id === values.location?._id)
+          ?.batches.find(batch => batch.batchNo === item.batchNumber);
+  
+        const sellPrice = selectedBatch?.sellPrice || item.stock?.sellPrice;
+  
+        // TODO: Remove fallback to stock-level sellPrice once all batches include sellPrice
+        if (!selectedBatch?.sellPrice) {
+          console.warn(
+            `Fallback to stock-level sellPrice for batch "${item.batchNumber}" in "${item.stock?.item?.name}"`
+          );
+        }
+          return {
           stock: item.stock?._id,
           batchNumber: item.batchNumber,
           quantity: item.quantity,
+          sellPrice, // Add the sellPrice to the payload
+
         };
       }),
     };
@@ -134,6 +149,8 @@ const AddPatientPharmacy: React.FC<AddPatientPharmacyProps> = ({
     onSubmit: handleFormSubmit,
     validationSchema: addPatientPharmacyValidationSchema,
   });
+
+  console.log("Pharmacy stocks", pharmacyStocks)
 
   useEffect(() => {
     if (!formik.values.location) {
@@ -252,36 +269,55 @@ const AddPatientPharmacy: React.FC<AddPatientPharmacyProps> = ({
 
   const calculateSummary = () => {
     const summaryMap = new Map<string, SummaryEntry>();
-
+  
     formik.values.items.forEach(item => {
-      if (!item.stock || !item.stock.item) return;
-
-      const packSize = item.stock.item.packSize;
-      const pricePerUnit = packSize !== 0 ? item.stock.sellPrice / packSize : 0;
-
+      if (!item.stock || !item.stock.item || !item.batchNumber) return;
+  
+      const packSize = item.stock.item.packSize || 1;
+  
+      // Find the batch for the selected batch number
+      const selectedBatch = item.stock.locations
+        .find(location => location.location._id === formik.values.location?._id)
+        ?.batches.find(batch => batch.batchNo === item.batchNumber);
+  
+      // Use batch sellPrice if available, otherwise fallback to stock-level sellPrice
+      const batchSellPrice = selectedBatch?.sellPrice;
+      const stockSellPrice = item.stock.sellPrice;
+      const pricePerUnit = batchSellPrice
+        ? batchSellPrice / packSize
+        : stockSellPrice / packSize;
+  
+      // TODO: Remove fallback logic once all data uses batch sellPrice
+      if (!batchSellPrice) {
+        console.warn(
+          `Fallback to stock-level sellPrice for batch "${item.batchNumber}" in "${item.stock.item.name}"`
+        );
+      }
+  
       const totalQuantity = item.quantity ?? 0;
-      const batchNumber = item.batchNumber ? item.batchNumber : '';
-
+      const batchNumber = item.batchNumber;
+  
       const total = pricePerUnit * totalQuantity;
-
+  
       const name = item.stock.item.name;
-
+  
       if (summaryMap.has(name)) {
         const existingItem = summaryMap.get(name)!;
         existingItem.quantity += totalQuantity;
-
+  
         if (batchNumber) {
           existingItem.batchNumber = existingItem.batchNumber
             ? `${existingItem.batchNumber}, ${batchNumber}`
             : batchNumber;
         }
-
+  
         // Optionally, verify if pricePerUnit is consistent
         if (existingItem.price !== pricePerUnit) {
-          console.warn(`Price per unit for ${name} is inconsistent.`);
-          // Handle accordingly, e.g., average, throw error, etc.
+          console.warn(
+            `Price per unit for "${name}" is inconsistent across batches.`
+          );
         }
-
+  
         existingItem.total += total;
       } else {
         const data: SummaryEntry = {
@@ -294,10 +330,10 @@ const AddPatientPharmacy: React.FC<AddPatientPharmacyProps> = ({
         summaryMap.set(name, data);
       }
     });
-
+  
     return Array.from(summaryMap.values());
   };
-
+  
   const SummaryTable = () => {
     const summaryData = calculateSummary();
 
