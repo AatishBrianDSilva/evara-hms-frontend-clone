@@ -54,6 +54,7 @@ interface IFormValues {
     stock: IPharmacyStock | null;
     batchNumber: string | null;
     quantity: number;
+    sellPrice? : number;
   }[];
 }
 
