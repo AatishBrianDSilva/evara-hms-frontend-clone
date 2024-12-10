@@ -26,7 +26,7 @@ import _ from 'lodash';
 import FileUploadButton from '../../../../components/FileUploadAndPreview/FileUploadButton';
 import { EBuckets, EDocumentTypes } from '../../../../types/global';
 import { ContentCopy } from '@mui/icons-material';
-import { useGetBatchesForStocksQuery, useGetStocksQuery } from '../../../../services/pharmacyDashboardService/stocksApi';
+import { useGetBatchesForStocksQuery } from '../../../../services/pharmacyDashboardService/stocksApi';
 
 interface EditPurchaseOrderDraftProps {
   openModal: boolean;
@@ -188,7 +188,9 @@ const EditPurchaseOrderDraft: React.FC<EditPurchaseOrderDraftProps> = ({
       isFetching: isStocksFetching,
     } = useGetBatchesForStocksQuery();
 
-    console.log("Stocks Data", stocksData)
+    const stocksLoading =
+    isStocksLoading || isStocksFetching;
+
 
   const initialValues: FormValues = {
     order_date: purchaseOrder?.date || null,
@@ -439,7 +441,7 @@ const EditPurchaseOrderDraft: React.FC<EditPurchaseOrderDraftProps> = ({
   // Handle item change to update batch numbers
   if (field === 'item') {
     const selectedDrugItemId = numericValue?._id;
-    const selectedDrugItem = stocksData?.data.find(stock => stock.itemId === selectedDrugItemId);
+    const selectedDrugItem = stocksData?.data?.find(stock => stock.itemId === selectedDrugItemId);
 
     // Update current batch numbers and reset batch number for the item
     setCurrentBatchNumbers(prev => ({
@@ -456,7 +458,9 @@ const EditPurchaseOrderDraft: React.FC<EditPurchaseOrderDraftProps> = ({
 
   // Validate batch number if the field is 'batchNo'
   if (field === 'batchNo') {
-    const batchNumbersForItem = currentBatchNumbers[currentItem.item?._id] || [];
+    const batchNumbersForItem = currentItem.item?._id
+    ? currentBatchNumbers[currentItem.item._id] || []
+    : [];
     if (batchNumbersForItem.includes(numericValue)) {
       setBatchWarnings(prev => ({
         ...prev,
@@ -580,7 +584,7 @@ const EditPurchaseOrderDraft: React.FC<EditPurchaseOrderDraftProps> = ({
           Edit Purchase Order
         </Typography>
 
-        {purchaseOrderLoading ? (
+        {purchaseOrderLoading || stocksLoading ? (
           renderSkeleton()
         ) : (
           <Box
