@@ -65,6 +65,9 @@ export interface IPurchaseOrderResponse {
 }
 
 export interface IPurchaseOrder {
+  allResponsesTax: number;
+  allResponsesSubTotal: number;
+  allResponsesNetAmount: number;
   _id: string;
   branchId: string;
   poNumber: string;
