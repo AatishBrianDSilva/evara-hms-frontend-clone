@@ -69,6 +69,8 @@ const PurchaseOrderReport: React.FC = () => {
     },
   });
 
+console.log("Purcahse order report", purchaseOrdersData)
+
   const purchaseOrders = purchaseOrdersData?.data?.records || [];
   const purchaseOrdersPagination = purchaseOrdersData?.data?.pagination;
   const purchaseOrderLoading = purchaseOrdersLoading || purchaseOrdersFetching;
@@ -130,7 +132,7 @@ const PurchaseOrderReport: React.FC = () => {
       field: 'netAmount',
       headerName: 'Amount',
       flex: 1,
-      valueGetter: params => `₹ ${params.row.request.netAmount}`,
+      valueGetter: params => `₹ ${params.row.allResponsesNetAmount}`,
     },
     { field: 'authorizedBy', headerName: 'Processed By', flex: 1 },
     {
