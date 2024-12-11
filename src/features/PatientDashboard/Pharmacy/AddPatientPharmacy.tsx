@@ -95,14 +95,8 @@ const AddPatientPharmacy: React.FC<AddPatientPharmacyProps> = ({
           .find(location => location.location._id === values.location?._id)
           ?.batches.find(batch => batch.batchNo === item.batchNumber);
   
-        const sellPrice = selectedBatch?.sellPrice || item.stock?.sellPrice;
+        const sellPrice = selectedBatch?.sellPrice;
   
-        // TODO: Remove fallback to stock-level sellPrice once all batches include sellPrice
-        if (!selectedBatch?.sellPrice) {
-          console.warn(
-            `Fallback to stock-level sellPrice for batch "${item.batchNumber}" in "${item.stock?.item?.name}"`
-          );
-        }
           return {
           stock: item.stock?._id,
           batchNumber: item.batchNumber,
@@ -281,19 +275,10 @@ const AddPatientPharmacy: React.FC<AddPatientPharmacyProps> = ({
         .find(location => location.location._id === formik.values.location?._id)
         ?.batches.find(batch => batch.batchNo === item.batchNumber);
   
-      // Use batch sellPrice if available, otherwise fallback to stock-level sellPrice
-      const batchSellPrice = selectedBatch?.sellPrice;
-      const stockSellPrice = item.stock.sellPrice;
-      const pricePerUnit = batchSellPrice
-        ? batchSellPrice / packSize
-        : stockSellPrice / packSize;
-  
-      // TODO: Remove fallback logic once all data uses batch sellPrice
-      if (!batchSellPrice) {
-        console.warn(
-          `Fallback to stock-level sellPrice for batch "${item.batchNumber}" in "${item.stock.item.name}"`
-        );
-      }
+      const batchSellPrice = selectedBatch?.sellPrice ?? 0; 
+      const pricePerUnit = batchSellPrice / packSize;
+
+
   
       const totalQuantity = item.quantity ?? 0;
       const total = pricePerUnit * totalQuantity;

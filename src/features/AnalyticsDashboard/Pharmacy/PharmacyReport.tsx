@@ -135,9 +135,8 @@ const PharmacyReport: React.FC = () => {
       headerName: 'Total Sales Value',
       flex: 1,
       valueGetter: params => {
-        // TODO: Remove fallback to item.stock.sellPrice once totalItemPrice is always available
         return formatToIndianCurrencyFormat(
-          params.row.totalItemPrice || params.row.item?.stock?.sellPrice || 0
+          params.row.totalItemPrice || 0
         ) || 'N/A';
       },
     },
