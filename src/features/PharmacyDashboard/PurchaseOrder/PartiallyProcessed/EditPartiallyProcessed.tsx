@@ -405,7 +405,7 @@ const EditPartiallyProcessed: React.FC<EditPartiallyProcessedProps> = ({
     if (batchNumbersForItem.includes(numericValue)) {
       setBatchWarnings(prev => ({
         ...prev,
-        [index]: 'This batch number is already in use for the selected item.',
+        [index]: 'This batch number is already in use for the selected item, new price and expiry will be applied to all items in batch',
       }));
     } else {
       setBatchWarnings(prev => {
@@ -415,7 +415,6 @@ const EditPartiallyProcessed: React.FC<EditPartiallyProcessedProps> = ({
       });
     }
   }
-
     newItems[index] = currentItem;
     formik.setFieldValue('items', newItems);
     updateCalculations(); // Call the update calculations after changing item values
