@@ -65,6 +65,7 @@ const PatientPharmacy: React.FC = () => {
   } = useGetStocksQuery();
   const stocks = stocksData?.data || [];
 
+
   // Get doctors
   const {
     data: doctorsData,

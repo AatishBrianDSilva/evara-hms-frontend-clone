@@ -144,7 +144,7 @@ const Stocks: React.FC = () => {
         batchNo: batch.batchNo,
         expiryDate: new Date(batch.expiryDate).toISOString(),
         ...locationQuantities,
-        sellPrice: formatToIndianCurrencyFormat(stock.sellPrice || 0) || 'N/A',
+        sellPrice: formatToIndianCurrencyFormat(batch.sellPrice) ,
         latestExpiryDate: new Date(batch.expiryDate).toISOString(),
         updatedAt: new Date(stock.updatedAt).toISOString(),
         quantity: totalQuantity,

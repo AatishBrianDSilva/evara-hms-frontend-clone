@@ -26,6 +26,7 @@ import _ from 'lodash';
 import FileUploadButton from '../../../../components/FileUploadAndPreview/FileUploadButton';
 import { EBuckets, EDocumentTypes } from '../../../../types/global';
 import { ContentCopy } from '@mui/icons-material';
+import { useGetBatchesForStocksQuery } from '../../../../services/pharmacyDashboardService/stocksApi';
 
 interface EditPartiallyProcessedProps {
   openModal: boolean;
@@ -293,6 +294,15 @@ const EditPartiallyProcessed: React.FC<EditPartiallyProcessedProps> = ({
     closeModal();
   };
 
+  const {
+    data: stocksData,
+    isLoading: isStocksLoading,
+    isFetching: isStocksFetching,
+  } = useGetBatchesForStocksQuery();
+
+  const stocksLoading =
+  isStocksLoading || isStocksFetching;
+
   const formik = useFormik({
     initialValues: initialValues,
     onSubmit: formSubmit,
@@ -324,6 +334,9 @@ const EditPartiallyProcessed: React.FC<EditPartiallyProcessedProps> = ({
     formik.setFieldValue('items', newFields);
     updateCalculations();
   };
+
+  const [currentBatchNumbers, setCurrentBatchNumbers] = React.useState<Record<string, string[]>>({});
+  const [batchWarnings, setBatchWarnings] = React.useState<Record<number, string>>({});
 
   const handleValueChange = (
     index: number,
@@ -366,6 +379,42 @@ const EditPartiallyProcessed: React.FC<EditPartiallyProcessedProps> = ({
         itemCost + (itemCost * tax) / 100 - discountAmount; // Update totalCost considering item-wise discount
     }
 
+     // Handle item change to update batch numbers
+  if (field === 'item') {
+    const selectedDrugItemId = numericValue?._id;
+    const selectedDrugItem = stocksData?.data?.find(stock => stock.itemId === selectedDrugItemId);
+
+    // Update current batch numbers and reset batch number for the item
+    setCurrentBatchNumbers(prev => ({
+      ...prev,
+      [selectedDrugItemId]: selectedDrugItem?.batchNumbers || [],
+    }));
+    currentItem.batchNo = null; // Reset batch number
+    setBatchWarnings(prevWarnings => {
+      const updatedWarnings = { ...prevWarnings };
+      delete updatedWarnings[index]; // Clear any warnings for the current item
+      return updatedWarnings;
+    });
+  }
+
+  // Validate batch number if the field is 'batchNo'
+  if (field === 'batchNo') {
+    const batchNumbersForItem = currentItem.item?._id
+    ? currentBatchNumbers[currentItem.item._id] || []
+    : [];
+    if (batchNumbersForItem.includes(numericValue)) {
+      setBatchWarnings(prev => ({
+        ...prev,
+        [index]: 'This batch number is already in use for the selected item, new price and expiry will be applied to all items in batch',
+      }));
+    } else {
+      setBatchWarnings(prev => {
+        const updatedWarnings = { ...prev };
+        delete updatedWarnings[index]; // Clear warning if batch number is valid
+        return updatedWarnings;
+      });
+    }
+  }
     newItems[index] = currentItem;
     formik.setFieldValue('items', newItems);
     updateCalculations(); // Call the update calculations after changing item values
@@ -391,8 +440,18 @@ const EditPartiallyProcessed: React.FC<EditPartiallyProcessedProps> = ({
   ]);
 
   useEffect(() => {
+    // Initialize batch numbers for all items when stocksData changes
+    if (stocksData?.data) {
+      const batchMap: Record<string, string[]> = {};
+      stocksData.data.forEach(stock => {
+        batchMap[stock.itemId] = stock.batchNumbers;
+      });
+      setCurrentBatchNumbers(batchMap);
+    }
+  
+    // Ensure calculations are updated when items change
     updateCalculations();
-  }, [updateCalculations]);
+  }, [stocksData, updateCalculations]);
 
   const getFieldErrorAndTouched = useCallback(
     (
@@ -460,7 +519,7 @@ const EditPartiallyProcessed: React.FC<EditPartiallyProcessedProps> = ({
           Edit Partially Processed Order
         </Typography>
 
-        {purchaseOrderLoading ? (
+        {purchaseOrderLoading || stocksLoading ? (
           renderSkeleton()
         ) : (
           <Box
@@ -691,10 +750,17 @@ const EditPartiallyProcessed: React.FC<EditPartiallyProcessedProps> = ({
                         label="Batch No"
                         name={`items[${index}].batchNo`}
                         value={formik.values.items[index].batchNo || ''}
-                        error={batchNoError}
-                        helperText={batchNoError ? batchNoErrorMessage : ''}
-                        onChange={formik.handleChange}
+                        error={!!batchWarnings[index] || batchNoError}
+                        helperText={
+                          batchWarnings[index] 
+                            ? batchWarnings[index] // Show the batch warning if present
+                            : batchNoError 
+                            ? batchNoErrorMessage // Show validation error if present
+                            : ''
+                        }
+                        onChange={e => handleValueChange(index, 'batchNo', e.target.value)}
                       />
+               
                     </Grid>
                     <Grid item flex={2}>
                       <CustomDatePicker
