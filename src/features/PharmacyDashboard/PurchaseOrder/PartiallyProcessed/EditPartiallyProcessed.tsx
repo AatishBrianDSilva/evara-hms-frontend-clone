@@ -321,7 +321,7 @@ const EditPartiallyProcessed: React.FC<EditPartiallyProcessedProps> = ({
         batchNo: '',
         expiryDate: null,
         packsRequired: packsRequired - noOfPacks,
-        noOfPacks: null,
+        noOfPacks: 0,
         freeQuantity: null, // Set freeQuantity to null for cloned item
         discount: null,
       },
@@ -352,7 +352,7 @@ const EditPartiallyProcessed: React.FC<EditPartiallyProcessedProps> = ({
 
     const numericValue =
       field === 'noOfPacks' || field === 'packSize' || field === 'freeQuantity'
-        ? Number(rawValue.replace(/[^\d.-]/g, '')) || null
+        ? Number(rawValue.replace(/[^\d.-]/g, '')) || 0
         : rawValue;
 
     currentItem = { ...currentItem, [field]: numericValue };
@@ -376,7 +376,7 @@ const EditPartiallyProcessed: React.FC<EditPartiallyProcessedProps> = ({
       const itemCost = noOfPacks * buyPrice;
       const discountAmount = (itemCost * discount) / 100; // Calculate item-wise discount
       currentItem.totalCost =
-        itemCost + (itemCost * tax) / 100 - discountAmount; // Update totalCost considering item-wise discount
+        itemCost + (itemCost * tax) / 100 - discountAmount || 0; // Update totalCost considering item-wise discount
     }
 
      // Handle item change to update batch numbers
