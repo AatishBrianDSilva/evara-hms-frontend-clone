@@ -470,12 +470,14 @@ const DonorRegistrationFromHospital: React.FC = () => {
           <TextField
             fullWidth
             id="register-mobile-id"
-            label="mobile"
-            name="Mobile"
+            label="Mobile"
+            name="mobile"
+            inputMode="numeric"
             value={formik.values.mobile}
             onChange={formik.handleChange}
             error={formik.touched.mobile && Boolean(formik.errors.mobile)}
             helperText={formik.touched.mobile && formik.errors.mobile}
+            inputProps={{ maxLength: 10 }}
           />
         </Grid>
         <Grid item xs={12} sm={6} md={4}>
