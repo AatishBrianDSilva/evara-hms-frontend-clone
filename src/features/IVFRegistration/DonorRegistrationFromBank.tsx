@@ -172,7 +172,6 @@ const DonorRegistrationFromBank: React.FC = () => {
       idProofNumber: '',
       idProofIssuedCountry: '',
       ABHANumber: '',
-      interpreter: false,
       isPatientDeceased: false,
       isDonor: false,
       hiv: '',
