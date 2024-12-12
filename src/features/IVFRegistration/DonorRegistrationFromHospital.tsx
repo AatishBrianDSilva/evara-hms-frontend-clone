@@ -824,7 +824,7 @@ const DonorRegistrationFromHospital: React.FC = () => {
             fullWidth
             id="height"
             name="height"
-            label="height"
+            label="Height"
             placeholder="Height"
             value={formik.values.height}
             onChange={formik.handleChange}
