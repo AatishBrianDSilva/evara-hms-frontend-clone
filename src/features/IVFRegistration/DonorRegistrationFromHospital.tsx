@@ -586,24 +586,29 @@ const DonorRegistrationFromHospital: React.FC = () => {
               />
             </Grid>
             <Grid item xs={12} sm={6} md={3}>
-              <TextField
-                fullWidth
-                id="register-dependentMobile-id"
-                label="Dependent Mobile"
-                placeholder="Dependent Mobile"
-                inputMode="numeric"
-                value={formik.values.dependentMobile}
-                onChange={formik.handleChange}
-                error={
-                  formik.touched.dependentMobile &&
-                  Boolean(formik.errors.dependentMobile)
+           <TextField
+              fullWidth
+              id="register-dependentMobile-id"
+              label="Dependent Mobile"
+              name="dependentMobile"
+              placeholder="Dependent Mobile"
+              value={formik.values.dependentMobile}
+              type="number" // Keep numeric keyboard for better UX
+              onChange={(event) => {
+                const value = event.target.value;
+                if (value.length <= 10) {
+                  formik.setFieldValue("dependentMobile", value);
                 }
-                helperText={
-                  formik.touched.dependentMobile &&
-                  formik.errors.dependentMobile
-                }
-                inputProps={{ maxLength: 10 }}
-              />
+              }}
+              error={
+                formik.touched.dependentMobile &&
+                Boolean(formik.errors.dependentMobile)
+              }
+              helperText={
+                formik.touched.dependentMobile &&
+                formik.errors.dependentMobile
+              }
+            />
             </Grid>
             <Grid item xs={12} sm={6} md={3}>
               <TextField
