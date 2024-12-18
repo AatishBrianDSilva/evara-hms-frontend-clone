@@ -471,12 +471,16 @@ const DonorRegistrationFromHospital: React.FC = () => {
             id="register-mobile-id"
             label="Mobile"
             name="mobile"
-            inputMode="numeric"
+            type="number" 
+            onChange={(event) => {
+              const value = event.target.value;
+              if (value.length <= 10) {
+                formik.setFieldValue("mobile", value);
+              }
+            }}            
             value={formik.values.mobile}
-            onChange={formik.handleChange}
             error={formik.touched.mobile && Boolean(formik.errors.mobile)}
             helperText={formik.touched.mobile && formik.errors.mobile}
-            inputProps={{ maxLength: 10 }}
           />
         </Grid>
         <Grid item xs={12} sm={6} md={4}>
@@ -486,7 +490,13 @@ const DonorRegistrationFromHospital: React.FC = () => {
             label="Alernative Mobile"
             name="alernativeMobile"
             value={formik.values.alernativeMobile}
-            onChange={formik.handleChange}
+            type="number" 
+            onChange={(event) => {
+              const value = event.target.value;
+              if (value.length <= 10) {
+                formik.setFieldValue("alernativeMobile", value);
+              }
+            }}            
             error={
               formik.touched.alernativeMobile &&
               Boolean(formik.errors.alernativeMobile)
@@ -494,7 +504,6 @@ const DonorRegistrationFromHospital: React.FC = () => {
             helperText={
               formik.touched.alernativeMobile && formik.errors.alernativeMobile
             }
-            inputProps={{ maxLength: 10 }}
           />
         </Grid>
         <Grid item xs={12} sm={6} md={4}>

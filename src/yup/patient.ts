@@ -18,11 +18,11 @@ export const PatientRegistrationValidationSchema = Yup.object().shape({
   religion: Yup.string().required('Religion is required'),
   mobile: Yup.string().matches(
     /^(\+\d{1,3}\s?)?\d{10,13}$/,
-    'Enter Valid Phone Number',
+    'Enter a 10 digit valid phone number',
   ).required('Mobile number is required'),
   alernativeMobile: Yup.string().matches(
     /^(\+\d{1,3}\s?)?\d{10,13}$/,
-    'Enter Valid Phone Number',
+    'Enter a 10 digit valid phone number',
   ),
   email: Yup.string().email('Invalid email format').required('Email is required'),
   dependentType: Yup.string(),
@@ -30,7 +30,7 @@ export const PatientRegistrationValidationSchema = Yup.object().shape({
   dependentRelation: Yup.string(),
   dependentMobile: Yup.string().matches(
     /^(\+\d{1,3}\s?)?\d{10,13}$/,
-    'Enter Valid Phone Number',
+    'Enter a 10 digit valid phone number',
   ),
   dependentEmail: Yup.string(),
   addressLine1: Yup.string().required('Address Line 1 is required'),
@@ -79,11 +79,11 @@ export const PartnerRegistrationValidationSchema = Yup.object().shape({
   occupation: Yup.string().required('Occupation is required'),
   mobile: Yup.string().matches(
     /^(\+\d{1,3}\s?)?\d{10,13}$/,
-    'Enter Valid Phone Number',
+    'Enter a 10 digit valid phone number',
   ).required('Mobile Number is required'),
   alernativeMobile: Yup.string().matches(
     /^(\+\d{1,3}\s?)?\d{10,13}$/,
-    'Enter Valid Phone Number',
+    'Enter a 10 digit valid phone number',
   ),
   email: Yup.string().email('Invalid email format').required('Email is required'),
   dependentType: Yup.string(),
@@ -91,7 +91,7 @@ export const PartnerRegistrationValidationSchema = Yup.object().shape({
   dependentRelation: Yup.string(),
   dependentMobile: Yup.string().matches(
     /^(\+\d{1,3}\s?)?\d{10,13}$/,
-    'Enter Valid Phone Number',
+    'Enter a 10 digit valid phone number',
   ),
   dependentEmail: Yup.string().email('Invalid email format'),
   addressLine1: Yup.string().required('Address Line 1 is required'),
@@ -138,11 +138,11 @@ export const DonorRegistrationfrombankValidationSchema = Yup.object().shape({
   religion: Yup.string().required('Religion is required'),
   mobile: Yup.string().matches(
     /^(\+\d{1,3}\s?)?\d{10,13}$/,
-    'Enter Valid Phone Number',
+    'Enter a 10 digit valid phone number',
   ).required('Mobile number is required'),
   alernativeMobile: Yup.string().matches(
     /^(\+\d{1,3}\s?)?\d{10,13}$/,
-    'Enter Valid Phone Number',
+    'Enter a 10 digit valid phone number',
   ),
   email: Yup.string().email('Invalid email format').required('Email is required'),
   dependentType: Yup.boolean(),
@@ -198,11 +198,11 @@ export const DonorRegistrationValidationSchemaFromHospital = Yup.object().shape(
     religion: Yup.string(),
     mobile: Yup.string().matches(
       /^(\+\d{1,3}\s?)?\d{10,13}$/,
-      'Enter Valid Phone Number',
+      'Enter a 10 digit valid phone number',
     ).required('Mobile number is required'),
     alernativeMobile: Yup.string().matches(
       /^(\+\d{1,3}\s?)?\d{10,13}$/,
-      'Enter Valid Phone Number',
+      'Enter a 10 digit valid phone number',
     ),
     email: Yup.string().email('Invalid email format').required('Email is required'),
     dependentType: Yup.string(),
@@ -210,7 +210,7 @@ export const DonorRegistrationValidationSchemaFromHospital = Yup.object().shape(
     dependentRelation: Yup.string(),
     dependentMobile: Yup.string().matches(
       /^(\+\d{1,3}\s?)?\d{10,13}$/,
-      'Enter Valid Phone Number',
+      'Enter a 10 digit valid phone number',
     ),
     dependentEmail: Yup.string(),
     addressLine1: Yup.string().required('Address Line 1 is required'),
