@@ -1,4 +1,3 @@
-// AppRoutes.tsx
 import React from 'react';
 import { Navigate, Outlet, Route, Routes } from 'react-router-dom';
 import Layout from '../components/Layout/Layout';
@@ -176,7 +175,6 @@ const AppRoutes: React.FC = () => (
                 EUserRole.Doctor,
                 EUserRole.Nurse,
                 EUserRole.Reception,
-                EUserRole.Embryologist,
                 EUserRole.CenterManager,
               ]}
               navigateTo="/not-authorized"
@@ -307,7 +305,17 @@ const AppRoutes: React.FC = () => (
           {/* More routes for each tab */}
         </Route>
 
-        <Route path="appointments" element={<Appointment />} />
+        <Route
+          path="appointments"
+          element={
+            <ProtectedRoute
+              allowedRoles={Object.values(EUserRole)}
+              navigateTo={'/not-authorized'}
+            />
+          }
+        >
+          <Route index element={<Appointment />} />
+        </Route>
 
         <Route
           path="pharmacy"
@@ -318,6 +326,7 @@ const AppRoutes: React.FC = () => (
                 EUserRole.Billing,
                 EUserRole.Pharmacist,
                 EUserRole.PharmacyManager,
+                EUserRole.Embryologist,
                 EUserRole.CenterManager,
               ]}
               navigateTo={'/not-authorized'}
