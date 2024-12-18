@@ -243,7 +243,7 @@ const AddTreatmentCycle: React.FC<AddTreatmentCycleProps> = ({
                     <Grid item flex={3}>
                       <CustomDatePicker
                         label="Date"
-                        minDate={new Date()}
+                        // minDate={new Date()}
                         value={createForm.values.fields[index].date}
                         onChange={newValue =>
                           createForm.setFieldValue(
