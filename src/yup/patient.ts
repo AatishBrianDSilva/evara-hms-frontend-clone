@@ -37,8 +37,9 @@ export const PatientRegistrationValidationSchema = Yup.object().shape({
   addressLine2: Yup.string(),
   state: Yup.string().required('State is required'),
   city: Yup.string().required('City is required'),
-  pincode: Yup.string().required('Pincode is required'),
-  // country: Yup.string().required("Country is required"),
+  pincode: Yup.string()
+  .required('Pincode is required')
+  .matches(/^\d{6}$/, 'Enter a 6-digit pin code'),
   idProofType: Yup.string().required('ID proof type is required'),
   idProofNumber: Yup.string().required('ID proof number is required'),
   idProofIssuedCountry: Yup.string(),
@@ -98,8 +99,9 @@ export const PartnerRegistrationValidationSchema = Yup.object().shape({
   addressLine2: Yup.string(),
   state: Yup.string().required('State is required'),
   city: Yup.string().required('City is required'),
-  pincode: Yup.string().required('Pincode is required'),
-  // country: Yup.string().required("Country is required"),
+  pincode: Yup.string()
+  .required('Pincode is required')
+  .matches(/^\d{6}$/, 'Enter a 6-digit pin code'),  // country: Yup.string().required("Country is required"),
   idProofType: Yup.string().required('ID proof type is required'),
   idProofNumber: Yup.string().required('ID proof number is required'),
   idProofIssuedCountry: Yup.string(),
@@ -151,8 +153,9 @@ export const DonorRegistrationfrombankValidationSchema = Yup.object().shape({
   addressLine2: Yup.string(),
   state: Yup.string().required('State is required'),
   city: Yup.string().required('City is required'),
-  pincode: Yup.string().required('Pincode is required'),
-  idProofType: Yup.string().required('ID proof type is required'),
+  pincode: Yup.string()
+  .required('Pincode is required')
+  .matches(/^\d{6}$/, 'Enter a 6-digit pin code'),  idProofType: Yup.string().required('ID proof type is required'),
   idProofNumber: Yup.string().required('ID proof number is required'),
   idProofIssuedCountry: Yup.string(),
   ABHANumber: Yup.string().matches(/^\d{14}$/, "Enter a 14 digit valid abha number"),
@@ -217,8 +220,9 @@ export const DonorRegistrationValidationSchemaFromHospital = Yup.object().shape(
     addressLine2: Yup.string(),
     state: Yup.string().required('State is required'),
     city: Yup.string().required('City is required'),
-    pincode: Yup.string().required('Pincode is required'),
-    // country: Yup.string().required("Country is required"),
+    pincode: Yup.string()
+    .required('Pincode is required')
+    .matches(/^\d{6}$/, 'Enter a 6-digit pin code'),    // country: Yup.string().required("Country is required"),
     idProofType: Yup.string().required('ID proof type is required'),
     idProofNumber: Yup.string().required('ID proof number is required'),
     idProofIssuedCountry: Yup.string(),

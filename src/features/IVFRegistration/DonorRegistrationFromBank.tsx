@@ -716,12 +716,13 @@ const DonorRegistrationFromBank: React.FC = () => {
             inputMode="numeric"
             placeholder="Pincode"
             value={formik.values.pincode}
-            onChange={e => {
-              const { value } = e.target;
-              if (/^\d*$/.test(value)) {
-                formik.handleChange(e);
+            type="number"
+            onChange={(event) => {
+              const value = event.target.value;
+              if (value.length <= 6) {
+                formik.setFieldValue("pincode", value);
               }
-            }}
+            }} 
             error={formik.touched.pincode && Boolean(formik.errors.pincode)}
             helperText={formik.touched.pincode && formik.errors.pincode}
             inputProps={{ maxLength: 6 }}
@@ -1247,7 +1248,7 @@ const DonorRegistrationFromBank: React.FC = () => {
       </Grid>
       <Divider sx={{ marginY: 6 }} />
       {/* Image */}
-      <Typography variant="h6">Image</Typography>
+      <Typography variant="h6">Profile Photo</Typography>
       <Grid
         container
         rowSpacing={rowSpacing}
