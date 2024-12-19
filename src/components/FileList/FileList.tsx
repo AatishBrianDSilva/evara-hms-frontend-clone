@@ -1,5 +1,6 @@
 import React from 'react';
-import { List, ListItem, ListItemText, Typography } from '@mui/material';
+import { Box, Link, Typography } from '@mui/material';
+import { OpenInNew } from '@mui/icons-material';
 
 interface FileListProps {
   files: string | string[];
@@ -14,16 +15,30 @@ const FileList: React.FC<FileListProps> = ({ files, title }) => {
       <Typography variant="subtitle1" gutterBottom>
         {title || 'File List'}
       </Typography>
-      <List component={'ol'}>
+      <Box
+        display={'flex'}
+        flexDirection={'column'}
+        border={1}
+        borderColor="grey.300"
+        borderRadius={1}
+        p={2}
+      >
         {fileArray.map((file, index) => {
           const fileName = file.split('/').pop();
           return (
-            <ListItem key={index}>
-              <ListItemText primary={`${index + 1}. ${fileName}`} />
-            </ListItem>
+            <Link href={file} target="_blank" key={index}>
+              <Typography
+                display={'flex'}
+                alignItems={'center'}
+                variant="body1"
+              >
+                {`${index + 1}. ${fileName}`}
+                <OpenInNew sx={{ ml: 1, cursor: 'pointer', fontSize: 16 }} />
+              </Typography>
+            </Link>
           );
         })}
-      </List>
+      </Box>
     </div>
   );
 };

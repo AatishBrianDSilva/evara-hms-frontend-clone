@@ -97,7 +97,6 @@ const SemenAnalysis: React.FC = () => {
   });
 
   const investigation = investigationData?.data;
-  console.log('investigation', investigation?.result?.files);
 
   const loading = investigationLoading || investigationFetching;
 
@@ -125,7 +124,7 @@ const SemenAnalysis: React.FC = () => {
   const handleSubmit = async (
     values: IEditInvestigationForm<ISemenAnalysisForm>,
   ) => {
-    const actualName = actualProcedureName || 'Default Investigation'; // Use a fallback if procedureName is null/undefined
+    const actualName = actualProcedureName || 'Semen Analysis'; // Use a fallback if procedureName is null/undefined
 
     const payload: IEditInvestigationpayload = {
       status: values.status,
@@ -138,8 +137,6 @@ const SemenAnalysis: React.FC = () => {
       testType: ETestType.SemenAnalysis,
       actualName: actualName, // New field added to the payload
     };
-
-    console.log('Payload', payload);
 
     const promise = editInvestigation({
       _id: openEditDialog.id,
