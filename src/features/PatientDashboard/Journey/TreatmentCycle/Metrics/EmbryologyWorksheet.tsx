@@ -1451,7 +1451,7 @@ const EmbryologyWorksheet: React.FC<EmbryologyWorksheetProps> = ({
 
       <Grid item xs={12}>
         <Typography variant="subtitle1" sx={{ mt: 2, mb: 2 }}>
-          Upload Images & Description
+          Upload Report
         </Typography>
         {/* <Grid container spacing={2} marginBottom={2}> */}
         <Grid item xs={12}>
