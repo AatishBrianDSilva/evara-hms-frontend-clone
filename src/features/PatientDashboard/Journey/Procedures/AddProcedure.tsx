@@ -83,7 +83,7 @@ const AddProcedure: React.FC<AddProcedureProps> = ({
 
   const createForm = useFormik({
     initialValues: {
-      fields: [{ procedure: null, doctor: null, date: null }],
+      fields: [{ procedure: null, doctor: doctors.length > 0 ? doctors[0] : null, date: null }],
     },
     validationSchema: AddProcedureValidationSchema,
     onSubmit: handleSubmit,
@@ -133,7 +133,7 @@ const AddProcedure: React.FC<AddProcedureProps> = ({
   const handleAddFields = () => {
     createForm.setFieldValue('fields', [
       ...createForm.values.fields,
-      { procedure: null, doctor: null, date: new Date() },
+      { procedure: null, doctor: doctors.length > 0 ? doctors[0] : null, date: new Date() },
     ]);
   };
 

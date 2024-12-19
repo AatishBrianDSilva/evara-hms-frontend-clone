@@ -85,8 +85,13 @@ const AddInvestigation: React.FC<AddInvestigationProps> = ({
 
   const createForm = useFormik({
     initialValues: {
-      fields: [{ investigation: null, doctor: null, date: null }],
-    },
+      fields: [
+        {
+          investigation: null,
+          doctor: doctors.length > 0 ? doctors[0] : null, // Set first doctor if available
+          date: null,
+        },
+      ],    },
     validationSchema: AddInvestigationValidationSchema,
     onSubmit: handleSubmit,
   });
@@ -135,7 +140,11 @@ const AddInvestigation: React.FC<AddInvestigationProps> = ({
   const handleAddFields = () => {
     createForm.setFieldValue('fields', [
       ...createForm.values.fields,
-      { investigation: null, doctor: null, date: new Date() },
+      {
+        investigation: null,
+        doctor: doctors.length > 0 ? doctors[0] : null, 
+        date: null,
+      },
     ]);
   };
 

@@ -85,7 +85,7 @@ const AddcryoPreservation: React.FC<AddcryoPreservationProps> = ({
 
   const createForm = useFormik({
     initialValues: {
-      fields: [{ cryoPreservation: null, doctor: null, date: null }],
+      fields: [{ cryoPreservation: null, doctor: doctors.length > 0 ? doctors[0] : null, date: null }],
     },
     validationSchema: AddCryoPreservationValidationSchema,
     onSubmit: handleSubmit,
@@ -135,7 +135,7 @@ const AddcryoPreservation: React.FC<AddcryoPreservationProps> = ({
   const handleAddFields = () => {
     createForm.setFieldValue('fields', [
       ...createForm.values.fields,
-      { cryoPreservation: null, doctor: null, date: new Date() },
+      { cryoPreservation: null, doctor: doctors.length > 0 ? doctors[0] : null, date: new Date() },
     ]);
   };
 

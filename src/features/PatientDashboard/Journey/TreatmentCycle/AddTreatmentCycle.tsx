@@ -84,7 +84,7 @@ const AddTreatmentCycle: React.FC<AddTreatmentCycleProps> = ({
 
   const createForm = useFormik({
     initialValues: {
-      fields: [{ treatmentCycle: null, doctor: null, date: null }],
+      fields: [{ treatmentCycle: null, doctor: doctors.length > 0 ? doctors[0] : null, date: null }],
     },
     validationSchema: AddTreatmentCycleValidationSchema,
     onSubmit: handleSubmit,
@@ -134,7 +134,7 @@ const AddTreatmentCycle: React.FC<AddTreatmentCycleProps> = ({
   const handleAddFields = () => {
     createForm.setFieldValue('fields', [
       ...createForm.values.fields,
-      { treatmentCycle: null, doctor: null, date: new Date() },
+      { treatmentCycle: null, doctor: doctors.length > 0 ? doctors[0] : null, date: new Date() },
     ]);
   };
 
