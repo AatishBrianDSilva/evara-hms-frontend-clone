@@ -235,7 +235,7 @@ const AddService: React.FC<AddServiceProps> = ({
                     <Grid item flex={3}>
                       <CustomDatePicker
                         label="Date"
-                        minDate={new Date()}
+                        minDate={new Date(new Date().setDate(new Date().getDate() - 7))}
                         format="dd/MM/yyyy"
                         value={createForm.values.fields[index].date}
                         onChange={newValue =>

@@ -248,7 +248,7 @@ const AddPackage: React.FC<AddPackageProps> = ({
                     <Grid item flex={1}>
                       <CustomDatePicker
                         label="Date"
-                        minDate={new Date()}
+                        minDate={new Date(new Date().setDate(new Date().getDate() - 7))} // Allow dates starting 7 days ago
                         format="dd/MM/yyyy"
                         value={createForm.values.fields[index].date}
                         onChange={newValue =>

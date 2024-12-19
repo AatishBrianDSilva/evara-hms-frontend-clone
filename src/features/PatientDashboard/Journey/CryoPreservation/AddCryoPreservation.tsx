@@ -247,7 +247,7 @@ const AddcryoPreservation: React.FC<AddcryoPreservationProps> = ({
                     <Grid item flex={3}>
                       <CustomDatePicker
                         label="Date"
-                        minDate={new Date()}
+                        minDate={new Date(new Date().setDate(new Date().getDate() - 7))}
                         value={createForm.values.fields[index].date}
                         onChange={newValue =>
                           createForm.setFieldValue(
