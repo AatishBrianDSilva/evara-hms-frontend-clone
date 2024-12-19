@@ -66,7 +66,7 @@ const ReportModalHeader: React.FC<ReportModalHeaderProps> = ({
               <strong>Date: </strong> {date}
             </Typography>
             <Typography>
-              <strong>Doc: </strong> {doctor}
+              <strong>Doctor: </strong> {doctor}
             </Typography>
           </Box>
         </Grid>
