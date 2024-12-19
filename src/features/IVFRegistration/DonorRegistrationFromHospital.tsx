@@ -801,7 +801,13 @@ const DonorRegistrationFromHospital: React.FC = () => {
             label="ABHA Number"
             placeholder="ABHA Number"
             value={formik.values.ABHANumber}
-            onChange={formik.handleChange}
+            type="number" 
+            onChange={(event) => {
+              const value = event.target.value;
+              if (value.length <= 14) {
+                formik.setFieldValue("ABHANumber", value);
+              }
+            }}
             error={
               formik.touched.ABHANumber && Boolean(formik.errors.ABHANumber)
             }
