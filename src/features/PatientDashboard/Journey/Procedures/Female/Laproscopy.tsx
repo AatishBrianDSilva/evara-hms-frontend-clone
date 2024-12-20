@@ -342,7 +342,7 @@ const Laparoscopy: React.FC<LaparoscopyProps> = () => {
 
         <Grid container pl={2}>
           <Typography variant="subtitle1" sx={{ mt: 2, mb: 2 }}>
-            Upload Images & Description
+            Upload Report
           </Typography>
           <Grid container spacing={2} marginBottom={2}>
             <Grid item xs={12}>

@@ -166,9 +166,11 @@ const PatientDashboardAddPartner: React.FC<
         position={'absolute'}
         top={'50%'}
         left={'50%'}
-        width={'40%'}
+        width={'70%'}
         borderRadius={1}
         boxShadow={5}
+        maxHeight="80vh"
+        overflow="auto"
         px={8}
         py={5}
         bgcolor={'background.paper'}
@@ -488,28 +490,11 @@ const PatientDashboardAddPartner: React.FC<
             </Grid>
           </Grid>
 
-          <Box display={'flex'} justifyContent={'center'} gap={1} mt={2} mb={2}>
-            {/* <Box flex={1}>
-              <FileUploadAndPreview
-                labelName='Identity Document'
-                color='secondary'
-                maxFiles={2}
-                previewDirection='column'
-                buttonStyle={{ width: '200px', justifyContent: 'center' }} // Adjust the width as needed
-              />
-            </Box>
-            <Box flex={1}>
-              <FileUploadAndPreview
-                labelName='Photo'
-                maxFiles={1}
-                color='secondary'
-                previewDirection='column'
-                buttonStyle={{ width: '200px', justifyContent: 'center' }} // Ensure this matches the width above
-              />
-            </Box> */}
-            <Divider sx={{ marginY: 6 }} />
-            {/* Image */}
-            <Typography variant="h6">Image</Typography>
+          <Box mt={2} mb={2}>
+            <Divider sx={{ mb: 2 }} />
+            <Typography variant="h6" sx={{ mb: 2 }}>
+              Profile Photo
+            </Typography>
             <Grid
               container
               rowSpacing={rowSpacing}

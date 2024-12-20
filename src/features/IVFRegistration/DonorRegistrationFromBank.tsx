@@ -471,12 +471,16 @@ const DonorRegistrationFromBank: React.FC = () => {
             id="register-mobile-id"
             label="Mobile"
             name="mobile"
-            inputMode="numeric"
             value={formik.values.mobile}
-            onChange={formik.handleChange}
+            type="number"
+            onChange={event => {
+              const value = event.target.value;
+              if (value.length <= 10) {
+                formik.setFieldValue('mobile', value);
+              }
+            }}
             error={formik.touched.mobile && Boolean(formik.errors.mobile)}
             helperText={formik.touched.mobile && formik.errors.mobile}
-            inputProps={{ maxLength: 10 }}
           />
         </Grid>
         <Grid item xs={12} sm={6} md={4}>
@@ -486,7 +490,13 @@ const DonorRegistrationFromBank: React.FC = () => {
             label="Alernative Mobile"
             name="alernativeMobile"
             value={formik.values.alernativeMobile}
-            onChange={formik.handleChange}
+            type="number"
+            onChange={event => {
+              const value = event.target.value;
+              if (value.length <= 10) {
+                formik.setFieldValue('alernativeMobile', value);
+              }
+            }}
             error={
               formik.touched.alernativeMobile &&
               Boolean(formik.errors.alernativeMobile)
@@ -494,7 +504,6 @@ const DonorRegistrationFromBank: React.FC = () => {
             helperText={
               formik.touched.alernativeMobile && formik.errors.alernativeMobile
             }
-            inputProps={{ maxLength: 10 }}
           />
         </Grid>
         <Grid item xs={12} sm={6} md={4}>
@@ -581,10 +590,16 @@ const DonorRegistrationFromBank: React.FC = () => {
                 fullWidth
                 id="register-dependentMobile-id"
                 label="Dependent Mobile"
+                name="dependentMobile"
                 placeholder="Dependent Mobile"
-                inputMode="numeric"
                 value={formik.values.dependentMobile}
-                onChange={formik.handleChange}
+                type="number" // Keep numeric keyboard for better UX
+                onChange={event => {
+                  const value = event.target.value;
+                  if (value.length <= 10) {
+                    formik.setFieldValue('dependentMobile', value);
+                  }
+                }}
                 error={
                   formik.touched.dependentMobile &&
                   Boolean(formik.errors.dependentMobile)
@@ -593,7 +608,6 @@ const DonorRegistrationFromBank: React.FC = () => {
                   formik.touched.dependentMobile &&
                   formik.errors.dependentMobile
                 }
-                inputProps={{ maxLength: 10 }}
               />
             </Grid>
             <Grid item xs={12} sm={6} md={3}>
@@ -702,10 +716,11 @@ const DonorRegistrationFromBank: React.FC = () => {
             inputMode="numeric"
             placeholder="Pincode"
             value={formik.values.pincode}
-            onChange={e => {
-              const { value } = e.target;
-              if (/^\d*$/.test(value)) {
-                formik.handleChange(e);
+            type="number"
+            onChange={event => {
+              const value = event.target.value;
+              if (value.length <= 6) {
+                formik.setFieldValue('pincode', value);
               }
             }}
             error={formik.touched.pincode && Boolean(formik.errors.pincode)}
@@ -787,7 +802,13 @@ const DonorRegistrationFromBank: React.FC = () => {
             label="ABHA Number"
             placeholder="ABHA Number"
             value={formik.values.ABHANumber}
-            onChange={formik.handleChange}
+            type="number"
+            onChange={event => {
+              const value = event.target.value;
+              if (value.length <= 14) {
+                formik.setFieldValue('ABHANumber', value);
+              }
+            }}
             error={
               formik.touched.ABHANumber && Boolean(formik.errors.ABHANumber)
             }
@@ -1227,7 +1248,7 @@ const DonorRegistrationFromBank: React.FC = () => {
       </Grid>
       <Divider sx={{ marginY: 6 }} />
       {/* Image */}
-      <Typography variant="h6">Image</Typography>
+      <Typography variant="h6">Profile Photo</Typography>
       <Grid
         container
         rowSpacing={rowSpacing}

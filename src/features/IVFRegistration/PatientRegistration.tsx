@@ -67,7 +67,7 @@ const PatientRegistration: React.FC = () => {
   const IDTypes = IDTypeData?.data || [];
   const idLoading = IDTypeLoading || IDTypeFetching;
 
-  // console.log(" ID Type Data", IDTypes);
+  console.log(' ID Type Data', IDTypes);
 
   const {
     data: PatientSourceData,
@@ -468,12 +468,16 @@ const PatientRegistration: React.FC = () => {
             name="mobile"
             label="Mobile"
             placeholder="Mobile"
-            inputMode="numeric"
             value={formik.values.mobile}
-            onChange={formik.handleChange}
+            type="number"
+            onChange={event => {
+              const value = event.target.value;
+              if (value.length <= 10) {
+                formik.setFieldValue('mobile', value);
+              }
+            }}
             error={formik.touched.mobile && Boolean(formik.errors.mobile)}
             helperText={formik.touched.mobile && formik.errors.mobile}
-            inputProps={{ maxLength: 10 }}
           />
         </Grid>
         <Grid item xs={12} sm={6} md={4}>
@@ -483,7 +487,13 @@ const PatientRegistration: React.FC = () => {
             label="Alernative Mobile"
             name="alernativeMobile"
             value={formik.values.alernativeMobile}
-            onChange={formik.handleChange}
+            type="number"
+            onChange={event => {
+              const value = event.target.value;
+              if (value.length <= 10) {
+                formik.setFieldValue('alernativeMobile', value);
+              }
+            }}
             error={
               formik.touched.alernativeMobile &&
               Boolean(formik.errors.alernativeMobile)
@@ -491,7 +501,6 @@ const PatientRegistration: React.FC = () => {
             helperText={
               formik.touched.alernativeMobile && formik.errors.alernativeMobile
             }
-            inputProps={{ maxLength: 10 }}
           />
         </Grid>
         <Grid item xs={12} sm={6} md={4}>
@@ -578,10 +587,16 @@ const PatientRegistration: React.FC = () => {
                 fullWidth
                 id="register-dependentMobile-id"
                 label="Dependent Mobile"
+                name="dependentMobile"
                 placeholder="Dependent Mobile"
-                inputMode="numeric"
                 value={formik.values.dependentMobile}
-                onChange={formik.handleChange}
+                type="number" // Keep numeric keyboard for better UX
+                onChange={event => {
+                  const value = event.target.value;
+                  if (value.length <= 10) {
+                    formik.setFieldValue('dependentMobile', value);
+                  }
+                }}
                 error={
                   formik.touched.dependentMobile &&
                   Boolean(formik.errors.dependentMobile)
@@ -590,7 +605,6 @@ const PatientRegistration: React.FC = () => {
                   formik.touched.dependentMobile &&
                   formik.errors.dependentMobile
                 }
-                inputProps={{ maxLength: 10 }}
               />
             </Grid>
             <Grid item xs={12} sm={6} md={3}>
@@ -699,7 +713,12 @@ const PatientRegistration: React.FC = () => {
             placeholder="Pincode"
             type="number"
             value={formik.values.pincode}
-            onChange={formik.handleChange}
+            onChange={event => {
+              const value = event.target.value;
+              if (value.length <= 6) {
+                formik.setFieldValue('pincode', value);
+              }
+            }}
             error={formik.touched.pincode && Boolean(formik.errors.pincode)}
             helperText={formik.touched.pincode && formik.errors.pincode}
             inputProps={{ maxLength: 6 }}
@@ -783,7 +802,13 @@ const PatientRegistration: React.FC = () => {
             label="ABHA Number"
             placeholder="ABHA Number"
             value={formik.values.ABHANumber}
-            onChange={formik.handleChange}
+            type="number"
+            onChange={event => {
+              const value = event.target.value;
+              if (value.length <= 14) {
+                formik.setFieldValue('ABHANumber', value);
+              }
+            }}
             error={
               formik.touched.ABHANumber && Boolean(formik.errors.ABHANumber)
             }
@@ -1055,6 +1080,7 @@ const PatientRegistration: React.FC = () => {
                 placeholder="Amount Eligible"
                 value={formik.values.insuranceAmountEligible}
                 onChange={formik.handleChange}
+                type="number"
                 error={
                   formik.touched.insuranceAmountEligible &&
                   Boolean(formik.errors.insuranceAmountEligible)
@@ -1070,7 +1096,7 @@ const PatientRegistration: React.FC = () => {
       </Grid>
       <Divider sx={{ marginY: 6 }} />
       {/* Image */}
-      <Typography variant="h6">Image</Typography>
+      <Typography variant="h6">Profile Photo</Typography>
       <Grid
         container
         rowSpacing={rowSpacing}

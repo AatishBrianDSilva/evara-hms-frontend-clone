@@ -83,7 +83,13 @@ const AddProcedure: React.FC<AddProcedureProps> = ({
 
   const createForm = useFormik({
     initialValues: {
-      fields: [{ procedure: null, doctor: null, date: null }],
+      fields: [
+        {
+          procedure: null,
+          doctor: doctors.length > 0 ? doctors[0] : null,
+          date: null,
+        },
+      ],
     },
     validationSchema: AddProcedureValidationSchema,
     onSubmit: handleSubmit,
@@ -133,7 +139,11 @@ const AddProcedure: React.FC<AddProcedureProps> = ({
   const handleAddFields = () => {
     createForm.setFieldValue('fields', [
       ...createForm.values.fields,
-      { procedure: null, doctor: null, date: new Date() },
+      {
+        procedure: null,
+        doctor: doctors.length > 0 ? doctors[0] : null,
+        date: new Date(),
+      },
     ]);
   };
 
@@ -238,7 +248,9 @@ const AddProcedure: React.FC<AddProcedureProps> = ({
                     <Grid item flex={3}>
                       <CustomDatePicker
                         label="Date"
-                        minDate={new Date()}
+                        minDate={
+                          new Date(new Date().setDate(new Date().getDate() - 7))
+                        }
                         value={createForm.values.fields[index].date}
                         onChange={newValue =>
                           createForm.setFieldValue(
