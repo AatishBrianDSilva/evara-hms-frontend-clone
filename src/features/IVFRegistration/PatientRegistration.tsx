@@ -67,7 +67,7 @@ const PatientRegistration: React.FC = () => {
   const IDTypes = IDTypeData?.data || [];
   const idLoading = IDTypeLoading || IDTypeFetching;
 
-  console.log(" ID Type Data", IDTypes);
+  console.log(' ID Type Data', IDTypes);
 
   const {
     data: PatientSourceData,
@@ -469,11 +469,11 @@ const PatientRegistration: React.FC = () => {
             label="Mobile"
             placeholder="Mobile"
             value={formik.values.mobile}
-            type="number" 
-            onChange={(event) => {
+            type="number"
+            onChange={event => {
               const value = event.target.value;
               if (value.length <= 10) {
-                formik.setFieldValue("mobile", value);
+                formik.setFieldValue('mobile', value);
               }
             }}
             error={formik.touched.mobile && Boolean(formik.errors.mobile)}
@@ -487,11 +487,11 @@ const PatientRegistration: React.FC = () => {
             label="Alernative Mobile"
             name="alernativeMobile"
             value={formik.values.alernativeMobile}
-            type="number" 
-            onChange={(event) => {
+            type="number"
+            onChange={event => {
               const value = event.target.value;
               if (value.length <= 10) {
-                formik.setFieldValue("alernativeMobile", value);
+                formik.setFieldValue('alernativeMobile', value);
               }
             }}
             error={
@@ -583,29 +583,29 @@ const PatientRegistration: React.FC = () => {
               />
             </Grid>
             <Grid item xs={12} sm={6} md={3}>
-            <TextField
-              fullWidth
-              id="register-dependentMobile-id"
-              label="Dependent Mobile"
-              name="dependentMobile"
-              placeholder="Dependent Mobile"
-              value={formik.values.dependentMobile}
-              type="number" // Keep numeric keyboard for better UX
-              onChange={(event) => {
-                const value = event.target.value;
-                if (value.length <= 10) {
-                  formik.setFieldValue("dependentMobile", value);
+              <TextField
+                fullWidth
+                id="register-dependentMobile-id"
+                label="Dependent Mobile"
+                name="dependentMobile"
+                placeholder="Dependent Mobile"
+                value={formik.values.dependentMobile}
+                type="number" // Keep numeric keyboard for better UX
+                onChange={event => {
+                  const value = event.target.value;
+                  if (value.length <= 10) {
+                    formik.setFieldValue('dependentMobile', value);
+                  }
+                }}
+                error={
+                  formik.touched.dependentMobile &&
+                  Boolean(formik.errors.dependentMobile)
                 }
-              }}
-              error={
-                formik.touched.dependentMobile &&
-                Boolean(formik.errors.dependentMobile)
-              }
-              helperText={
-                formik.touched.dependentMobile &&
-                formik.errors.dependentMobile
-              }
-            />
+                helperText={
+                  formik.touched.dependentMobile &&
+                  formik.errors.dependentMobile
+                }
+              />
             </Grid>
             <Grid item xs={12} sm={6} md={3}>
               <TextField
@@ -713,12 +713,12 @@ const PatientRegistration: React.FC = () => {
             placeholder="Pincode"
             type="number"
             value={formik.values.pincode}
-            onChange={(event) => {
+            onChange={event => {
               const value = event.target.value;
               if (value.length <= 6) {
-                formik.setFieldValue("pincode", value);
+                formik.setFieldValue('pincode', value);
               }
-            }}            
+            }}
             error={formik.touched.pincode && Boolean(formik.errors.pincode)}
             helperText={formik.touched.pincode && formik.errors.pincode}
             inputProps={{ maxLength: 6 }}
@@ -802,11 +802,11 @@ const PatientRegistration: React.FC = () => {
             label="ABHA Number"
             placeholder="ABHA Number"
             value={formik.values.ABHANumber}
-            type="number" 
-            onChange={(event) => {
+            type="number"
+            onChange={event => {
               const value = event.target.value;
               if (value.length <= 14) {
-                formik.setFieldValue("ABHANumber", value);
+                formik.setFieldValue('ABHANumber', value);
               }
             }}
             error={

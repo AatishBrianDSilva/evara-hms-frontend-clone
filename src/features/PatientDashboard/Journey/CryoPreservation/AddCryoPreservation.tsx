@@ -85,7 +85,13 @@ const AddcryoPreservation: React.FC<AddcryoPreservationProps> = ({
 
   const createForm = useFormik({
     initialValues: {
-      fields: [{ cryoPreservation: null, doctor: doctors.length > 0 ? doctors[0] : null, date: null }],
+      fields: [
+        {
+          cryoPreservation: null,
+          doctor: doctors.length > 0 ? doctors[0] : null,
+          date: null,
+        },
+      ],
     },
     validationSchema: AddCryoPreservationValidationSchema,
     onSubmit: handleSubmit,
@@ -135,7 +141,11 @@ const AddcryoPreservation: React.FC<AddcryoPreservationProps> = ({
   const handleAddFields = () => {
     createForm.setFieldValue('fields', [
       ...createForm.values.fields,
-      { cryoPreservation: null, doctor: doctors.length > 0 ? doctors[0] : null, date: new Date() },
+      {
+        cryoPreservation: null,
+        doctor: doctors.length > 0 ? doctors[0] : null,
+        date: new Date(),
+      },
     ]);
   };
 
@@ -247,7 +257,9 @@ const AddcryoPreservation: React.FC<AddcryoPreservationProps> = ({
                     <Grid item flex={3}>
                       <CustomDatePicker
                         label="Date"
-                        minDate={new Date(new Date().setDate(new Date().getDate() - 7))}
+                        minDate={
+                          new Date(new Date().setDate(new Date().getDate() - 7))
+                        }
                         value={createForm.values.fields[index].date}
                         onChange={newValue =>
                           createForm.setFieldValue(

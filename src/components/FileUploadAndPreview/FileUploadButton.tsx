@@ -30,6 +30,7 @@ interface FileUploadButtonProps {
   bucket: EBuckets;
   documentType?: EDocumentTypes;
   reportId?: string;
+  showSubmitHint?: boolean;
 }
 
 const FileUploadButton: React.FC<FileUploadButtonProps> = ({
@@ -46,6 +47,7 @@ const FileUploadButton: React.FC<FileUploadButtonProps> = ({
   bucket,
   documentType,
   reportId,
+  showSubmitHint = false,
 }) => {
   const maxFileSizeInBytes = maxFileSizeinMB * 1024 * 1024;
 
@@ -291,9 +293,16 @@ const FileUploadButton: React.FC<FileUploadButtonProps> = ({
         </Box>
       )}
       {uploadSuccess && (
-        <Typography variant="subtitle1" style={{ color: 'green' }}>
-          Files uploaded successfully!
-        </Typography>
+        <>
+          <Typography variant="subtitle1" style={{ color: 'green' }}>
+            Files uploaded successfully!
+          </Typography>
+          {showSubmitHint && (
+            <Typography variant="subtitle1" style={{ color: 'green' }}>
+              Click on Submit/Update to save the files.
+            </Typography>
+          )}
+        </>
       )}
       {error && (
         <Typography color="error" variant="subtitle2">

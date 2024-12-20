@@ -91,7 +91,8 @@ const AddInvestigation: React.FC<AddInvestigationProps> = ({
           doctor: doctors.length > 0 ? doctors[0] : null, // Set first doctor if available
           date: null,
         },
-      ],    },
+      ],
+    },
     validationSchema: AddInvestigationValidationSchema,
     onSubmit: handleSubmit,
   });
@@ -142,7 +143,7 @@ const AddInvestigation: React.FC<AddInvestigationProps> = ({
       ...createForm.values.fields,
       {
         investigation: null,
-        doctor: doctors.length > 0 ? doctors[0] : null, 
+        doctor: doctors.length > 0 ? doctors[0] : null,
         date: null,
       },
     ]);
@@ -258,7 +259,9 @@ const AddInvestigation: React.FC<AddInvestigationProps> = ({
                     <Grid item flex={3}>
                       <CustomDatePicker
                         label="Date"
-                        minDate={new Date(new Date().setDate(new Date().getDate() - 7))}
+                        minDate={
+                          new Date(new Date().setDate(new Date().getDate() - 7))
+                        }
                         format="dd/MM/yyyy"
                         value={createForm.values.fields[index].date}
                         onChange={newValue =>

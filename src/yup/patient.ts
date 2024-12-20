@@ -16,15 +16,19 @@ export const PatientRegistrationValidationSchema = Yup.object().shape({
   motherTounge: Yup.string(),
   occupation: Yup.string().required('Occupation is required'),
   religion: Yup.string().required('Religion is required'),
-  mobile: Yup.string().matches(
-    /^(\+\d{1,3}\s?)?\d{10,13}$/,
-    'Enter a 10 digit valid phone number',
-  ).required('Mobile number is required'),
+  mobile: Yup.string()
+    .matches(
+      /^(\+\d{1,3}\s?)?\d{10,13}$/,
+      'Enter a 10 digit valid phone number',
+    )
+    .required('Mobile number is required'),
   alernativeMobile: Yup.string().matches(
     /^(\+\d{1,3}\s?)?\d{10,13}$/,
     'Enter a 10 digit valid phone number',
   ),
-  email: Yup.string().email('Invalid email format').required('Email is required'),
+  email: Yup.string()
+    .email('Invalid email format')
+    .required('Email is required'),
   dependentType: Yup.string(),
   dependentName: Yup.string(),
   dependentRelation: Yup.string(),
@@ -38,12 +42,15 @@ export const PatientRegistrationValidationSchema = Yup.object().shape({
   state: Yup.string().required('State is required'),
   city: Yup.string().required('City is required'),
   pincode: Yup.string()
-  .required('Pincode is required')
-  .matches(/^\d{6}$/, 'Enter a 6-digit pin code'),
+    .required('Pincode is required')
+    .matches(/^\d{6}$/, 'Enter a 6-digit pin code'),
   idProofType: Yup.string().required('ID proof type is required'),
   idProofNumber: Yup.string().required('ID proof number is required'),
   idProofIssuedCountry: Yup.string(),
-  ABHANumber: Yup.string().matches(/^\d{14}$/, "Enter a 14 digit valid abha number"),
+  ABHANumber: Yup.string().matches(
+    /^\d{14}$/,
+    'Enter a 14 digit valid abha number',
+  ),
   reasonOfVisit: Yup.string().required('Reason of visit is required'),
   referredBy: Yup.string(),
   referredByOther: Yup.string(),
@@ -78,15 +85,19 @@ export const PartnerRegistrationValidationSchema = Yup.object().shape({
   countryBirth: Yup.string(),
   motherTounge: Yup.string(),
   occupation: Yup.string().required('Occupation is required'),
-  mobile: Yup.string().matches(
-    /^(\+\d{1,3}\s?)?\d{10,13}$/,
-    'Enter a 10 digit valid phone number',
-  ).required('Mobile Number is required'),
+  mobile: Yup.string()
+    .matches(
+      /^(\+\d{1,3}\s?)?\d{10,13}$/,
+      'Enter a 10 digit valid phone number',
+    )
+    .required('Mobile Number is required'),
   alernativeMobile: Yup.string().matches(
     /^(\+\d{1,3}\s?)?\d{10,13}$/,
     'Enter a 10 digit valid phone number',
   ),
-  email: Yup.string().email('Invalid email format').required('Email is required'),
+  email: Yup.string()
+    .email('Invalid email format')
+    .required('Email is required'),
   dependentType: Yup.string(),
   dependentName: Yup.string(),
   dependentRelation: Yup.string(),
@@ -100,12 +111,15 @@ export const PartnerRegistrationValidationSchema = Yup.object().shape({
   state: Yup.string().required('State is required'),
   city: Yup.string().required('City is required'),
   pincode: Yup.string()
-  .required('Pincode is required')
-  .matches(/^\d{6}$/, 'Enter a 6-digit pin code'),  // country: Yup.string().required("Country is required"),
+    .required('Pincode is required')
+    .matches(/^\d{6}$/, 'Enter a 6-digit pin code'), // country: Yup.string().required("Country is required"),
   idProofType: Yup.string().required('ID proof type is required'),
   idProofNumber: Yup.string().required('ID proof number is required'),
   idProofIssuedCountry: Yup.string(),
-  ABHANumber: Yup.string().matches(/^\d{14}$/, "Enter a 14 digit valid abha number"),
+  ABHANumber: Yup.string().matches(
+    /^\d{14}$/,
+    'Enter a 14 digit valid abha number',
+  ),
   referredBy: Yup.string(),
   referredByOther: Yup.string(),
   referredByDoctor: Yup.string(),
@@ -138,15 +152,19 @@ export const DonorRegistrationfrombankValidationSchema = Yup.object().shape({
   motherTounge: Yup.string(),
   occupation: Yup.string().required('Occupation is required'),
   religion: Yup.string().required('Religion is required'),
-  mobile: Yup.string().matches(
-    /^(\+\d{1,3}\s?)?\d{10,13}$/,
-    'Enter a 10 digit valid phone number',
-  ).required('Mobile number is required'),
+  mobile: Yup.string()
+    .matches(
+      /^(\+\d{1,3}\s?)?\d{10,13}$/,
+      'Enter a 10 digit valid phone number',
+    )
+    .required('Mobile number is required'),
   alernativeMobile: Yup.string().matches(
     /^(\+\d{1,3}\s?)?\d{10,13}$/,
     'Enter a 10 digit valid phone number',
   ),
-  email: Yup.string().email('Invalid email format').required('Email is required'),
+  email: Yup.string()
+    .email('Invalid email format')
+    .required('Email is required'),
   dependentType: Yup.boolean(),
 
   addressLine1: Yup.string().required('Address line 1 is required'),
@@ -154,11 +172,15 @@ export const DonorRegistrationfrombankValidationSchema = Yup.object().shape({
   state: Yup.string().required('State is required'),
   city: Yup.string().required('City is required'),
   pincode: Yup.string()
-  .required('Pincode is required')
-  .matches(/^\d{6}$/, 'Enter a 6-digit pin code'),  idProofType: Yup.string().required('ID proof type is required'),
+    .required('Pincode is required')
+    .matches(/^\d{6}$/, 'Enter a 6-digit pin code'),
+  idProofType: Yup.string().required('ID proof type is required'),
   idProofNumber: Yup.string().required('ID proof number is required'),
   idProofIssuedCountry: Yup.string(),
-  ABHANumber: Yup.string().matches(/^\d{14}$/, "Enter a 14 digit valid abha number"),
+  ABHANumber: Yup.string().matches(
+    /^\d{14}$/,
+    'Enter a 14 digit valid abha number',
+  ),
   interpreter: Yup.boolean(),
   isDonor: Yup.boolean(),
   hiv: Yup.string(),
@@ -199,15 +221,19 @@ export const DonorRegistrationValidationSchemaFromHospital = Yup.object().shape(
     motherTounge: Yup.string(),
     occupation: Yup.string().required('Occupation is required'),
     religion: Yup.string(),
-    mobile: Yup.string().matches(
-      /^(\+\d{1,3}\s?)?\d{10,13}$/,
-      'Enter a 10 digit valid phone number',
-    ).required('Mobile number is required'),
+    mobile: Yup.string()
+      .matches(
+        /^(\+\d{1,3}\s?)?\d{10,13}$/,
+        'Enter a 10 digit valid phone number',
+      )
+      .required('Mobile number is required'),
     alernativeMobile: Yup.string().matches(
       /^(\+\d{1,3}\s?)?\d{10,13}$/,
       'Enter a 10 digit valid phone number',
     ),
-    email: Yup.string().email('Invalid email format').required('Email is required'),
+    email: Yup.string()
+      .email('Invalid email format')
+      .required('Email is required'),
     dependentType: Yup.string(),
     dependentName: Yup.string(),
     dependentRelation: Yup.string(),
@@ -221,12 +247,15 @@ export const DonorRegistrationValidationSchemaFromHospital = Yup.object().shape(
     state: Yup.string().required('State is required'),
     city: Yup.string().required('City is required'),
     pincode: Yup.string()
-    .required('Pincode is required')
-    .matches(/^\d{6}$/, 'Enter a 6-digit pin code'),    // country: Yup.string().required("Country is required"),
+      .required('Pincode is required')
+      .matches(/^\d{6}$/, 'Enter a 6-digit pin code'), // country: Yup.string().required("Country is required"),
     idProofType: Yup.string().required('ID proof type is required'),
     idProofNumber: Yup.string().required('ID proof number is required'),
     idProofIssuedCountry: Yup.string(),
-    ABHANumber: Yup.string().matches(/^\d{14}$/, "Enter a 14 digit valid abha number"),
+    ABHANumber: Yup.string().matches(
+      /^\d{14}$/,
+      'Enter a 14 digit valid abha number',
+    ),
     reasonOfVisit: Yup.string(),
     referredBy: Yup.string(),
     referredByOther: Yup.string(),

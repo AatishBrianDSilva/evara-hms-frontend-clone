@@ -52,7 +52,6 @@ const PatientDetails: React.FC = () => {
     partner,
     case: patientCase,
   } = useSelector((state: RootState) => state.patients);
-  console.log('patient Case data', patientCase);
 
   // const defaultSelectedDonorId = "defaultDonorId";
   const [selectedDonorId, setSelectedDonorId] = useState<DonorData | undefined>(
@@ -71,9 +70,7 @@ const PatientDetails: React.FC = () => {
     },
   });
 
-  const donorsData = (donors as DonorsResponse)?.data?.records || [];
-
-  console.log('Donor Data', donorsData);
+  // const donorsData = (donors as DonorsResponse)?.data?.records || [];
 
   const [assignCaseToDonorMutation] = useAssignCaseToDonorMutation();
 

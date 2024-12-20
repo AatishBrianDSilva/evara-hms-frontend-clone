@@ -83,7 +83,13 @@ const AddService: React.FC<AddServiceProps> = ({
 
   const createForm = useFormik({
     initialValues: {
-      fields: [{ service: null, doctor: doctors.length > 0 ? doctors[0] : null, date: null }],
+      fields: [
+        {
+          service: null,
+          doctor: doctors.length > 0 ? doctors[0] : null,
+          date: null,
+        },
+      ],
     },
     validationSchema: AddServiceValidationSchema,
     onSubmit: handleSubmit,
@@ -133,7 +139,11 @@ const AddService: React.FC<AddServiceProps> = ({
   const handleAddFields = () => {
     createForm.setFieldValue('fields', [
       ...createForm.values.fields,
-      { service: null, doctor: doctors.length > 0 ? doctors[0] : null, date: new Date() },
+      {
+        service: null,
+        doctor: doctors.length > 0 ? doctors[0] : null,
+        date: new Date(),
+      },
     ]);
   };
 
@@ -235,7 +245,9 @@ const AddService: React.FC<AddServiceProps> = ({
                     <Grid item flex={3}>
                       <CustomDatePicker
                         label="Date"
-                        minDate={new Date(new Date().setDate(new Date().getDate() - 7))}
+                        minDate={
+                          new Date(new Date().setDate(new Date().getDate() - 7))
+                        }
                         format="dd/MM/yyyy"
                         value={createForm.values.fields[index].date}
                         onChange={newValue =>
