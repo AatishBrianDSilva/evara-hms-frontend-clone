@@ -235,7 +235,7 @@ const SemenAnalysis: React.FC = () => {
 
     // Check if both values are valid numbers
     if (!isNaN(concentration) && !isNaN(vol)) {
-      const total = concentration * vol;
+      const total = (concentration / 100) * vol;
       // Format the total to two decimal places
       const formattedTotal = total.toFixed(2);
 
@@ -262,7 +262,7 @@ const SemenAnalysis: React.FC = () => {
 
     // Check if both values are valid numbers
     if (!isNaN(concentration) && !isNaN(motility) && !isNaN(vol)) {
-      const total = (concentration * vol * motility) / 100;
+      const total = (concentration / 100) * vol * (motility / 100);
 
       // Format the total to two decimal places
       const formattedTotal = total.toFixed(2);
@@ -293,7 +293,7 @@ const SemenAnalysis: React.FC = () => {
 
     // Check if both values are valid numbers
     if (!isNaN(concentration) && !isNaN(normal) && !isNaN(vol)) {
-      const total = concentration * vol * normal;
+      const total = (concentration / 100) * vol * (normal / 100);
 
       // Format the total to two decimal places
       const formattedTotal = total.toFixed(2);
