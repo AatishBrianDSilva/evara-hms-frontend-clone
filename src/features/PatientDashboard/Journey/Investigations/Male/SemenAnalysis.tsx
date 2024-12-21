@@ -417,8 +417,9 @@ const SemenAnalysis: React.FC = () => {
             }
             select
           >
-            <MenuItem value="Retrograte">Retrograte</MenuItem>
-            <MenuItem value="Intorgrate">Intorgrate</MenuItem>
+            <MenuItem value="Retrograde">Retrograde</MenuItem>
+            <MenuItem value="Antigrade">Antigrade</MenuItem>
+            <MenuItem value="PEU">PEU</MenuItem>
           </TextField>
         </Grid>
 
