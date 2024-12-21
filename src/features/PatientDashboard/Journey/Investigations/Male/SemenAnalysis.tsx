@@ -7,8 +7,10 @@ import {
   Skeleton,
   TextField,
   Typography,
+  MenuItem,
+  InputAdornment,
 } from '@mui/material';
-import React from 'react';
+import React, { useEffect } from 'react';
 import { useDispatch, useSelector } from 'react-redux';
 import { closeEditInvestigation } from '../investigationSlice';
 import { RootState } from '../../../../../app/store';
@@ -95,6 +97,7 @@ const SemenAnalysis: React.FC = () => {
   });
 
   const investigation = investigationData?.data;
+
   const loading = investigationLoading || investigationFetching;
 
   const date = new Date(investigation?.date || new Date()).toLocaleDateString();
@@ -105,7 +108,6 @@ const SemenAnalysis: React.FC = () => {
 
   const investigationDetails = investigation?.result
     ?.details as ISemenAnalysisForm;
-  // console.log("Investigation details", investigation);
 
   const [fileUploadedUrl, setFileUploadedUrl] = React.useState<string[]>(() => {
     // Initialize with an empty array by default
@@ -122,7 +124,7 @@ const SemenAnalysis: React.FC = () => {
   const handleSubmit = async (
     values: IEditInvestigationForm<ISemenAnalysisForm>,
   ) => {
-    const actualName = actualProcedureName || 'Default Investigation'; // Use a fallback if procedureName is null/undefined
+    const actualName = actualProcedureName || 'Semen Analysis'; // Use a fallback if procedureName is null/undefined
 
     const payload: IEditInvestigationpayload = {
       status: values.status,
@@ -135,8 +137,6 @@ const SemenAnalysis: React.FC = () => {
       testType: ETestType.SemenAnalysis,
       actualName: actualName, // New field added to the payload
     };
-
-    console.log('Payload', payload);
 
     const promise = editInvestigation({
       _id: openEditDialog.id,
@@ -160,59 +160,56 @@ const SemenAnalysis: React.FC = () => {
 
   const initialValues: IEditInvestigationForm<ISemenAnalysisForm> = {
     result: {
-      date: investigationDetails?.date || null,
-      spermDfi: investigationDetails?.spermDfi || '',
-      timeOfSampleReceivedAtHospital:
-        investigationDetails?.timeOfSampleReceivedAtHospital || null,
-      placeOfCollection: investigationDetails?.placeOfCollection || '',
-      timeOfCollection: investigationDetails?.timeOfCollection || null,
-      timeOfEvaluation: investigationDetails?.timeOfEvaluation || null,
-      daysOfAbstinence: investigationDetails?.daysOfAbstinence || '',
-      volume: investigationDetails?.volume || '',
-      spillage: investigationDetails?.spillage || '',
-      appearance: investigationDetails?.appearance || '',
+      sampleCollectionDate: investigationDetails?.sampleCollectionDate
+        ? new Date(investigationDetails.sampleCollectionDate)
+        : null,
+      sampleCollectionTime: investigationDetails?.sampleCollectionTime
+        ? new Date(investigationDetails.sampleCollectionTime)
+        : null,
+      sampleReceivingDate: investigationDetails?.sampleReceivingDate
+        ? new Date(investigationDetails.sampleReceivingDate)
+        : null,
+      sampleReceivingTime: investigationDetails?.sampleReceivingTime
+        ? new Date(investigationDetails.sampleReceivingTime)
+        : null,
+      sampleTested: investigationDetails?.sampleTested || '',
+      sampleCollectionLocation:
+        investigationDetails?.sampleCollectionLocation || '',
+      spillageReport: investigationDetails?.spillageReport || '',
       liquefaction: investigationDetails?.liquefaction || '',
+      liquefactionTime: investigationDetails?.liquefactionTime
+        ? new Date(investigationDetails.liquefactionTime)
+        : null,
       viscosity: investigationDetails?.viscosity || '',
+      abstinence: investigationDetails?.abstinence || '',
+      volume: investigationDetails?.volume || '',
       ph: investigationDetails?.ph || '',
-      color: investigationDetails?.color || '',
-      spermConcMillionsPerMl:
-        investigationDetails?.spermConcMillionsPerMl || '',
-      pusCells: investigationDetails?.pusCells || '',
-      rbc: investigationDetails?.rbc || '',
-      agglutination: investigationDetails?.agglutination || '',
-      totalEjaculateMillions:
-        investigationDetails?.totalEjaculateMillions || '',
-      fructose: investigationDetails?.fructose || '',
-      epithelialCells: investigationDetails?.epithelialCells || '',
-      live: investigationDetails?.live || '',
-      dead: investigationDetails?.dead || '',
-      impressionPhysicalAssessment:
-        investigationDetails?.impressionPhysicalAssessment || '',
-      rapidProgressiveGradeA:
-        investigationDetails?.rapidProgressiveGradeA || '',
-      slowProgressiveGradeB: investigationDetails?.slowProgressiveGradeB || '',
-      nonProgressiveGradeC: investigationDetails?.nonProgressiveGradeC || '',
-      immotileGradeD: investigationDetails?.immotileGradeD || '',
-      impressionSpermMotility:
-        investigationDetails?.impressionSpermMotility || '',
+      visualAppearance: investigationDetails?.visualAppearance || '',
+      spermConcentration: investigationDetails?.spermConcentration || '',
+      spermMotilityTotal: investigationDetails?.spermMotilityTotal || '',
+      progressivePR: investigationDetails?.progressivePR || '',
+      slowProgressive: investigationDetails?.slowProgressive || '',
+      nonProgressive: investigationDetails?.nonProgressive || '',
+      immotile: investigationDetails?.immotile || '',
       normalForms: investigationDetails?.normalForms || '',
       headDefects: investigationDetails?.headDefects || '',
-      overAllDefects: investigationDetails?.overAllDefects || '',
-      midPieceAndNeckDefects:
-        investigationDetails?.midPieceAndNeckDefects || '',
-      cytoplasmicDroplets: investigationDetails?.cytoplasmicDroplets || '',
+      midPieceDefects: investigationDetails?.midPieceDefects || '',
       tailDefects: investigationDetails?.tailDefects || '',
-      defectsInHeadMidPieceNeckAndTail:
-        investigationDetails?.defectsInHeadMidPieceNeckAndTail || '',
-      impressionMorphologyAssessment:
-        investigationDetails?.impressionMorphologyAssessment || '',
-      hos: investigationDetails?.hos || '',
-      acrosomeIntactnessAI: investigationDetails?.acrosomeIntactnessAI || '',
-      zonaBindingPotentialOfSpermAsPerAITesting:
-        investigationDetails?.zonaBindingPotentialOfSpermAsPerAITesting || '',
-      analysis: investigationDetails?.analysis || '',
-      description: investigationDetails?.description || '',
-      disclaimer: '',
+      totalSpermCount: investigationDetails?.totalSpermCount || '',
+      motileSperm: investigationDetails?.motileSperm || '',
+      morphologicallyNormalSperm:
+        investigationDetails?.morphologicallyNormalSperm || '',
+      debris: investigationDetails?.debris || '',
+      roundCells: investigationDetails?.roundCells || '',
+      agglutination: investigationDetails?.agglutination || '',
+      aggregration: investigationDetails?.aggregration || '',
+      fructose: investigationDetails?.fructose || '',
+      proxidosePositiveCellConcentration:
+        investigationDetails?.proxidosePositiveCellConcentration || '',
+      impression: investigationDetails?.impression || '',
+      remarks: investigationDetails?.remarks || '',
+      advice: investigationDetails?.advice || '',
+      imageDescription: investigationDetails?.imageDescription || '',
     },
     status: investigation?.status || 'Scheduled',
     notes: investigation?.result?.notes || '',
@@ -226,756 +223,1041 @@ const SemenAnalysis: React.FC = () => {
     enableReinitialize: true,
   });
 
+  const { setFieldValue, values } = formik;
+
+  // Calculate total sperm count
+  useEffect(() => {
+    const { spermConcentration, volume } = values.result;
+
+    // Parse the values as floats. Use 0 if parsing fails.
+    const concentration = parseFloat(spermConcentration || '0');
+    const vol = parseFloat(volume || '0');
+
+    // Check if both values are valid numbers
+    if (!isNaN(concentration) && !isNaN(vol)) {
+      const total = (concentration / 100) * vol;
+      // Format the total to two decimal places
+      const formattedTotal = total.toFixed(2);
+
+      // Avoid unnecessary updates
+      if (values.result.totalSpermCount !== formattedTotal) {
+        setFieldValue('result.totalSpermCount', formattedTotal);
+      }
+    } else {
+      // If either value is invalid, set totalSpermCount to empty string
+      if (values.result.totalSpermCount !== '') {
+        setFieldValue('result.totalSpermCount', '');
+      }
+    }
+  }, [values.result.spermConcentration, values.result.volume, setFieldValue]);
+
+  // Calculate sperm motility count
+  useEffect(() => {
+    const { spermConcentration, spermMotilityTotal, volume } = values.result;
+
+    // Parse the values as floats. Use 0 if parsing fails.
+    const concentration = parseFloat(spermConcentration || '0');
+    const motility = parseFloat(spermMotilityTotal || '0');
+    const vol = parseFloat(volume || '0');
+
+    // Check if both values are valid numbers
+    if (!isNaN(concentration) && !isNaN(motility) && !isNaN(vol)) {
+      const total = (concentration / 100) * vol * (motility / 100);
+
+      // Format the total to two decimal places
+      const formattedTotal = total.toFixed(2);
+
+      // Avoid unnecessary updates
+      if (values.result.motileSperm !== formattedTotal) {
+        setFieldValue('result.motileSperm', formattedTotal);
+      }
+    } else {
+      // If either value is invalid, set motileSperm to empty string
+      if (values.result.motileSperm !== '') {
+        setFieldValue('result.motileSperm', '');
+      }
+    }
+  }, [
+    values.result.spermConcentration,
+    values.result.spermMotilityTotal,
+    values.result.volume,
+    setFieldValue,
+  ]);
+
+  // Calculate morphologically normal sperm count
+  useEffect(() => {
+    const { spermConcentration, volume, normalForms } = values.result;
+    const concentration = parseFloat(spermConcentration || '0');
+    const vol = parseFloat(volume || '0');
+    const normal = parseFloat(normalForms || '0');
+
+    // Check if both values are valid numbers
+    if (!isNaN(concentration) && !isNaN(normal) && !isNaN(vol)) {
+      const total = (concentration / 100) * vol * (normal / 100);
+
+      // Format the total to two decimal places
+      const formattedTotal = total.toFixed(2);
+
+      // Avoid unnecessary updates
+      if (values.result.morphologicallyNormalSperm !== formattedTotal) {
+        setFieldValue('result.morphologicallyNormalSperm', formattedTotal);
+      }
+    } else {
+      // If either value is invalid, set morphologicallyNormalSperm to empty string
+      if (values.result.morphologicallyNormalSperm !== '') {
+        setFieldValue('result.morphologicallyNormalSperm', '');
+      }
+    }
+  }, [
+    values.result.spermConcentration,
+    values.result.volume,
+    values.result.normalForms,
+    setFieldValue,
+  ]);
+
   if (loading) return renderSkeletonLoader();
 
   return (
-    <>
-      <form onSubmit={formik.handleSubmit}>
-        <ReportModalHeader
-          reportName={investigationName}
-          doctor={doctor}
-          date={date}
-        />
-
-        <Grid container spacing={2} marginBottom={2} mt={2} flex={1}>
-          <Grid item xs={12} sm={6} md={3}>
-            <CustomDatePicker
-              label="Date"
-              value={formik.values.result.date}
-              onChange={date => formik.setFieldValue('result.date', date)}
-              error={
-                formik.touched.result?.date &&
-                Boolean(formik.errors.result?.date)
-              }
-              helperText={
-                formik.touched.result?.date && formik.errors.result?.date
-              }
-            />
-          </Grid>
-          <Grid item xs={12} sm={6} md={3}>
-            <TextField
-              label="Sperm DFI"
-              fullWidth
-              name="result.spermDfi"
-              onChange={formik.handleChange}
-              error={
-                formik.touched.result?.spermDfi &&
-                Boolean(formik.errors.result?.spermDfi)
-              }
-              helperText={
-                formik.touched.result?.spermDfi &&
-                formik.errors.result?.spermDfi
-              }
-            />
-          </Grid>
-          <Grid item xs={12} sm={6} md={3}>
-            <CustomTimePicker
-              label="Time of sample received at hospital"
-              value={formik.values.result.timeOfSampleReceivedAtHospital}
-              onChange={date =>
-                formik.setFieldValue(
-                  'result.timeOfSampleReceivedAtHospital',
-                  date,
-                )
-              }
-            />
-          </Grid>
-
-          <Grid item xs={12} sm={6} md={3}>
-            <TextField
-              label="Place of Collection"
-              fullWidth
-              name="result.placeOfCollection"
-              value={formik.values.result.placeOfCollection}
-              onChange={formik.handleChange}
-              error={
-                formik.touched.result?.placeOfCollection &&
-                Boolean(formik.errors.result?.placeOfCollection)
-              }
-              helperText={
-                formik.touched.result?.placeOfCollection &&
-                formik.errors.result?.placeOfCollection
-              }
-            />
-          </Grid>
-          <Grid item xs={12} sm={6} md={3}>
-            <CustomTimePicker
-              label="Time Of Collection"
-              value={formik.values.result.timeOfCollection}
-              name="result.timeOfCollection"
-              onChange={date =>
-                formik.setFieldValue('result.timeOfCollection', date)
-              }
-              error={
-                formik.touched.result?.timeOfCollection &&
-                Boolean(formik.errors.result?.timeOfCollection)
-              }
-              helperText={
-                formik.touched.result?.timeOfCollection &&
-                formik.errors.result?.timeOfCollection
-              }
-            />
-          </Grid>
-          <Grid item xs={12} sm={6} md={3}>
-            <CustomTimePicker
-              label="Time Of Evaluation"
-              value={formik.values.result.timeOfEvaluation}
-              onChange={date =>
-                formik.setFieldValue('result.timeOfEvaluation', date)
-              }
-              error={
-                formik.touched.result?.timeOfEvaluation &&
-                Boolean(formik.errors.result?.timeOfEvaluation)
-              }
-              helperText={
-                formik.touched.result?.timeOfEvaluation &&
-                formik.errors.result?.timeOfEvaluation
-              }
-            />
-          </Grid>
-        </Grid>
-        {/* <Grid container spacing={2} marginBottom={2}> */}
-        <Grid container spacing={2} marginBottom={2}>
-          <Grid item xs={12} sm={6} md={3}>
-            <TextField
-              label="Days of Abstinence"
-              fullWidth
-              type="number"
-              name="result.daysOfAbstinence"
-              value={formik.values.result.daysOfAbstinence}
-              onChange={formik.handleChange}
-              error={
-                formik.touched.result?.daysOfAbstinence &&
-                Boolean(formik.errors.result?.daysOfAbstinence)
-              }
-              helperText={
-                formik.touched.result?.daysOfAbstinence &&
-                formik.errors.result?.daysOfAbstinence
-              }
-            />
-          </Grid>
-          <Grid item xs={12} sm={6} md={3}>
-            <TextField
-              label="Volume"
-              fullWidth
-              value={formik.values.result.volume}
-              name="result.volume"
-              onChange={formik.handleChange}
-              error={
-                formik.touched.result?.volume &&
-                Boolean(formik.errors.result?.volume)
-              }
-              helperText={
-                formik.touched.result?.volume && formik.errors.result?.volume
-              }
-            />
-          </Grid>
-          <Grid item xs={12} sm={6} md={3}>
-            <TextField
-              label="Spillage"
-              fullWidth
-              value={formik.values.result.spillage}
-              name="result.spillage"
-              onChange={formik.handleChange}
-              error={
-                formik.touched.result?.spillage &&
-                Boolean(formik.errors.result?.spillage)
-              }
-              helperText={
-                formik.touched.result?.spillage &&
-                formik.errors.result?.spillage
-              }
-            />
-          </Grid>
-          <Grid item xs={12} sm={6} md={3}>
-            <TextField
-              label="Appearance"
-              fullWidth
-              value={formik.values.result.appearance}
-              name="result.appearance"
-              onChange={formik.handleChange}
-              error={
-                formik.touched.result?.appearance &&
-                Boolean(formik.errors.result?.appearance)
-              }
-              helperText={
-                formik.touched.result?.appearance &&
-                formik.errors.result?.appearance
-              }
-            />
-          </Grid>
-        </Grid>
-        <Grid container spacing={2} marginBottom={2}>
-          <Grid item xs={12} sm={6} md={3}>
-            <TextField
-              label="Liquefaction"
-              fullWidth
-              value={formik.values.result.liquefaction}
-              name="result.liquefaction"
-              onChange={formik.handleChange}
-              error={
-                formik.touched.result?.liquefaction &&
-                Boolean(formik.errors.result?.liquefaction)
-              }
-              helperText={
-                formik.touched.result?.liquefaction &&
-                formik.errors.result?.liquefaction
-              }
-            />
-          </Grid>
-          <Grid item xs={12} sm={6} md={3}>
-            <TextField
-              label="Viscosity"
-              fullWidth
-              name="result.viscosity"
-              value={formik.values.result.viscosity}
-              onChange={formik.handleChange}
-              error={
-                formik.touched.result?.viscosity &&
-                Boolean(formik.errors.result?.viscosity)
-              }
-              helperText={
-                formik.touched.result?.viscosity &&
-                formik.errors.result?.viscosity
-              }
-            />
-          </Grid>
-          <Grid item xs={12} sm={6} md={3}>
-            <TextField
-              label="PH"
-              fullWidth
-              name="result.ph"
-              onChange={formik.handleChange}
-              value={formik.values.result.ph}
-              error={
-                formik.touched.result?.ph && Boolean(formik.errors.result?.ph)
-              }
-              helperText={formik.touched.result?.ph && formik.errors.result?.ph}
-            />
-          </Grid>
-
-          <Grid item xs={12} sm={6} md={3}>
-            <TextField
-              label="Color"
-              fullWidth
-              name="result.color"
-              value={formik.values.result.color}
-              onChange={formik.handleChange}
-              error={
-                formik.touched.result?.color &&
-                Boolean(formik.errors.result?.color)
-              }
-              helperText={
-                formik.touched.result?.color && formik.errors.result?.color
-              }
-            />
-          </Grid>
-        </Grid>
-        <Grid container spacing={2} marginBottom={2}>
-          <Grid item xs={12} sm={6} md={3}>
-            <TextField
-              label="Pus Cells"
-              fullWidth
-              value={formik.values.result.pusCells}
-              name="result.pusCells"
-              onChange={e => formik.handleChange(e)}
-              error={
-                formik.touched.result?.pusCells &&
-                Boolean(formik.errors.result?.pusCells)
-              }
-              helperText={
-                formik.touched.result?.pusCells &&
-                formik.errors.result?.pusCells
-              }
-            />
-          </Grid>
-          <Grid item xs={12} sm={6} md={3}>
-            <TextField
-              label="RBC"
-              fullWidth
-              value={formik.values.result.rbc}
-              name="result.rbc"
-              onChange={formik.handleChange}
-              error={
-                formik.touched.result?.rbc && Boolean(formik.errors.result?.rbc)
-              }
-              helperText={
-                formik.touched.result?.rbc && formik.errors.result?.rbc
-              }
-            />
-          </Grid>
-          <Grid item xs={12} sm={6} md={3}>
-            <TextField
-              label="Agglutination"
-              fullWidth
-              name="result.agglutination"
-              onChange={formik.handleChange}
-              value={formik.values.result.agglutination}
-              error={
-                formik.touched.result?.agglutination &&
-                Boolean(formik.errors.result?.agglutination)
-              }
-              helperText={
-                formik.touched.result?.agglutination &&
-                formik.errors.result?.agglutination
-              }
-            />
-          </Grid>
-          <Grid item xs={12} sm={6} md={3}>
-            <TextField
-              label="Total Ejaculate"
-              fullWidth
-              value={formik.values.result.totalEjaculateMillions}
-              name="result.totalEjaculateMillions"
-              onChange={formik.handleChange}
-              error={
-                formik.touched.result?.totalEjaculateMillions &&
-                Boolean(formik.errors.result?.totalEjaculateMillions)
-              }
-              helperText={
-                formik.touched.result?.totalEjaculateMillions &&
-                formik.errors.result?.totalEjaculateMillions
-              }
-            />
-          </Grid>
-        </Grid>
-        <Grid container spacing={2} marginBottom={2}>
-          <Grid item xs={12} sm={6} md={3}>
-            <TextField
-              label="Fructose"
-              fullWidth
-              value={formik.values.result.fructose}
-              name="result.fructose"
-              onChange={formik.handleChange}
-              error={
-                formik.touched.result?.fructose &&
-                Boolean(formik.errors.result?.fructose)
-              }
-              helperText={
-                formik.touched.result?.fructose &&
-                formik.errors.result?.fructose
-              }
-            />
-          </Grid>
-          <Grid item xs={12} sm={6} md={3}>
-            <TextField
-              label="Epithelial Cells"
-              fullWidth
-              value={formik.values.result.epithelialCells}
-              name="result.epithelialCells"
-              onChange={formik.handleChange}
-              error={
-                formik.touched.result?.epithelialCells &&
-                Boolean(formik.errors.result?.epithelialCells)
-              }
-              helperText={
-                formik.touched.result?.epithelialCells &&
-                formik.errors.result?.epithelialCells
-              }
-            />
-          </Grid>
-          <Grid item xs={12} sm={6} md={3}>
-            <TextField
-              label="Live"
-              fullWidth
-              value={formik.values.result.live}
-              name="result.live"
-              onChange={formik.handleChange}
-              error={
-                formik.touched.result?.live &&
-                Boolean(formik.errors.result?.live)
-              }
-              helperText={
-                formik.touched.result?.live && formik.errors.result?.live
-              }
-            />
-          </Grid>
-          <Grid item xs={12} sm={6} md={3}>
-            <TextField
-              label="Dead"
-              fullWidth
-              value={formik.values.result.dead}
-              name="result.dead"
-              onChange={formik.handleChange}
-              error={
-                formik.touched.result?.dead &&
-                Boolean(formik.errors.result?.dead)
-              }
-              helperText={
-                formik.touched.result?.dead && formik.errors.result?.dead
-              }
-            />
-          </Grid>
-        </Grid>
-        <Grid container spacing={2} marginBottom={2}>
-          <Grid item xs={12} sm={6} md={3}>
-            <TextField
-              label="Physical Impression Assessment"
-              fullWidth
-              name="result.impressionPhysicalAssessment"
-              value={formik.values.result.impressionPhysicalAssessment}
-              onChange={formik.handleChange}
-              error={
-                formik.touched.result?.impressionPhysicalAssessment &&
-                Boolean(formik.errors.result?.impressionPhysicalAssessment)
-              }
-            />
-          </Grid>
-          <Grid item xs={12} sm={6} md={3}>
-            <TextField
-              label="Normal Forms"
-              fullWidth
-              value={formik.values.result.normalForms}
-              name="result.normalForms"
-              onChange={formik.handleChange}
-              error={
-                formik.touched.result?.normalForms &&
-                Boolean(formik.errors.result?.normalForms)
-              }
-              helperText={
-                formik.touched.result?.normalForms &&
-                formik.errors.result?.normalForms
-              }
-            />
-          </Grid>
-          <Grid item xs={12} sm={6} md={3}>
-            <TextField
-              label="Head Defects"
-              fullWidth
-              value={formik.values.result.headDefects}
-              name="result.headDefects"
-              onChange={formik.handleChange}
-              error={
-                formik.touched.result?.headDefects &&
-                Boolean(formik.errors.result?.headDefects)
-              }
-            />
-          </Grid>
-          <Grid item xs={12} sm={6} md={3}>
-            <TextField
-              label="Over All Defects"
-              fullWidth
-              value={formik.values.result.overAllDefects}
-              onChange={formik.handleChange('result.overAllDefects')}
-              error={
-                formik.touched.result?.overAllDefects &&
-                Boolean(formik.errors.result?.overAllDefects)
-              }
-              helperText={
-                formik.touched.result?.overAllDefects &&
-                formik.errors.result?.overAllDefects
-              }
-            />
-          </Grid>
-        </Grid>
-        <Grid container spacing={2} marginBottom={2}>
-          <Grid item xs={12} sm={6} md={3}>
-            <TextField
-              label="Mid Piece and Neck Defects"
-              fullWidth
-              value={formik.values.result.midPieceAndNeckDefects}
-              onChange={formik.handleChange('result.midPieceAndNeckDefects')}
-              error={
-                formik.touched.result?.midPieceAndNeckDefects &&
-                Boolean(formik.errors.result?.midPieceAndNeckDefects)
-              }
-              helperText={
-                formik.touched.result?.midPieceAndNeckDefects &&
-                formik.errors.result?.midPieceAndNeckDefects
-              }
-            />
-          </Grid>
-          <Grid item xs={12} sm={6} md={3}>
-            <TextField
-              label="Cytoplasmic Droplets"
-              fullWidth
-              name="result.cytoplasmicDroplets"
-              value={formik.values.result.cytoplasmicDroplets}
-              onChange={formik.handleChange}
-              error={
-                formik.touched.result?.cytoplasmicDroplets &&
-                Boolean(formik.errors.result?.cytoplasmicDroplets)
-              }
-              helperText={
-                formik.touched.result?.cytoplasmicDroplets &&
-                formik.errors.result?.cytoplasmicDroplets
-              }
-            />
-          </Grid>
-          <Grid item xs={12} sm={6} md={3}>
-            <TextField
-              label="Tail Defects"
-              fullWidth
-              value={formik.values.result.tailDefects}
-              name="result.tailDefects"
-              onChange={formik.handleChange}
-              error={
-                formik.touched.result?.tailDefects &&
-                Boolean(formik.errors.result?.tailDefects)
-              }
-              helperText={
-                formik.touched.result?.tailDefects &&
-                formik.errors.result?.tailDefects
-              }
-            />
-          </Grid>
-          <Grid item xs={12} sm={6} md={3}>
-            <TextField
-              label="Defects In Head, Mid Piece, Neck & Tail"
-              fullWidth
-              value={formik.values.result.defectsInHeadMidPieceNeckAndTail}
-              name="result.defectsInHeadMidPieceNeckAndTail"
-              onChange={formik.handleChange}
-              error={
-                formik.touched.result?.defectsInHeadMidPieceNeckAndTail &&
-                Boolean(formik.errors.result?.defectsInHeadMidPieceNeckAndTail)
-              }
-              helperText={
-                formik.touched.result?.defectsInHeadMidPieceNeckAndTail &&
-                formik.errors.result?.defectsInHeadMidPieceNeckAndTail
-              }
-            />
-          </Grid>
-        </Grid>
-        {/* <Grid container spacing={2} marginBottom={2}> */}
-        <Grid container spacing={2} marginBottom={2}>
-          <Grid item xs={12} sm={6} md={3}>
-            <TextField
-              label="Morphology Impression Assessment"
-              fullWidth
-              value={formik.values.result.impressionMorphologyAssessment}
-              name="result.impressionMorphologyAssessment"
-              onChange={formik.handleChange}
-              error={
-                formik.touched.result?.impressionMorphologyAssessment &&
-                Boolean(formik.errors.result?.impressionMorphologyAssessment)
-              }
-              helperText={
-                formik.touched.result?.impressionMorphologyAssessment &&
-                formik.errors.result?.impressionMorphologyAssessment
-              }
-            />
-          </Grid>
+    <form onSubmit={formik.handleSubmit}>
+      <ReportModalHeader
+        reportName={investigationName}
+        doctor={doctor}
+        date={date}
+      />
+      {/* Sample Information */}
+      <Grid container spacing={2} marginBottom={4} mt={2}>
+        <Grid item xs={12}>
+          <Typography variant="h6">Sample Information</Typography>
         </Grid>
 
-        <Typography variant="subtitle1" sx={{ mt: 2, mb: 2 }}>
-          Advanced Sperm Fertilization Parameter Assessment
-        </Typography>
-        <Grid container spacing={2} marginBottom={2}>
-          <Grid item xs={12} sm={6} md={3}>
-            <TextField
-              label="HOS (Hypo-Osmotic Swelling)"
-              fullWidth
-              value={formik.values.result.hos}
-              name="result.hos"
-              onChange={formik.handleChange}
-              error={
-                formik.touched.result?.hos && Boolean(formik.errors.result?.hos)
-              }
-              helperText={
-                formik.touched.result?.hos && formik.errors.result?.hos
-              }
-            />
-          </Grid>
-          <Grid item xs={12} sm={6} md={3}>
-            <TextField
-              label="Acrosome Intactness (AI)"
-              fullWidth
-              value={formik.values.result.acrosomeIntactnessAI}
-              name="result.acrosomeIntactnessAI"
-              onChange={formik.handleChange}
-              error={
-                formik.touched.result?.acrosomeIntactnessAI &&
-                Boolean(formik.errors.result?.acrosomeIntactnessAI)
-              }
-              helperText={
-                formik.touched.result?.acrosomeIntactnessAI &&
-                formik.errors.result?.acrosomeIntactnessAI
-              }
-            />
-          </Grid>
-          <Grid item xs={12} sm={6} md={3}>
-            <TextField
-              label="Zona Binding Potential Of Sperm As Per AI Testing"
-              fullWidth
-              value={
-                formik.values.result.zonaBindingPotentialOfSpermAsPerAITesting
-              }
-              name="result.zonaBindingPotentialOfSpermAsPerAITesting"
-              onChange={formik.handleChange}
-              error={
-                formik.touched.result
-                  ?.zonaBindingPotentialOfSpermAsPerAITesting &&
-                Boolean(
-                  formik.errors.result
-                    ?.zonaBindingPotentialOfSpermAsPerAITesting,
-                )
-              }
-              helperText={
-                formik.touched.result
-                  ?.zonaBindingPotentialOfSpermAsPerAITesting &&
-                formik.errors.result?.zonaBindingPotentialOfSpermAsPerAITesting
-              }
-            />
-          </Grid>
+        <Grid item xs={12} sm={6} md={6}>
+          <CustomDatePicker
+            label="Sample Collection Date"
+            value={formik.values.result.sampleCollectionDate}
+            onChange={date =>
+              formik.setFieldValue('result.sampleCollectionDate', date)
+            }
+            error={
+              formik.touched.result?.sampleCollectionDate &&
+              Boolean(formik.errors.result?.sampleCollectionDate)
+            }
+            helperText={
+              formik.touched.result?.sampleCollectionDate &&
+              formik.errors.result?.sampleCollectionDate
+            }
+          />
+        </Grid>
+        <Grid item xs={12} sm={6} md={6}>
+          <CustomTimePicker
+            label="Sample Collection Time"
+            value={formik.values.result.sampleCollectionTime}
+            onChange={date =>
+              formik.setFieldValue('result.sampleCollectionTime', date)
+            }
+            error={
+              formik.touched.result?.sampleCollectionTime &&
+              Boolean(formik.errors.result?.sampleCollectionTime)
+            }
+            helperText={
+              formik.touched.result?.sampleCollectionTime &&
+              formik.errors.result?.sampleCollectionTime
+            }
+          />
         </Grid>
 
-        <Typography variant="subtitle1" sx={{ mt: 2, mb: 2 }}>
-          Final Semen Analysis & Advanced Sperm Assessment
-        </Typography>
-        <Grid container spacing={2} marginBottom={2}>
-          <Grid item xs={12} sm={12} md={12}>
-            <TextField
-              label="Analysis"
-              multiline
-              minRows={2}
-              fullWidth
-              value={formik.values.result.analysis}
-              name="result.analysis"
-              onChange={formik.handleChange}
-              error={
-                formik.touched.result?.analysis &&
-                Boolean(formik.errors.result?.analysis)
-              }
-              helperText={
-                formik.touched.result?.analysis &&
-                formik.errors.result?.analysis
-              }
-            />
-          </Grid>
+        <Grid item xs={12} sm={6} md={6}>
+          <CustomDatePicker
+            label="Sample Receiving Date"
+            value={formik.values.result.sampleReceivingDate}
+            onChange={date =>
+              formik.setFieldValue('result.sampleReceivingDate', date)
+            }
+            error={
+              formik.touched.result?.sampleReceivingDate &&
+              Boolean(formik.errors.result?.sampleReceivingDate)
+            }
+            helperText={
+              formik.touched.result?.sampleReceivingDate &&
+              formik.errors.result?.sampleReceivingDate
+            }
+          />
+        </Grid>
+        <Grid item xs={12} sm={6} md={6}>
+          <CustomTimePicker
+            label="Sample Receiving Time"
+            value={formik.values.result.sampleReceivingTime}
+            onChange={date =>
+              formik.setFieldValue('result.sampleReceivingTime', date)
+            }
+            error={
+              formik.touched.result?.sampleReceivingTime &&
+              Boolean(formik.errors.result?.sampleReceivingTime)
+            }
+            helperText={
+              formik.touched.result?.sampleReceivingTime &&
+              formik.errors.result?.sampleReceivingTime
+            }
+          />
         </Grid>
 
-        <Typography variant="subtitle1" sx={{ mt: 2, mb: 2 }}>
-          Upload Report
-        </Typography>
-        <Grid container spacing={2} marginBottom={2}>
-          <Grid item xs={12}>
-            {patient && (
-              <FileUploadButton
-                acceptTypes="image/*, application/pdf"
-                maxFiles={5}
-                maxFileSizeinMB={15}
-                onUploadFiles={setFileUploadedUrl}
-                bucket={EBuckets.UserReports}
-                documentType={EDocumentTypes.Investigation}
-                user={patient?._id}
-                reportId={openEditDialog.id}
-              />
-            )}
-          </Grid>
-          <Grid item xs={12}>
+        <Grid item xs={12} sm={6} md={3}>
+          <TextField
+            label="Sample Tested"
+            fullWidth
+            name="result.sampleTested"
+            onChange={formik.handleChange}
+            value={formik.values.result.sampleTested}
+            error={
+              formik.touched.result?.sampleTested &&
+              Boolean(formik.errors.result?.sampleTested)
+            }
+            helperText={
+              formik.touched.result?.sampleTested &&
+              formik.errors.result?.sampleTested
+            }
+            select
+          >
+            <MenuItem value="Retrograde">Retrograde</MenuItem>
+            <MenuItem value="Antigrade">Antigrade</MenuItem>
+            <MenuItem value="PEU">PEU</MenuItem>
+          </TextField>
+        </Grid>
+
+        <Grid item xs={12} sm={6} md={3}>
+          <TextField
+            label="Sample Collection Location"
+            fullWidth
+            value={formik.values.result.sampleCollectionLocation}
+            name="result.sampleCollectionLocation"
+            onChange={formik.handleChange}
+            error={
+              formik.touched.result?.sampleCollectionLocation &&
+              Boolean(formik.errors.result?.sampleCollectionLocation)
+            }
+            helperText={
+              formik.touched.result?.sampleCollectionLocation &&
+              formik.errors.result?.sampleCollectionLocation
+            }
+            select
+          >
+            <MenuItem value="On-Site">On-Site</MenuItem>
+            <MenuItem value="Off-Site">Off-Site</MenuItem>
+          </TextField>
+        </Grid>
+
+        <Grid item xs={12} sm={6} md={3}>
+          <TextField
+            label="Spillage Report"
+            fullWidth
+            value={formik.values.result.spillageReport}
+            name="result.spillageReport"
+            onChange={formik.handleChange}
+            error={
+              formik.touched.result?.spillageReport &&
+              Boolean(formik.errors.result?.spillageReport)
+            }
+            helperText={
+              formik.touched.result?.spillageReport &&
+              formik.errors.result?.spillageReport
+            }
+            select
+          >
+            <MenuItem value="Yes">Yes</MenuItem>
+            <MenuItem value="No">No</MenuItem>
+          </TextField>
+        </Grid>
+
+        <Grid item xs={12} sm={6} md={3}>
+          <TextField
+            label="Liquefaction"
+            fullWidth
+            value={formik.values.result.liquefaction}
+            name="result.liquefaction"
+            onChange={formik.handleChange}
+            error={
+              formik.touched.result?.liquefaction &&
+              Boolean(formik.errors.result?.liquefaction)
+            }
+            helperText={
+              formik.touched.result?.liquefaction &&
+              formik.errors.result?.liquefaction
+            }
+            select
+          >
+            <MenuItem value="Yes">Yes</MenuItem>
+            <MenuItem value="No">No</MenuItem>
+          </TextField>
+        </Grid>
+
+        <Grid item xs={12} sm={6} md={3}>
+          <CustomTimePicker
+            label="Liquefaction Time"
+            value={formik.values.result.liquefactionTime}
+            onChange={date =>
+              formik.setFieldValue('result.liquefactionTime', date)
+            }
+            error={
+              formik.touched.result?.liquefactionTime &&
+              Boolean(formik.errors.result?.liquefactionTime)
+            }
+            helperText={
+              formik.touched.result?.liquefactionTime &&
+              formik.errors.result?.liquefactionTime
+            }
+          />
+        </Grid>
+
+        <Grid item xs={12} sm={6} md={3}>
+          <TextField
+            label="Viscosity"
+            fullWidth
+            name="result.viscosity"
+            value={formik.values.result.viscosity}
+            onChange={formik.handleChange}
+            error={
+              formik.touched.result?.viscosity &&
+              Boolean(formik.errors.result?.viscosity)
+            }
+            helperText={
+              formik.touched.result?.viscosity &&
+              formik.errors.result?.viscosity
+            }
+            select
+          >
+            <MenuItem value="Normal">Normal</MenuItem>
+            <MenuItem value="High">High</MenuItem>
+          </TextField>
+        </Grid>
+
+        <Grid item xs={12} sm={6} md={3}>
+          <TextField
+            label="Abstinence"
+            fullWidth
+            name="result.abstinence"
+            value={formik.values.result.abstinence}
+            onChange={formik.handleChange}
+            error={
+              formik.touched.result?.abstinence &&
+              Boolean(formik.errors.result?.abstinence)
+            }
+            helperText={
+              formik.touched.result?.abstinence &&
+              formik.errors.result?.abstinence
+            }
+          />
+        </Grid>
+
+        <Grid item xs={12} sm={6} md={3}>
+          <TextField
+            label="Volume"
+            fullWidth
+            name="result.volume"
+            value={formik.values.result.volume}
+            onChange={formik.handleChange}
+            error={
+              formik.touched.result?.volume &&
+              Boolean(formik.errors.result?.volume)
+            }
+            helperText={
+              formik.touched.result?.volume && formik.errors.result?.volume
+            }
+            InputProps={{
+              endAdornment: (
+                <InputAdornment position="end">
+                  <Typography sx={{ fontSize: '12px' }}>ml</Typography>
+                </InputAdornment>
+              ),
+            }}
+          />
+        </Grid>
+
+        <Grid item xs={12} sm={6} md={3}>
+          <TextField
+            label="PH"
+            fullWidth
+            name="result.ph"
+            value={formik.values.result.ph}
+            onChange={formik.handleChange}
+            error={
+              formik.touched.result?.ph && Boolean(formik.errors.result?.ph)
+            }
+            helperText={formik.touched.result?.ph && formik.errors.result?.ph}
+            InputProps={{
+              endAdornment: (
+                <InputAdornment position="end">
+                  <Typography sx={{ fontSize: '12px' }}>pH</Typography>
+                </InputAdornment>
+              ),
+            }}
+          />
+        </Grid>
+
+        <Grid item xs={12} sm={6} md={3}>
+          <TextField
+            label="Visual Appearance"
+            fullWidth
+            name="result.visualAppearance"
+            value={formik.values.result.visualAppearance}
+            onChange={formik.handleChange}
+            error={
+              formik.touched.result?.visualAppearance &&
+              Boolean(formik.errors.result?.visualAppearance)
+            }
+            helperText={
+              formik.touched.result?.visualAppearance &&
+              formik.errors.result?.visualAppearance
+            }
+          />
+        </Grid>
+      </Grid>
+
+      {/* Parameter */}
+      <Grid container spacing={2} marginBottom={4}>
+        <Grid item xs={12}>
+          <Typography variant="h6">Parameter</Typography>
+        </Grid>
+        <Grid item xs={12} sm={6} md={6}>
+          <TextField
+            label="Sperm Concentration"
+            fullWidth
+            name="result.spermConcentration"
+            value={formik.values.result.spermConcentration}
+            onChange={formik.handleChange}
+            error={
+              formik.touched.result?.spermConcentration &&
+              Boolean(formik.errors.result?.spermConcentration)
+            }
+            helperText={
+              formik.touched.result?.spermConcentration &&
+              formik.errors.result?.spermConcentration
+            }
+            InputProps={{
+              endAdornment: (
+                <InputAdornment position="end">
+                  <Typography sx={{ fontSize: '12px' }}>millions/ml</Typography>
+                </InputAdornment>
+              ),
+            }}
+          />
+        </Grid>
+      </Grid>
+
+      {/* Motility */}
+      <Grid container spacing={2} marginBottom={4}>
+        <Grid item xs={12}>
+          <Typography variant="h6">Motility</Typography>
+        </Grid>
+        <Grid item xs={12} sm={6} md={3}>
+          <TextField
+            label="Sperm Motility Total"
+            fullWidth
+            name="result.spermMotilityTotal"
+            value={formik.values.result.spermMotilityTotal}
+            onChange={formik.handleChange}
+            error={
+              formik.touched.result?.spermMotilityTotal &&
+              Boolean(formik.errors.result?.spermMotilityTotal)
+            }
+            helperText={
+              formik.touched.result?.spermMotilityTotal &&
+              formik.errors.result?.spermMotilityTotal
+            }
+            InputProps={{
+              endAdornment: (
+                <InputAdornment position="end">
+                  <Typography sx={{ fontSize: '12px' }}>%</Typography>
+                </InputAdornment>
+              ),
+            }}
+          />
+        </Grid>
+        <Grid item xs={12} sm={6} md={3}>
+          <TextField
+            label="Progressive PR"
+            fullWidth
+            name="result.progressivePR"
+            value={formik.values.result.progressivePR}
+            onChange={formik.handleChange}
+            error={
+              formik.touched.result?.progressivePR &&
+              Boolean(formik.errors.result?.progressivePR)
+            }
+            helperText={
+              formik.touched.result?.progressivePR &&
+              formik.errors.result?.progressivePR
+            }
+            InputProps={{
+              endAdornment: (
+                <InputAdornment position="end">
+                  <Typography sx={{ fontSize: '12px' }}>%</Typography>
+                </InputAdornment>
+              ),
+            }}
+          />
+        </Grid>
+        <Grid item xs={12} sm={6} md={3}>
+          <TextField
+            label="Rapid Progressive"
+            fullWidth
+            name="result.rapidProgressive"
+            value={formik.values.result.rapidProgressive}
+            onChange={formik.handleChange}
+            error={
+              formik.touched.result?.rapidProgressive &&
+              Boolean(formik.errors.result?.rapidProgressive)
+            }
+            helperText={
+              formik.touched.result?.rapidProgressive &&
+              formik.errors.result?.rapidProgressive
+            }
+            InputProps={{
+              endAdornment: (
+                <InputAdornment position="end">
+                  <Typography sx={{ fontSize: '12px' }}>%</Typography>
+                </InputAdornment>
+              ),
+            }}
+          />
+        </Grid>
+        <Grid item xs={12} sm={6} md={3}>
+          <TextField
+            label="Slow Progressive"
+            fullWidth
+            name="result.slowProgressive"
+            value={formik.values.result.slowProgressive}
+            onChange={formik.handleChange}
+            error={
+              formik.touched.result?.slowProgressive &&
+              Boolean(formik.errors.result?.slowProgressive)
+            }
+            helperText={
+              formik.touched.result?.slowProgressive &&
+              formik.errors.result?.slowProgressive
+            }
+            InputProps={{
+              endAdornment: (
+                <InputAdornment position="end">
+                  <Typography sx={{ fontSize: '12px' }}>%</Typography>
+                </InputAdornment>
+              ),
+            }}
+          />
+        </Grid>
+        <Grid item xs={12} sm={6} md={3}>
+          <TextField
+            label="Non Progressive"
+            fullWidth
+            name="result.nonProgressive"
+            value={formik.values.result.nonProgressive}
+            onChange={formik.handleChange}
+            error={
+              formik.touched.result?.nonProgressive &&
+              Boolean(formik.errors.result?.nonProgressive)
+            }
+            helperText={
+              formik.touched.result?.nonProgressive &&
+              formik.errors.result?.nonProgressive
+            }
+            InputProps={{
+              endAdornment: (
+                <InputAdornment position="end">
+                  <Typography sx={{ fontSize: '12px' }}>%</Typography>
+                </InputAdornment>
+              ),
+            }}
+          />
+        </Grid>
+        <Grid item xs={12} sm={6} md={3}>
+          <TextField
+            label="Immotile IM"
+            fullWidth
+            name="result.immotile"
+            value={formik.values.result.immotile}
+            onChange={formik.handleChange}
+            error={
+              formik.touched.result?.immotile &&
+              Boolean(formik.errors.result?.immotile)
+            }
+            helperText={
+              formik.touched.result?.immotile && formik.errors.result?.immotile
+            }
+            InputProps={{
+              endAdornment: (
+                <InputAdornment position="end">
+                  <Typography sx={{ fontSize: '12px' }}>%</Typography>
+                </InputAdornment>
+              ),
+            }}
+          />
+        </Grid>
+      </Grid>
+
+      {/* Morphology */}
+      <Grid container spacing={2} marginBottom={4}>
+        <Grid item xs={12}>
+          <Typography variant="h6">Morphology</Typography>
+        </Grid>
+        <Grid item xs={12} sm={6} md={3}>
+          <TextField
+            label="Normal Forms"
+            fullWidth
+            name="result.normalForms"
+            value={formik.values.result.normalForms}
+            onChange={formik.handleChange}
+            error={
+              formik.touched.result?.normalForms &&
+              Boolean(formik.errors.result?.normalForms)
+            }
+            helperText={
+              formik.touched.result?.normalForms &&
+              formik.errors.result?.normalForms
+            }
+            InputProps={{
+              endAdornment: (
+                <InputAdornment position="end">
+                  <Typography sx={{ fontSize: '12px' }}>%</Typography>
+                </InputAdornment>
+              ),
+            }}
+          />
+        </Grid>
+        <Grid item xs={12} sm={6} md={3}>
+          <TextField
+            label="Head Defects"
+            fullWidth
+            name="result.headDefects"
+            value={formik.values.result.headDefects}
+            onChange={formik.handleChange}
+            error={
+              formik.touched.result?.headDefects &&
+              Boolean(formik.errors.result?.headDefects)
+            }
+            helperText={
+              formik.touched.result?.headDefects &&
+              formik.errors.result?.headDefects
+            }
+            InputProps={{
+              endAdornment: (
+                <InputAdornment position="end">
+                  <Typography sx={{ fontSize: '12px' }}>%</Typography>
+                </InputAdornment>
+              ),
+            }}
+          />
+        </Grid>
+        <Grid item xs={12} sm={6} md={3}>
+          <TextField
+            label="Mid Piece Defects"
+            fullWidth
+            name="result.midPieceDefects"
+            value={formik.values.result.midPieceDefects}
+            onChange={formik.handleChange}
+            error={
+              formik.touched.result?.midPieceDefects &&
+              Boolean(formik.errors.result?.midPieceDefects)
+            }
+            helperText={
+              formik.touched.result?.midPieceDefects &&
+              formik.errors.result?.midPieceDefects
+            }
+            InputProps={{
+              endAdornment: (
+                <InputAdornment position="end">
+                  <Typography sx={{ fontSize: '12px' }}>%</Typography>
+                </InputAdornment>
+              ),
+            }}
+          />
+        </Grid>
+        <Grid item xs={12} sm={6} md={3}>
+          <TextField
+            label="Tail Defects"
+            fullWidth
+            name="result.tailDefects"
+            value={formik.values.result.tailDefects}
+            onChange={formik.handleChange}
+            error={
+              formik.touched.result?.tailDefects &&
+              Boolean(formik.errors.result?.tailDefects)
+            }
+            helperText={
+              formik.touched.result?.tailDefects &&
+              formik.errors.result?.tailDefects
+            }
+            InputProps={{
+              endAdornment: (
+                <InputAdornment position="end">
+                  <Typography sx={{ fontSize: '12px' }}>%</Typography>
+                </InputAdornment>
+              ),
+            }}
+          />
+        </Grid>
+      </Grid>
+
+      {/* Total Ejaculation */}
+      <Grid container spacing={2} marginBottom={4}>
+        <Grid item xs={12}>
+          <Typography variant="h6">Total Ejaculation</Typography>
+        </Grid>
+        <Grid item xs={12} sm={6}>
+          <TextField
+            label="Total Sperm Count"
+            fullWidth
+            name="result.totalSpermCount"
+            value={formik.values.result.totalSpermCount}
+            onChange={formik.handleChange}
+            disabled={true}
+            error={
+              formik.touched.result?.totalSpermCount &&
+              Boolean(formik.errors.result?.totalSpermCount)
+            }
+            helperText={
+              formik.touched.result?.totalSpermCount &&
+              formik.errors.result?.totalSpermCount
+            }
+            InputProps={{
+              endAdornment: (
+                <InputAdornment position="end">
+                  <Typography sx={{ fontSize: '12px' }}>
+                    millions/ejaculate
+                  </Typography>
+                </InputAdornment>
+              ),
+            }}
+          />
+        </Grid>
+        <Grid item xs={12} sm={6}>
+          <TextField
+            label="Motile Sperm"
+            fullWidth
+            name="result.motileSperm"
+            value={formik.values.result.motileSperm}
+            onChange={formik.handleChange}
+            disabled={true}
+            error={
+              formik.touched.result?.motileSperm &&
+              Boolean(formik.errors.result?.motileSperm)
+            }
+            helperText={
+              formik.touched.result?.motileSperm &&
+              formik.errors.result?.motileSperm
+            }
+            InputProps={{
+              endAdornment: (
+                <InputAdornment position="end">
+                  <Typography sx={{ fontSize: '12px' }}>
+                    millions/ejaculate
+                  </Typography>
+                </InputAdornment>
+              ),
+            }}
+          />
+        </Grid>
+        <Grid item xs={12} sm={6}>
+          <TextField
+            label="Morphologically Normal Sperm"
+            fullWidth
+            name="result.morphologicallyNormalSperm"
+            value={formik.values.result.morphologicallyNormalSperm}
+            onChange={formik.handleChange}
+            disabled={true}
+            error={
+              formik.touched.result?.morphologicallyNormalSperm &&
+              Boolean(formik.errors.result?.morphologicallyNormalSperm)
+            }
+            helperText={
+              formik.touched.result?.morphologicallyNormalSperm &&
+              formik.errors.result?.morphologicallyNormalSperm
+            }
+            InputProps={{
+              endAdornment: (
+                <InputAdornment position="end">
+                  <Typography sx={{ fontSize: '12px' }}>
+                    millions/ejaculate
+                  </Typography>
+                </InputAdornment>
+              ),
+            }}
+          />
+        </Grid>
+      </Grid>
+
+      {/* Additional Information */}
+      <Grid container spacing={2} marginBottom={4}>
+        <Grid item xs={12}>
+          <Typography variant="h6">Additional Information</Typography>
+        </Grid>
+        <Grid item xs={12} sm={6} md={3}>
+          <TextField
+            label="Debris"
+            fullWidth
+            name="result.debris"
+            value={formik.values.result.debris}
+            onChange={formik.handleChange}
+            error={
+              formik.touched.result?.debris &&
+              Boolean(formik.errors.result?.debris)
+            }
+            helperText={
+              formik.touched.result?.debris && formik.errors.result?.debris
+            }
+          />
+        </Grid>
+        <Grid item xs={12} sm={6} md={3}>
+          <TextField
+            label="Round Cells"
+            fullWidth
+            name="result.roundCells"
+            value={formik.values.result.roundCells}
+            onChange={formik.handleChange}
+            error={
+              formik.touched.result?.roundCells &&
+              Boolean(formik.errors.result?.roundCells)
+            }
+            helperText={
+              formik.touched.result?.roundCells &&
+              formik.errors.result?.roundCells
+            }
+            InputProps={{
+              endAdornment: (
+                <InputAdornment position="end">
+                  <Typography sx={{ fontSize: '12px' }}>millions/ml</Typography>
+                </InputAdornment>
+              ),
+            }}
+          />
+        </Grid>
+        <Grid item xs={12} sm={6} md={3}>
+          <TextField
+            label="Agglutination"
+            fullWidth
+            name="result.agglutination"
+            value={formik.values.result.agglutination}
+            onChange={formik.handleChange}
+            error={
+              formik.touched.result?.agglutination &&
+              Boolean(formik.errors.result?.agglutination)
+            }
+            helperText={
+              formik.touched.result?.agglutination &&
+              formik.errors.result?.agglutination
+            }
+          />
+        </Grid>
+        <Grid item xs={12} sm={6} md={3}>
+          <TextField
+            label="Aggregration"
+            fullWidth
+            name="result.aggregration"
+            value={formik.values.result.aggregration}
+            onChange={formik.handleChange}
+            error={
+              formik.touched.result?.aggregration &&
+              Boolean(formik.errors.result?.aggregration)
+            }
+            helperText={
+              formik.touched.result?.aggregration &&
+              formik.errors.result?.aggregration
+            }
+          />
+        </Grid>
+        <Grid item xs={12} sm={6} md={3}>
+          <TextField
+            label="Fructose"
+            fullWidth
+            name="result.fructose"
+            value={formik.values.result.fructose}
+            onChange={formik.handleChange}
+            error={
+              formik.touched.result?.fructose &&
+              Boolean(formik.errors.result?.fructose)
+            }
+            helperText={
+              formik.touched.result?.fructose && formik.errors.result?.fructose
+            }
+            select
+          >
+            <MenuItem value="Present">Present</MenuItem>
+            <MenuItem value="Absent">Absent</MenuItem>
+          </TextField>
+        </Grid>
+        <Grid item xs={12} sm={6}>
+          <TextField
+            label="Proxidose - Positive cell concentration"
+            fullWidth
+            name="result.proxidosePositiveCellConcentration"
+            value={formik.values.result.proxidosePositiveCellConcentration}
+            onChange={formik.handleChange}
+            InputProps={{
+              endAdornment: (
+                <InputAdornment position="end">
+                  <Typography sx={{ fontSize: '12px' }}>millions/ml</Typography>
+                </InputAdornment>
+              ),
+            }}
+          />
+        </Grid>
+      </Grid>
+
+      {/* Impression */}
+      <Grid container spacing={2} marginBottom={4}>
+        <Grid item xs={12}>
+          <Typography variant="h6">Impression</Typography>
+        </Grid>
+        <Grid item xs={12}>
+          <TextField
+            label="Impression"
+            fullWidth
+            multiline
+            minRows={2}
+            name="result.impression"
+            value={formik.values.result.impression}
+            onChange={formik.handleChange}
+          />
+        </Grid>
+      </Grid>
+
+      {/* Remarks */}
+      <Grid container spacing={2} marginBottom={4}>
+        <Grid item xs={12}>
+          <Typography variant="h6">Remarks</Typography>
+        </Grid>
+        <Grid item xs={12}>
+          <TextField
+            label="Remarks"
+            fullWidth
+            multiline
+            minRows={2}
+            name="result.remarks"
+            value={formik.values.result.remarks}
+            onChange={formik.handleChange}
+          />
+        </Grid>
+        <Grid item xs={12}>
+          <TextField
+            label="Advice"
+            fullWidth
+            multiline
+            minRows={2}
+            name="result.advice"
+            value={formik.values.result.advice}
+            onChange={formik.handleChange}
+          />
+        </Grid>
+      </Grid>
+
+      {/* Upload Images & Description */}
+      <Grid container spacing={2} marginBottom={4}>
+        <Grid item xs={12}>
+          <Typography variant="h6">Upload Images & Description</Typography>
+        </Grid>
+        <Grid item xs={12}>
+          {patient && (
+            <FileUploadButton
+              showSubmitHint={true}
+              acceptTypes="image/*, application/pdf"
+              maxFiles={5}
+              maxFileSizeinMB={15}
+              onUploadFiles={files => {
+                const existingFiles = investigation?.result?.files || [];
+                const updatedFiles = [...existingFiles, ...files];
+                const uniqueFiles = [...new Set(updatedFiles)];
+                setFileUploadedUrl(uniqueFiles);
+              }}
+              bucket={EBuckets.UserReports}
+              documentType={EDocumentTypes.Investigation}
+              user={patient?._id}
+              reportId={openEditDialog.id}
+            />
+          )}
+        </Grid>
+        <Grid item xs={12}>
+          {investigation?.result?.files && (
             <FileList
               files={investigation?.result?.files || []}
               title="Uploaded Files"
             />
-          </Grid>
-          <Grid item xs={12} sm={12} md={12}>
-            <TextField
-              label="Description"
-              multiline
-              minRows={2}
-              fullWidth
-              value={formik.values.result.description}
-              name="result.description"
-              onChange={formik.handleChange}
-              error={
-                formik.touched.result?.description &&
-                Boolean(formik.errors.result?.description)
-              }
-              helperText={
-                formik.touched.result?.description &&
-                formik.errors.result?.description
-              }
-            />
-          </Grid>
+          )}
         </Grid>
-
-        {/* </Grid> */}
-
-        {/* <Typography variant="subtitle1" sx={{ mt: 2, mb: 2 }}>Reference Values For Semen Analysis</Typography>
-      <SemenAnalysisTable /> */}
-
-        <Typography variant="subtitle1" sx={{ mt: 2, mb: 2 }}>
-          Disclaimer
-        </Typography>
-        <Grid container spacing={2} marginBottom={2}>
-          <Grid item xs={12} sm={12} md={12}>
-            <TextField
-              label="Disclaimer"
-              name="result.disclaimer"
-              value={formik.values.result.disclaimer}
-              multiline
-              minRows={2}
-              fullWidth
-              onChange={formik.handleChange}
-              error={
-                formik.touched.result?.disclaimer &&
-                Boolean(formik.errors.result?.disclaimer)
-              }
-              helperText={
-                formik.touched.result?.disclaimer &&
-                formik.errors.result?.disclaimer
-              }
-            />
-          </Grid>
-        </Grid>
-
-        <Box
-          display={'flex'}
-          justifyContent={'center'}
-          alignItems={'center'}
-          gap={2}
-          mb={2}
-        >
-          <Grid item xs={12}>
-            <FormControlLabel
-              control={
-                <Checkbox
-                  checked={formik.values.status === 'Completed'}
-                  onChange={e =>
-                    formik.setFieldValue(
-                      'status',
-                      e.target.checked ? 'Completed' : 'Scheduled',
-                    )
-                  }
-                  color="primary"
-                />
-              }
-              label="Status: Completed"
-            />
-          </Grid>
-        </Box>
-
-        <Box
-          display={'flex'}
-          justifyContent={'center'}
-          alignItems={'center'}
-          gap={2}
-          mb={2}
-        >
-          <Button
-            variant="contained"
-            disabled={
-              editingInvestigation ||
-              (_.isEqual(formik.values, formik.initialValues) &&
-                fileUploadedUrl.length === 0)
+        <Grid item xs={12}>
+          <TextField
+            label="Description"
+            multiline
+            minRows={2}
+            fullWidth
+            value={formik.values.result.imageDescription}
+            name="result.imageDescription"
+            onChange={formik.handleChange}
+            error={
+              formik.touched.result?.imageDescription &&
+              Boolean(formik.errors.result?.imageDescription)
             }
-            color="primary"
-            type="submit"
-          >
-            Update
-          </Button>
-          <Button
-            variant="contained"
-            color="secondary"
-            sx={{ width: 'fit-content' }}
-            onClick={() => dispatch(closeEditInvestigation())}
-          >
-            Cancel
-          </Button>
-        </Box>
-      </form>
-    </>
+            helperText={
+              formik.touched.result?.imageDescription &&
+              formik.errors.result?.imageDescription
+            }
+          />
+        </Grid>
+      </Grid>
+
+      {/* Status */}
+      <Box
+        display={'flex'}
+        justifyContent={'center'}
+        alignItems={'center'}
+        gap={2}
+        mb={2}
+      >
+        <Grid item xs={12}>
+          <FormControlLabel
+            control={
+              <Checkbox
+                checked={formik.values.status === 'Completed'}
+                onChange={e =>
+                  formik.setFieldValue(
+                    'status',
+                    e.target.checked ? 'Completed' : 'Scheduled',
+                  )
+                }
+                color="primary"
+              />
+            }
+            label="Status: Completed"
+          />
+        </Grid>
+      </Box>
+
+      {/* Buttons */}
+      <Box
+        display={'flex'}
+        justifyContent={'center'}
+        alignItems={'center'}
+        gap={2}
+        mb={2}
+      >
+        <Button
+          variant="contained"
+          disabled={
+            editingInvestigation ||
+            (_.isEqual(formik.values, formik.initialValues) &&
+              fileUploadedUrl.length === 0)
+          }
+          color="primary"
+          type="submit"
+        >
+          Update
+        </Button>
+        <Button
+          variant="contained"
+          color="secondary"
+          sx={{ width: 'fit-content' }}
+          onClick={() => dispatch(closeEditInvestigation())}
+        >
+          Cancel
+        </Button>
+      </Box>
+    </form>
   );
 };
 

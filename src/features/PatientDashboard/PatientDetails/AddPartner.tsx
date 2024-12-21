@@ -170,7 +170,7 @@ const PatientDashboardAddPartner: React.FC<
         borderRadius={1}
         boxShadow={5}
         maxHeight="80vh"
-        overflow="auto" 
+        overflow="auto"
         px={8}
         py={5}
         bgcolor={'background.paper'}
@@ -492,8 +492,15 @@ const PatientDashboardAddPartner: React.FC<
 
           <Box mt={2} mb={2}>
             <Divider sx={{ mb: 2 }} />
-            <Typography variant="h6" sx={{ mb: 2 }}>Profile Photo</Typography>
-            <Grid container rowSpacing={rowSpacing} columnSpacing={columnSpacing} mt={1}>
+            <Typography variant="h6" sx={{ mb: 2 }}>
+              Profile Photo
+            </Typography>
+            <Grid
+              container
+              rowSpacing={rowSpacing}
+              columnSpacing={columnSpacing}
+              mt={1}
+            >
               <Grid item xs={12}>
                 <FileUploadButton
                   acceptTypes="image/*"
@@ -506,7 +513,6 @@ const PatientDashboardAddPartner: React.FC<
               </Grid>
             </Grid>
           </Box>
-
 
           <Divider />
 

@@ -54,7 +54,6 @@ const Packages: React.FC = () => {
         patientId: patient?.patientId,
         active: true,
       },
-
     },
     {
       skip: !patient?.patientId,

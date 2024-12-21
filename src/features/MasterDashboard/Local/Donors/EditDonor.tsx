@@ -128,10 +128,6 @@ const EditDonor: React.FC<EditDonorProps> = ({ openModal, onClose, id }) => {
     isFetching: DonorFetching,
   } = useGetDonorByIdQuery(id);
 
-  console.log('Id prop', id);
-
-  console.log('Donor Data', DonorData);
-
   const indianStates = [
     'Andhra Pradesh',
     'Arunachal Pradesh',

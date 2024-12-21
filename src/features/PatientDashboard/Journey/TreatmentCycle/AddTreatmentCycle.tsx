@@ -84,7 +84,13 @@ const AddTreatmentCycle: React.FC<AddTreatmentCycleProps> = ({
 
   const createForm = useFormik({
     initialValues: {
-      fields: [{ treatmentCycle: null, doctor: doctors.length > 0 ? doctors[0] : null, date: null }],
+      fields: [
+        {
+          treatmentCycle: null,
+          doctor: doctors.length > 0 ? doctors[0] : null,
+          date: null,
+        },
+      ],
     },
     validationSchema: AddTreatmentCycleValidationSchema,
     onSubmit: handleSubmit,
@@ -134,7 +140,11 @@ const AddTreatmentCycle: React.FC<AddTreatmentCycleProps> = ({
   const handleAddFields = () => {
     createForm.setFieldValue('fields', [
       ...createForm.values.fields,
-      { treatmentCycle: null, doctor: doctors.length > 0 ? doctors[0] : null, date: new Date() },
+      {
+        treatmentCycle: null,
+        doctor: doctors.length > 0 ? doctors[0] : null,
+        date: new Date(),
+      },
     ]);
   };
 
@@ -243,7 +253,9 @@ const AddTreatmentCycle: React.FC<AddTreatmentCycleProps> = ({
                     <Grid item flex={3}>
                       <CustomDatePicker
                         label="Date"
-                        minDate={new Date(new Date().setDate(new Date().getDate() - 7))}
+                        minDate={
+                          new Date(new Date().setDate(new Date().getDate() - 7))
+                        }
                         value={createForm.values.fields[index].date}
                         onChange={newValue =>
                           createForm.setFieldValue(
