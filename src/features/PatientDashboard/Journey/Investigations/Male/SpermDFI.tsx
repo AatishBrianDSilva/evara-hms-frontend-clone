@@ -9,7 +9,6 @@ import {
   TextField,
   Typography,
 } from '@mui/material';
-import CustomDatePicker from '../../../../../components/CustomDatePicker/CustomDatePicker';
 import {
   useEditInvestigationMutation,
   useGetInvestigationByIdQuery,
