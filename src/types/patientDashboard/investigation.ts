@@ -255,29 +255,13 @@ export interface ISemenAnalysisForm {
 }
 
 export interface ISpermDFIForm {
-  collectionDate: Date | null;
-  timeOfCollection: Date | null;
-  timeOfEvaluation: Date | null;
-  sampleCollectedAt: string;
-  abstinence: string;
-  color: string;
-  volume: string;
-  liquefaction: string;
-  viscosity: string;
-  count: string;
-  motility: string;
-  rapidProgressive: string;
-  slowProgressive: string;
-  nonProgressive: string;
-  immobile: string;
-  normalForms: string;
-  spillage: string;
-  agglutination: string;
-  dfi: string;
-  embryologist: string;
-  referredBy: string;
-  impressions: string;
-  description: string;
+  abstinencePeriod?: string;
+  spermEvaluated?: string;
+  normalHalo?: string;
+  noAbnormalHalo?: string;
+  dfiIndex?: string;
+  imageDescription?: string;
+
 }
 
 export interface ICryoPreservationEmbryoForm {

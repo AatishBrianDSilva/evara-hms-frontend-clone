@@ -19,6 +19,7 @@ import { useGetReferralDoctorsQuery } from '../../services/masterDashboardServic
 import { useGetPatientIdTypesQuery } from '../../services/masterDashboardService/local/patientIdTypeApi';
 import { useGetPatientSourcesQuery } from '../../services/masterDashboardService/local/patientSourceApi';
 
+
 const columnSpacing = 2;
 const rowSpacing = 2;
 
@@ -38,6 +39,7 @@ const PatientRegistration: React.FC = () => {
 
   const [fileUploadedUrl, setFileUploadedUrl] = React.useState<string[]>(['']);
   const [IdUploadedUrl, setIdUploadedUrl] = React.useState<string[]>(['']);
+
 
   //import referral doctors
   const {
@@ -742,7 +744,7 @@ const PatientRegistration: React.FC = () => {
             getOptionLabel={option => option}
             loading={idLoading}
             value={formik.values.idProofType}
-            onChange={value => {
+            onChange={(value) => {
               formik.setFieldValue('idProofType', value);
             }}
             error={

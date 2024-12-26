@@ -1,5 +1,17 @@
 import * as Yup from 'yup';
 
+const idProofTypeMap: Record<string, string> = {
+  aadhar: "Aadhar",
+  "aadhar card": "Aadhar",
+  "aadhar number": "Aadhar",
+  abha: "ABHA",
+  "abha card": "ABHA",
+  pan: "Pan",
+  "pan card": "Pan",
+  "driving license": "DrivingLicense",
+  "license": "DrivingLicense",
+};
+
 export const PatientRegistrationValidationSchema = Yup.object().shape({
   title: Yup.string(),
   firstName: Yup.string().required('First name is required'),
@@ -44,8 +56,51 @@ export const PatientRegistrationValidationSchema = Yup.object().shape({
   pincode: Yup.string()
     .required('Pincode is required')
     .matches(/^\d{6}$/, 'Enter a 6-digit pin code'),
-  idProofType: Yup.string().required('ID proof type is required'),
-  idProofNumber: Yup.string().required('ID proof number is required'),
+  idProofType: Yup.string().required('ID Proof Type is required'),
+  idProofNumber: Yup.string()
+  .required("ID Proof Number is required")
+  .test("idProofValidation", function (value) {
+    const { idProofType } = this.parent;
+
+    if (!idProofType) return true; // Skip validation if idProofType is not set
+
+    // Normalize idProofType
+    const normalizedType = idProofTypeMap[idProofType.toLowerCase()] || idProofType;
+
+    const errorMessageMap = {
+      Aadhar: "Enter a 12 digit valid aadhar number",
+      ABHA: "Enter a 14 digit valid abha number",
+      Pan: 'Enter a 10 digit PAN number in "ABCDE1234F" format',
+      DrivingLicense: 'Enter a 16 digit driving license in "SS-RRYYYYNNNNNNN" format',
+    };
+
+    switch (normalizedType) {
+      case "Aadhar":
+        if (!/^\d{12}$/.test(value || "")) {
+          return this.createError({ message: errorMessageMap["Aadhar"] });
+        }
+        break;
+      case "ABHA":
+        if (!/^\d{14}$/.test(value || "")) {
+          return this.createError({ message: errorMessageMap["ABHA"] });
+        }
+        break;
+      case "Pan":
+        if (!/^[A-Z]{5}\d{4}[A-Z]{1}$/.test(value || "")) {
+          return this.createError({ message: errorMessageMap["Pan"] });
+        }
+        break;
+      case "DrivingLicense":
+        if (!/^[A-Z]{2}-\d{2}[A-Z]{4}\d{7}$/.test(value || "")) {
+          return this.createError({ message: errorMessageMap["DrivingLicense"] });
+        }
+        break;
+      default:
+        return true; // Allow other values without additional validation
+    }
+
+    return true;
+  }),
   idProofIssuedCountry: Yup.string(),
   ABHANumber: Yup.string().matches(
     /^\d{14}$/,
@@ -113,8 +168,51 @@ export const PartnerRegistrationValidationSchema = Yup.object().shape({
   pincode: Yup.string()
     .required('Pincode is required')
     .matches(/^\d{6}$/, 'Enter a 6-digit pin code'), // country: Yup.string().required("Country is required"),
-  idProofType: Yup.string().required('ID proof type is required'),
-  idProofNumber: Yup.string().required('ID proof number is required'),
+    idProofType: Yup.string().required('ID Proof Type is required'),
+    idProofNumber: Yup.string()
+    .required("ID Proof Number is required")
+    .test("idProofValidation", function (value) {
+      const { idProofType } = this.parent;
+  
+      if (!idProofType) return true; // Skip validation if idProofType is not set
+  
+      // Normalize idProofType
+      const normalizedType = idProofTypeMap[idProofType.toLowerCase()] || idProofType;
+  
+      const errorMessageMap = {
+        Aadhar: "Enter a 12 digit valid aadhar number",
+        ABHA: "Enter a 14 digit valid abha number",
+        Pan: 'Enter a 10 digit PAN number in "ABCDE1234F" format',
+        DrivingLicense: 'Enter a 16 digit driving license in "SS-RRYYYYNNNNNNN" format',
+      };
+  
+      switch (normalizedType) {
+        case "Aadhar":
+          if (!/^\d{12}$/.test(value || "")) {
+            return this.createError({ message: errorMessageMap["Aadhar"] });
+          }
+          break;
+        case "ABHA":
+          if (!/^\d{14}$/.test(value || "")) {
+            return this.createError({ message: errorMessageMap["ABHA"] });
+          }
+          break;
+        case "Pan":
+          if (!/^[A-Z]{5}\d{4}[A-Z]{1}$/.test(value || "")) {
+            return this.createError({ message: errorMessageMap["Pan"] });
+          }
+          break;
+        case "DrivingLicense":
+          if (!/^[A-Z]{2}-\d{2}[A-Z]{4}\d{7}$/.test(value || "")) {
+            return this.createError({ message: errorMessageMap["DrivingLicense"] });
+          }
+          break;
+        default:
+          return true; // Allow other values without additional validation
+      }
+  
+      return true;
+    }),
   idProofIssuedCountry: Yup.string(),
   ABHANumber: Yup.string().matches(
     /^\d{14}$/,
@@ -174,8 +272,51 @@ export const DonorRegistrationfrombankValidationSchema = Yup.object().shape({
   pincode: Yup.string()
     .required('Pincode is required')
     .matches(/^\d{6}$/, 'Enter a 6-digit pin code'),
-  idProofType: Yup.string().required('ID proof type is required'),
-  idProofNumber: Yup.string().required('ID proof number is required'),
+    idProofType: Yup.string().required('ID Proof Type is required'),
+    idProofNumber: Yup.string()
+    .required("ID Proof Number is required")
+    .test("idProofValidation", function (value) {
+      const { idProofType } = this.parent;
+  
+      if (!idProofType) return true; // Skip validation if idProofType is not set
+  
+      // Normalize idProofType
+      const normalizedType = idProofTypeMap[idProofType.toLowerCase()] || idProofType;
+  
+      const errorMessageMap = {
+        Aadhar: "Enter a 12 digit valid aadhar number",
+        ABHA: "Enter a 14 digit valid abha number",
+        Pan: 'Enter a 10 digit PAN number in "ABCDE1234F" format',
+        DrivingLicense: 'Enter a 16 digit driving license in "SS-RRYYYYNNNNNNN" format',
+      };
+  
+      switch (normalizedType) {
+        case "Aadhar":
+          if (!/^\d{12}$/.test(value || "")) {
+            return this.createError({ message: errorMessageMap["Aadhar"] });
+          }
+          break;
+        case "ABHA":
+          if (!/^\d{14}$/.test(value || "")) {
+            return this.createError({ message: errorMessageMap["ABHA"] });
+          }
+          break;
+        case "Pan":
+          if (!/^[A-Z]{5}\d{4}[A-Z]{1}$/.test(value || "")) {
+            return this.createError({ message: errorMessageMap["Pan"] });
+          }
+          break;
+        case "DrivingLicense":
+          if (!/^[A-Z]{2}-\d{2}[A-Z]{4}\d{7}$/.test(value || "")) {
+            return this.createError({ message: errorMessageMap["DrivingLicense"] });
+          }
+          break;
+        default:
+          return true; // Allow other values without additional validation
+      }
+  
+      return true;
+    }),
   idProofIssuedCountry: Yup.string(),
   ABHANumber: Yup.string().matches(
     /^\d{14}$/,
@@ -249,8 +390,51 @@ export const DonorRegistrationValidationSchemaFromHospital = Yup.object().shape(
     pincode: Yup.string()
       .required('Pincode is required')
       .matches(/^\d{6}$/, 'Enter a 6-digit pin code'), // country: Yup.string().required("Country is required"),
-    idProofType: Yup.string().required('ID proof type is required'),
-    idProofNumber: Yup.string().required('ID proof number is required'),
+      idProofType: Yup.string().required('ID Proof Type is required'),
+      idProofNumber: Yup.string()
+      .required("ID Proof Number is required")
+      .test("idProofValidation", function (value) {
+        const { idProofType } = this.parent;
+    
+        if (!idProofType) return true; // Skip validation if idProofType is not set
+    
+        // Normalize idProofType
+        const normalizedType = idProofTypeMap[idProofType.toLowerCase()] || idProofType;
+    
+        const errorMessageMap = {
+          Aadhar: "Enter a 12 digit valid aadhar number",
+          ABHA: "Enter a 14 digit valid abha number",
+          Pan: 'Enter a 10 digit PAN number in "ABCDE1234F" format',
+          DrivingLicense: 'Enter a 16 digit driving license in "SS-RRYYYYNNNNNNN" format',
+        };
+    
+        switch (normalizedType) {
+          case "Aadhar":
+            if (!/^\d{12}$/.test(value || "")) {
+              return this.createError({ message: errorMessageMap["Aadhar"] });
+            }
+            break;
+          case "ABHA":
+            if (!/^\d{14}$/.test(value || "")) {
+              return this.createError({ message: errorMessageMap["ABHA"] });
+            }
+            break;
+          case "Pan":
+            if (!/^[A-Z]{5}\d{4}[A-Z]{1}$/.test(value || "")) {
+              return this.createError({ message: errorMessageMap["Pan"] });
+            }
+            break;
+          case "DrivingLicense":
+            if (!/^[A-Z]{2}-\d{2}[A-Z]{4}\d{7}$/.test(value || "")) {
+              return this.createError({ message: errorMessageMap["DrivingLicense"] });
+            }
+            break;
+          default:
+            return true; // Allow other values without additional validation
+        }
+    
+        return true;
+      }),
     idProofIssuedCountry: Yup.string(),
     ABHANumber: Yup.string().matches(
       /^\d{14}$/,
