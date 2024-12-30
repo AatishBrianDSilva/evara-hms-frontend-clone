@@ -50,9 +50,13 @@ const DeletePatientPharmacy: React.FC<DeletePatientPharmacyProps> = ({
     <Dialog open={openModal} onClose={onClose}>
       <DialogTitle color="primary">Delete Pharmacy Order</DialogTitle>
       <DialogContent>
-        <Typography>
+        <Typography variant="body1">
           Are you sure you want to delete <strong>{name}</strong> with quantity
           of <strong>{quantity}</strong>? This action cannot be undone.
+        </Typography>
+        <Typography variant="body2" color="text.secondary">
+          The pharmacy order will be deleted from the system and the stock will
+          be updated.
         </Typography>
       </DialogContent>
       <DialogActions>
