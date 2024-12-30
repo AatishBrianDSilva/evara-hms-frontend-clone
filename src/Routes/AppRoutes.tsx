@@ -55,6 +55,7 @@ import RejectedInternalOrder from '../features/PharmacyDashboard/InternalOrders/
 import ProcessInternalOrder from '../features/PharmacyDashboard/InternalOrders/Processed/Processed';
 import DraftInternalOrder from '../features/PharmacyDashboard/InternalOrders/Draft/Draft';
 import InternalOrders from '../features/PharmacyDashboard/InternalOrders/InternalOrders';
+import AdminApproval from '../features/PharmacyDashboard/PurchaseOrder/AdminApproval/AdminApproval';
 
 // import BillingsAdvance from "../features/PatientDashboard/Billings/Advance/BillingsAdvance";
 import BillingsPaid from '../features/PatientDashboard/Billings/Paid/BillingsPaid';
@@ -363,6 +364,10 @@ const AppRoutes: React.FC = () => (
               <Route
                 path={EPurchaseOrderTabPaths.Ordered}
                 element={<Ordered />}
+              />
+              <Route
+                path={EPurchaseOrderTabPaths.AdminApproval}
+                element={<AdminApproval />}
               />
               <Route
                 path={EPurchaseOrderTabPaths.PartiallyProcessed}

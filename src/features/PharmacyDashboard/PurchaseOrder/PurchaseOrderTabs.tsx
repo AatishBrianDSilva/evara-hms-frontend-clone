@@ -29,11 +29,12 @@ const PurchaseOrderTabs: React.FC = () => {
           <Tab label="Approved" id="purchase-order-main-tabpanel-1" />
           <Tab label="Rejected" id="purchase-order-main-tabpanel-2" />
           <Tab label="Ordered" id="purchase-order-main-tabpanel-3" />
+          <Tab label="Admin Approval" id="purchase-order-main-tabpanel-4" />
           <Tab
             label="Partially processed"
-            id="purchase-order-main-tabpanel-4"
+            id="purchase-order-main-tabpanel-5"
           />
-          <Tab label="Processed" id="purchase-order-main-tabpanel-5" />
+          <Tab label="Processed" id="purchase-order-main-tabpanel-6" />
         </Tabs>
       </Box>
 
