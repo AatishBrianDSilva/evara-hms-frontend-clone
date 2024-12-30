@@ -177,11 +177,25 @@ export const purchaseOrderApi = createApi({
     }),
     rejectPurchaseOrderByAdmin: builder.mutation<
       ApiResponse<IPurchaseOrder>,
-      { id: string }
+      { id: string; isPartial?: boolean }
     >({
-      query: ({ id }) => ({
+      query: ({ id, isPartial }) => ({
         url: `pharmacy-dashboard/purchase-order/${id}/rejected-by-admin`,
         method: 'PUT',
+        body: {
+          isPartial, // Include the flag in the body
+        },
+      }),
+      invalidatesTags: ['PurchaseOrder'],
+    }),
+    movePartialPurchaseOrderToAdminApproval: builder.mutation<
+      ApiResponse<IPurchaseOrder>,
+      { id: string; payload: any }
+    >({
+      query: ({ id, payload }) => ({
+        url: `pharmacy-dashboard/purchase-order/${id}/move-partial-po-to-admin-approval`,
+        method: 'PUT',
+        body: { id, payload },
       }),
       invalidatesTags: ['PurchaseOrder'],
     }),
@@ -202,4 +216,5 @@ export const {
   useUpdateStockFromPartiallyProcessedPurchaseOrderMutation,
   useMovePurchaseOrderToAdminApprovalMutation,
   useRejectPurchaseOrderByAdminMutation,
+  useMovePartialPurchaseOrderToAdminApprovalMutation,
 } = purchaseOrderApi;
