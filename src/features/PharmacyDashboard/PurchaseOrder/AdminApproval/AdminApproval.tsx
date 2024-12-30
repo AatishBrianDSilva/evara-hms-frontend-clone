@@ -26,6 +26,7 @@ import { useSelector } from 'react-redux';
 import { RootState } from '../../../../app/store';
 import UpdateRejectedPurchaseOrder from './UpdateRejectedPurchaseOrder';
 import EditApprovalPending from './EditApprovalPending';
+import EditPartiallyProcessedApprovalPending from './EditPartiallyProcessedApprovalPending';
 
 const Ordered: React.FC = () => {
   // const { showPromiseToast } = useToast()
@@ -76,6 +77,8 @@ const Ordered: React.FC = () => {
       status: [
         EPurchaseOrderStatus.WaitingForApproval,
         EPurchaseOrderStatus.RejectedByAdmin,
+        EPurchaseOrderStatus.PartialPOWaitingForApproval,
+        EPurchaseOrderStatus.PartialPORejectedByAdmin,
       ],
     },
   });
@@ -93,6 +96,8 @@ const Ordered: React.FC = () => {
   const [isViewModalOpen, setIsViewModalOpen] = useState<boolean>(false);
   const [isRejectedOrderModalOpen, setIsRejectedOrderModalOpen] =
     useState(false);
+  const [isPartiallyProcessedModalOpen, setIsPartiallyProcessedModalOpen] =
+    useState<boolean>(false);
   // const [isAddModalOpen, setIsAddModalOpen] = useState<boolean>(false)
 
   // Edit Modal
@@ -124,6 +129,18 @@ const Ordered: React.FC = () => {
   const closeRejectedOrderModal = () => {
     setSelectedRow(undefined);
     setIsRejectedOrderModalOpen(false);
+  };
+
+  // Edit partial po modal for admin apporval
+
+  const openEditPartiallyProcessedApprovalPending = (order: IPurchaseOrder) => {
+    setSelectedRow(order);
+    setIsPartiallyProcessedModalOpen(true);
+  };
+
+  const closeEditPartiallyProcessedApprovalPending = () => {
+    setSelectedRow(undefined);
+    setIsPartiallyProcessedModalOpen(false);
   };
 
   const columnsConfig: GridColDef[] = [
@@ -175,12 +192,20 @@ const Ordered: React.FC = () => {
                   ? 'Waiting for Approval'
                   : status === EPurchaseOrderStatus.RejectedByAdmin
                     ? 'Rejected by Admin'
-                    : 'Unknown Status'
+                    : status === EPurchaseOrderStatus.PartialPORejectedByAdmin
+                      ? ' Pratial PO Rejected by Admin'
+                      : status ===
+                          EPurchaseOrderStatus.PartialPOWaitingForApproval
+                        ? 'Partial PO Waiting for Approval'
+                        : 'Unknown Status'
               }
             >
-              {status === EPurchaseOrderStatus.WaitingForApproval ? (
+              {status === EPurchaseOrderStatus.WaitingForApproval ||
+              status === EPurchaseOrderStatus.PartialPOWaitingForApproval ? (
                 <Circle sx={{ color: 'warning.main' }} />
               ) : status === EPurchaseOrderStatus.RejectedByAdmin ? (
+                <Circle sx={{ color: 'error.main' }} />
+              ) : status === EPurchaseOrderStatus.PartialPORejectedByAdmin ? (
                 <Circle sx={{ color: 'error.main' }} />
               ) : (
                 <Circle sx={{ color: 'text.primary' }} />
@@ -197,14 +222,44 @@ const Ordered: React.FC = () => {
       type: 'actions',
       getActions: (params: GridRowParams) => {
         const row = params.row;
+
+        const isRejectedByAdmin = row.status === 'RejectedByAdmin';
+        const isPartialPORejectedByAdmin =
+          row.status === 'PartialPORejectedByAdmin';
+        const isPartialPOWaitingForApproval =
+          row.status === 'PartialPOWaitingForApproval';
+
         const actions = [
-          row.status === 'RejectedByAdmin' ? (
+          isRejectedByAdmin || isPartialPORejectedByAdmin ? (
             <Tooltip title="Edit Rejected PO">
               <GridActionsCellItem
                 icon={<Edit />}
                 label="Edit"
                 onClick={() => openRejectedOrderModal(row)} // Open UpdateRejectedPurchaseOrder modal
               />
+            </Tooltip>
+          ) : isPartialPOWaitingForApproval ? (
+            <Tooltip
+              title={
+                isAdmin
+                  ? 'Admin Approval for Partial PO'
+                  : 'Only admins can approve'
+              }
+            >
+              <span>
+                <GridActionsCellItem
+                  icon={<AddCircle />}
+                  label="Add Partial PO"
+                  onClick={() =>
+                    isAdmin && openEditPartiallyProcessedApprovalPending(row)
+                  } // Open EditPartiallyProcessedApprovalPending modal
+                  disabled={!isAdmin} // Disable for non-admin
+                  sx={{
+                    opacity: isAdmin ? 1 : 0.5, // Make it visually dull for non-admins
+                    pointerEvents: isAdmin ? 'auto' : 'none', // Prevent mouse events for disabled
+                  }}
+                />
+              </span>
             </Tooltip>
           ) : (
             <Tooltip
@@ -214,7 +269,7 @@ const Ordered: React.FC = () => {
                 <GridActionsCellItem
                   icon={<AddCircle />}
                   label="Add"
-                  onClick={() => isAdmin && openEditModal(row)} // Prevent click if not admin
+                  onClick={() => isAdmin && openEditModal(row)} // Open EditApprovalPending modal
                   disabled={!isAdmin} // Disable for non-admin
                   sx={{
                     opacity: isAdmin ? 1 : 0.5, // Make it visually dull for non-admins
@@ -297,6 +352,16 @@ const Ordered: React.FC = () => {
         <UpdateRejectedPurchaseOrder
           openModal={isRejectedOrderModalOpen}
           onClose={closeRejectedOrderModal}
+          id={selectedRow?._id || ''}
+          drugItems={drugItems}
+          drugVendors={drugVendors}
+        />
+      )}
+
+      {isPartiallyProcessedModalOpen && (
+        <EditPartiallyProcessedApprovalPending
+          openModal={isPartiallyProcessedModalOpen}
+          onClose={closeEditPartiallyProcessedApprovalPending}
           id={selectedRow?._id || ''}
           drugItems={drugItems}
           drugVendors={drugVendors}

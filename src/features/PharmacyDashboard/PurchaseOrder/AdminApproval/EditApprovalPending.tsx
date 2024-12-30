@@ -207,7 +207,12 @@ const EditApprovalPending: React.FC<EditPurchaseOrderDraftProps> = ({
     useRejectPurchaseOrderByAdminMutation();
 
   const handleReject = async () => {
-    const rejectPromise = rejectPurchaseOrderByAdmin({ id }).unwrap();
+    const isPartial = false;
+
+    const rejectPromise = rejectPurchaseOrderByAdmin({
+      id,
+      isPartial,
+    }).unwrap();
 
     showPromiseToast(rejectPromise, {
       loading: 'Rejecting Purchase Order...',

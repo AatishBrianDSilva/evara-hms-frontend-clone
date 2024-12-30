@@ -15,7 +15,8 @@ import {
 } from '../../../../types/pharmacyDashboard/master';
 import { useToast } from '../../../../context/ToastContext';
 import {
-  useUpdatePartialPurchaseOrderMutation,
+  // useUpdatePartialPurchaseOrderMutation,
+  useMovePartialPurchaseOrderToAdminApprovalMutation,
   useGetPurchaseOrderByIdQuery,
 } from '../../../../services/pharmacyDashboardService/purchaseOrderApi';
 import { FormikErrors, FormikTouched, useFormik } from 'formik';
@@ -168,12 +169,8 @@ const EditPartiallyProcessed: React.FC<EditPartiallyProcessedProps> = ({
   const purchaseOrderLoading =
     isPurchaseOrderLoading || isPurchaseOrderFetching;
 
-  // Store older response items
-  const oldResponseItems =
-    (purchaseOrder as any)?.responses?.flatMap((res: any) => res.items) || [];
-
   const [editPurchaseOrder, { isLoading: isEditingLoading }] =
-    useUpdatePartialPurchaseOrderMutation();
+    useMovePartialPurchaseOrderToAdminApprovalMutation();
 
   const [fileUploadedUrl, setFileUploadedUrl] = React.useState<string[]>(() => {
     let initialUrl: string[] = [];
@@ -222,71 +219,52 @@ const EditPartiallyProcessed: React.FC<EditPartiallyProcessedProps> = ({
   };
 
   const formSubmit = async (values: FormValues) => {
-    // Combine old response items with new items
-    const combinedResponseItems = [
-      ...oldResponseItems,
-      ...values.items.map(item => ({
-        item: item.item?._id,
-        batchNo: item.batchNo,
-        expiryDate: item.expiryDate,
-        packSize: item.packSize,
-        quantity: (item.packSize ?? 0) * (item.noOfPacks ?? 0),
-        mrp: item.mrp,
-        mrpPerPack: item.mrpPerPack,
-        buyPrice: item.buyPrice,
-        tax: item.tax,
-        freeQuantity: item.freeQuantity,
-        noOfPacks: item.noOfPacks,
-        packsRequired: item.packsRequired,
-        discount: item.discount,
-      })),
-    ];
-
-    const payload = {
-      id: id,
-      date: purchaseOrder?.date,
-      vendor: purchaseOrder?.vendor?._id,
-      invoiceNumber: values.invoiceNumber,
-      request: {
+    // Prepare the new payload for approval
+    const payloadForApproval = {
+      id,
+      payload: {
+        order_date: values.order_date,
+        vendor: values.vendor?._id, // Assuming `vendor` is an object with `_id`
         items: values.items.map(item => ({
-          item: item.item?._id,
+          item: item.item?._id, // Assuming `item` is an object with `_id`
+          packsRequired: item.packsRequired,
           packSize: item.packSize,
-          quantity: (item.packSize ?? 0) * (item.noOfPacks ?? 0),
+          noOfPacks: item.noOfPacks,
+          batchNo: item.batchNo,
+          expiryDate: item.expiryDate,
           mrp: item.mrp,
           mrpPerPack: item.mrpPerPack,
           buyPrice: item.buyPrice,
           tax: item.tax,
+          totalCost: item.totalCost,
           freeQuantity: item.freeQuantity,
-          noOfPacks: item.noOfPacks,
-          packsRequired: item.packsRequired,
+          quantity: item.quantity,
           discount: item.discount,
         })),
         subTotal: values.subTotal,
         tax: values.tax,
         otherCharges: values.otherCharges,
         netAmount: values.netAmount,
-      },
-      response: {
-        items: combinedResponseItems as any,
-        subTotal: values.subTotal,
-        tax: values.tax,
-        otherCharges: values.otherCharges,
-        netAmount: values.netAmount,
-        invoice: fileUploadedUrl,
+        invoiceNumber: values.invoiceNumber,
+        files: fileUploadedUrl, // Attach uploaded file URLs
       },
     };
 
-    const editPromise = editPurchaseOrder(payload).unwrap();
+    // Send the new payload for approval
+    const editPromise = editPurchaseOrder(payloadForApproval).unwrap();
     showPromiseToast(editPromise, {
-      loading: 'Updating Purchase Order',
-      success: msg => msg || 'Purchase Order Updated Successfully',
-      error: msg => msg || 'Error Updating Purchase Order',
+      loading: 'Sending for Admin Approval',
+      success: msg => msg || 'Successfully Sent for Approval',
+      error: msg => msg || 'Error Sending for Approval',
     });
 
     try {
       await editPromise;
     } catch (error) {
-      console.error('Error Updating purchase order', error);
+      console.error(
+        'Error sending partial purchase order for approval:',
+        error,
+      );
       closeModal();
       return;
     }
@@ -300,8 +278,7 @@ const EditPartiallyProcessed: React.FC<EditPartiallyProcessedProps> = ({
     isFetching: isStocksFetching,
   } = useGetBatchesForStocksQuery();
 
-  const stocksLoading =
-  isStocksLoading || isStocksFetching;
+  const stocksLoading = isStocksLoading || isStocksFetching;
 
   const formik = useFormik({
     initialValues: initialValues,
@@ -335,8 +312,12 @@ const EditPartiallyProcessed: React.FC<EditPartiallyProcessedProps> = ({
     updateCalculations();
   };
 
-  const [currentBatchNumbers, setCurrentBatchNumbers] = React.useState<Record<string, string[]>>({});
-  const [batchWarnings, setBatchWarnings] = React.useState<Record<number, string>>({});
+  const [currentBatchNumbers, setCurrentBatchNumbers] = React.useState<
+    Record<string, string[]>
+  >({});
+  const [batchWarnings, setBatchWarnings] = React.useState<
+    Record<number, string>
+  >({});
 
   const handleValueChange = (
     index: number,
@@ -379,42 +360,45 @@ const EditPartiallyProcessed: React.FC<EditPartiallyProcessedProps> = ({
         itemCost + (itemCost * tax) / 100 - discountAmount || 0; // Update totalCost considering item-wise discount
     }
 
-     // Handle item change to update batch numbers
-  if (field === 'item') {
-    const selectedDrugItemId = numericValue?._id;
-    const selectedDrugItem = stocksData?.data?.find(stock => stock.itemId === selectedDrugItemId);
+    // Handle item change to update batch numbers
+    if (field === 'item') {
+      const selectedDrugItemId = numericValue?._id;
+      const selectedDrugItem = stocksData?.data?.find(
+        stock => stock.itemId === selectedDrugItemId,
+      );
 
-    // Update current batch numbers and reset batch number for the item
-    setCurrentBatchNumbers(prev => ({
-      ...prev,
-      [selectedDrugItemId]: selectedDrugItem?.batchNumbers || [],
-    }));
-    currentItem.batchNo = null; // Reset batch number
-    setBatchWarnings(prevWarnings => {
-      const updatedWarnings = { ...prevWarnings };
-      delete updatedWarnings[index]; // Clear any warnings for the current item
-      return updatedWarnings;
-    });
-  }
-
-  // Validate batch number if the field is 'batchNo'
-  if (field === 'batchNo') {
-    const batchNumbersForItem = currentItem.item?._id
-    ? currentBatchNumbers[currentItem.item._id] || []
-    : [];
-    if (batchNumbersForItem.includes(numericValue)) {
-      setBatchWarnings(prev => ({
+      // Update current batch numbers and reset batch number for the item
+      setCurrentBatchNumbers(prev => ({
         ...prev,
-        [index]: 'This batch number is already in use for the selected item, new price and expiry will be applied to all items in batch',
+        [selectedDrugItemId]: selectedDrugItem?.batchNumbers || [],
       }));
-    } else {
-      setBatchWarnings(prev => {
-        const updatedWarnings = { ...prev };
-        delete updatedWarnings[index]; // Clear warning if batch number is valid
+      currentItem.batchNo = null; // Reset batch number
+      setBatchWarnings(prevWarnings => {
+        const updatedWarnings = { ...prevWarnings };
+        delete updatedWarnings[index]; // Clear any warnings for the current item
         return updatedWarnings;
       });
     }
-  }
+
+    // Validate batch number if the field is 'batchNo'
+    if (field === 'batchNo') {
+      const batchNumbersForItem = currentItem.item?._id
+        ? currentBatchNumbers[currentItem.item._id] || []
+        : [];
+      if (batchNumbersForItem.includes(numericValue)) {
+        setBatchWarnings(prev => ({
+          ...prev,
+          [index]:
+            'This batch number is already in use for the selected item, new price and expiry will be applied to all items in batch',
+        }));
+      } else {
+        setBatchWarnings(prev => {
+          const updatedWarnings = { ...prev };
+          delete updatedWarnings[index]; // Clear warning if batch number is valid
+          return updatedWarnings;
+        });
+      }
+    }
     newItems[index] = currentItem;
     formik.setFieldValue('items', newItems);
     updateCalculations(); // Call the update calculations after changing item values
@@ -448,7 +432,7 @@ const EditPartiallyProcessed: React.FC<EditPartiallyProcessedProps> = ({
       });
       setCurrentBatchNumbers(batchMap);
     }
-  
+
     // Ensure calculations are updated when items change
     updateCalculations();
   }, [stocksData, updateCalculations]);
@@ -669,7 +653,7 @@ const EditPartiallyProcessed: React.FC<EditPartiallyProcessedProps> = ({
                         disabled // disable the field as required
                       />
                     </Grid>
-                    <Grid item flex={1}>
+                    <Grid item flex={1.5}>
                       <TextField
                         fullWidth
                         label="No Of Packs"
@@ -685,7 +669,7 @@ const EditPartiallyProcessed: React.FC<EditPartiallyProcessedProps> = ({
                         }
                       />
                     </Grid>
-                    <Grid item flex={1}>
+                    <Grid item flex={1.5}>
                       <TextField
                         fullWidth
                         disabled={!itemSelected}
@@ -744,7 +728,7 @@ const EditPartiallyProcessed: React.FC<EditPartiallyProcessedProps> = ({
                         }
                       />
                     </Grid>
-                    <Grid item flex={1.5}>
+                    <Grid item flex={2}>
                       <TextField
                         fullWidth
                         label="Batch No"
@@ -752,15 +736,16 @@ const EditPartiallyProcessed: React.FC<EditPartiallyProcessedProps> = ({
                         value={formik.values.items[index].batchNo || ''}
                         error={!!batchWarnings[index] || batchNoError}
                         helperText={
-                          batchWarnings[index] 
+                          batchWarnings[index]
                             ? batchWarnings[index] // Show the batch warning if present
-                            : batchNoError 
-                            ? batchNoErrorMessage // Show validation error if present
-                            : ''
+                            : batchNoError
+                              ? batchNoErrorMessage // Show validation error if present
+                              : ''
                         }
-                        onChange={e => handleValueChange(index, 'batchNo', e.target.value)}
+                        onChange={e =>
+                          handleValueChange(index, 'batchNo', e.target.value)
+                        }
                       />
-               
                     </Grid>
                     <Grid item flex={2}>
                       <CustomDatePicker
