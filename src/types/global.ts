@@ -86,6 +86,7 @@ export enum EPurchaseOrderTabPaths {
   Approved = 'approved',
   Rejected = 'rejected',
   Ordered = 'ordered',
+  AdminApproval = 'admin-approval',
   PartiallyProcessed = 'partially-processed',
   Processed = 'processed',
 }

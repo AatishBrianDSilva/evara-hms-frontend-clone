@@ -103,11 +103,11 @@ const SpermDFI: React.FC = () => {
   const investigationName = investigation?.investigation?.test?.testName;
   const actualProcedureName = investigation?.investigation?.name;
 
-  const investigationDetails = investigation?.result?.details as ISpermDFIForm || {};
+  const investigationDetails =
+    (investigation?.result?.details as ISpermDFIForm) || {};
 
-
-  console.log("Investigation", investigation)
-  console.log("Investigation Details", investigationDetails)
+  console.log('Investigation', investigation);
+  console.log('Investigation Details', investigationDetails);
 
   const [fileUploadedUrl, setFileUploadedUrl] = React.useState<string[]>(() => {
     let initialUrl: string[] = [];
@@ -167,7 +167,6 @@ const SpermDFI: React.FC = () => {
     notes: investigation?.result?.notes || '',
     files: [],
   };
-  
 
   const formik = useFormik({
     initialValues: initialValues,
@@ -190,7 +189,7 @@ const SpermDFI: React.FC = () => {
             <Typography variant="h6">Sperm Evaluation</Typography>
           </Grid>
           <Grid item xs={12} sm={6}>
-          <TextField
+            <TextField
               label="Abstinence Period"
               fullWidth
               name="result.abstinencePeriod"
@@ -264,7 +263,7 @@ const SpermDFI: React.FC = () => {
                 acceptTypes="image/*"
                 maxFiles={5}
                 maxFileSizeinMB={15}
-                onUploadFiles={(files) => {
+                onUploadFiles={files => {
                   const existingFiles = investigation?.result?.files || [];
                   const updatedFiles = [...existingFiles, ...files];
                   const uniqueFiles = [...new Set(updatedFiles)];
@@ -318,7 +317,7 @@ const SpermDFI: React.FC = () => {
               control={
                 <Checkbox
                   checked={formik.values.status === 'Completed'}
-                  onChange={(e) =>
+                  onChange={e =>
                     formik.setFieldValue(
                       'status',
                       e.target.checked ? 'Completed' : 'Scheduled',
