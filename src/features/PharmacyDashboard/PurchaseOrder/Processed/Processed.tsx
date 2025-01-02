@@ -125,22 +125,18 @@ const Processed: React.FC = () => {
           );
         }
 
-        // Add Print action for the processed report if it exists
-        if (row.reportProcessed) {
+        if (row.reportKey) {
           actions.push(
-            <Tooltip
-              title="Print Processed Report"
-              key="print-report-processed"
-            >
+            <Tooltip title="Print Processed Report" key="print-processed">
               <GridActionsCellItem
                 icon={<Print />}
                 label="Print Processed Report"
                 onClick={() =>
                   fetchAndPrintPdf(
-                    row._id,
+                    row._id, // Purchase Order ID
                     'POInvoiceProcessed',
                     'pharmacy',
-                    // row.reportProcessed.key
+                    row.reportKey, // Pass the report key
                   )
                 }
               />
@@ -153,10 +149,17 @@ const Processed: React.FC = () => {
     },
   ];
 
-  const rows = purchaseOrders.map((order: IPurchaseOrder) => ({
-    ...order,
-    id: order.response._id, // Use response._id for unique row identifier
-  }));
+  const rows = purchaseOrders.flatMap(
+    (order: IPurchaseOrder) =>
+      order.responses?.map((response: any, index: number) => ({
+        ...order, // Include top-level fields
+        ...response, // Include response-level fields
+        id: response._id || `${order._id}-response-${index}`, // Unique ID for each response
+        reportKey: response.report?.key || '', // Extract the report key
+        netAmount: response.netAmount, // Response-specific amount
+        invoiceNumber: response.invoiceNumber, // Response-specific invoice number
+      })) || [],
+  );
 
   return (
     <Box height={'100%'} display={'flex'} flexDirection={'column'}>
