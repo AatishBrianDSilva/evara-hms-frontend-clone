@@ -214,7 +214,7 @@ const EditGlobalConsultant: React.FC<EditDoctorProps> = ({
 
   return (
     <Dialog open={openModal} onClose={onClose} maxWidth="md" fullWidth>
-      <DialogTitle color={'primary'}>Edit Referral Doctor</DialogTitle>
+      <DialogTitle color={'primary'}>Edit Doctor</DialogTitle>
       {DoctorLoading ? (
         skeletonLoader()
       ) : (
