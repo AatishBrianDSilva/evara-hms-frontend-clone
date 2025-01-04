@@ -39,6 +39,8 @@ import { calculateAge } from '../../utils/calculateAge';
 import { ENVIRONMENT } from '../../utils/apiConfig';
 import { useGetActiveBranchesQuery } from '../../services/masterDashboardService/global/globalBranch';
 import { CLINICID } from '../../features/Auth/Login';
+import RoleGuard from '../RoleGuard/RoleGuard';
+import { EUserRole } from '../../types/masterDashboard/global';
 
 const Search = styled('div')(({ theme }) => ({
   position: 'relative',
@@ -287,28 +289,38 @@ const DesktopHeader: React.FC = () => {
             Pharmacy
           </Typography>
         </Grid>
-        <Grid item display={'flex'} flexDirection={'column'} md={6} lg={4}>
-          <IconButton
-            sx={{ color: 'gray', width: 'fit-content', margin: 'auto' }}
-            onClick={() => handleAppsMenuNavigation('/analytics')}
-          >
-            <Analytics />
-          </IconButton>
-          <Typography variant="caption" align="center">
-            Analytics
-          </Typography>
-        </Grid>
-        <Grid item display={'flex'} flexDirection={'column'} md={6} lg={4}>
-          <IconButton
-            sx={{ color: 'gray', width: 'fit-content', margin: 'auto' }}
-            onClick={() => handleAppsMenuNavigation('/master')}
-          >
-            <Settings />
-          </IconButton>
-          <Typography variant="caption" align="center">
-            Master
-          </Typography>
-        </Grid>
+        <RoleGuard
+          allowedRoles={[
+            EUserRole.Admin,
+            EUserRole.CenterManager,
+            EUserRole.Billing,
+          ]}
+        >
+          <Grid item display={'flex'} flexDirection={'column'} md={6} lg={4}>
+            <IconButton
+              sx={{ color: 'gray', width: 'fit-content', margin: 'auto' }}
+              onClick={() => handleAppsMenuNavigation('/analytics')}
+            >
+              <Analytics />
+            </IconButton>
+            <Typography variant="caption" align="center">
+              Analytics
+            </Typography>
+          </Grid>
+        </RoleGuard>
+        <RoleGuard allowedRoles={[EUserRole.Admin, EUserRole.CenterManager]}>
+          <Grid item display={'flex'} flexDirection={'column'} md={6} lg={4}>
+            <IconButton
+              sx={{ color: 'gray', width: 'fit-content', margin: 'auto' }}
+              onClick={() => handleAppsMenuNavigation('/master')}
+            >
+              <Settings />
+            </IconButton>
+            <Typography variant="caption" align="center">
+              Master
+            </Typography>
+          </Grid>
+        </RoleGuard>
         {/* <Grid item display={"flex"} flexDirection={"column"} md={6} lg={4}>
           <IconButton sx={{ color: 'gray', width: 'fit-content', margin: 'auto' }}>
             <Diversity3 />
