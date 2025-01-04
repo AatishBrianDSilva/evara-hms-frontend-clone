@@ -15,6 +15,8 @@ export interface IGlobalBranch {
   isActive: boolean;
   addBranch: AddBranchRequest;
   editBranch: EditBranchRequest;
+  gstNumber: string;
+  drugLicenceNumber: string;
 }
 
 interface AddBranchRequest {
