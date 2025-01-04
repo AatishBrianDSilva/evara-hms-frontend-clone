@@ -13,7 +13,7 @@ interface IDoctorPickerProps {
   fieldName: string; // e.g. `fields.${index}.doctor`
   label?: string; // e.g. "Doctor"
   error?: boolean;
-  helperText?: string;
+  helperText?: string | undefined;
 
   /** If provided, only doctors matching this speciality are displayed. */
   speciality?: DoctorSpeciality;

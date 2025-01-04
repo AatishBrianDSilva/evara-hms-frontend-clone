@@ -20,22 +20,20 @@ import { RootState } from '../../../../app/store';
 import { useSelector } from 'react-redux';
 import { useAddCryoPreservationMutation } from '../../../../services/patientDashboardService/cryoPreservationApi';
 import { useToast } from '../../../../context/ToastContext';
-import { IDoctor } from '../../../../types/doctor';
 import { FilterOptionType } from '../../../../types/global';
 import { IMasterCryoPreservations } from '../../../../types/master';
 import CustomDatePicker from '../../../../components/CustomDatePicker/CustomDatePicker';
+import DoctorPicker from '../../../../components/DoctorPicker/DoctorPicker';
 
 interface AddcryoPreservationProps {
   open?: boolean;
   onClose?: () => void;
-  doctors: IDoctor[];
   masterCryoPreservations: IMasterCryoPreservations[];
 }
 
 const AddcryoPreservation: React.FC<AddcryoPreservationProps> = ({
   open,
   onClose,
-  doctors,
   masterCryoPreservations,
 }) => {
   const { patient, case: patientCase } = useSelector(
@@ -88,7 +86,7 @@ const AddcryoPreservation: React.FC<AddcryoPreservationProps> = ({
       fields: [
         {
           cryoPreservation: null,
-          doctor: doctors.length > 0 ? doctors[0] : null,
+          doctor: null,
           date: null,
         },
       ],
@@ -110,7 +108,7 @@ const AddcryoPreservation: React.FC<AddcryoPreservationProps> = ({
         createForm.values.fields,
       );
     },
-    [createForm.values.fields, doctors, masterCryoPreservations],
+    [createForm.values.fields, masterCryoPreservations],
   );
 
   const getFieldErrorAndTouched = useCallback(
@@ -143,7 +141,10 @@ const AddcryoPreservation: React.FC<AddcryoPreservationProps> = ({
       ...createForm.values.fields,
       {
         cryoPreservation: null,
-        doctor: doctors.length > 0 ? doctors[0] : null,
+        doctor:
+          createForm.values.fields.length > 0
+            ? createForm.values.fields[0].doctor
+            : null,
         date: new Date(),
       },
     ]);
@@ -233,24 +234,14 @@ const AddcryoPreservation: React.FC<AddcryoPreservationProps> = ({
                     </Grid>
                     {/* Abstracted Autocomplete for Doctors */}
                     <Grid item flex={3}>
-                      <FieldAutocomplete
-                        options={doctors}
-                        getOptionLabel={option =>
-                          `${option.firstName} ${option.lastName}`
-                        }
-                        isOptionEqualToValue={(option, value) =>
-                          option._id === value._id
-                        }
-                        value={createForm.values.fields[index].doctor}
-                        onChange={newValue =>
-                          createForm.setFieldValue(
-                            `fields.${index}.doctor`,
-                            newValue,
-                          )
-                        }
+                      <DoctorPicker
+                        formState={createForm}
+                        formIndex={index}
+                        fieldName={`fields.${index}.doctor`}
                         label="Doctor"
                         error={isDoctorError}
                         helperText={isDoctorError ? doctorErrorMessage : ''}
+                        autoSelectIfDoctor={true}
                       />
                     </Grid>
                     {/* Date Picker */}

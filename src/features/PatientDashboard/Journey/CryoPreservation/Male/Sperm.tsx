@@ -14,7 +14,6 @@ import React from 'react';
 import ReportModalHeader from '../../../../../components/ReportModalHeader/ReportModalHeader';
 import { useDispatch, useSelector } from 'react-redux';
 import { RootState } from '../../../../../app/store';
-import { IDoctor } from '../../../../../types/doctor';
 import { useFormik } from 'formik';
 import _ from 'lodash';
 import { closeEditCryoPreservation } from '../cryoPreservationSlice';
@@ -80,11 +79,7 @@ const renderSkeletonLoader = () => {
   );
 };
 
-interface TesaProps {
-  doctors: IDoctor[];
-}
-
-const Sperm: React.FC<TesaProps> = () => {
+const Sperm: React.FC = () => {
   const dispatch = useDispatch();
   const { showPromiseToast } = useToast();
 
