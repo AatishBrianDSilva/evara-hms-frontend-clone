@@ -15,9 +15,8 @@ import FileUploadButton from '../../../../../components/FileUploadAndPreview/Fil
 import { EBuckets, EDocumentTypes } from '../../../../../types/global';
 import { useSelector } from 'react-redux';
 import { RootState } from '../../../../../app/store';
-import FieldAutocomplete from '../../../../../components/FieldAutoComplete/FieldAutoComplete';
 import { DoctorSpeciality } from '../../../../../types/masterDashboard/global';
-import { useGetDoctorsQuery } from '../../../../../services/doctorsApi';
+import DoctorPicker from '../../../../../components/DoctorPicker/DoctorPicker';
 
 interface IFormValues {
   volume: string;
@@ -75,10 +74,6 @@ const IUIHReport: React.FC<IUIHReportProps> = ({
   const [fileUploadedUrl, setFileUploadedUrl] = React.useState<string[]>(['']);
 
   const [updateReport, { isLoading }] = useEditTreatmentCycleMutation();
-
-  // Fetch doctors for the doctor selection
-  const { data: doctorData } = useGetDoctorsQuery({});
-  const doctors = doctorData?.data?.records || [];
 
   const { data: treatmentCyclesData } = useGetTreatmentCyclesQuery(
     {
@@ -639,79 +634,75 @@ const IUIHReport: React.FC<IUIHReportProps> = ({
             error={formik.touched.embryologist1 && Boolean(formik.errors.embryologist1)}
             helperText={formik.touched.embryologist1 && formik.errors.embryologist1}
           /> */}
-          <FieldAutocomplete
-            options={doctors}
-            getOptionLabel={option =>
-              `${option.firstName || ''} ${option.lastName || ''}`
-            }
-            filterOptions={(options, _state) => {
-              return options.filter(
-                option => option.speciality === DoctorSpeciality.Embryologist,
-              );
-            }}
-            isOptionEqualToValue={(option, value) => option._id === value._id}
-            value={formik.values.embryologist1}
-            onChange={newValue => {
-              formik.setFieldValue('embryologist1', newValue);
-            }}
+          <DoctorPicker
+            formState={formik}
+            formIndex={0}
+            fieldName={`embryologist1`}
             label="Embryologist 1"
+            error={
+              formik.touched.embryologist1 &&
+              Boolean(formik.errors.embryologist1)
+            }
+            helperText={
+              formik.touched.embryologist1
+                ? formik.errors.embryologist1
+                : undefined
+            }
+            speciality={DoctorSpeciality.Embryologist}
           />
         </Grid>
         <Grid item lg={4}>
-          <FieldAutocomplete
-            options={doctors}
-            getOptionLabel={option =>
-              `${option.firstName || ''} ${option.lastName || ''}`
-            }
-            filterOptions={(options, _state) => {
-              return options.filter(
-                option => option.speciality === DoctorSpeciality.Embryologist,
-              );
-            }}
-            isOptionEqualToValue={(option, value) => option._id === value._id}
-            value={formik.values.embryologist2}
-            onChange={newValue => {
-              formik.setFieldValue('embryologist2', newValue);
-            }}
+          <DoctorPicker
+            formState={formik}
+            formIndex={0}
+            fieldName={`embryologist2`}
             label="Embryologist 2"
+            error={
+              formik.touched.embryologist2 &&
+              Boolean(formik.errors.embryologist2)
+            }
+            helperText={
+              formik.touched.embryologist2
+                ? formik.errors.embryologist2
+                : undefined
+            }
+            speciality={DoctorSpeciality.Embryologist}
           />
         </Grid>
         <Grid item lg={4}>
-          <FieldAutocomplete
-            options={doctors}
-            getOptionLabel={option =>
-              `${option.firstName || ''} ${option.lastName || ''}`
-            }
-            filterOptions={(options, _state) => {
-              return options.filter(
-                option => option.speciality === DoctorSpeciality.Gynecologist,
-              );
-            }}
-            isOptionEqualToValue={(option, value) => option._id === value._id}
-            value={formik.values.gyneacologist1}
-            onChange={newValue => {
-              formik.setFieldValue('gyneacologist1', newValue);
-            }}
+          <DoctorPicker
+            formState={formik}
+            formIndex={0}
+            fieldName={`gyneacologist1`}
             label="Gyneacologist 1"
+            error={
+              formik.touched.gyneacologist1 &&
+              Boolean(formik.errors.gyneacologist1)
+            }
+            helperText={
+              formik.touched.gyneacologist1
+                ? formik.errors.gyneacologist1
+                : undefined
+            }
+            speciality={DoctorSpeciality.Gynecologist}
           />
         </Grid>
         <Grid item lg={4}>
-          <FieldAutocomplete
-            options={doctors}
-            getOptionLabel={option =>
-              `${option.firstName || ''} ${option.lastName || ''}`
-            }
-            filterOptions={(options, _state) => {
-              return options.filter(
-                option => option.speciality === DoctorSpeciality.Gynecologist,
-              );
-            }}
-            isOptionEqualToValue={(option, value) => option._id === value._id}
-            value={formik.values.gyneacologist2}
-            onChange={newValue => {
-              formik.setFieldValue('gyneacologist2', newValue);
-            }}
+          <DoctorPicker
+            formState={formik}
+            formIndex={0}
+            fieldName={`gyneacologist2`}
             label="Gyneacologist 2"
+            error={
+              formik.touched.gyneacologist2 &&
+              Boolean(formik.errors.gyneacologist2)
+            }
+            helperText={
+              formik.touched.gyneacologist2
+                ? formik.errors.gyneacologist2
+                : undefined
+            }
+            speciality={DoctorSpeciality.Gynecologist}
           />
         </Grid>
         <Grid item lg={4}>
