@@ -19,7 +19,6 @@ import {
 import { useDispatch, useSelector } from 'react-redux';
 import { RootState } from '../../../../app/store';
 import AddProcedure from './AddProcedure';
-import { useGetDoctorsQuery } from '../../../../services/doctorsApi';
 import { useGetMasterProceduresQuery } from '../../../../services/masterDashboardService/serviceData/masterProceduresApi';
 import { CircularProgress } from '@mui/material';
 import {
@@ -59,14 +58,6 @@ const Procedures: React.FC = () => {
   const [selectedFiles, setSelectedFiles] = useState<string[]>([]);
   const [isViewReportsModalOpen, setIsViewReportsModalOpen] =
     useState<boolean>(false);
-
-  // Get doctors
-  const {
-    data: DoctorsData,
-    isLoading: DoctorsLoading,
-    isFetching: DoctorFetching,
-  } = useGetDoctorsQuery({});
-  const doctors = DoctorsData?.data?.records || [];
 
   // Get master procedures
   const {
@@ -117,11 +108,7 @@ const Procedures: React.FC = () => {
   const [deleteProcedure, { isLoading: deletingProcedure }] =
     useDeleteProcedureMutation();
 
-  const loading =
-    DoctorsLoading ||
-    MasterProceduresLoading ||
-    DoctorFetching ||
-    MasterProcedureFetching;
+  const loading = MasterProceduresLoading || MasterProcedureFetching;
 
   // Get the state of the edit procedure dialog
   const { editProcedureOpen } = useSelector(
@@ -310,13 +297,13 @@ const Procedures: React.FC = () => {
 
     switch (procedure?.procedure.procedure.procedureType) {
       case EProcedureType.PGT:
-        return <PGT doctors={doctors} />;
+        return <PGT />;
       case EProcedureType.TESA:
-        return <Tesa doctors={doctors} />;
+        return <Tesa />;
       case EProcedureType.Hysteroscopy:
-        return <Hysteroscopy doctors={doctors} />;
+        return <Hysteroscopy />;
       case EProcedureType.Laparoscopy:
-        return <Laparoscopy doctors={doctors} />;
+        return <Laparoscopy />;
       default:
         return <>Unkown Procedure</>;
     }
@@ -377,7 +364,6 @@ const Procedures: React.FC = () => {
       {addProcedureOpen && (
         <AddProcedure
           masterProcedures={masterProcedures}
-          doctors={doctors}
           onClose={closeForm}
           open={addProcedureOpen}
         />

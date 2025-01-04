@@ -19,7 +19,6 @@ import {
   useEditProcedureMutation,
   useGetProcedureByIdQuery,
 } from '../../../../../services/patientDashboardService/procedureApi';
-import { IDoctor } from '../../../../../types/doctor';
 import {
   IEditProcedureForm,
   IEditProcedurePayload,
@@ -90,11 +89,7 @@ const renderSkeletonLoader = () => {
   );
 };
 
-interface PGTProps {
-  doctors: IDoctor[];
-}
-
-const PGT: React.FC<PGTProps> = () => {
+const PGT: React.FC = () => {
   const dispatch = useDispatch();
   const { showPromiseToast } = useToast();
 

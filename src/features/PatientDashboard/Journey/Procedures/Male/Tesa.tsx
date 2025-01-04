@@ -17,7 +17,6 @@ import {
   useEditProcedureMutation,
   useGetProcedureByIdQuery,
 } from '../../../../../services/patientDashboardService/procedureApi';
-import { IDoctor } from '../../../../../types/doctor';
 import {
   IEditProcedureForm,
   IEditProcedurePayload,
@@ -27,11 +26,11 @@ import { useFormik } from 'formik';
 import { EProcedureType } from '../../../../../types/master';
 import _ from 'lodash';
 import { closeEditProcedure } from '../procedureSlice';
-import FieldAutocomplete from '../../../../../components/FieldAutoComplete/FieldAutoComplete';
 import CustomDatePicker from '../../../../../components/CustomDatePicker/CustomDatePicker';
 import FileUploadButton from '../../../../../components/FileUploadAndPreview/FileUploadButton';
 import { EBuckets, EDocumentTypes } from '../../../../../types/global';
 import { DoctorSpeciality } from '../../../../../types/masterDashboard/global';
+import DoctorPicker from '../../../../../components/DoctorPicker/DoctorPicker';
 
 const renderSkeletonLoader = () => {
   return (
@@ -76,11 +75,7 @@ const renderSkeletonLoader = () => {
   );
 };
 
-interface TesaProps {
-  doctors: IDoctor[];
-}
-
-const Tesa: React.FC<TesaProps> = ({ doctors }) => {
+const Tesa: React.FC = () => {
   const dispatch = useDispatch();
   const { showPromiseToast } = useToast();
 
@@ -297,69 +292,58 @@ const Tesa: React.FC<TesaProps> = ({ doctors }) => {
 
         <Grid container spacing={2} mb={2}>
           <Grid item xs={12} md={6} lg={4}>
-            <FieldAutocomplete
-              options={doctors}
-              getOptionLabel={option =>
-                `${option.firstName} ${option.lastName}`
-              }
-              isOptionEqualToValue={(option, value) => {
-                return option._id === value._id;
-              }}
-              value={formik.values.result.surgeon}
-              onChange={newValue =>
-                formik.setFieldValue('result.surgeon', newValue)
-              }
+            <DoctorPicker
+              formState={formik}
+              formIndex={0}
+              fieldName={`result.surgeon`}
               label="Surgeon"
+              error={
+                formik.touched.result?.surgeon &&
+                Boolean(formik.errors.result?.surgeon)
+              }
+              helperText={
+                formik.touched.result?.surgeon
+                  ? formik.errors.result?.surgeon
+                  : undefined
+              }
             />
           </Grid>
 
           <Grid item xs={12} md={6} lg={4}>
-            <FieldAutocomplete
-              options={doctors}
-              getOptionLabel={option =>
-                `${option.firstName} ${option.lastName}`
-              }
-              isOptionEqualToValue={(option, value) => {
-                return option._id === value._id;
-              }}
-              filterOptions={(options, _state) => {
-                return options.filter(
-                  option => option.speciality === DoctorSpeciality.Embryologist,
-                );
-              }}
-              value={formik.values.result.embryologist}
-              onChange={newValue =>
-                formik.setFieldValue('result.embryologist', newValue)
-              }
+            <DoctorPicker
+              formState={formik}
+              formIndex={0}
+              fieldName={`result.embryologist`}
               label="Embryologist"
+              error={
+                formik.touched.result?.embryologist &&
+                Boolean(formik.errors.result?.embryologist)
+              }
+              helperText={
+                formik.touched.result?.embryologist
+                  ? formik.errors.result?.embryologist
+                  : undefined
+              }
+              speciality={DoctorSpeciality.Embryologist}
             />
           </Grid>
 
           <Grid item xs={12} md={6} lg={4}>
-            <FieldAutocomplete
-              options={doctors}
-              getOptionLabel={option =>
-                `${option.firstName || ''} ${option.lastName || ''}`
-              }
-              filterOptions={(options, _state) => {
-                return options.filter(
-                  option => option.speciality === DoctorSpeciality.Anaesthetist,
-                );
-              }}
-              isOptionEqualToValue={(option, value) => option._id === value._id}
-              value={formik.values.result.anaesthetist}
-              onChange={newValue =>
-                formik.setFieldValue(`details.anaesthetist`, newValue)
-              }
+            <DoctorPicker
+              formState={formik}
+              formIndex={0}
+              fieldName={`result.anaesthetist`}
               label="Anaesthetist"
               error={
                 formik.touched.result?.anaesthetist &&
                 Boolean(formik.errors.result?.anaesthetist)
               }
               helperText={
-                formik.touched.result?.anaesthetist &&
-                formik.errors.result?.anaesthetist
+                formik.touched.result?.anaesthetist
+                  ? formik.errors.result?.anaesthetist
+                  : undefined
               }
+              speciality={DoctorSpeciality.Anaesthetist}
             />
           </Grid>
           <Grid item xs={12} md={6} lg={4}>
