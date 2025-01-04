@@ -1,4 +1,5 @@
-import React, { useMemo, useEffect } from 'react';
+import React, { useMemo, useEffect, useRef } from 'react';
+import { getIn } from 'formik'; // Helps safely read nested values
 import FieldAutocomplete from '../FieldAutoComplete/FieldAutoComplete';
 import { useGetDoctorsQuery } from '../../services/doctorsApi';
 import { useSelector } from 'react-redux';
@@ -7,24 +8,18 @@ import { EUserRole } from '../../types/masterDashboard/global';
 import { DoctorSpeciality } from '../../types/masterDashboard/global';
 
 interface IDoctorPickerProps {
-  // Formik form references
-  formState: any; // e.g. createForm
-  formIndex: number; // e.g. "index"
-  fieldName: string; // e.g. `fields.${index}.doctor`
-  label?: string; // e.g. "Doctor"
+  formState: any; // your Formik form instance
+  fieldName: string; // full field path, e.g. "fields[0].doctor" or just "doctor"
+  label?: string;
   error?: boolean;
-  helperText?: string | undefined;
-
-  /** If provided, only doctors matching this speciality are displayed. */
+  helperText?: string;
   speciality?: DoctorSpeciality;
-
-  /** If true, and the logged in user is a doctor, automatically select them. */
+  /** Auto-select the logged-in doctor exactly once if true. */
   autoSelectIfDoctor?: boolean;
 }
 
 const DoctorPicker: React.FC<IDoctorPickerProps> = ({
   formState,
-  formIndex,
   fieldName,
   label = 'Doctor',
   error,
@@ -32,10 +27,9 @@ const DoctorPicker: React.FC<IDoctorPickerProps> = ({
   speciality,
   autoSelectIfDoctor = false,
 }) => {
-  // 1. Grab the logged-in user
   const user = useSelector((state: RootState) => state.auth.user);
 
-  // 2. Fetch all doctors
+  // 1. Fetch all doctors
   const {
     data: DoctorsData,
     isLoading: doctorsLoading,
@@ -43,43 +37,62 @@ const DoctorPicker: React.FC<IDoctorPickerProps> = ({
   } = useGetDoctorsQuery({});
   const allDoctors = DoctorsData?.data?.records || [];
 
-  // 3. Filter doctors by speciality if speciality prop is provided
+  // 2. Filter by speciality if provided
   const doctors = useMemo(() => {
-    if (!speciality) {
-      return allDoctors;
-    }
+    if (!speciality) return allDoctors;
     return allDoctors.filter(doc => doc.speciality === speciality);
   }, [allDoctors, speciality]);
 
-  // 4. Check if user is a doctor and find their matching doctor document
+  // 3. Check if user is a doctor/embryologist and find their doc record
   const isDoctor =
     user?.role === EUserRole.Doctor || user?.role === EUserRole.Embryologist;
+
   const loggedInDoctor = useMemo(() => {
     if (!isDoctor) return null;
-    // Adjust doc.userId vs doc._id vs doc.id depending on your schema
     return doctors.find(doc => doc.userId === user?.id);
-  }, [user, doctors, isDoctor]);
+  }, [isDoctor, user?.id, doctors]);
 
-  // 5. Current value from the form
-  const currentValue = formState.values?.fields?.[formIndex]?.doctor;
+  // 4. Current value from Formik
+  //    Using getIn() from formik to safely read nested keys (like fields[0].doctor).
+  const currentValue = getIn(formState.values, fieldName) || null;
 
-  // 6. If autoSelectIfDoctor is true, and the user is a doctor, auto-select them
+  // 5. Use a ref so we only auto-select *once*
+  const hasAutoSelectedRef = useRef(false);
+
+  // 6. If autoSelectIfDoctor, pick the logged-in doc exactly once if not set
   useEffect(() => {
-    if (autoSelectIfDoctor && isDoctor && loggedInDoctor) {
+    if (
+      autoSelectIfDoctor &&
+      !hasAutoSelectedRef.current &&
+      isDoctor &&
+      loggedInDoctor &&
+      !currentValue // only if the current field is empty/null
+    ) {
       formState.setFieldValue(fieldName, loggedInDoctor);
+      hasAutoSelectedRef.current = true;
     }
-    // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [autoSelectIfDoctor, isDoctor, loggedInDoctor]);
+  }, [
+    autoSelectIfDoctor,
+    isDoctor,
+    loggedInDoctor,
+    currentValue,
+    fieldName,
+    formState,
+  ]);
 
-  // 7. Render the FieldAutocomplete
+  // 7. Handle user picks from dropdown
+  const handleChange = (newValue: any) => {
+    formState.setFieldValue(fieldName, newValue);
+  };
+
   return (
     <FieldAutocomplete
       options={doctors}
       getOptionLabel={option => `${option.firstName} ${option.lastName}`}
       isOptionEqualToValue={(option, value) => option._id === value?._id}
       groupBy={option => option.speciality}
-      value={currentValue || null}
-      onChange={newValue => formState.setFieldValue(fieldName, newValue)}
+      value={currentValue}
+      onChange={handleChange}
       label={label}
       loading={doctorsLoading || doctorsFetching}
       error={error}

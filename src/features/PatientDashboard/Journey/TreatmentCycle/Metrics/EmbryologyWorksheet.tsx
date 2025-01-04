@@ -660,7 +660,6 @@ const EmbryologyWorksheet: React.FC<EmbryologyWorksheetProps> = ({
         <Grid item lg={4}>
           <DoctorPicker
             formState={formik}
-            formIndex={0}
             fieldName={`doctor`}
             label="Doctor"
             error={formik.touched.doctor && Boolean(formik.errors.doctor)}
@@ -672,7 +671,6 @@ const EmbryologyWorksheet: React.FC<EmbryologyWorksheetProps> = ({
         <Grid item lg={4}>
           <DoctorPicker
             formState={formik}
-            formIndex={0}
             fieldName={`assistantDoctor`}
             label="Assistant Doctor"
             error={
@@ -697,7 +695,6 @@ const EmbryologyWorksheet: React.FC<EmbryologyWorksheetProps> = ({
           /> */}
           <DoctorPicker
             formState={formik}
-            formIndex={0}
             fieldName={`embryologist`}
             label="Embryologist"
             error={

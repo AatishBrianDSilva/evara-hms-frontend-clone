@@ -294,7 +294,6 @@ const Tesa: React.FC = () => {
           <Grid item xs={12} md={6} lg={4}>
             <DoctorPicker
               formState={formik}
-              formIndex={0}
               fieldName={`result.surgeon`}
               label="Surgeon"
               error={
@@ -312,7 +311,6 @@ const Tesa: React.FC = () => {
           <Grid item xs={12} md={6} lg={4}>
             <DoctorPicker
               formState={formik}
-              formIndex={0}
               fieldName={`result.embryologist`}
               label="Embryologist"
               error={
@@ -331,7 +329,6 @@ const Tesa: React.FC = () => {
           <Grid item xs={12} md={6} lg={4}>
             <DoctorPicker
               formState={formik}
-              formIndex={0}
               fieldName={`result.anaesthetist`}
               label="Anaesthetist"
               error={

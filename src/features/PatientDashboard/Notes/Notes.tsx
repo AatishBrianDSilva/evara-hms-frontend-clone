@@ -22,7 +22,6 @@ import EditNotes from './EditNotes';
 import { useGetNotesQuery } from '../../../services/patientDashboardService/notesApi';
 import { useSelector } from 'react-redux';
 import { RootState } from '../../../app/store';
-import { useGetDoctorsQuery } from '../../../services/doctorsApi';
 import { IDoctor } from '../../../types/doctor';
 import { Chip, CircularProgress } from '@mui/material';
 import DeleteConfirmationModal from '../../../components/DeleteConfirmationModal/DeleteConfirmationModal';
@@ -145,19 +144,9 @@ const Notes: React.FC = () => {
 
   const medications = medicationsData?.data || [];
 
-  const {
-    data,
-    isLoading: DoctorLoading,
-    isFetching: DoctorFetching,
-  } = useGetDoctorsQuery({});
-
-  const doctors = data?.data?.records || [];
-
   if (
     NotesLoading ||
     NotesFetching ||
-    DoctorLoading ||
-    DoctorFetching ||
     observationsLoading ||
     observationsFetching ||
     treatmentAdvicesLoading ||
@@ -175,14 +164,6 @@ const Notes: React.FC = () => {
       </Box>
     );
   }
-
-  console.log({
-    observations,
-    treatments: treatmentAdvices,
-    investigations,
-    scans,
-    medications,
-  });
 
   const handleAddModalOpen = () => {
     setShowAddModal(true);
@@ -443,7 +424,6 @@ const Notes: React.FC = () => {
         investigations={investigations}
         scans={scans}
         medications={medications}
-        doctors={doctors}
       />
       <EditNotes
         closeModal={handleModalClose}

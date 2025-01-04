@@ -425,7 +425,6 @@ const EndometrialAssessment: React.FC = () => {
             <Grid item xs={12} md={6} lg={2}>
               <DoctorPicker
                 formState={formik}
-                formIndex={0}
                 fieldName={`result.doctor`}
                 label="Doctor"
                 error={

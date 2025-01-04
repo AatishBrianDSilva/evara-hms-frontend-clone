@@ -236,8 +236,7 @@ const AddPackage: React.FC<AddPackageProps> = ({
                     <Grid item flex={1}>
                       <DoctorPicker
                         formState={createForm}
-                        formIndex={index}
-                        fieldName={`fields.${index}.doctor`}
+                        fieldName={`fields[${index}].doctor`}
                         label="Doctor"
                         error={isDoctorError}
                         helperText={isDoctorError ? doctorErrorMessage : ''}

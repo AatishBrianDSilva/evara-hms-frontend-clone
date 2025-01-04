@@ -245,7 +245,6 @@ const Embryo: React.FC = () => {
           <Grid item xs={12} sm={6} md={3}>
             <DoctorPicker
               formState={formik}
-              formIndex={0}
               fieldName={`details.doctor`}
               label="Doctor"
               error={
@@ -311,7 +310,6 @@ const Embryo: React.FC = () => {
           <Grid item xs={12} sm={6} md={3}>
             <DoctorPicker
               formState={formik}
-              formIndex={0}
               fieldName={`details.embryologistA`}
               label="Embryologist 1"
               error={
@@ -329,7 +327,6 @@ const Embryo: React.FC = () => {
           <Grid item xs={12} sm={6} md={3}>
             <DoctorPicker
               formState={formik}
-              formIndex={0}
               fieldName={`details.embryologistB`}
               label="Embryologist 2"
               error={

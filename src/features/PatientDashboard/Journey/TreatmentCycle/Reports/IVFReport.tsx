@@ -175,7 +175,6 @@ const EmbryoTransferReport: React.FC<IVFReportProps> = ({
         <Grid item xs={12} sm={6} md={3}>
           <DoctorPicker
             formState={formik}
-            formIndex={0}
             fieldName={`embryologistA`}
             label="Embryologist A"
             error={
@@ -194,7 +193,6 @@ const EmbryoTransferReport: React.FC<IVFReportProps> = ({
         <Grid item xs={12} sm={6} md={3}>
           <DoctorPicker
             formState={formik}
-            formIndex={0}
             fieldName={`embryologistB`}
             label="Embryologist B"
             error={
@@ -228,7 +226,6 @@ const EmbryoTransferReport: React.FC<IVFReportProps> = ({
         <Grid item xs={12} sm={6} md={3}>
           <DoctorPicker
             formState={formik}
-            formIndex={0}
             fieldName={`gynecologistA`}
             label="Gynecologist A"
             error={
@@ -247,7 +244,6 @@ const EmbryoTransferReport: React.FC<IVFReportProps> = ({
         <Grid item xs={12} sm={6} md={3}>
           <DoctorPicker
             formState={formik}
-            formIndex={0}
             fieldName={`gynecologistB`}
             label="Gynecologist B"
             error={

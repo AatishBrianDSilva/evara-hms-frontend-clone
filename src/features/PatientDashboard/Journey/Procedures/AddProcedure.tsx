@@ -224,8 +224,7 @@ const AddProcedure: React.FC<AddProcedureProps> = ({
                     <Grid item flex={3}>
                       <DoctorPicker
                         formState={createForm}
-                        formIndex={index}
-                        fieldName={`fields.${index}.doctor`}
+                        fieldName={`fields[${index}].doctor`}
                         label="Doctor"
                         error={isDoctorError}
                         helperText={isDoctorError ? doctorErrorMessage : ''}

@@ -636,7 +636,6 @@ const IUIHReport: React.FC<IUIHReportProps> = ({
           /> */}
           <DoctorPicker
             formState={formik}
-            formIndex={0}
             fieldName={`embryologist1`}
             label="Embryologist 1"
             error={
@@ -654,7 +653,6 @@ const IUIHReport: React.FC<IUIHReportProps> = ({
         <Grid item lg={4}>
           <DoctorPicker
             formState={formik}
-            formIndex={0}
             fieldName={`embryologist2`}
             label="Embryologist 2"
             error={
@@ -672,7 +670,6 @@ const IUIHReport: React.FC<IUIHReportProps> = ({
         <Grid item lg={4}>
           <DoctorPicker
             formState={formik}
-            formIndex={0}
             fieldName={`gyneacologist1`}
             label="Gyneacologist 1"
             error={
@@ -690,7 +687,6 @@ const IUIHReport: React.FC<IUIHReportProps> = ({
         <Grid item lg={4}>
           <DoctorPicker
             formState={formik}
-            formIndex={0}
             fieldName={`gyneacologist2`}
             label="Gyneacologist 2"
             error={

@@ -864,7 +864,6 @@ const OocyteAspirationReportForm: React.FC<OPUReportProps> = ({
         <Grid item lg={4}>
           <DoctorPicker
             formState={formik}
-            formIndex={0}
             fieldName={`surgeon`}
             label="Surgeon"
             error={formik.touched.surgeon && Boolean(formik.errors.surgeon)}
@@ -876,7 +875,6 @@ const OocyteAspirationReportForm: React.FC<OPUReportProps> = ({
         <Grid item lg={4}>
           <DoctorPicker
             formState={formik}
-            formIndex={0}
             fieldName={`anaesthetist`}
             label="Anaesthetist"
             error={
