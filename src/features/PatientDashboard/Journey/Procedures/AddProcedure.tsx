@@ -20,22 +20,20 @@ import { RootState } from '../../../../app/store';
 import { useSelector } from 'react-redux';
 import { useAddProcedureMutation } from '../../../../services/patientDashboardService/procedureApi';
 import { useToast } from '../../../../context/ToastContext';
-import { IDoctor } from '../../../../types/doctor';
 import { FilterOptionType } from '../../../../types/global';
 import { IMasterProcedures } from '../../../../types/master';
 import CustomDatePicker from '../../../../components/CustomDatePicker/CustomDatePicker';
+import DoctorPicker from '../../../../components/DoctorPicker/DoctorPicker';
 
 interface AddProcedureProps {
   open?: boolean;
   onClose?: () => void;
-  doctors: IDoctor[];
   masterProcedures: IMasterProcedures[];
 }
 
 const AddProcedure: React.FC<AddProcedureProps> = ({
   open,
   onClose,
-  doctors,
   masterProcedures,
 }) => {
   const { patient, case: patientCase } = useSelector(
@@ -86,7 +84,7 @@ const AddProcedure: React.FC<AddProcedureProps> = ({
       fields: [
         {
           procedure: null,
-          doctor: doctors.length > 0 ? doctors[0] : null,
+          doctor: null,
           date: null,
         },
       ],
@@ -108,7 +106,7 @@ const AddProcedure: React.FC<AddProcedureProps> = ({
         createForm.values.fields,
       );
     },
-    [createForm.values.fields, doctors, masterProcedures],
+    [createForm.values.fields, masterProcedures],
   );
 
   const getFieldErrorAndTouched = useCallback(
@@ -141,7 +139,7 @@ const AddProcedure: React.FC<AddProcedureProps> = ({
       ...createForm.values.fields,
       {
         procedure: null,
-        doctor: doctors.length > 0 ? doctors[0] : null,
+        doctor: createForm.values.fields[0].doctor,
         date: new Date(),
       },
     ]);
@@ -224,24 +222,13 @@ const AddProcedure: React.FC<AddProcedureProps> = ({
                     </Grid>
                     {/* Abstracted Autocomplete for Doctors */}
                     <Grid item flex={3}>
-                      <FieldAutocomplete
-                        options={doctors}
-                        getOptionLabel={option =>
-                          `${option.firstName} ${option.lastName}`
-                        }
-                        isOptionEqualToValue={(option, value) =>
-                          option._id === value._id
-                        }
-                        value={createForm.values.fields[index].doctor}
-                        onChange={newValue =>
-                          createForm.setFieldValue(
-                            `fields.${index}.doctor`,
-                            newValue,
-                          )
-                        }
+                      <DoctorPicker
+                        formState={createForm}
+                        fieldName={`fields[${index}].doctor`}
                         label="Doctor"
                         error={isDoctorError}
                         helperText={isDoctorError ? doctorErrorMessage : ''}
+                        autoSelectIfDoctor={true}
                       />
                     </Grid>
                     {/* Date Picker */}

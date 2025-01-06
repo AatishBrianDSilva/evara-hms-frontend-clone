@@ -12,6 +12,12 @@ export interface IGlobalUser {
   addUser: AddUserRequest;
   editUser: EditUserRequest;
   updatePassword: UpdatePasswordRequest;
+  doctor?: {
+    firstName: string;
+    lastName?: string;
+    gender: string;
+    speciality: string;
+  };
 }
 
 interface AddUserRequest {

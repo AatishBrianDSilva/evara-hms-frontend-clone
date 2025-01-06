@@ -19,7 +19,6 @@ import {
 import { useDispatch, useSelector } from 'react-redux';
 import { RootState } from '../../../../app/store';
 import AddCryoPreservation from './AddCryoPreservation';
-import { useGetDoctorsQuery } from '../../../../services/doctorsApi';
 import { useGetMasterCryoPreservationsQuery } from '../../../../services/masterDashboardService/serviceData/masterCryoPreservationApi';
 import { CircularProgress } from '@mui/material';
 import {
@@ -60,14 +59,6 @@ const CryoPreservations: React.FC = () => {
   const [selectedFiles, setSelectedFiles] = useState<string[]>([]);
   const [isViewReportsModalOpen, setIsViewReportsModalOpen] =
     useState<boolean>(false);
-
-  // Get doctors
-  const {
-    data: doctorsData,
-    isLoading: DoctorsLoading,
-    isFetching: DoctorFetching,
-  } = useGetDoctorsQuery({});
-  const doctors = doctorsData?.data?.records || [];
 
   // Get master cryoPreservations
   const {
@@ -119,10 +110,7 @@ const CryoPreservations: React.FC = () => {
     useDeleteCryoPreservationMutation();
 
   const loading =
-    DoctorsLoading ||
-    MastercryoPreservationsLoading ||
-    DoctorFetching ||
-    MastercryoPreservationFetching;
+    MastercryoPreservationsLoading || MastercryoPreservationFetching;
 
   // Get the state of the edit cryoPreservation dialog
   const { editCryoPreservationOpen } = useSelector(
@@ -322,9 +310,9 @@ const CryoPreservations: React.FC = () => {
 
     switch (cryoPreservation?.cryo.cryoPreservation.cryoPreservationType) {
       case ECryoPreservationType.Embryo:
-        return <Embryo doctors={doctors} />;
+        return <Embryo />;
       case ECryoPreservationType.Sperm:
-        return <Tesa doctors={doctors} />;
+        return <Tesa />;
       default:
         return <>Unkown CryoPreservation</>;
     }
@@ -385,7 +373,6 @@ const CryoPreservations: React.FC = () => {
       {addcryoPreservationOpen && (
         <AddCryoPreservation
           masterCryoPreservations={mastercryoPreservations}
-          doctors={doctors}
           onClose={closeForm}
           open={addcryoPreservationOpen}
         />

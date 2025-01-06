@@ -13,7 +13,6 @@ import Autocomplete from '@mui/material/Autocomplete';
 import { useFormik } from 'formik';
 import { useSelector } from 'react-redux';
 import { RootState } from '../../../app/store';
-import FieldAutoComplete from '../../../components/FieldAutoComplete/FieldAutoComplete';
 import { useAddNotesMutation } from '../../../services/patientDashboardService/notesApi';
 import { useToast } from '../../../context/ToastContext';
 import {
@@ -22,7 +21,7 @@ import {
 } from '../../../types/masterDashboard/local';
 import { IMasterInvestigation, IMasterProcedures } from '../../../types/master';
 import { IPharmacyStock } from '../../../types/pharmacyDashboard/stocks';
-import { IDoctor } from '../../../types/doctor';
+import DoctorPicker from '../../../components/DoctorPicker/DoctorPicker';
 
 interface IFormValues {
   doctor: {
@@ -49,7 +48,6 @@ const AddNotes: React.FC<{
   investigations: IMasterInvestigation[];
   scans: IMasterProcedures[];
   medications: IPharmacyStock[];
-  doctors: IDoctor[];
 }> = ({
   closeModal,
   addModal,
@@ -58,7 +56,6 @@ const AddNotes: React.FC<{
   investigations,
   scans,
   medications,
-  doctors,
 }) => {
   const { showPromiseToast } = useToast();
 
@@ -128,25 +125,45 @@ const AddNotes: React.FC<{
     enableReinitialize: true,
   });
 
-  const observationOptions = observations
-    .map(observations => observations?.name) // Map to get the names
-    .filter(name => name !== undefined); // Filter out the undefined values
+  const observationOptions = [
+    ...new Set(
+      observations
+        .map(observations => observations?.name)
+        .filter(name => name !== undefined),
+    ),
+  ];
 
-  const adviceOptions = treatmentAdvices
-    .map(treatmentAdvices => treatmentAdvices?.name) // Map to get the names
-    .filter(name => name !== undefined); // Filter out the undefined values
+  const adviceOptions = [
+    ...new Set(
+      treatmentAdvices
+        .map(treatmentAdvices => treatmentAdvices?.name)
+        .filter(name => name !== undefined),
+    ),
+  ];
 
-  const investigationNames = investigations
-    .map(investigations => investigations?.test?.testName) // Map to get the names
-    .filter(name => name !== undefined); // Filter out the undefined values
+  const investigationNames = [
+    ...new Set(
+      investigations
+        .map(investigations => investigations?.test?.testName)
+        .filter(name => name !== undefined),
+    ),
+  ];
 
-  const scanNames = scans
-    .map(scans => scans?.procedure?.procedureName) // Map to get the names
-    .filter(name => name !== undefined); // Filter out the undefined values
+  const scanNames = [
+    ...new Set(
+      scans
+        .map(scans => scans?.procedure?.procedureName)
+        .filter(name => name !== undefined),
+    ),
+  ];
 
-  const medicationNames = medications
-    .map(medication => medication?.item?.name) // Map to get the names
-    .filter(name => name !== undefined); // Filter out the undefined values
+  const medicationNames = [
+    ...new Set(
+      medications
+        .map(medication => medication?.item?.name)
+        .filter(name => name !== undefined),
+    ),
+  ];
 
   return (
     <Dialog open={addModal} onClose={closeModal} fullWidth maxWidth={false}>
@@ -179,21 +196,15 @@ const AddNotes: React.FC<{
         >
           <Grid container spacing={2} mt={2} justifyContent="center">
             <Grid item xs={6} sm={3} lg={3} pb={3}>
-              <FieldAutoComplete
+              <DoctorPicker
+                formState={formik}
+                fieldName={`doctor`}
                 label="Doctor"
-                options={doctors}
-                getOptionLabel={option =>
-                  `${option.firstName} ${option.lastName}`
+                error={formik.touched.doctor && Boolean(formik.errors.doctor)}
+                helperText={
+                  formik.touched.doctor ? formik.errors.doctor : undefined
                 }
-                isOptionEqualToValue={(option, value) =>
-                  option._id === value._id
-                }
-                value={formik.values.doctor || null} // Ensure value is not undefined
-                onChange={value => {
-                  formik.setFieldValue('doctor', value);
-                }}
-                error={formik.errors.doctor !== undefined}
-                helperText={formik.errors.doctor}
+                autoSelectIfDoctor={true}
               />
             </Grid>
           </Grid>

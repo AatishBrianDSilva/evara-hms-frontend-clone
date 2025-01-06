@@ -5,7 +5,6 @@ import { Button, Grid, IconButton, Modal } from '@mui/material';
 import { useToast } from '../../../../context/ToastContext';
 import { useSelector } from 'react-redux';
 import { useAddEstimationMutation } from '../../../../services/patientDashboardService/billings/estimationApi';
-import { useGetDoctorsQuery } from '../../../../services/doctorsApi';
 import { useGetAllServicesQuery } from '../../../../services/patientDashboardService/billings/billingApi';
 import { FormikErrors, FormikTouched, useFormik } from 'formik';
 import { RootState } from '../../../../app/store';
@@ -14,6 +13,7 @@ import CustomDatePicker from '../../../../components/CustomDatePicker/CustomDate
 import { Add, Delete } from '@mui/icons-material';
 import _ from 'lodash';
 import { addEstimationValidationSchema } from '../../../../yup/patientDashboard/billings';
+import DoctorPicker from '../../../../components/DoctorPicker/DoctorPicker';
 
 interface addEstimationProps {
   openModal: boolean;
@@ -43,14 +43,6 @@ const AddEstimations: React.FC<addEstimationProps> = ({
   }));
 
   const isAdmin = user?.role === 'admin';
-
-  const {
-    data: DoctorsData,
-    isLoading: DoctorsLoading,
-    isFetching: DoctorFetching,
-  } = useGetDoctorsQuery({});
-  const doctors = DoctorsData?.data?.records || [];
-  const isDoctorsLoading = DoctorsLoading || DoctorFetching;
 
   const {
     data: masterServicesData,
@@ -256,25 +248,13 @@ const AddEstimations: React.FC<addEstimationProps> = ({
                   />
                 </Grid>
                 <Grid item flex={3}>
-                  <FieldAutocomplete
-                    options={doctors}
-                    getOptionLabel={option =>
-                      `${option.firstName} ${option.lastName}`
-                    }
-                    isOptionEqualToValue={(option, value) =>
-                      option._id === value._id
-                    }
-                    value={formik.values.items[index].doctor}
-                    onChange={newValue =>
-                      formik.setFieldValue(`items.${index}.doctor`, newValue)
-                    }
+                  <DoctorPicker
+                    formState={formik}
+                    fieldName={`items[${index}].doctor`}
                     label="Doctor"
                     error={isDoctorError}
-                    helperText={isDoctorError && doctorErrorMessage}
-                    loading={isDoctorsLoading}
-                    showNone={serviceType === 'Service'}
-                    noneType={{ _id: 'null', firstName: 'None', lastName: '' }}
-                    getOptionKey={option => option._id}
+                    helperText={isDoctorError ? doctorErrorMessage : undefined}
+                    autoSelectIfDoctor={true}
                   />
                 </Grid>
                 <Grid item flex={2}>

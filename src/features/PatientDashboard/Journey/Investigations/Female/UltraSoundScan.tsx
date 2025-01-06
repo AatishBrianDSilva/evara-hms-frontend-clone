@@ -28,10 +28,9 @@ import {
   IUltraSoundScanForm,
 } from '../../../../../types/patientDashboard/investigation';
 import { ETestType } from '../../../../../types/master';
-import { useGetDoctorsQuery } from '../../../../../services/doctorsApi';
-import FieldAutocomplete from '../../../../../components/FieldAutoComplete/FieldAutoComplete';
 import CustomDatePicker from '../../../../../components/CustomDatePicker/CustomDatePicker';
 import { EBuckets, EDocumentTypes } from '../../../../../types/global';
+import DoctorPicker from '../../../../../components/DoctorPicker/DoctorPicker';
 
 const renderSkeletonLoader = () => {
   return (
@@ -93,14 +92,6 @@ const UltraSoundScan: React.FC = () => {
   } = useGetInvestigationByIdQuery(openEditDialog.id, {
     skip: !openEditDialog || !openEditDialog.id,
   });
-
-  // Get doctors
-  const {
-    data: DoctorsData,
-    isLoading: DoctorsLoading,
-    isFetching: DoctorFetching,
-  } = useGetDoctorsQuery({});
-  const doctors = DoctorsData?.data?.records || [];
 
   const investigation = investigationData?.data;
   const loading = investigationLoading || investigationFetching;
@@ -666,20 +657,20 @@ const UltraSoundScan: React.FC = () => {
             />
           </Grid>
           <Grid item xs={12} md={6} lg={4}>
-            <FieldAutocomplete
-              options={doctors}
-              getOptionLabel={option =>
-                `${option.firstName} ${option.lastName}`
-              }
-              isOptionEqualToValue={(option, value) => {
-                return option._id === value._id;
-              }}
-              value={formik.values.result.doctor}
-              onChange={newValue =>
-                formik.setFieldValue('result.doctor', newValue)
-              }
+            <DoctorPicker
+              formState={formik}
+              fieldName={`result.doctor`}
               label="Doctor"
-              loading={DoctorFetching || DoctorsLoading}
+              error={
+                formik.touched.result?.doctor &&
+                Boolean(formik.errors.result?.doctor)
+              }
+              helperText={
+                formik.touched.result?.doctor
+                  ? formik.errors.result?.doctor
+                  : undefined
+              }
+              autoSelectIfDoctor={true}
             />
           </Grid>
           <Grid item xs={12} md={6} lg={4}>

@@ -17,7 +17,6 @@ import {
   useDeletePackageMutation,
   useGetPackagesQuery,
 } from '../../../../services/patientDashboardService/packageApi';
-import { useGetDoctorsQuery } from '../../../../services/doctorsApi';
 import DeleteConfirmationModal from '../../../../components/DeleteConfirmationModal/DeleteConfirmationModal';
 import { useToast } from '../../../../context/ToastContext';
 
@@ -33,14 +32,6 @@ const Packages: React.FC = () => {
     name: string;
     status: boolean;
   }>({ id: '', name: '', status: false });
-
-  // Get doctors
-  const {
-    data: DoctorsData,
-    isLoading: DoctorsLoading,
-    isFetching: DoctorFetching,
-  } = useGetDoctorsQuery({});
-  const doctors = DoctorsData?.data?.records || [];
 
   // Get master packages
   const {
@@ -91,11 +82,7 @@ const Packages: React.FC = () => {
   const [deletePackage, { isLoading: deletingPackage }] =
     useDeletePackageMutation();
 
-  const loading =
-    MasterPackagesLoading ||
-    MasterPackageFetching ||
-    DoctorsLoading ||
-    DoctorFetching;
+  const loading = MasterPackagesLoading || MasterPackageFetching;
 
   const columns: GridColDef[] = [
     {
@@ -214,7 +201,6 @@ const Packages: React.FC = () => {
       {addPackageOpen && (
         <AddPackage
           masterPackages={masterPackages as any}
-          doctors={doctors}
           onClose={closeForm}
           open={addPackageOpen}
         />

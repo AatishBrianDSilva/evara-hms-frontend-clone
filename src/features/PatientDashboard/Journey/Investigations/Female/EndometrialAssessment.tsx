@@ -17,7 +17,6 @@ import {
   useEditInvestigationMutation,
   useGetInvestigationByIdQuery,
 } from '../../../../../services/patientDashboardService/investigationApi';
-import { useGetDoctorsQuery } from '../../../../../services/doctorsApi';
 import {
   IEditInvestigationForm,
   IEditInvestigationpayload,
@@ -28,11 +27,11 @@ import { FormikErrors, FormikProvider, FormikTouched, useFormik } from 'formik';
 import { closeEditInvestigation } from '../investigationSlice';
 import ReportModalHeader from '../../../../../components/ReportModalHeader/ReportModalHeader';
 import _ from 'lodash';
-import FieldAutocomplete from '../../../../../components/FieldAutoComplete/FieldAutoComplete';
 import CustomDatePicker from '../../../../../components/CustomDatePicker/CustomDatePicker';
 import FileUploadButton from '../../../../../components/FileUploadAndPreview/FileUploadButton';
 import { EBuckets, EDocumentTypes } from '../../../../../types/global';
 import { Add, Delete } from '@mui/icons-material';
+import DoctorPicker from '../../../../../components/DoctorPicker/DoctorPicker';
 
 interface IEndometrialItems {
   date: Date | null;
@@ -102,14 +101,6 @@ const EndometrialAssessment: React.FC = () => {
   } = useGetInvestigationByIdQuery(openEditDialog.id, {
     skip: !openEditDialog || !openEditDialog.id,
   });
-
-  // Get doctors
-  const {
-    data: DoctorsData,
-    isLoading: DoctorsLoading,
-    isFetching: DoctorFetching,
-  } = useGetDoctorsQuery({});
-  const doctors = DoctorsData?.data?.records || [];
 
   const investigation = investigationData?.data;
   const loading = investigationLoading || investigationFetching;
@@ -432,20 +423,20 @@ const EndometrialAssessment: React.FC = () => {
               />
             </Grid>
             <Grid item xs={12} md={6} lg={2}>
-              <FieldAutocomplete
-                options={doctors}
-                getOptionLabel={option =>
-                  `${option.firstName} ${option.lastName}`
-                }
-                isOptionEqualToValue={(option, value) => {
-                  return option._id === value._id;
-                }}
-                value={formik.values.result.doctor}
-                onChange={newValue =>
-                  formik.setFieldValue('result.doctor', newValue)
-                }
+              <DoctorPicker
+                formState={formik}
+                fieldName={`result.doctor`}
                 label="Doctor"
-                loading={DoctorFetching || DoctorsLoading}
+                error={
+                  formik.touched.result?.doctor &&
+                  Boolean(formik.errors.result?.doctor)
+                }
+                helperText={
+                  formik.touched.result?.doctor
+                    ? formik.errors.result?.doctor
+                    : undefined
+                }
+                autoSelectIfDoctor={true}
               />
             </Grid>
             <Grid item xs={12} md={6} lg={2}>

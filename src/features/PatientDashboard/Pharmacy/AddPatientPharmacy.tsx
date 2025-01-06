@@ -29,6 +29,7 @@ import Add from '@mui/icons-material/Add';
 import { IDrugLocation } from '../../../types/pharmacyDashboard/master';
 import { formatToIndianCurrencyFormat } from '../../../utils/formatToIndianCurrencyFormat';
 import { useGetDrugLocationsQuery } from '../../../services/pharmacyDashboardService/master/drugLocationApi';
+import DoctorPicker from '../../../components/DoctorPicker/DoctorPicker';
 
 type SummaryEntry = {
   name: string;
@@ -42,7 +43,6 @@ interface AddPatientPharmacyProps {
   openModal: boolean;
   onClose: () => void;
   pharmacyStocks: IPharmacyStock[];
-  doctors: IDoctor[];
   patientId: string;
 }
 
@@ -54,7 +54,7 @@ interface IFormValues {
     stock: IPharmacyStock | null;
     batchNumber: string | null;
     quantity: number;
-    sellPrice? : number;
+    sellPrice?: number;
   }[];
 }
 
@@ -62,7 +62,6 @@ const AddPatientPharmacy: React.FC<AddPatientPharmacyProps> = ({
   openModal,
   onClose,
   pharmacyStocks,
-  doctors,
   patientId,
 }) => {
   const { showPromiseToast } = useToast();
@@ -94,20 +93,17 @@ const AddPatientPharmacy: React.FC<AddPatientPharmacyProps> = ({
         const selectedBatch = item.stock?.locations
           .find(location => location.location._id === values.location?._id)
           ?.batches.find(batch => batch.batchNo === item.batchNumber);
-  
+
         const sellPrice = selectedBatch?.sellPrice;
-  
-          return {
+
+        return {
           stock: item.stock?._id,
           batchNumber: item.batchNumber,
           quantity: item.quantity,
           sellPrice, // Add the sellPrice to the payload
-
         };
       }),
     };
-
-    console.log('payload', payload);
 
     const promise = addPharmacy(payload).unwrap();
 
@@ -144,8 +140,6 @@ const AddPatientPharmacy: React.FC<AddPatientPharmacyProps> = ({
     onSubmit: handleFormSubmit,
     validationSchema: addPatientPharmacyValidationSchema,
   });
-
-  console.log("Pharmacy stocks", pharmacyStocks)
 
   useEffect(() => {
     if (!formik.values.location) {
@@ -264,25 +258,23 @@ const AddPatientPharmacy: React.FC<AddPatientPharmacyProps> = ({
 
   const calculateSummary = () => {
     const summaryData: SummaryEntry[] = [];
-  
+
     formik.values.items.forEach(item => {
       if (!item.stock || !item.batchNumber) return;
-  
+
       const packSize = item.stock.item.packSize || 1;
-  
+
       // Find the batch for the selected batch number
       const selectedBatch = item.stock.locations
         .find(location => location.location._id === formik.values.location?._id)
         ?.batches.find(batch => batch.batchNo === item.batchNumber);
-  
-      const batchSellPrice = selectedBatch?.sellPrice ?? 0; 
+
+      const batchSellPrice = selectedBatch?.sellPrice ?? 0;
       const pricePerUnit = batchSellPrice / packSize;
 
-
-  
       const totalQuantity = item.quantity ?? 0;
       const total = pricePerUnit * totalQuantity;
-  
+
       summaryData.push({
         name: item.stock.item.name,
         quantity: totalQuantity,
@@ -291,10 +283,10 @@ const AddPatientPharmacy: React.FC<AddPatientPharmacyProps> = ({
         total: total,
       });
     });
-  
+
     return summaryData;
   };
-  
+
   const SummaryTable = () => {
     const summaryData = calculateSummary();
 
@@ -404,21 +396,15 @@ const AddPatientPharmacy: React.FC<AddPatientPharmacyProps> = ({
                 />
               </Grid>
               <Grid item lg={2}>
-                <FieldAutocomplete
-                  options={doctors}
-                  getOptionLabel={option =>
-                    `${option.firstName} ${option.lastName}`
-                  }
-                  isOptionEqualToValue={(option, value) =>
-                    option?._id === value?._id
-                  }
-                  value={formik.values.doctor}
-                  onChange={newValue => {
-                    formik.setFieldValue('doctor', newValue);
-                  }}
+                <DoctorPicker
+                  formState={formik}
+                  fieldName={`doctor`}
                   label="Doctor"
                   error={formik.touched.doctor && Boolean(formik.errors.doctor)}
-                  helperText={formik.touched.doctor && formik.errors.doctor}
+                  helperText={
+                    formik.touched.doctor ? formik.errors.doctor : undefined
+                  }
+                  autoSelectIfDoctor={true}
                 />
               </Grid>
               <Grid item lg={3}>

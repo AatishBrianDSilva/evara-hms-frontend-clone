@@ -2,6 +2,7 @@ export interface IDoctor {
   _id: string;
   clinicId: string;
   branchId: string;
+  userId?: string;
   firstName: string;
   lastName: string;
   gender: string;

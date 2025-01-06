@@ -12,8 +12,7 @@ import {
 import { useSelector } from 'react-redux';
 import { RootState } from '../../../../app/store';
 import AddTreatmentAdvice from './AddTreatmentAdvice';
-import { useGetDoctorsQuery } from '../../../../services/doctorsApi';
-import { CircularProgress, Tooltip } from '@mui/material';
+import { Tooltip } from '@mui/material';
 
 import {
   useGetTreatmentAdvicesQuery,
@@ -37,18 +36,6 @@ const TreatmentAdvice: React.FC = () => {
   const [page, setPage] = useState<number>(1);
   const [pageSize, setPageSize] = useState<number>(25);
 
-  // Get doctors
-  const {
-    data: DoctorsData,
-    isLoading: DoctorsLoading,
-    isFetching: DoctorFetching,
-  } = useGetDoctorsQuery({});
-  const doctors = DoctorsData?.data?.records || [];
-
-  console.log('Doctor Data', doctors);
-
-  console.log('Patient Code', patient?.patientId);
-
   // Get patient treatment advice
   const {
     data: treatmentAdvicesData,
@@ -68,11 +55,6 @@ const TreatmentAdvice: React.FC = () => {
     },
   );
 
-  console.log('Filters being applied:', {
-    patientCode: patient?.patientId,
-  });
-  console.log('Fetched Treatment Advices Data:', treatmentAdvicesData);
-
   const patientTreatmentAdvices = treatmentAdvicesData?.data?.records || [];
   const patientTreatmentAdvicesPagination =
     treatmentAdvicesData?.data?.pagination;
@@ -82,8 +64,6 @@ const TreatmentAdvice: React.FC = () => {
   // Delete treatment advice
   const [deleteTreatmentAdvice, { isLoading: deletingTreatmentAdvice }] =
     useDeleteTreatmentAdviceMutation();
-
-  const loading = DoctorsLoading || DoctorFetching;
 
   // State variables for controlling various dialogs
   const [addTreatmentAdviceOpen, setAddTreatmentAdviceOpen] =
@@ -213,9 +193,7 @@ const TreatmentAdvice: React.FC = () => {
           </Button>
         )}
         <Button
-          startIcon={
-            loading ? <CircularProgress size={16} color="secondary" /> : <Add />
-          }
+          startIcon={<Add />}
           variant="contained"
           color="primary"
           onClick={() => setAddTreatmentAdviceOpen(true)}

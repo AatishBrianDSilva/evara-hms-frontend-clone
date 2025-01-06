@@ -169,11 +169,11 @@ const BillingsPending: React.FC = () => {
                 onClick={() => openEditModal(row)}
               />
             </Tooltip>,
-            <GridActionsCellItem
-              icon={<Delete />}
-              label="Delete"
-              onClick={() => openDeleteModal(row)}
-            />,
+            // <GridActionsCellItem
+            //   icon={<Delete />}
+            //   label="Delete"
+            //   onClick={() => openDeleteModal(row)}
+            // />,
           ];
         }
         return [
@@ -190,11 +190,11 @@ const BillingsPending: React.FC = () => {
               onClick={() => openEditModal(row)}
             />
           </Tooltip>,
-          <GridActionsCellItem
-            icon={<Delete />}
-            label="Delete"
-            onClick={() => openDeleteModal(row)}
-          />,
+          // <GridActionsCellItem
+          //   icon={<Delete />}
+          //   label="Delete"
+          //   onClick={() => openDeleteModal(row)}
+          // />,
         ];
       },
     },

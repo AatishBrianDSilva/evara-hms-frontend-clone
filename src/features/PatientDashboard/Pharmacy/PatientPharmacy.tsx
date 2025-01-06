@@ -13,7 +13,6 @@ import { useGetPatientPharmacysQuery } from '../../../services/patientDashboardS
 import { useSelector } from 'react-redux';
 import { RootState } from '../../../app/store';
 import { useGetStocksQuery } from '../../../services/pharmacyDashboardService/stocksApi';
-import { useGetDoctorsQuery } from '../../../services/doctorsApi';
 import ViewPatientPharmacy from './ViewPatientPharmacy';
 import Delete from '@mui/icons-material/Delete';
 import DeletePatientPharmacy from './DeletePatientPharmacy';
@@ -60,8 +59,6 @@ const PatientPharmacy: React.FC = () => {
   const patientPagination = patientPharmacyData?.data?.pagination;
   const PatientPharmacyLoading = isLoading || isFetching;
 
-  console.log('Patient Pharmacy', patientPharmacy);
-
   // Pharmacy Stocks
   const {
     data: stocksData,
@@ -70,16 +67,7 @@ const PatientPharmacy: React.FC = () => {
   } = useGetStocksQuery();
   const stocks = stocksData?.data || [];
 
-  // Get doctors
-  const {
-    data: doctorsData,
-    isLoading: doctorsLoading,
-    isFetching: doctorFetching,
-  } = useGetDoctorsQuery({});
-  const doctors = doctorsData?.data?.records || [];
-
-  const addPatientPharmacyLoading =
-    stocksLoading || stocksFetching || doctorsLoading || doctorFetching;
+  const addPatientPharmacyLoading = stocksLoading || stocksFetching;
 
   // Columns configuration for the data grid
   const columns: GridColDef[] = [
@@ -213,7 +201,6 @@ const PatientPharmacy: React.FC = () => {
           openModal={isAddModalOpen}
           onClose={closeAddModal}
           pharmacyStocks={stocks}
-          doctors={doctors}
           patientId={patientId}
         />
       )}

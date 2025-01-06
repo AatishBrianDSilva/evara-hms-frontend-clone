@@ -19,7 +19,6 @@ import {
 import { useDispatch, useSelector } from 'react-redux';
 import { RootState } from '../../../../app/store';
 import AddInvestigation from './AddInvestigation';
-import { useGetDoctorsQuery } from '../../../../services/doctorsApi';
 import { useGetMasterInvestigationsQuery } from '../../../../services/masterDashboardService/serviceData/masterInvestigationApi';
 import { CircularProgress } from '@mui/material';
 import {
@@ -64,13 +63,13 @@ const Investigations: React.FC = () => {
   const [isViewReportsModalOpen, setIsViewReportsModalOpen] =
     useState<boolean>(false);
 
-  // Get doctors
-  const {
-    data: DoctorsData,
-    isLoading: DoctorsLoading,
-    isFetching: DoctorFetching,
-  } = useGetDoctorsQuery({});
-  const doctors = DoctorsData?.data?.records || [];
+  // // Get doctors
+  // const {
+  //   data: DoctorsData,
+  //   isLoading: DoctorsLoading,
+  //   isFetching: DoctorFetching,
+  // } = useGetDoctorsQuery({});
+  // const doctors = DoctorsData?.data?.records || [];
 
   // Get master investigations
   const {
@@ -122,9 +121,9 @@ const Investigations: React.FC = () => {
     useDeleteInvestigationMutation();
 
   const loading =
-    DoctorsLoading ||
+    // DoctorsLoading ||
     MasterInvestigationsLoading ||
-    DoctorFetching ||
+    // DoctorFetching ||
     MasterInvestigationFetching;
 
   // Get the state of the edit investigation dialog
@@ -380,7 +379,7 @@ const Investigations: React.FC = () => {
       {addInvestigationOpen && (
         <AddInvestigation
           masterInvestigations={masterInvestigations}
-          doctors={doctors}
+          // doctors={doctors}
           onClose={closeForm}
           open={addInvestigationOpen}
         />
