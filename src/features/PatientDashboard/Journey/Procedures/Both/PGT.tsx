@@ -424,6 +424,7 @@ const PGT: React.FC = () => {
                 name="result.noOfBiopsies"
                 label="No of Biopsies"
                 fullWidth
+                type="number"
                 value={formik.values.result.noOfBiopsies}
                 onChange={formik.handleChange}
               />
@@ -633,8 +634,17 @@ const PGT: React.FC = () => {
                       fullWidth
                       label="PCR Tube ID"
                       name={`result.embryoBiopsyDetails[${index}].pcr_tube_id`}
-                      value={item.pcr_tube_id || ''}
-                      onChange={formik.handleChange}
+                      value={
+                        formik.values.result.embryoBiopsyDetails[index]
+                          .pcr_tube_id || ''
+                      }
+                      onChange={e => {
+                        const value = e.target.value.replace(/[^0-9]/g, ''); // Allow numbers only
+                        formik.setFieldValue(
+                          `result.embryoBiopsyDetails[${index}].pcr_tube_id`,
+                          `PCR_${value}`,
+                        );
+                      }}
                       error={isTubeIdError}
                       helperText={isTubeIdError && tubeIdErrorMessage}
                     />
@@ -654,6 +664,7 @@ const PGT: React.FC = () => {
                     <TextField
                       fullWidth
                       label="No. of Cells"
+                      type="number"
                       name={`result.embryoBiopsyDetails[${index}].no_of_cells`}
                       value={item.no_of_cells || ''}
                       onChange={formik.handleChange}
@@ -685,6 +696,7 @@ const PGT: React.FC = () => {
                   </Grid>
                   <Grid item flex={1}>
                     <TextField
+                      select
                       fullWidth
                       label="Nucleus Seen"
                       name={`result.embryoBiopsyDetails[${index}].nucleus_seen`}
@@ -692,10 +704,14 @@ const PGT: React.FC = () => {
                       onChange={formik.handleChange}
                       error={isNucleusSeenError}
                       helperText={isNucleusSeenError && nucleusSeenErrorMessage}
-                    />
+                    >
+                      <MenuItem value="Yes">Yes</MenuItem>
+                      <MenuItem value="No">No</MenuItem>
+                    </TextField>
                   </Grid>
                   <Grid item flex={1}>
                     <TextField
+                      select
                       fullWidth
                       label="Cell Integrity"
                       name={`result.embryoBiopsyDetails[${index}].cell_integrity`}
@@ -705,7 +721,10 @@ const PGT: React.FC = () => {
                       helperText={
                         isCellIntegrityError && cellIntegrityErrorMessage
                       }
-                    />
+                    >
+                      <MenuItem value="Yes">Yes</MenuItem>
+                      <MenuItem value="No">No</MenuItem>
+                    </TextField>
                   </Grid>
                   <Grid item flex={1}>
                     <TextField

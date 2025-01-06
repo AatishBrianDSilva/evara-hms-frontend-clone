@@ -21,7 +21,7 @@ import {
 import { useDispatch, useSelector } from 'react-redux';
 import { useToast } from '../../../../../context/ToastContext';
 import { RootState } from '../../../../../app/store';
-import React from 'react';
+import React, { useEffect } from 'react';
 import { ETestType } from '../../../../../types/master';
 import { useFormik } from 'formik';
 import FileUploadButton from '../../../../../components/FileUploadAndPreview/FileUploadButton';
@@ -110,11 +110,8 @@ const SpermDFI: React.FC = () => {
   console.log('Investigation Details', investigationDetails);
 
   const [fileUploadedUrl, setFileUploadedUrl] = React.useState<string[]>(() => {
-    let initialUrl: string[] = [];
-    if (investigation?.result?.files) {
-      initialUrl = investigation.result.files.flat();
-    }
-    return initialUrl;
+    // Initialize with existing files if available
+    return investigation?.result?.files || [];
   });
 
   const handleSubmit = async (
@@ -174,6 +171,37 @@ const SpermDFI: React.FC = () => {
     enableReinitialize: true,
   });
 
+  // Sperm DFI Calculation
+  useEffect(() => {
+    const { noAbnormalHalo, spermEvaluated } = formik.values.result;
+
+    // Parse inputs as numbers (default to 0 if invalid)
+    const abnormalHaloCount = parseFloat(noAbnormalHalo || '0');
+    const totalSpermCount = parseFloat(spermEvaluated || '0');
+
+    // Calculate DFI%
+    if (totalSpermCount > 0) {
+      const dfiPercentage = (
+        (abnormalHaloCount / totalSpermCount) *
+        100
+      ).toFixed(2);
+
+      // Avoid unnecessary updates
+      if (formik.values.result.dfiIndex !== dfiPercentage) {
+        formik.setFieldValue('result.dfiIndex', dfiPercentage);
+      }
+    } else {
+      // Reset DFI% to empty string if total sperm count is 0 or invalid
+      if (formik.values.result.dfiIndex !== '') {
+        formik.setFieldValue('result.dfiIndex', '');
+      }
+    }
+  }, [
+    formik.values.result.noAbnormalHalo,
+    formik.values.result.spermEvaluated,
+    formik.setFieldValue,
+  ]);
+
   if (loading) return renderSkeletonLoader();
 
   return (
@@ -188,6 +216,8 @@ const SpermDFI: React.FC = () => {
           <Grid item xs={12}>
             <Typography variant="h6">Sperm Evaluation</Typography>
           </Grid>
+
+          {/* Abstinence Period */}
           <Grid item xs={12} sm={6}>
             <TextField
               label="Abstinence Period"
@@ -199,9 +229,14 @@ const SpermDFI: React.FC = () => {
               helperText={formik.errors.result?.abstinencePeriod}
             />
           </Grid>
+
+          {/* Break After Abstinence Period */}
+          <Grid item xs={12} />
+
+          {/* Sperms Evaluated */}
           <Grid item xs={12} sm={6}>
             <TextField
-              label="No of Sperms Evaluated"
+              label="Number of Sperms Evaluated"
               fullWidth
               name="result.spermEvaluated"
               value={formik.values.result.spermEvaluated}
@@ -210,6 +245,8 @@ const SpermDFI: React.FC = () => {
               helperText={formik.errors.result?.spermEvaluated}
             />
           </Grid>
+
+          {/* Sperms with Normal HALO */}
           <Grid item xs={12} sm={6}>
             <TextField
               label="Sperms with Normal HALO"
@@ -221,9 +258,11 @@ const SpermDFI: React.FC = () => {
               helperText={formik.errors.result?.normalHalo}
             />
           </Grid>
+
+          {/* Sperms with NO/ABNORMAL HALO */}
           <Grid item xs={12} sm={6}>
             <TextField
-              label="Sperms with NO/ABNORMAL HALO"
+              label="Sperms with No/Abnormal Halo"
               fullWidth
               name="result.noAbnormalHalo"
               value={formik.values.result.noAbnormalHalo}
@@ -232,6 +271,10 @@ const SpermDFI: React.FC = () => {
               helperText={formik.errors.result?.noAbnormalHalo}
             />
           </Grid>
+
+          <Grid item xs={12} />
+
+          {/* DNA Fragmentation Index */}
           <Grid item xs={12} sm={6}>
             <TextField
               label="DNA Fragmentation Index (DFI%)"
@@ -239,8 +282,7 @@ const SpermDFI: React.FC = () => {
               name="result.dfiIndex"
               value={formik.values.result.dfiIndex}
               onChange={formik.handleChange}
-              error={Boolean(formik.errors.result?.dfiIndex)}
-              helperText={formik.errors.result?.dfiIndex}
+              disabled
               InputProps={{
                 endAdornment: (
                   <InputAdornment position="end">
@@ -248,10 +290,10 @@ const SpermDFI: React.FC = () => {
                   </InputAdornment>
                 ),
               }}
+              helperText={formik.errors.result?.dfiIndex}
             />
           </Grid>
         </Grid>
-
         <Grid container spacing={2} mb={4}>
           <Grid item xs={12}>
             <Typography variant="h6">Upload Images & Description</Typography>

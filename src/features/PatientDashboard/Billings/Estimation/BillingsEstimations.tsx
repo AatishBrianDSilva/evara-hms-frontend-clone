@@ -86,6 +86,9 @@ const BillingsEstimations: React.FC = () => {
       paginate: true,
       page: page,
       limit: pageSize,
+      sort: {
+        createdAt: -1,
+      },
       filters: {
         patientCode: patient?.patientId,
         status: 'Active',

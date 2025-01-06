@@ -178,7 +178,7 @@ const AddPackage: React.FC<AddPackageProps> = ({
       scroll="paper"
     >
       <DialogTitle sx={{ textAlign: 'center', pt: 4 }} variant="h5">
-        Add Packages
+        Add Package
       </DialogTitle>
       <Box component={'form'} onSubmit={createForm.handleSubmit}>
         <Paper elevation={0} sx={{ p: 2, mb: 2 }}>
@@ -238,11 +238,10 @@ const AddPackage: React.FC<AddPackageProps> = ({
                     <Grid item flex={1}>
                       <CustomDatePicker
                         label="Date"
-                        minDate={
-                          new Date(new Date().setDate(new Date().getDate() - 7))
-                        } // Allow dates starting 7 days ago
+                        value={new Date()} // Set current date as value
                         format="dd/MM/yyyy"
-                        value={createForm.values.fields[index].date}
+                        minDate={new Date()} // Set today's date as the minimum date
+                        maxDate={new Date()} // Set today's date as the maximum date
                         onChange={newValue =>
                           createForm.setFieldValue(
                             `fields.${index}.date`,
