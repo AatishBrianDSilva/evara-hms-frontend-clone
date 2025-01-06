@@ -5,7 +5,7 @@ import CustomDataGrid from '../../../../components/CustomDataGrid/CustomDataGrid
 import { GridActionsCellItem, GridColDef } from '@mui/x-data-grid';
 
 import { Button, Chip, Skeleton, Tooltip } from '@mui/material';
-import { Delete, DiscountTwoTone, Print } from '@mui/icons-material';
+import { DiscountTwoTone, Print } from '@mui/icons-material';
 import {
   useDeleteBillingMutation,
   useGetBillingsQuery,
@@ -226,11 +226,6 @@ const BillingsPending: React.FC = () => {
     setIsEditModalOpen(false);
   };
 
-  // Delete Modal
-  const openDeleteModal = (row: any) => {
-    setSelectedRow(row);
-    setIsDeleteModalOpen(true);
-  };
   const closeDeleteModal = () => {
     setSelectedRow(undefined);
     setIsDeleteModalOpen(false);
