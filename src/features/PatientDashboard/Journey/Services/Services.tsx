@@ -15,7 +15,6 @@ import {
 import { useSelector } from 'react-redux';
 import { RootState } from '../../../../app/store';
 import AddService from './AddService';
-import { useGetDoctorsQuery } from '../../../../services/doctorsApi';
 import { useGetMasterServicesQuery } from '../../../../services/masterDashboardService/serviceData/masterServicesApi';
 import { CircularProgress } from '@mui/material';
 import {

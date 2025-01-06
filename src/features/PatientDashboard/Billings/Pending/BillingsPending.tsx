@@ -5,15 +5,10 @@ import CustomDataGrid from '../../../../components/CustomDataGrid/CustomDataGrid
 import { GridActionsCellItem, GridColDef } from '@mui/x-data-grid';
 
 import { Button, Chip, Skeleton, Tooltip } from '@mui/material';
-import { Delete, DiscountTwoTone, Print } from '@mui/icons-material';
-import {
-  useDeleteBillingMutation,
-  useGetBillingsQuery,
-} from '../../../../services/patientDashboardService/billings/billingApi';
+import { DiscountTwoTone, Print } from '@mui/icons-material';
+import { useGetBillingsQuery } from '../../../../services/patientDashboardService/billings/billingApi';
 import { useSelector } from 'react-redux';
 import { RootState } from '../../../../app/store';
-import { useToast } from '../../../../context/ToastContext';
-import DeleteConfirmationModal from '../../../../components/DeleteConfirmationModal/DeleteConfirmationModal';
 import ProcessPendingModal from './ProcessPendingModal';
 import PrintPending from './PrintPending';
 import EditPending from './EditPending';
@@ -37,8 +32,6 @@ const BillingsPending: React.FC = () => {
   const handlePageSizeChange = (newPageSize: number) => {
     setPageSize(newPageSize);
   };
-
-  const { showPromiseToast } = useToast();
 
   const { patient } = useSelector((state: RootState) => state.patients);
 
@@ -66,30 +59,29 @@ const BillingsPending: React.FC = () => {
   const patientBillingsPagination = data?.data?.pagination;
   const patientBillingsLoading = isLoading || isFetching;
 
-  console.log('Pending Billing Data', patientBillingsPending);
   const getRowId = (row: RowType) => row._id;
 
-  // Delete investigation
-  const [deletePendingBillings, { isLoading: isDeleteLoading }] =
-    useDeleteBillingMutation();
+  // // Delete investigation
+  // const [deletePendingBillings, { isLoading: isDeleteLoading }] =
+  //   useDeleteBillingMutation();
 
-  const handleDelete = async () => {
-    const id = selectedRow.id;
-    const promise = deletePendingBillings(id).unwrap();
+  // const handleDelete = async () => {
+  //   const id = selectedRow.id;
+  //   const promise = deletePendingBillings(id).unwrap();
 
-    showPromiseToast(promise, {
-      loading: 'Deleting Bill...',
-      success: () => 'Bill deleted successfully',
-      error: () => 'Error deleting Bill',
-    });
+  //   showPromiseToast(promise, {
+  //     loading: 'Deleting Bill...',
+  //     success: () => 'Bill deleted successfully',
+  //     error: () => 'Error deleting Bill',
+  //   });
 
-    try {
-      await promise;
-    } catch (error) {
-      console.error('Error deleting bill', error);
-    }
-    closeDeleteModal();
-  };
+  //   try {
+  //     await promise;
+  //   } catch (error) {
+  //     console.error('Error deleting bill', error);
+  //   }
+  //   // closeDeleteModal();
+  // };
 
   const columnsConfig: GridColDef[] = [
     {
@@ -205,7 +197,7 @@ const BillingsPending: React.FC = () => {
 
   const [isProcessModalOpen, setIsProcessModalOpen] = useState<boolean>(false);
   const [isEditModalOpen, setIsEditModalOpen] = useState<boolean>(false);
-  const [isDeleteModalOpen, setIsDeleteModalOpen] = useState<boolean>(false);
+  // const [isDeleteModalOpen, setIsDeleteModalOpen] = useState<boolean>(false);
   const [isPrintModalOpen, setIsPrintModalOpen] = useState<boolean>(false);
 
   // Process Modal
@@ -227,14 +219,14 @@ const BillingsPending: React.FC = () => {
   };
 
   // Delete Modal
-  const openDeleteModal = (row: any) => {
-    setSelectedRow(row);
-    setIsDeleteModalOpen(true);
-  };
-  const closeDeleteModal = () => {
-    setSelectedRow(undefined);
-    setIsDeleteModalOpen(false);
-  };
+  // const openDeleteModal = (row: any) => {
+  //   setSelectedRow(row);
+  //   setIsDeleteModalOpen(true);
+  // };
+  // const closeDeleteModal = () => {
+  //   setSelectedRow(undefined);
+  //   setIsDeleteModalOpen(false);
+  // };
 
   // const openPrintModal = (row: any) => {
   //   setSelectedRow(row);
@@ -353,7 +345,7 @@ const BillingsPending: React.FC = () => {
         />
       )}
 
-      {isDeleteModalOpen && (
+      {/* {isDeleteModalOpen && (
         <DeleteConfirmationModal
           text={`${selectedRow?.billingId}`}
           open={isDeleteModalOpen}
@@ -361,7 +353,7 @@ const BillingsPending: React.FC = () => {
           onConfirm={handleDelete}
           loading={isDeleteLoading}
         />
-      )}
+      )} */}
     </Box>
   );
 };

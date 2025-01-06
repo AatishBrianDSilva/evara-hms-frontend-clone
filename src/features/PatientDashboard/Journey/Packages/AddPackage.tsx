@@ -152,15 +152,6 @@ const AddPackage: React.FC<AddPackageProps> = ({
     createForm.setFieldValue('fields', updatedFields);
   };
 
-  const handleDoctorChange = (
-    selectedDoctor: IDoctor | null,
-    index: number,
-  ) => {
-    const updatedFields = [...createForm.values.fields];
-    updatedFields[index].doctor = selectedDoctor;
-    createForm.setFieldValue('fields', updatedFields);
-  };
-
   const handleAddFields = () => {
     createForm.setFieldValue('fields', [
       ...createForm.values.fields,
