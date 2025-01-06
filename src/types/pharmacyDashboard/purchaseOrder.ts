@@ -69,6 +69,7 @@ export interface IPurchaseOrderResponse {
 }
 
 export interface IPurchaseOrder {
+  responses: any;
   allResponsesTax: number;
   allResponsesSubTotal: number;
   allResponsesNetAmount: number;
