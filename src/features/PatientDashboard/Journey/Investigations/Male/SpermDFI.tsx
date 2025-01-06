@@ -236,7 +236,7 @@ const SpermDFI: React.FC = () => {
           {/* Sperms Evaluated */}
           <Grid item xs={12} sm={6}>
             <TextField
-              label="No of Sperms Evaluated"
+              label="Number of Sperms Evaluated"
               fullWidth
               name="result.spermEvaluated"
               value={formik.values.result.spermEvaluated}

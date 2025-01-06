@@ -284,7 +284,6 @@ const Hysteroscopy: React.FC = () => {
           <TextField
             name="result.dayOfCycle"
             label="Day of Cycle"
-            type="number"
             fullWidth
             value={formik.values.result.dayOfCycle}
             onChange={formik.handleChange}
