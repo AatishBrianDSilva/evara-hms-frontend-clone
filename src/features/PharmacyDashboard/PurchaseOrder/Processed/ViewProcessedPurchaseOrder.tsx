@@ -40,7 +40,10 @@ const ViewProcessedPurchaseOrder: React.FC<ViewProcessedPurchaseOrderProps> = ({
   const purchaseOrder = purchaseOrderData?.data;
   const isLoadingOrder = isLoading || isFetching;
 
-  // console.log("Processed PO", purchaseOrder);
+  console.log('PO Id', id);
+  console.log('PO Id2', purchaseOrderId);
+
+  console.log('Processed PO', purchaseOrder);
 
   // Find the specific response using response._id
   const response = (

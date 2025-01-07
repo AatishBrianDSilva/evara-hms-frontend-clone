@@ -69,6 +69,7 @@ export interface IPurchaseOrderResponse {
 }
 
 export interface IPurchaseOrder {
+  parentId: string;
   responses: any;
   allResponsesTax: number;
   allResponsesSubTotal: number;
