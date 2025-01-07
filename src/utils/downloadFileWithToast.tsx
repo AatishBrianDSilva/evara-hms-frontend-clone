@@ -17,7 +17,7 @@ export const downloadFileWithToast = async ({
   params = '',
   fileName = 'download.csv',
   successMessage = 'Download successful!',
-  errorMessage = 'Download failed.',
+  errorMessage = 'File is being prepared, please try again later.',
   startMessage = 'Preparing download...',
 }: DownloadFileOptions) => {
   toast.info(startMessage, { autoClose: 2000 });

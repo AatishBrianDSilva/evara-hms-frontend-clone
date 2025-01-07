@@ -704,76 +704,81 @@ const History: React.FC = () => {
       component={'form'}
       onSubmit={formik.handleSubmit}
     >
-      <Box
-        mt={2}
-        boxShadow={2}
-        p={2}
-        borderRadius={2}
-        height={'500px'}
-        overflow={'auto'}
-      >
-        <Grid container alignItems="center" justifyContent="space-between">
-          <Grid item xs={12} md={6} lg={2}>
-            <Typography variant="h4">Synopsis</Typography>
+      {patientExists && (
+        <Box
+          mt={2}
+          boxShadow={2}
+          p={2}
+          borderRadius={2}
+          height={'500px'}
+          overflow={'auto'}
+        >
+          <Grid container alignItems="center" justifyContent="space-between">
+            <Grid item xs={12} md={6} lg={2}>
+              <Typography variant="h4">Synopsis</Typography>
+            </Grid>
+            <Grid item xs={1}>
+              <IconButton
+                size="small"
+                key="edit"
+                onClick={handleComponentChangeClick}
+              >
+                <Edit sx={{ fontSize: 16 }} />
+              </IconButton>
+            </Grid>
           </Grid>
-          <Grid item xs={1}>
-            <IconButton
-              size="small"
-              key="edit"
-              onClick={handleComponentChangeClick}
-            >
-              <Edit sx={{ fontSize: 16 }} />
-            </IconButton>
-          </Grid>
-        </Grid>
 
-        <Grid container style={{ marginTop: '40px' }}>
-          <Grid item xs={12}>
-            {showOtherComponent ? (
-              renderNestedObject(filteredPatientHistory)
-            ) : (
-              <>
-                <Autocomplete
-                  id="checkboxes-tags-demo"
-                  options={Object.keys(filteredPatientHistory).filter(
-                    key =>
-                      ![
-                        '_id',
-                        'patientId',
-                        'clinicId',
-                        'branchId',
-                        'patientCode',
-                        'files',
-                        'createdAt',
-                        'updatedAt',
-                        '__v',
-                      ].includes(key),
-                  )}
-                  multiple
-                  disableCloseOnSelect
-                  // getOptionLabel={(option) => option}
-                  getOptionLabel={option => formatKey(option)}
-                  renderOption={(props, option, { selected }) => (
-                    <li {...props}>
-                      <Checkbox style={{ marginRight: 8 }} checked={selected} />
-                      {/* {option} */}
-                      {formatKey(option)}
-                    </li>
-                  )}
-                  onChange={(_event, selectedOptions) =>
-                    handleSubheadingToggle(selectedOptions)
-                  }
-                  style={{ width: 500 }}
-                  renderInput={params => (
-                    <TextField {...params} label="History" placeholder="" />
-                  )}
-                />
-                {renderSelectedData()}
-              </>
-            )}
+          <Grid container style={{ marginTop: '40px' }}>
+            <Grid item xs={12}>
+              {showOtherComponent ? (
+                renderNestedObject(filteredPatientHistory)
+              ) : (
+                <>
+                  <Autocomplete
+                    id="checkboxes-tags-demo"
+                    options={Object.keys(filteredPatientHistory).filter(
+                      key =>
+                        ![
+                          '_id',
+                          'patientId',
+                          'clinicId',
+                          'branchId',
+                          'patientCode',
+                          'files',
+                          'createdAt',
+                          'updatedAt',
+                          '__v',
+                        ].includes(key),
+                    )}
+                    multiple
+                    disableCloseOnSelect
+                    // getOptionLabel={(option) => option}
+                    getOptionLabel={option => formatKey(option)}
+                    renderOption={(props, option, { selected }) => (
+                      <li {...props}>
+                        <Checkbox
+                          style={{ marginRight: 8 }}
+                          checked={selected}
+                        />
+                        {/* {option} */}
+                        {formatKey(option)}
+                      </li>
+                    )}
+                    onChange={(_event, selectedOptions) =>
+                      handleSubheadingToggle(selectedOptions)
+                    }
+                    style={{ width: 500 }}
+                    renderInput={params => (
+                      <TextField {...params} label="History" placeholder="" />
+                    )}
+                  />
+                  {renderSelectedData()}
+                </>
+              )}
+            </Grid>
           </Grid>
-        </Grid>
-      </Box>
+        </Box>
+      )}
 
       <Box padding={2} mt={2}>
         <Stepper activeStep={activeStep} orientation="vertical">

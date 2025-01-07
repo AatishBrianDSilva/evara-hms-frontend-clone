@@ -19,6 +19,8 @@ import {
 } from '../../../../services/patientDashboardService/packageApi';
 import DeleteConfirmationModal from '../../../../components/DeleteConfirmationModal/DeleteConfirmationModal';
 import { useToast } from '../../../../context/ToastContext';
+import RoleGuard from '../../../../components/RoleGuard/RoleGuard';
+import { EUserRole } from '../../../../types/masterDashboard/global';
 
 const Packages: React.FC = () => {
   const { showPromiseToast } = useToast();
@@ -174,15 +176,25 @@ const Packages: React.FC = () => {
         alignItems="center"
         mb={3}
       >
-        <Button
-          startIcon={<Add />}
-          variant="contained"
-          color="primary"
-          onClick={() => setAddPackageOpen(true)}
-          disabled={loading}
+        <RoleGuard
+          allowedRoles={[
+            EUserRole.Doctor,
+            EUserRole.Nurse,
+            EUserRole.Admin,
+            EUserRole.CenterManager,
+            EUserRole.Embryologist,
+          ]}
         >
-          Add Package
-        </Button>
+          <Button
+            startIcon={<Add />}
+            variant="contained"
+            color="primary"
+            onClick={() => setAddPackageOpen(true)}
+            disabled={loading}
+          >
+            Add Package
+          </Button>
+        </RoleGuard>
       </Box>
       <CustomDataGrid
         autoHeight={true}

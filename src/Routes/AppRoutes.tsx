@@ -280,25 +280,40 @@ const AppRoutes: React.FC = () => (
             element={<Navigate to={EJourneyTabPaths.Investigations} replace />}
           />
           <Route path={EPatientTabPaths.Report} element={<Report />} />
-          <Route path={EPatientTabPaths.Billings} element={<BillingsTab />}>
-            <Route
-              index
-              element={<Navigate to={EBillingsTabPaths.Estimation} replace />}
-            />
-            <Route
-              path={EBillingsTabPaths.Estimation}
-              element={<BillingsEstimations />}
-            />
-            <Route
-              path={EBillingsTabPaths.Pending}
-              element={<BillingsPending />}
-            />
-            {/* <Route path={EBillingsTabPaths.Advance} element={<BillingsAdvance />} /> */}
-            <Route path={EBillingsTabPaths.Paid} element={<BillingsPaid />} />
-            <Route
-              path={EBillingsTabPaths.Refund}
-              element={<BillingsRefund />}
-            />
+          <Route
+            path={EPatientTabPaths.Billings}
+            element={
+              <ProtectedRoute
+                allowedRoles={[
+                  EUserRole.Admin,
+                  EUserRole.CenterManager,
+                  EUserRole.Billing,
+                  EUserRole.PharmacyManager,
+                ]}
+                navigateTo={'/not-authorized'}
+              />
+            }
+          >
+            <Route element={<BillingsTab />}>
+              <Route
+                index
+                element={<Navigate to={EBillingsTabPaths.Estimation} replace />}
+              />
+              <Route
+                path={EBillingsTabPaths.Estimation}
+                element={<BillingsEstimations />}
+              />
+              <Route
+                path={EBillingsTabPaths.Pending}
+                element={<BillingsPending />}
+              />
+              {/* <Route path={EBillingsTabPaths.Advance} element={<BillingsAdvance />} /> */}
+              <Route path={EBillingsTabPaths.Paid} element={<BillingsPaid />} />
+              <Route
+                path={EBillingsTabPaths.Refund}
+                element={<BillingsRefund />}
+              />
+            </Route>
             {/* <Route path={EBillingsTabPaths.Archieved} element={<BillingsArchived />} /> */}
             {/* <Route path={EBillingsTabPaths.Transactions} element={<BillingsTransactions />} /> */}
           </Route>
