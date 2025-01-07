@@ -280,7 +280,20 @@ const AppRoutes: React.FC = () => (
             element={<Navigate to={EJourneyTabPaths.Investigations} replace />}
           />
           <Route path={EPatientTabPaths.Report} element={<Report />} />
-          <Route path={EPatientTabPaths.Billings} element={<BillingsTab />}>
+          <Route
+            path={EPatientTabPaths.Billings}
+            element={
+              <ProtectedRoute
+                allowedRoles={[
+                  EUserRole.Admin,
+                  EUserRole.CenterManager,
+                  EUserRole.Billing,
+                  EUserRole.PharmacyManager,
+                ]}
+                navigateTo={'/not-authorized'}
+              />
+            }
+          >
             <Route
               index
               element={<Navigate to={EBillingsTabPaths.Estimation} replace />}
