@@ -722,8 +722,8 @@ const PGT: React.FC = () => {
                         isCellIntegrityError && cellIntegrityErrorMessage
                       }
                     >
-                      <MenuItem value="Yes">Yes</MenuItem>
-                      <MenuItem value="No">No</MenuItem>
+                      <MenuItem value="Intact">Intact</MenuItem>
+                      <MenuItem value="Lysed">Lysed</MenuItem>
                     </TextField>
                   </Grid>
                   <Grid item flex={1}>
