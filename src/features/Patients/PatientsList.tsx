@@ -86,6 +86,7 @@ const PatientsList: React.FC = () => {
 
   const columnsConfig: GridColDef[] = [
     { field: 'patientId', headerName: 'ID', flex: 1 }, // Adjust the flex values based on your needs
+    { field: 'caseId', headerName: 'Case ID', flex: 1 },
     { field: 'firstName', headerName: 'Name', flex: 1 },
     { field: 'lastName', headerName: 'Last Name', flex: 1 },
     { field: 'gender', headerName: 'Gender', flex: 1 },
@@ -178,10 +179,11 @@ const PatientsList: React.FC = () => {
       <Box display="flex" justifyContent="flex-end" gap={2}>
         <TextField
           label="Search Patient"
-          placeholder="ID/Name/Phone"
+          placeholder="ID/Case-ID/Name/Phone"
           size="small"
           variant="outlined"
           onChange={e => debouncedSearchChange(e.target.value)}
+          sx={{ width: '300px' }}
         />
 
         <Button
