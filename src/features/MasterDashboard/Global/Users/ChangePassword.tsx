@@ -26,7 +26,6 @@ interface ChangePasswordProps {
 
 interface IFormValues {
   email: string;
-  currentPassword: string;
   newPassword: string;
 }
 
@@ -70,17 +69,12 @@ const ChangePassword: React.FC<ChangePasswordProps> = ({
     isFetching: UserFetching,
   } = useGetGlobalUserByIdQuery(id);
 
-  console.log('Id prop', id);
-
   const data = UserData ? UserData.data : null;
 
   const isUserLoading = UserLoading || UserFetching;
 
-  console.log('Data at change password', data);
-
   const initialValues: IFormValues = {
     email: data?.email || '',
-    currentPassword: data?.currentPassword || '',
     newPassword: data?.newPassword || '',
   };
 
@@ -94,7 +88,6 @@ const ChangePassword: React.FC<ChangePasswordProps> = ({
         const payload = {
           userId: id,
           email: values.email,
-          currentPassword: values.currentPassword,
           newPassword: values.newPassword,
         };
 
@@ -133,16 +126,6 @@ const ChangePassword: React.FC<ChangePasswordProps> = ({
                   name="email"
                   label="Email"
                   value={formik.values.email}
-                  onChange={formik.handleChange}
-                />
-              </Grid>
-              <Grid item xs={8} sm={4} lg={3}>
-                <TextField
-                  fullWidth
-                  id="currentPassword"
-                  name="currentPassword"
-                  label="Current Password"
-                  value={formik.values.currentPassword}
                   onChange={formik.handleChange}
                 />
               </Grid>
