@@ -13,6 +13,8 @@ import { useGetTreatmentCyclesQuery } from '../../../../services/patientDashboar
 import TreatmentCycleCard from '../../../../components/TreatmentCycleCard/TreatmentCycleCard';
 import TreatmentCycleCardSkeleton from '../../../../components/TreatmentCycleCard/TreatmentCycleSkeleton';
 import { useNavigate, useParams } from 'react-router-dom';
+import { EUserRole } from '../../../../types/masterDashboard/global';
+import RoleGuard from '../../../../components/RoleGuard/RoleGuard';
 
 const TreatmentCycles: React.FC = () => {
   const navigate = useNavigate();
@@ -98,16 +100,30 @@ const TreatmentCycles: React.FC = () => {
             Remove Filter
           </Button>
         )}
-        <Button
-          startIcon={
-            loading ? <CircularProgress size={16} color="secondary" /> : <Add />
-          }
-          variant="contained"
-          color="primary"
-          onClick={() => setAddTreatmentCycleOpen(true)}
+        <RoleGuard
+          allowedRoles={[
+            EUserRole.Doctor,
+            EUserRole.Nurse,
+            EUserRole.Admin,
+            EUserRole.CenterManager,
+            EUserRole.Embryologist,
+          ]}
         >
-          Treatment Cycle
-        </Button>
+          <Button
+            startIcon={
+              loading ? (
+                <CircularProgress size={16} color="secondary" />
+              ) : (
+                <Add />
+              )
+            }
+            variant="contained"
+            color="primary"
+            onClick={() => setAddTreatmentCycleOpen(true)}
+          >
+            Treatment Cycle
+          </Button>
+        </RoleGuard>
       </Box>
 
       <Box
