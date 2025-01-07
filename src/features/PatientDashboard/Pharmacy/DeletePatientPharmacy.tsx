@@ -35,7 +35,7 @@ const DeletePatientPharmacy: React.FC<DeletePatientPharmacyProps> = ({
     showPromiseToast(promise, {
       loading: 'Deleting Pharmacy Order...',
       success: () => 'Pharmacy Order deleted successfully',
-      error: () => 'Error Deleting Pharmacy Order',
+      error: err => err || 'Error Deleting Pharmacy Order',
     });
 
     try {

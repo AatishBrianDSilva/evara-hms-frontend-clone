@@ -40,6 +40,8 @@ import Laparoscopy from './Female/Laproscopy';
 import { Visibility } from '@mui/icons-material';
 import ViewReports from '../ViewReports';
 import { useNavigate, useParams } from 'react-router-dom';
+import { EUserRole } from '../../../../types/masterDashboard/global';
+import RoleGuard from '../../../../components/RoleGuard/RoleGuard';
 
 const Procedures: React.FC = () => {
   const { id, itemId } = useParams<{ id: string; itemId?: string }>();
@@ -336,16 +338,30 @@ const Procedures: React.FC = () => {
             Remove Filter
           </Button>
         )}
-        <Button
-          startIcon={
-            loading ? <CircularProgress size={16} color="secondary" /> : <Add />
-          }
-          variant="contained"
-          color="primary"
-          onClick={() => setAddProcedureOpen(true)}
+        <RoleGuard
+          allowedRoles={[
+            EUserRole.Doctor,
+            EUserRole.Nurse,
+            EUserRole.Admin,
+            EUserRole.CenterManager,
+            EUserRole.Embryologist,
+          ]}
         >
-          Procedure
-        </Button>
+          <Button
+            startIcon={
+              loading ? (
+                <CircularProgress size={16} color="secondary" />
+              ) : (
+                <Add />
+              )
+            }
+            variant="contained"
+            color="primary"
+            onClick={() => setAddProcedureOpen(true)}
+          >
+            Procedure
+          </Button>
+        </RoleGuard>
       </Box>
       <CustomDataGrid
         autoHeight={true}

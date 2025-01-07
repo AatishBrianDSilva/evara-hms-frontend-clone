@@ -44,6 +44,8 @@ import { usePrint } from '../../../../context/PrintPDFContext';
 import { Visibility } from '@mui/icons-material';
 import ViewReports from '../ViewReports';
 import { useNavigate, useParams } from 'react-router-dom';
+import RoleGuard from '../../../../components/RoleGuard/RoleGuard';
+import { EUserRole } from '../../../../types/masterDashboard/global';
 
 const Investigations: React.FC = () => {
   const dispatch = useDispatch();
@@ -351,16 +353,30 @@ const Investigations: React.FC = () => {
             Remove Filter
           </Button>
         )}
-        <Button
-          startIcon={
-            loading ? <CircularProgress size={16} color="secondary" /> : <Add />
-          }
-          variant="contained"
-          color="primary"
-          onClick={() => setAddInvestigationOpen(true)}
+        <RoleGuard
+          allowedRoles={[
+            EUserRole.Doctor,
+            EUserRole.Nurse,
+            EUserRole.Admin,
+            EUserRole.CenterManager,
+            EUserRole.Embryologist,
+          ]}
         >
-          Investigation
-        </Button>
+          <Button
+            startIcon={
+              loading ? (
+                <CircularProgress size={16} color="secondary" />
+              ) : (
+                <Add />
+              )
+            }
+            variant="contained"
+            color="primary"
+            onClick={() => setAddInvestigationOpen(true)}
+          >
+            Investigation
+          </Button>
+        </RoleGuard>
       </Box>
       <CustomDataGrid
         autoHeight={true}

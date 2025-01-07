@@ -23,6 +23,8 @@ import { useToast } from '../../../../context/ToastContext';
 import { useNavigate, useParams } from 'react-router-dom';
 import { Visibility } from '@mui/icons-material';
 import ViewTreatmentAdvice from './ViewTreatmentAdvice';
+import RoleGuard from '../../../../components/RoleGuard/RoleGuard';
+import { EUserRole } from '../../../../types/masterDashboard/global';
 
 const TreatmentAdvice: React.FC = () => {
   const { id, itemId } = useParams<{ id: string; itemId?: string }>();
@@ -192,14 +194,24 @@ const TreatmentAdvice: React.FC = () => {
             Remove Filter
           </Button>
         )}
-        <Button
-          startIcon={<Add />}
-          variant="contained"
-          color="primary"
-          onClick={() => setAddTreatmentAdviceOpen(true)}
+        <RoleGuard
+          allowedRoles={[
+            EUserRole.Doctor,
+            EUserRole.Nurse,
+            EUserRole.Admin,
+            EUserRole.CenterManager,
+            EUserRole.Embryologist,
+          ]}
         >
-          Treatment Advice
-        </Button>
+          <Button
+            startIcon={<Add />}
+            variant="contained"
+            color="primary"
+            onClick={() => setAddTreatmentAdviceOpen(true)}
+          >
+            Treatment Advice
+          </Button>
+        </RoleGuard>
       </Box>
       <CustomDataGrid
         autoHeight={true}
