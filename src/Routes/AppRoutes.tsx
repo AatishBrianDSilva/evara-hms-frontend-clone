@@ -294,24 +294,26 @@ const AppRoutes: React.FC = () => (
               />
             }
           >
-            <Route
-              index
-              element={<Navigate to={EBillingsTabPaths.Estimation} replace />}
-            />
-            <Route
-              path={EBillingsTabPaths.Estimation}
-              element={<BillingsEstimations />}
-            />
-            <Route
-              path={EBillingsTabPaths.Pending}
-              element={<BillingsPending />}
-            />
-            {/* <Route path={EBillingsTabPaths.Advance} element={<BillingsAdvance />} /> */}
-            <Route path={EBillingsTabPaths.Paid} element={<BillingsPaid />} />
-            <Route
-              path={EBillingsTabPaths.Refund}
-              element={<BillingsRefund />}
-            />
+            <Route element={<BillingsTab />}>
+              <Route
+                index
+                element={<Navigate to={EBillingsTabPaths.Estimation} replace />}
+              />
+              <Route
+                path={EBillingsTabPaths.Estimation}
+                element={<BillingsEstimations />}
+              />
+              <Route
+                path={EBillingsTabPaths.Pending}
+                element={<BillingsPending />}
+              />
+              {/* <Route path={EBillingsTabPaths.Advance} element={<BillingsAdvance />} /> */}
+              <Route path={EBillingsTabPaths.Paid} element={<BillingsPaid />} />
+              <Route
+                path={EBillingsTabPaths.Refund}
+                element={<BillingsRefund />}
+              />
+            </Route>
             {/* <Route path={EBillingsTabPaths.Archieved} element={<BillingsArchived />} /> */}
             {/* <Route path={EBillingsTabPaths.Transactions} element={<BillingsTransactions />} /> */}
           </Route>
