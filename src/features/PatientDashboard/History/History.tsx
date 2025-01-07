@@ -19,7 +19,12 @@ import {
 } from '../../../services/patientDashboardService/patientHistoryApi';
 import { useSelector } from 'react-redux';
 import { RootState } from '../../../app/store';
-import { Autocomplete, Checkbox, IconButton } from '@mui/material';
+import {
+  Autocomplete,
+  Checkbox,
+  IconButton,
+  InputAdornment,
+} from '@mui/material';
 import FileUploadButton from '../../../components/FileUploadAndPreview/FileUploadButton';
 import { EBuckets, EDocumentTypes } from '../../../types/global';
 import { format } from 'date-fns';
@@ -699,76 +704,81 @@ const History: React.FC = () => {
       component={'form'}
       onSubmit={formik.handleSubmit}
     >
-      <Box
-        mt={2}
-        boxShadow={2}
-        p={2}
-        borderRadius={2}
-        height={'500px'}
-        overflow={'auto'}
-      >
-        <Grid container alignItems="center" justifyContent="space-between">
-          <Grid item xs={12} md={6} lg={2}>
-            <Typography variant="h4">Synopsis</Typography>
+      {patientExists && (
+        <Box
+          mt={2}
+          boxShadow={2}
+          p={2}
+          borderRadius={2}
+          height={'500px'}
+          overflow={'auto'}
+        >
+          <Grid container alignItems="center" justifyContent="space-between">
+            <Grid item xs={12} md={6} lg={2}>
+              <Typography variant="h4">Synopsis</Typography>
+            </Grid>
+            <Grid item xs={1}>
+              <IconButton
+                size="small"
+                key="edit"
+                onClick={handleComponentChangeClick}
+              >
+                <Edit sx={{ fontSize: 16 }} />
+              </IconButton>
+            </Grid>
           </Grid>
-          <Grid item xs={1}>
-            <IconButton
-              size="small"
-              key="edit"
-              onClick={handleComponentChangeClick}
-            >
-              <Edit sx={{ fontSize: 16 }} />
-            </IconButton>
-          </Grid>
-        </Grid>
 
-        <Grid container style={{ marginTop: '40px' }}>
-          <Grid item xs={12}>
-            {showOtherComponent ? (
-              renderNestedObject(filteredPatientHistory)
-            ) : (
-              <>
-                <Autocomplete
-                  id="checkboxes-tags-demo"
-                  options={Object.keys(filteredPatientHistory).filter(
-                    key =>
-                      ![
-                        '_id',
-                        'patientId',
-                        'clinicId',
-                        'branchId',
-                        'patientCode',
-                        'files',
-                        'createdAt',
-                        'updatedAt',
-                        '__v',
-                      ].includes(key),
-                  )}
-                  multiple
-                  disableCloseOnSelect
-                  // getOptionLabel={(option) => option}
-                  getOptionLabel={option => formatKey(option)}
-                  renderOption={(props, option, { selected }) => (
-                    <li {...props}>
-                      <Checkbox style={{ marginRight: 8 }} checked={selected} />
-                      {/* {option} */}
-                      {formatKey(option)}
-                    </li>
-                  )}
-                  onChange={(_event, selectedOptions) =>
-                    handleSubheadingToggle(selectedOptions)
-                  }
-                  style={{ width: 500 }}
-                  renderInput={params => (
-                    <TextField {...params} label="History" placeholder="" />
-                  )}
-                />
-                {renderSelectedData()}
-              </>
-            )}
+          <Grid container style={{ marginTop: '40px' }}>
+            <Grid item xs={12}>
+              {showOtherComponent ? (
+                renderNestedObject(filteredPatientHistory)
+              ) : (
+                <>
+                  <Autocomplete
+                    id="checkboxes-tags-demo"
+                    options={Object.keys(filteredPatientHistory).filter(
+                      key =>
+                        ![
+                          '_id',
+                          'patientId',
+                          'clinicId',
+                          'branchId',
+                          'patientCode',
+                          'files',
+                          'createdAt',
+                          'updatedAt',
+                          '__v',
+                        ].includes(key),
+                    )}
+                    multiple
+                    disableCloseOnSelect
+                    // getOptionLabel={(option) => option}
+                    getOptionLabel={option => formatKey(option)}
+                    renderOption={(props, option, { selected }) => (
+                      <li {...props}>
+                        <Checkbox
+                          style={{ marginRight: 8 }}
+                          checked={selected}
+                        />
+                        {/* {option} */}
+                        {formatKey(option)}
+                      </li>
+                    )}
+                    onChange={(_event, selectedOptions) =>
+                      handleSubheadingToggle(selectedOptions)
+                    }
+                    style={{ width: 500 }}
+                    renderInput={params => (
+                      <TextField {...params} label="History" placeholder="" />
+                    )}
+                  />
+                  {renderSelectedData()}
+                </>
+              )}
+            </Grid>
           </Grid>
-        </Grid>
-      </Box>
+        </Box>
+      )}
 
       <Box padding={2} mt={2}>
         <Stepper activeStep={activeStep} orientation="vertical">
@@ -864,6 +874,7 @@ const History: React.FC = () => {
                     label="No. Of Pregnancies"
                     name="noOfPregnencies"
                     value={formik.values.noOfPregnencies}
+                    type="number"
                     onChange={formik.handleChange}
                     error={
                       formik.touched.noOfPregnencies &&
@@ -942,6 +953,7 @@ const History: React.FC = () => {
                     ref={inputRefs.lmpDate}
                     label="Date"
                     name="lmpDate"
+                    maxDate={new Date()}
                     value={formik.values.lmpDate}
                     onChange={async value =>
                       await formik.setFieldValue('lmpDate', value)
@@ -957,6 +969,7 @@ const History: React.FC = () => {
                   <TextField
                     label="Age at Menarche"
                     name="ageAtMenarche"
+                    type="number"
                     value={formik.values.ageAtMenarche}
                     onChange={formik.handleChange}
                     error={
@@ -974,6 +987,7 @@ const History: React.FC = () => {
                   <TextField
                     label="Menstrual Regularity"
                     name="mensturalRegularity"
+                    type="number"
                     value={formik.values.mensturalRegularity}
                     onChange={formik.handleChange}
                     error={
@@ -991,6 +1005,7 @@ const History: React.FC = () => {
                   <TextField
                     label="Menstrual Bleeding"
                     name="mensturalBleeding "
+                    type="number"
                     value={formik.values.mensturalBleeding}
                     onChange={formik.handleChange}
                     error={
@@ -1008,6 +1023,7 @@ const History: React.FC = () => {
                   <TextField
                     label="Longest Cycle Duration"
                     name="longestCycleDuration"
+                    type="number"
                     value={formik.values.longestCycleDuration}
                     onChange={formik.handleChange}
                     error={
@@ -1025,6 +1041,7 @@ const History: React.FC = () => {
                   <TextField
                     label="Shortest Cycle Duration"
                     name="shortestCycleDuration"
+                    type="number"
                     value={formik.values.shortestCycleDuration}
                     onChange={formik.handleChange}
                     error={
@@ -1042,6 +1059,7 @@ const History: React.FC = () => {
                   <TextField
                     label="Period Duration"
                     name="periodDuration"
+                    type="number"
                     value={formik.values.periodDuration}
                     onChange={formik.handleChange}
                     error={
@@ -1148,6 +1166,7 @@ const History: React.FC = () => {
                     label="Hirsutism"
                     name="hirsutism"
                     value={formik.values.hirsutisnm}
+                    type="number"
                     onChange={formik.handleChange}
                     error={
                       formik.touched.hirsutisnm &&
@@ -1180,6 +1199,7 @@ const History: React.FC = () => {
                   <TextField
                     label="Dysmenorrhoea"
                     name="dysmenorrhoea"
+                    type="number"
                     value={formik.values.dysmenorrhoea}
                     onChange={formik.handleChange}
                     error={
@@ -1271,6 +1291,7 @@ const History: React.FC = () => {
                   <TextField
                     label="Frequency Coitus"
                     name="frequencyCoitus"
+                    type="number"
                     value={formik.values.frequencyCoitus}
                     onChange={formik.handleChange}
                     error={
@@ -1622,6 +1643,13 @@ const History: React.FC = () => {
                     }
                     helperText={formik.touched.height && formik.errors.height}
                     fullWidth
+                    InputProps={{
+                      endAdornment: (
+                        <InputAdornment position="end">
+                          <Typography variant="body2">CM</Typography>
+                        </InputAdornment>
+                      ),
+                    }}
                   />
                 </Grid>
                 <Grid item xs={12} md={6} lg={2}>
@@ -1635,11 +1663,17 @@ const History: React.FC = () => {
                     }
                     helperText={formik.touched.weight && formik.errors.weight}
                     fullWidth
+                    InputProps={{
+                      endAdornment: (
+                        <InputAdornment position="end">
+                          <Typography variant="body2">KG</Typography>
+                        </InputAdornment>
+                      ),
+                    }}
                   />
                 </Grid>
                 <Grid item xs={12} md={6} lg={2}>
                   <TextField
-                    disabled
                     label="BMI"
                     name="bmi"
                     value={formik.values.bmi}
@@ -1658,6 +1692,13 @@ const History: React.FC = () => {
                     error={formik.touched.bp && Boolean(formik.errors.bp)}
                     helperText={formik.touched.bp && formik.errors.bp}
                     fullWidth
+                    InputProps={{
+                      endAdornment: (
+                        <InputAdornment position="end">
+                          <Typography variant="body2">Hg</Typography>
+                        </InputAdornment>
+                      ),
+                    }}
                   />
                 </Grid>
                 <Grid item xs={12} md={6} lg={2}>
@@ -1913,6 +1954,13 @@ const History: React.FC = () => {
                         formik.touched.cbpResult && formik.errors.cbpResult
                       }
                       fullWidth
+                      InputProps={{
+                        endAdornment: (
+                          <InputAdornment position="end">
+                            <Typography variant="body2">mlU/L</Typography>
+                          </InputAdornment>
+                        ),
+                      }}
                     />
                   </Box>
                 </Grid>
@@ -1958,6 +2006,13 @@ const History: React.FC = () => {
                         formik.touched.e2Result && formik.errors.e2Result
                       }
                       fullWidth
+                      InputProps={{
+                        endAdornment: (
+                          <InputAdornment position="end">
+                            <Typography variant="body2">pg/ml</Typography>
+                          </InputAdornment>
+                        ),
+                      }}
                     />
                   </Box>
                 </Grid>
@@ -2006,6 +2061,13 @@ const History: React.FC = () => {
                         formik.touched.hepCResult && formik.errors.hepCResult
                       }
                       fullWidth
+                      InputProps={{
+                        endAdornment: (
+                          <InputAdornment position="end">
+                            <Typography variant="body2">IU/mL</Typography>
+                          </InputAdornment>
+                        ),
+                      }}
                     />
                   </Box>
                 </Grid>
@@ -2148,6 +2210,13 @@ const History: React.FC = () => {
                         formik.touched.rbsResult && formik.errors.rbsResult
                       }
                       fullWidth
+                      InputProps={{
+                        endAdornment: (
+                          <InputAdornment position="end">
+                            <Typography variant="body2">mg/dL</Typography>
+                          </InputAdornment>
+                        ),
+                      }}
                     />
                   </Box>
                 </Grid>
@@ -2195,6 +2264,13 @@ const History: React.FC = () => {
                         formik.touched.tshResult && formik.errors.tshResult
                       }
                       fullWidth
+                      InputProps={{
+                        endAdornment: (
+                          <InputAdornment position="end">
+                            <Typography variant="body2">mlU/L</Typography>
+                          </InputAdornment>
+                        ),
+                      }}
                     />
                   </Box>
                 </Grid>
@@ -2293,6 +2369,13 @@ const History: React.FC = () => {
                         formik.errors.prolactinResult
                       }
                       fullWidth
+                      InputProps={{
+                        endAdornment: (
+                          <InputAdornment position="end">
+                            <Typography variant="body2">ng/mL</Typography>
+                          </InputAdornment>
+                        ),
+                      }}
                     />
                   </Box>
                 </Grid>
@@ -2343,6 +2426,13 @@ const History: React.FC = () => {
                         formik.errors.spermAssessmentResult
                       }
                       fullWidth
+                      InputProps={{
+                        endAdornment: (
+                          <InputAdornment position="end">
+                            <Typography variant="body2">%</Typography>
+                          </InputAdornment>
+                        ),
+                      }}
                     />
                   </Box>
                 </Grid>
@@ -2440,6 +2530,13 @@ const History: React.FC = () => {
                         formik.touched.esrResult && formik.errors.esrResult
                       }
                       fullWidth
+                      InputProps={{
+                        endAdornment: (
+                          <InputAdornment position="end">
+                            <Typography variant="body2">mm/hr</Typography>
+                          </InputAdornment>
+                        ),
+                      }}
                     />
                   </Box>
                 </Grid>
@@ -2489,6 +2586,13 @@ const History: React.FC = () => {
                         formik.errors.rubellaResult
                       }
                       fullWidth
+                      InputProps={{
+                        endAdornment: (
+                          <InputAdornment position="end">
+                            <Typography variant="body2">IU/mL</Typography>
+                          </InputAdornment>
+                        ),
+                      }}
                     />
                   </Box>
                 </Grid>
@@ -2536,6 +2640,13 @@ const History: React.FC = () => {
                         formik.touched.fshResult && formik.errors.fshResult
                       }
                       fullWidth
+                      InputProps={{
+                        endAdornment: (
+                          <InputAdornment position="end">
+                            <Typography variant="body2">mlU/mL</Typography>
+                          </InputAdornment>
+                        ),
+                      }}
                     />
                   </Box>
                 </Grid>
@@ -2581,6 +2692,13 @@ const History: React.FC = () => {
                         formik.touched.lhResult && formik.errors.lhResult
                       }
                       fullWidth
+                      InputProps={{
+                        endAdornment: (
+                          <InputAdornment position="end">
+                            <Typography variant="body2">IU/mL</Typography>
+                          </InputAdornment>
+                        ),
+                      }}
                     />
                   </Box>
                 </Grid>
@@ -2678,6 +2796,13 @@ const History: React.FC = () => {
                         formik.errors.progesteroneResult
                       }
                       fullWidth
+                      InputProps={{
+                        endAdornment: (
+                          <InputAdornment position="end">
+                            <Typography variant="body2">ng/mL</Typography>
+                          </InputAdornment>
+                        ),
+                      }}
                     />
                   </Box>
                 </Grid>
@@ -2725,6 +2850,13 @@ const History: React.FC = () => {
                         formik.touched.amhResult && formik.errors.amhResult
                       }
                       fullWidth
+                      InputProps={{
+                        endAdornment: (
+                          <InputAdornment position="end">
+                            <Typography variant="body2">IU/L</Typography>
+                          </InputAdornment>
+                        ),
+                      }}
                     />
                   </Box>
                 </Grid>
@@ -2821,6 +2953,13 @@ const History: React.FC = () => {
                         formik.touched.ca125Result && formik.errors.ca125Result
                       }
                       fullWidth
+                      InputProps={{
+                        endAdornment: (
+                          <InputAdornment position="end">
+                            <Typography variant="body2">U/mL</Typography>
+                          </InputAdornment>
+                        ),
+                      }}
                     />
                   </Box>
                 </Grid>
@@ -2871,6 +3010,13 @@ const History: React.FC = () => {
                         formik.errors.vitaminDResult
                       }
                       fullWidth
+                      InputProps={{
+                        endAdornment: (
+                          <InputAdornment position="end">
+                            <Typography variant="body2">ng/m</Typography>
+                          </InputAdornment>
+                        ),
+                      }}
                     />
                   </Box>
                 </Grid>
@@ -2969,6 +3115,13 @@ const History: React.FC = () => {
                         formik.touched.tbpcrResult && formik.errors.tbpcrResult
                       }
                       fullWidth
+                      InputProps={{
+                        endAdornment: (
+                          <InputAdornment position="end">
+                            <Typography variant="body2">mm</Typography>
+                          </InputAdornment>
+                        ),
+                      }}
                     />
                   </Box>
                 </Grid>

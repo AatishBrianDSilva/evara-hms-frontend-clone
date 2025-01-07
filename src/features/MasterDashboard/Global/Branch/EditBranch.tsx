@@ -37,6 +37,8 @@ interface IFormValues {
   phone: string;
   email: string;
   isActive: boolean;
+  gstNumber: string;
+  drugLicenceNumber: string;
 }
 
 const skeletonLoader = () => {
@@ -133,6 +135,8 @@ const EditBranch: React.FC<EditBranchProps> = ({ openModal, onClose, id }) => {
     phone: data?.phone || '',
     email: data?.email || '',
     isActive: data?.isActive || false,
+    gstNumber: data?.gstNumber || '',
+    drugLicenceNumber: data?.drugLicenceNumber || '',
   };
 
   const [editBranchMutation, { isLoading: isEditing }] =
@@ -157,6 +161,8 @@ const EditBranch: React.FC<EditBranchProps> = ({ openModal, onClose, id }) => {
           phone: values.phone,
           email: values.email,
           isActive: values.isActive,
+          gstNumber: values.gstNumber,
+          drugLicenceNumber: values.drugLicenceNumber,
         };
 
         const promise = editBranchMutation({ id, branchData }).unwrap();
@@ -289,6 +295,29 @@ const EditBranch: React.FC<EditBranchProps> = ({ openModal, onClose, id }) => {
                 />
               </Grid>
               <Grid item xs={8} sm={4} lg={3}>
+                <TextField
+                  fullWidth
+                  id="gstNumber"
+                  name="gstNumber"
+                  label="GST Number"
+                  placeholder="GST Number"
+                  value={formik.values.gstNumber}
+                  onChange={formik.handleChange}
+                />
+              </Grid>
+              <Grid item xs={8} sm={4} lg={6}>
+                <TextField
+                  fullWidth
+                  id="drugLicenceNumber"
+                  name="drugLicenceNumber"
+                  label="Drug Licence Number"
+                  placeholder="Drug Licence Number"
+                  value={formik.values.drugLicenceNumber}
+                  onChange={formik.handleChange}
+                  helperText="If more than one, please separate with comma"
+                />
+              </Grid>
+              <Grid item xs={12} sm={12} lg={12}>
                 <FormControlLabel
                   label="Active ?"
                   control={

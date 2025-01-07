@@ -17,7 +17,6 @@ import {
   useEditProcedureMutation,
   useGetProcedureByIdQuery,
 } from '../../../../../services/patientDashboardService/procedureApi';
-import { IDoctor } from '../../../../../types/doctor';
 import {
   IEditProcedureForm,
   IEditProcedurePayload,
@@ -77,11 +76,7 @@ const renderSkeletonLoader = () => {
   );
 };
 
-interface HysteroscopyProps {
-  doctors: IDoctor[];
-}
-
-const Hysteroscopy: React.FC<HysteroscopyProps> = () => {
+const Hysteroscopy: React.FC = () => {
   const dispatch = useDispatch();
   const { showPromiseToast } = useToast();
 
@@ -289,7 +284,6 @@ const Hysteroscopy: React.FC<HysteroscopyProps> = () => {
           <TextField
             name="result.dayOfCycle"
             label="Day of Cycle"
-            type="number"
             fullWidth
             value={formik.values.result.dayOfCycle}
             onChange={formik.handleChange}
@@ -533,7 +527,7 @@ const Hysteroscopy: React.FC<HysteroscopyProps> = () => {
 
         <Grid container pl={2}>
           <Typography variant="subtitle1" sx={{ mt: 2, mb: 2 }}>
-            Upload Images & Description
+            Upload Report
           </Typography>
           <Grid container spacing={2} marginBottom={2}>
             <Grid item xs={12}>

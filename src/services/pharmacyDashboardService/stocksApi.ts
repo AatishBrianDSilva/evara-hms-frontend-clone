@@ -43,6 +43,15 @@ export const stocksApi = createApi({
       query: id => `pharmacy-dashboard/stocks/${id}`,
       providesTags: (_result, _error, id) => [{ type: 'Stocks', id }],
     }),
+    getBatchesForStocks: builder.query<
+    ApiResponse<{ itemId: string; itemName: string; batchNumbers: string[] }[]>,
+    void
+    >({
+      query: () => ({
+        url: `pharmacy-dashboard/batchesForStocks`,
+        method: 'GET',
+      }),
+    }),
   }),
 });
 
@@ -50,4 +59,5 @@ export const {
   useGetStocksQuery,
   useGetPaginatedStocksQuery,
   useGetStockByIdQuery,
+  useGetBatchesForStocksQuery,
 } = stocksApi;

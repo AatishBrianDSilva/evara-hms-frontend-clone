@@ -39,6 +39,7 @@ export interface IPharmacyStock {
     batches: {
       batchNo: string;
       quantity: number;
+      sellPrice?: number;
     }[];
   }[];
   totalQuantity: number;

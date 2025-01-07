@@ -13,8 +13,10 @@ import { useGetPatientPharmacysQuery } from '../../../services/patientDashboardS
 import { useSelector } from 'react-redux';
 import { RootState } from '../../../app/store';
 import { useGetStocksQuery } from '../../../services/pharmacyDashboardService/stocksApi';
-import { useGetDoctorsQuery } from '../../../services/doctorsApi';
 import ViewPatientPharmacy from './ViewPatientPharmacy';
+import Delete from '@mui/icons-material/Delete';
+import DeletePatientPharmacy from './DeletePatientPharmacy';
+import { IPatientPharmacy } from '../../../types/patientDashboard/patientPharmacy';
 
 const PatientPharmacy: React.FC = () => {
   const patient = useSelector((state: RootState) => state.patients.patient);
@@ -29,10 +31,12 @@ const PatientPharmacy: React.FC = () => {
     setPageSize(newPageSize);
   };
 
-  const [selectedRow, setSelectedRow] = useState<string | undefined>();
+  const [selectedRow, setSelectedRow] = useState<
+    IPatientPharmacy | undefined
+  >();
   const [isAddModalOpen, setIsAddModalOpen] = useState<boolean>(false);
   const [isViewModalOpen, setIsViewModalOpen] = useState<boolean>(false);
-
+  const [isDeleteModalOpen, setIsDeleteModalOpen] = useState<boolean>(false);
   const {
     data: patientPharmacyData,
     isLoading,
@@ -55,8 +59,6 @@ const PatientPharmacy: React.FC = () => {
   const patientPagination = patientPharmacyData?.data?.pagination;
   const PatientPharmacyLoading = isLoading || isFetching;
 
-  console.log('Patient Pharmacy', patientPharmacy);
-
   // Pharmacy Stocks
   const {
     data: stocksData,
@@ -65,16 +67,7 @@ const PatientPharmacy: React.FC = () => {
   } = useGetStocksQuery();
   const stocks = stocksData?.data || [];
 
-  // Get doctors
-  const {
-    data: doctorsData,
-    isLoading: doctorsLoading,
-    isFetching: doctorFetching,
-  } = useGetDoctorsQuery({});
-  const doctors = doctorsData?.data?.records || [];
-
-  const addPatientPharmacyLoading =
-    stocksLoading || stocksFetching || doctorsLoading || doctorFetching;
+  const addPatientPharmacyLoading = stocksLoading || stocksFetching;
 
   // Columns configuration for the data grid
   const columns: GridColDef[] = [
@@ -133,7 +126,12 @@ const PatientPharmacy: React.FC = () => {
           <GridActionsCellItem
             icon={<Visibility />}
             label="Print"
-            onClick={() => openViewModal(row?.id)}
+            onClick={() => openViewModal(row)}
+          />,
+          <GridActionsCellItem
+            icon={<Delete />}
+            label="Delete"
+            onClick={() => openDeleteModal(row)}
           />,
         ];
       },
@@ -148,14 +146,24 @@ const PatientPharmacy: React.FC = () => {
     setIsAddModalOpen(false);
   };
 
-  //
-  const openViewModal = (order: any) => {
+  // View Modal
+  const openViewModal = (order: IPatientPharmacy) => {
     setSelectedRow(order);
     setIsViewModalOpen(true);
   };
   const closeViewModal = () => {
     setSelectedRow(undefined);
     setIsViewModalOpen(false);
+  };
+
+  // Delete Modal
+  const openDeleteModal = (order: IPatientPharmacy) => {
+    setSelectedRow(order);
+    setIsDeleteModalOpen(true);
+  };
+  const closeDeleteModal = () => {
+    setSelectedRow(undefined);
+    setIsDeleteModalOpen(false);
   };
 
   return (
@@ -193,7 +201,6 @@ const PatientPharmacy: React.FC = () => {
           openModal={isAddModalOpen}
           onClose={closeAddModal}
           pharmacyStocks={stocks}
-          doctors={doctors}
           patientId={patientId}
         />
       )}
@@ -203,7 +210,17 @@ const PatientPharmacy: React.FC = () => {
         <ViewPatientPharmacy
           openModal={isViewModalOpen}
           onClose={closeViewModal}
-          id={selectedRow || ''}
+          id={selectedRow?._id || ''}
+        />
+      )}
+
+      {isDeleteModalOpen && (
+        <DeletePatientPharmacy
+          openModal={isDeleteModalOpen}
+          onClose={closeDeleteModal}
+          id={selectedRow?._id || ''}
+          name={selectedRow?.item?.stock?.item?.name || ''}
+          quantity={selectedRow?.totalQuantity || 0}
         />
       )}
     </Box>

@@ -19,23 +19,21 @@ import { RootState } from '../../../../app/store';
 import { useSelector } from 'react-redux';
 import { useAddTreatmentCycleMutation } from '../../../../services/patientDashboardService/treatmentCycleApi';
 import { useToast } from '../../../../context/ToastContext';
-import { IDoctor } from '../../../../types/doctor';
 import { FilterOptionType } from '../../../../types/global';
 import { IMasterTreatmentCycle } from '../../../../types/master';
 import CustomDatePicker from '../../../../components/CustomDatePicker/CustomDatePicker';
 import { AddTreatmentCycleValidationSchema } from '../../../../yup/patientDashboard/treatmentCycle';
+import DoctorPicker from '../../../../components/DoctorPicker/DoctorPicker';
 
 interface AddTreatmentCycleProps {
   open?: boolean;
   onClose?: () => void;
-  doctors: IDoctor[];
   masterTreatmentCycles: IMasterTreatmentCycle[];
 }
 
 const AddTreatmentCycle: React.FC<AddTreatmentCycleProps> = ({
   open,
   onClose,
-  doctors,
   masterTreatmentCycles,
 }) => {
   const { patient, case: patientCase } = useSelector(
@@ -84,7 +82,13 @@ const AddTreatmentCycle: React.FC<AddTreatmentCycleProps> = ({
 
   const createForm = useFormik({
     initialValues: {
-      fields: [{ treatmentCycle: null, doctor: null, date: null }],
+      fields: [
+        {
+          treatmentCycle: null,
+          doctor: null,
+          date: null,
+        },
+      ],
     },
     validationSchema: AddTreatmentCycleValidationSchema,
     onSubmit: handleSubmit,
@@ -103,7 +107,7 @@ const AddTreatmentCycle: React.FC<AddTreatmentCycleProps> = ({
         createForm.values.fields,
       );
     },
-    [createForm.values.fields, doctors, masterTreatmentCycles],
+    [createForm.values.fields, masterTreatmentCycles],
   );
 
   const getFieldErrorAndTouched = useCallback(
@@ -134,7 +138,11 @@ const AddTreatmentCycle: React.FC<AddTreatmentCycleProps> = ({
   const handleAddFields = () => {
     createForm.setFieldValue('fields', [
       ...createForm.values.fields,
-      { treatmentCycle: null, doctor: null, date: new Date() },
+      {
+        treatmentCycle: null,
+        doctor: createForm.values.fields[0].doctor,
+        date: new Date(),
+      },
     ]);
   };
 
@@ -219,31 +227,22 @@ const AddTreatmentCycle: React.FC<AddTreatmentCycleProps> = ({
                     </Grid>
                     {/* Abstracted Autocomplete for Doctors */}
                     <Grid item flex={3}>
-                      <FieldAutocomplete
-                        options={doctors}
-                        getOptionLabel={option =>
-                          `${option.firstName} ${option.lastName}`
-                        }
-                        isOptionEqualToValue={(option, value) =>
-                          option._id === value._id
-                        }
-                        value={createForm.values.fields[index].doctor}
-                        onChange={newValue =>
-                          createForm.setFieldValue(
-                            `fields.${index}.doctor`,
-                            newValue,
-                          )
-                        }
+                      <DoctorPicker
+                        formState={createForm}
+                        fieldName={`fields[${index}].doctor`}
                         label="Doctor"
                         error={isDoctorError}
                         helperText={isDoctorError ? doctorErrorMessage : ''}
+                        autoSelectIfDoctor={true}
                       />
                     </Grid>
                     {/* Date Picker */}
                     <Grid item flex={3}>
                       <CustomDatePicker
                         label="Date"
-                        // minDate={new Date()}
+                        minDate={
+                          new Date(new Date().setDate(new Date().getDate() - 7))
+                        }
                         value={createForm.values.fields[index].date}
                         onChange={newValue =>
                           createForm.setFieldValue(

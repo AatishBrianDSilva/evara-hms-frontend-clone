@@ -20,22 +20,20 @@ import { RootState } from '../../../../app/store';
 import { useSelector } from 'react-redux';
 import { useAddCryoPreservationMutation } from '../../../../services/patientDashboardService/cryoPreservationApi';
 import { useToast } from '../../../../context/ToastContext';
-import { IDoctor } from '../../../../types/doctor';
 import { FilterOptionType } from '../../../../types/global';
 import { IMasterCryoPreservations } from '../../../../types/master';
 import CustomDatePicker from '../../../../components/CustomDatePicker/CustomDatePicker';
+import DoctorPicker from '../../../../components/DoctorPicker/DoctorPicker';
 
 interface AddcryoPreservationProps {
   open?: boolean;
   onClose?: () => void;
-  doctors: IDoctor[];
   masterCryoPreservations: IMasterCryoPreservations[];
 }
 
 const AddcryoPreservation: React.FC<AddcryoPreservationProps> = ({
   open,
   onClose,
-  doctors,
   masterCryoPreservations,
 }) => {
   const { patient, case: patientCase } = useSelector(
@@ -85,7 +83,13 @@ const AddcryoPreservation: React.FC<AddcryoPreservationProps> = ({
 
   const createForm = useFormik({
     initialValues: {
-      fields: [{ cryoPreservation: null, doctor: null, date: null }],
+      fields: [
+        {
+          cryoPreservation: null,
+          doctor: null,
+          date: null,
+        },
+      ],
     },
     validationSchema: AddCryoPreservationValidationSchema,
     onSubmit: handleSubmit,
@@ -104,7 +108,7 @@ const AddcryoPreservation: React.FC<AddcryoPreservationProps> = ({
         createForm.values.fields,
       );
     },
-    [createForm.values.fields, doctors, masterCryoPreservations],
+    [createForm.values.fields, masterCryoPreservations],
   );
 
   const getFieldErrorAndTouched = useCallback(
@@ -135,7 +139,14 @@ const AddcryoPreservation: React.FC<AddcryoPreservationProps> = ({
   const handleAddFields = () => {
     createForm.setFieldValue('fields', [
       ...createForm.values.fields,
-      { cryoPreservation: null, doctor: null, date: new Date() },
+      {
+        cryoPreservation: null,
+        doctor:
+          createForm.values.fields.length > 0
+            ? createForm.values.fields[0].doctor
+            : null,
+        date: new Date(),
+      },
     ]);
   };
 
@@ -223,31 +234,22 @@ const AddcryoPreservation: React.FC<AddcryoPreservationProps> = ({
                     </Grid>
                     {/* Abstracted Autocomplete for Doctors */}
                     <Grid item flex={3}>
-                      <FieldAutocomplete
-                        options={doctors}
-                        getOptionLabel={option =>
-                          `${option.firstName} ${option.lastName}`
-                        }
-                        isOptionEqualToValue={(option, value) =>
-                          option._id === value._id
-                        }
-                        value={createForm.values.fields[index].doctor}
-                        onChange={newValue =>
-                          createForm.setFieldValue(
-                            `fields.${index}.doctor`,
-                            newValue,
-                          )
-                        }
+                      <DoctorPicker
+                        formState={createForm}
+                        fieldName={`fields[${index}].doctor`}
                         label="Doctor"
                         error={isDoctorError}
                         helperText={isDoctorError ? doctorErrorMessage : ''}
+                        autoSelectIfDoctor={true}
                       />
                     </Grid>
                     {/* Date Picker */}
                     <Grid item flex={3}>
                       <CustomDatePicker
                         label="Date"
-                        minDate={new Date()}
+                        minDate={
+                          new Date(new Date().setDate(new Date().getDate() - 7))
+                        }
                         value={createForm.values.fields[index].date}
                         onChange={newValue =>
                           createForm.setFieldValue(

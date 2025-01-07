@@ -134,9 +134,11 @@ const PharmacyReport: React.FC = () => {
       field: 'createdAt',
       headerName: 'Total Sales Value',
       flex: 1,
-      valueGetter: params =>
-        formatToIndianCurrencyFormat(params.row.item.stock.sellPrice || 0) ||
-        'N/A',
+      valueGetter: params => {
+        return formatToIndianCurrencyFormat(
+          params.row.totalItemPrice || 0
+        ) || 'N/A';
+      },
     },
   ];
 

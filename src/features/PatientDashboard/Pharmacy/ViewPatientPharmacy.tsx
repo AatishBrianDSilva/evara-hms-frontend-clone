@@ -140,6 +140,7 @@ const ViewPatientPharmacy: React.FC<ViewPatientPharmacyProps> = ({
   onClose,
   id,
 }) => {
+  console.log('View Patient Pharmacy ID', id);
   const {
     data: patientPharmacyData,
     isLoading,

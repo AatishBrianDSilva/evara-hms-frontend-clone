@@ -9,6 +9,8 @@ import { RangeKeyDict } from 'react-date-range';
 import { endOfWeek, startOfWeek } from 'date-fns';
 import PatientsSection from './PatientsSection';
 import PharmacySection from './PharmacySection';
+import RoleGuard from '../../components/RoleGuard/RoleGuard';
+import { EUserRole } from '../../types/masterDashboard/global';
 
 const Home: React.FC = () => {
   const [startDate, setStartDate] = useState<Date | null>(
@@ -76,9 +78,18 @@ const Home: React.FC = () => {
             </Box>
 
             {/* Analytics Section with evenly spaced cards */}
-            <Box display="flex" justifyContent="space-between" gap={2}>
-              <AnalyticsSection startDate={startDate} endDate={endDate} />
-            </Box>
+            <RoleGuard
+              allowedRoles={[
+                EUserRole.Admin,
+                EUserRole.PharmacyManager,
+                EUserRole.Billing,
+                EUserRole.CenterManager,
+              ]}
+            >
+              <Box display="flex" justifyContent="space-between" gap={2}>
+                <AnalyticsSection startDate={startDate} endDate={endDate} />
+              </Box>
+            </RoleGuard>
           </Box>
           {/* <Divider sx={{ my: 2 }} /> */}
           {/* Appointments Section - Full width */}
@@ -92,14 +103,28 @@ const Home: React.FC = () => {
             {/* <Typography variant="h6" sx={{ fontWeight: "bold" }}>
               Upcoming Appointments
             </Typography> */}
-            <AppointmentsSection startDate={startDate} endDate={endDate} />
+            <RoleGuard allowedRoles={'All'}>
+              <AppointmentsSection startDate={startDate} endDate={endDate} />
+            </RoleGuard>
           </Box>
           {/* <Divider sx={{ my: 2 }} /> */}
           {/* Other sections (Patients and Pharmacy) */}
           <Box display="flex" flexDirection="column" gap={2}>
-            <PatientsSection startDate={startDate} endDate={endDate} />
+            <RoleGuard allowedRoles={'All'}>
+              <PatientsSection startDate={startDate} endDate={endDate} />
+            </RoleGuard>
             {/* <Divider /> */}
-            <PharmacySection startDate={startDate} endDate={endDate} />
+            <RoleGuard
+              allowedRoles={[
+                EUserRole.Admin,
+                EUserRole.PharmacyManager,
+                EUserRole.Pharmacist,
+                EUserRole.Billing,
+                EUserRole.CenterManager,
+              ]}
+            >
+              <PharmacySection startDate={startDate} endDate={endDate} />
+            </RoleGuard>
           </Box>
         </Box>
       </Paper>

@@ -14,7 +14,6 @@ import React from 'react';
 import ReportModalHeader from '../../../../../components/ReportModalHeader/ReportModalHeader';
 import { useDispatch, useSelector } from 'react-redux';
 import { RootState } from '../../../../../app/store';
-import { IDoctor } from '../../../../../types/doctor';
 import { useFormik } from 'formik';
 import _ from 'lodash';
 import { closeEditCryoPreservation } from '../cryoPreservationSlice';
@@ -80,11 +79,7 @@ const renderSkeletonLoader = () => {
   );
 };
 
-interface TesaProps {
-  doctors: IDoctor[];
-}
-
-const Sperm: React.FC<TesaProps> = () => {
+const Sperm: React.FC = () => {
   const dispatch = useDispatch();
   const { showPromiseToast } = useToast();
 
@@ -830,7 +825,7 @@ const Sperm: React.FC<TesaProps> = () => {
         <Grid container spacing={2} marginBottom={2} pt={3} pl={2}>
           {' '}
           <Typography variant="subtitle1" sx={{ mt: 2, mb: 2, pl: 2 }}>
-            Upload Images & Description
+            Upload Report
           </Typography>
           {/* <Grid container spacing={2} marginBottom={2}> */}
           <Grid item xs={12}>

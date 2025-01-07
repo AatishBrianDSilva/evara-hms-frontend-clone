@@ -86,6 +86,9 @@ const BillingsEstimations: React.FC = () => {
       paginate: true,
       page: page,
       limit: pageSize,
+      sort: {
+        createdAt: -1,
+      },
       filters: {
         patientCode: patient?.patientId,
         status: 'Active',
@@ -100,8 +103,6 @@ const BillingsEstimations: React.FC = () => {
   const patientEstimations = estimationsData?.data?.records || [];
   const patientEstimationsPagination = estimationsData?.data?.pagination;
   const patientEstimationLoading = estimationsLoading || estimationsFetching;
-
-  console.log('Estimation Data', patientEstimations);
 
   const getRowId = (row: RowType) => row._id;
 

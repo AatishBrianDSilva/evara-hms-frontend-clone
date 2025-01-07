@@ -17,6 +17,7 @@ interface PrintPDFContextProps {
       | 'POInvoice'
       | 'POInvoiceProcessed',
     sourceType?: 'patient' | 'pharmacy',
+    key?: string,
   ) => void;
   fetchAndPrintUploadedPDF: (fileUrl: string) => void;
 }
@@ -58,14 +59,20 @@ export const PrintProvider: React.FC<{ children: React.ReactNode }> = ({
       | 'POInvoice'
       | 'POInvoiceProcessed' = 'report',
     sourceType: 'patient' | 'pharmacy' = 'patient',
+    key?: string,
   ) => {
     let url = '';
     if (type === 'POInvoice') {
       // If type is POInvoice, map to downloadPOInvoice endpoint
       url = `${API_BASE_URL}/pharmacy-dashboard/purchase-order/download/${reportId}`;
     } else if (type === 'POInvoiceProcessed') {
-      // If type is POInvoice, map to downloadPOInvoice endpoint
-      url = `${API_BASE_URL}/pharmacy-dashboard/purchase-order/processed/download/${reportId}`;
+      if (!key) {
+        toast.error('Report key is required for processed invoices');
+        return;
+      }
+      url = `${API_BASE_URL}/pharmacy-dashboard/purchase-order/processed/download/${reportId}?key=${encodeURIComponent(
+        key,
+      )}`;
     } else if (reportId) {
       // Handle regular reportId-based fetching logic
       if (type === 'report' && sourceType === 'patient') {

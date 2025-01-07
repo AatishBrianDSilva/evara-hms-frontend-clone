@@ -21,21 +21,19 @@ import { useSelector } from 'react-redux';
 import { useAddServiceMutation } from '../../../../services/patientDashboardService/serviceApi';
 import { useToast } from '../../../../context/ToastContext';
 import { IMasterService } from '../../../../types/master';
-import { IDoctor } from '../../../../types/doctor';
 import { FilterOptionType } from '../../../../types/global';
 import CustomDatePicker from '../../../../components/CustomDatePicker/CustomDatePicker';
+import DoctorPicker from '../../../../components/DoctorPicker/DoctorPicker';
 
 interface AddServiceProps {
   open?: boolean;
   onClose?: () => void;
-  doctors: IDoctor[];
   masterServices: IMasterService[];
 }
 
 const AddService: React.FC<AddServiceProps> = ({
   open,
   onClose,
-  doctors,
   masterServices,
 }) => {
   const { patient, case: patientCase } = useSelector(
@@ -83,7 +81,13 @@ const AddService: React.FC<AddServiceProps> = ({
 
   const createForm = useFormik({
     initialValues: {
-      fields: [{ service: null, doctor: null, date: null }],
+      fields: [
+        {
+          service: null,
+          doctor: null,
+          date: null,
+        },
+      ],
     },
     validationSchema: AddServiceValidationSchema,
     onSubmit: handleSubmit,
@@ -102,7 +106,7 @@ const AddService: React.FC<AddServiceProps> = ({
         createForm.values.fields,
       );
     },
-    [createForm.values.fields, doctors, masterServices],
+    [createForm.values.fields, masterServices],
   );
 
   const getFieldErrorAndTouched = useCallback(
@@ -133,7 +137,11 @@ const AddService: React.FC<AddServiceProps> = ({
   const handleAddFields = () => {
     createForm.setFieldValue('fields', [
       ...createForm.values.fields,
-      { service: null, doctor: null, date: new Date() },
+      {
+        service: null,
+        doctor: createForm.values.fields[0].doctor,
+        date: new Date(),
+      },
     ]);
   };
 
@@ -211,31 +219,22 @@ const AddService: React.FC<AddServiceProps> = ({
                     </Grid>
                     {/* Abstracted Autocomplete for Doctors */}
                     <Grid item flex={3}>
-                      <FieldAutocomplete
-                        options={doctors}
-                        getOptionLabel={option =>
-                          `${option.firstName} ${option.lastName}`
-                        }
-                        isOptionEqualToValue={(option, value) =>
-                          option._id === value._id
-                        }
-                        value={createForm.values.fields[index].doctor}
-                        onChange={newValue =>
-                          createForm.setFieldValue(
-                            `fields.${index}.doctor`,
-                            newValue,
-                          )
-                        }
+                      <DoctorPicker
+                        formState={createForm}
+                        fieldName={`fields[${index}].doctor`}
                         label="Doctor"
                         error={isDoctorError}
                         helperText={isDoctorError ? doctorErrorMessage : ''}
+                        autoSelectIfDoctor={true}
                       />
                     </Grid>
                     {/* Date Picker */}
                     <Grid item flex={3}>
                       <CustomDatePicker
                         label="Date"
-                        minDate={new Date()}
+                        minDate={
+                          new Date(new Date().setDate(new Date().getDate() - 7))
+                        }
                         format="dd/MM/yyyy"
                         value={createForm.values.fields[index].date}
                         onChange={newValue =>

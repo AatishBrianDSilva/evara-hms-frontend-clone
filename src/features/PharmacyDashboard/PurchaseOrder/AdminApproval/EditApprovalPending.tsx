@@ -15,8 +15,9 @@ import {
 } from '../../../../types/pharmacyDashboard/master';
 import { useToast } from '../../../../context/ToastContext';
 import {
+  useEditPurchaseOrderMutation,
   useGetPurchaseOrderByIdQuery,
-  useMovePurchaseOrderToAdminApprovalMutation,
+  useRejectPurchaseOrderByAdminMutation,
 } from '../../../../services/pharmacyDashboardService/purchaseOrderApi';
 import { FormikErrors, FormikTouched, useFormik } from 'formik';
 import Delete from '@mui/icons-material/Delete';
@@ -27,6 +28,9 @@ import FileUploadButton from '../../../../components/FileUploadAndPreview/FileUp
 import { EBuckets, EDocumentTypes } from '../../../../types/global';
 import { ContentCopy } from '@mui/icons-material';
 import { useGetBatchesForStocksQuery } from '../../../../services/pharmacyDashboardService/stocksApi';
+import { useSelector } from 'react-redux';
+import { RootState } from '../../../../app/store';
+import FileList from '../../../../components/FileList/FileList';
 
 interface EditPurchaseOrderDraftProps {
   openModal: boolean;
@@ -151,7 +155,7 @@ const renderSkeleton = () => (
   </Box>
 );
 
-const EditPurchaseOrderDraft: React.FC<EditPurchaseOrderDraftProps> = ({
+const EditApprovalPending: React.FC<EditPurchaseOrderDraftProps> = ({
   openModal,
   onClose,
   id,
@@ -160,24 +164,32 @@ const EditPurchaseOrderDraft: React.FC<EditPurchaseOrderDraftProps> = ({
 }) => {
   const { showPromiseToast } = useToast();
 
+  const { user } = useSelector((state: RootState) => ({
+    user: state.auth.user,
+  }));
+
+  const isAdmin = user?.role === 'admin';
+
   const {
     data: purchaseOrderData,
     isLoading: isPurchaseOrderLoading,
     isFetching: isPurchaseorderFetching,
   } = useGetPurchaseOrderByIdQuery(id);
   const purchaseOrder = purchaseOrderData?.data;
+  const payloadForApproval = purchaseOrder?.payloadForApproval || null;
+
   const purchaseOrderLoading =
     isPurchaseOrderLoading || isPurchaseorderFetching;
 
   console.log('Ordered PO data', purchaseOrderData);
 
-  const [moveToAdminApproval, { isLoading: isEditingLoading }] =
-    useMovePurchaseOrderToAdminApprovalMutation();
+  const [editPurchaseOrder, { isLoading: isEditingLoading }] =
+    useEditPurchaseOrderMutation();
 
   const [fileUploadedUrl, setFileUploadedUrl] = React.useState<string[]>(() => {
     let initialUrl: string[] = [];
-    if (purchaseOrder?.response?.invoice) {
-      initialUrl = purchaseOrder.response.invoice.flat();
+    if (payloadForApproval?.files) {
+      initialUrl = payloadForApproval.files.flat();
     }
     return initialUrl;
   });
@@ -190,38 +202,67 @@ const EditPurchaseOrderDraft: React.FC<EditPurchaseOrderDraftProps> = ({
 
   const stocksLoading = isStocksLoading || isStocksFetching;
 
+  // purchase order rejection
+  const [rejectPurchaseOrderByAdmin, { isLoading: isRejecting }] =
+    useRejectPurchaseOrderByAdminMutation();
+
+  const handleReject = async () => {
+    const isPartial = false;
+
+    const rejectPromise = rejectPurchaseOrderByAdmin({
+      id,
+      isPartial,
+    }).unwrap();
+
+    showPromiseToast(rejectPromise, {
+      loading: 'Rejecting Purchase Order...',
+      success: msg => msg || 'Purchase Order Rejected Successfully!',
+      error: msg => msg || 'Error Rejecting Purchase Order.',
+    });
+
+    try {
+      await rejectPromise;
+      closeModal(); // Close the modal after the rejection is successful
+    } catch (error) {
+      console.error('Error Rejecting Purchase Order:', error);
+      closeModal(); // Close the modal even if an error occurs
+      return;
+    }
+  };
+
   const initialValues: FormValues = {
     order_date: purchaseOrder?.date || null,
     vendor: purchaseOrder?.vendor || null,
+    invoiceNumber:
+      payloadForApproval?.invoiceNumber || purchaseOrder?.invoiceNumber || '',
+
     items:
-      purchaseOrder?.request.items.map((item): IItem => {
+      payloadForApproval?.items?.map((item: any): IItem => {
         const noOfPacks = item.noOfPacks ?? 0;
         const buyPrice = item.buyPrice ?? 0;
         const discount = item.discount ?? 0;
 
-        // Total cost without tax, applying discount
+        // Calculate initial costs
         const itemCost = noOfPacks * buyPrice;
         const discountAmount = (itemCost * discount) / 100;
         const totalCostWithoutTax = itemCost - discountAmount;
-
-        // Calculate tax amount separately using tax percentage, but don't modify `tax` field
-        const taxAmount = (totalCostWithoutTax * (item.tax ?? 0)) / 100; // tax is % like 18%
+        const taxAmount = (totalCostWithoutTax * (item.tax ?? 0)) / 100;
 
         return {
-          item: item.item || null,
+          item: drugItems.find(drug => drug._id === item.item) || null,
           packSize: item.packSize || null,
           noOfPacks: noOfPacks,
-          packsRequired: noOfPacks,
+          packsRequired: item.packsRequired || noOfPacks,
           mrp: item.mrp || null,
           mrpPerPack: item.mrpPerPack || null,
           buyPrice: buyPrice,
-          tax: item.tax, // Keep tax as the percentage (e.g., 18 for 18%)
-          taxAmount: taxAmount, // Calculate and store the tax amount separately
-          totalCost: totalCostWithoutTax, // Total cost without tax
+          tax: item.tax || null,
+          taxAmount: taxAmount,
+          totalCost: totalCostWithoutTax,
           freeQuantity: item.freeQuantity || null,
           batchNo: item.batchNo || null,
-          expiryDate: item.expiryDate || null,
-          quantity: noOfPacks * (item.packSize ?? 0), // Calculate quantity
+          expiryDate: item.expiryDate ? new Date(item.expiryDate) : null,
+          quantity: noOfPacks * (item.packSize ?? 0),
           discount: discount,
         };
       }) || [],
@@ -252,7 +293,10 @@ const EditPurchaseOrderDraft: React.FC<EditPurchaseOrderDraftProps> = ({
       }, 0) ?? 0, // Ensuring tax is never undefined, returning 0 by default
 
     // Keep other charges from purchase order
-    otherCharges: purchaseOrder?.request.otherCharges || 0,
+    otherCharges:
+      payloadForApproval?.otherCharges ||
+      purchaseOrder?.request.otherCharges ||
+      0,
 
     // Calculate the net amount as subTotal + tax + otherCharges
     netAmount: (function () {
@@ -285,44 +329,61 @@ const EditPurchaseOrderDraft: React.FC<EditPurchaseOrderDraftProps> = ({
     })(),
 
     partialyProcessed: false,
-    invoiceNumber: purchaseOrder?.invoiceNumber || '',
-    files: [],
+    files: payloadForApproval?.files || [],
   };
 
   const formSubmit = async (values: FormValues) => {
-    const newpayload = {
-      id,
-      payload: {
-        order_date: values.order_date,
-        vendor: values.vendor?._id, // Assuming `vendor` is an object with `_id`
+    const payload = {
+      id: id,
+      date: purchaseOrder?.date,
+      vendor: purchaseOrder?.vendor?._id,
+      invoiceNumber: values.invoiceNumber,
+      request: {
         items: values.items.map(item => ({
-          item: item.item?._id, // Assuming `item` is an object with `_id`
-          packsRequired: item.packsRequired,
+          item: item.item?._id,
           packSize: item.packSize,
-          noOfPacks: item.noOfPacks,
-          batchNo: item.batchNo,
-          expiryDate: item.expiryDate,
+          quantity: (item.packSize ?? 0) * (item.noOfPacks ?? 0), // Handle null values
           mrp: item.mrp,
-          mrpPerPack: item.mrpPerPack,
-          buyPrice: item.buyPrice,
+          mrpPerPack: Number(item.mrpPerPack) || 0, // Convert to number
+          buyPrice: Number(item.buyPrice) || 0, // Convert to number
           tax: item.tax,
-          totalCost: item.totalCost,
-          freeQuantity: item.freeQuantity,
-          quantity: item.quantity,
+          freeQuantity: item.freeQuantity, // Ensure freeQuantity is included
+          noOfPacks: item.noOfPacks, // Ensure noOfPacks is included
+          packsRequired: item.packsRequired, // Include packsRequired here
           discount: item.discount,
         })),
         subTotal: values.subTotal,
         tax: values.tax,
+
+        otherCharges: values.otherCharges,
+        netAmount: Math.round(values.netAmount ?? 0),
+      },
+      response: {
+        items: values.items.map(item => ({
+          item: item.item?._id,
+          batchNo: item.batchNo,
+          expiryDate: item.expiryDate,
+          packSize: item.packSize,
+          quantity: (item.packSize ?? 0) * (item.noOfPacks ?? 0), // Handle null values
+          mrp: item.mrp,
+          mrpPerPack: Number(item.mrpPerPack) || 0, // Convert to number
+          buyPrice: Number(item.buyPrice) || 0, // Convert to number
+          tax: item.tax,
+          freeQuantity: item.freeQuantity, // Ensure freeQuantity is included
+          noOfPacks: item.noOfPacks, // Ensure noOfPacks is included
+          packsRequired: item.packsRequired, // Include packsRequired here
+          discount: item.discount,
+        })),
+        subTotal: values.subTotal,
+        tax: values.tax,
+
         otherCharges: values.otherCharges,
         netAmount: values.netAmount,
-        invoiceNumber: values.invoiceNumber,
-        files: fileUploadedUrl, // Attach uploaded file URLs
+        invoice: fileUploadedUrl,
       },
     };
 
-    console.log('Payload being sent:', newpayload); // Log the payload for debugging
-
-    const editPromise = moveToAdminApproval(newpayload).unwrap();
+    const editPromise = editPurchaseOrder(payload).unwrap();
     showPromiseToast(editPromise, {
       loading: 'Creating Invoice',
       success: msg => msg || 'Invoice Created Successfully',
@@ -566,7 +627,7 @@ const EditPurchaseOrderDraft: React.FC<EditPurchaseOrderDraftProps> = ({
         }}
       >
         <Typography variant="h5" color={'primary'} mt={2} textAlign={'center'}>
-          Edit Purchase Order
+          Admin Approval
         </Typography>
 
         {purchaseOrderLoading || stocksLoading ? (
@@ -998,14 +1059,34 @@ const EditPurchaseOrderDraft: React.FC<EditPurchaseOrderDraftProps> = ({
               <Grid container spacing={2} marginBottom={2}>
                 <Grid item xs={12}>
                   <FileUploadButton
+                    showSubmitHint={true}
                     acceptTypes="application/pdf"
                     maxFiles={5}
                     maxFileSizeinMB={10}
-                    onUploadFiles={setFileUploadedUrl}
+                    // onUploadFiles={setFileUploadedUrl}
+                    onUploadFiles={files => {
+                      const existingFiles = payloadForApproval?.files || [];
+                      const updatedFiles = [
+                        ...existingFiles,
+                        ...fileUploadedUrl,
+                        ...files,
+                      ]; // Combine existing files, already uploaded files, and new files
+                      const uniqueFiles = [...new Set(updatedFiles)];
+                      setFileUploadedUrl(uniqueFiles);
+                    }}
                     bucket={EBuckets.PharmacyInvoices}
                     documentType={EDocumentTypes.Invoice}
                     user={id}
+                    // reportId={openEditDialog.id}
                   />
+                </Grid>
+                <Grid item xs={12}>
+                  {payloadForApproval?.files && (
+                    <FileList
+                      files={payloadForApproval?.files || []}
+                      title="Uploaded Files"
+                    />
+                  )}
                 </Grid>
               </Grid>
               <Box
@@ -1022,13 +1103,22 @@ const EditPurchaseOrderDraft: React.FC<EditPurchaseOrderDraftProps> = ({
                   type="submit"
                   disabled={
                     isEditingLoading ||
-                    _.isEqual(initialValues, formik.values) ||
                     isAnyItemExceedsRequired ||
-                    isAnyItemMissingBatchOrExpiry
+                    isAnyItemMissingBatchOrExpiry ||
+                    !isAdmin
                   }
                   sx={{ width: 'fit-content' }}
                 >
-                  Move To Admin Approval
+                  Approve Purchase Order
+                </Button>
+                <Button
+                  variant="contained"
+                  color="error"
+                  sx={{ width: 'fit-content' }}
+                  onClick={handleReject}
+                  disabled={!isAdmin || isRejecting}
+                >
+                  Reject
                 </Button>
                 <Button
                   variant="contained"
@@ -1047,4 +1137,4 @@ const EditPurchaseOrderDraft: React.FC<EditPurchaseOrderDraftProps> = ({
   );
 };
 
-export default EditPurchaseOrderDraft;
+export default EditApprovalPending;

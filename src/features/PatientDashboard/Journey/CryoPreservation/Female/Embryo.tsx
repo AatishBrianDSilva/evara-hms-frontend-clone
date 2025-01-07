@@ -1,5 +1,4 @@
 import React from 'react';
-import { IDoctor } from '../../../../../types/doctor';
 import {
   Box,
   Skeleton,
@@ -29,13 +28,10 @@ import { ICryoPreservationEmbryoForm } from '../../../../../types/patientDashboa
 import { ECryoPreservationType } from '../../../../../types/master';
 import FileUploadButton from '../../../../../components/FileUploadAndPreview/FileUploadButton';
 import { EBuckets, EDocumentTypes } from '../../../../../types/global';
-import FieldAutocomplete from '../../../../../components/FieldAutoComplete/FieldAutoComplete';
 import CustomTimePicker from '../../../../../components/CustomDatePicker/CustomTimePicker';
 import { DoctorSpeciality } from '../../../../../types/masterDashboard/global';
+import DoctorPicker from '../../../../../components/DoctorPicker/DoctorPicker';
 
-interface EmbryoProps {
-  doctors: IDoctor[];
-}
 const renderSkeletonLoader = () => {
   return (
     <>
@@ -79,7 +75,7 @@ const renderSkeletonLoader = () => {
   );
 };
 
-const Embryo: React.FC<EmbryoProps> = ({ doctors }) => {
+const Embryo: React.FC = () => {
   const dispatch = useDispatch();
   const { showPromiseToast } = useToast();
   const patient = useSelector(
@@ -247,24 +243,20 @@ const Embryo: React.FC<EmbryoProps> = ({ doctors }) => {
         />
         <Grid container spacing={2} marginBottom={2} mt={2} flex={1}>
           <Grid item xs={12} sm={6} md={3}>
-            <FieldAutocomplete
-              options={doctors}
-              getOptionLabel={option =>
-                `${option.firstName} ${option.lastName}`
-              }
-              isOptionEqualToValue={(option, value) => option._id === value._id}
-              value={formik.values.details.doctor}
-              onChange={newValue =>
-                formik.setFieldValue(`details.doctor`, newValue)
-              }
+            <DoctorPicker
+              formState={formik}
+              fieldName={`details.doctor`}
               label="Doctor"
               error={
                 formik.touched.details?.doctor &&
                 Boolean(formik.errors.details?.doctor)
               }
               helperText={
-                formik.touched.details?.doctor && formik.errors.details?.doctor
+                formik.touched.details?.doctor
+                  ? formik.errors.details?.doctor
+                  : undefined
               }
+              autoSelectIfDoctor={true}
             />
           </Grid>
           <Grid item xs={12} sm={6} md={3}>
@@ -316,57 +308,37 @@ const Embryo: React.FC<EmbryoProps> = ({ doctors }) => {
             />
           </Grid>
           <Grid item xs={12} sm={6} md={3}>
-            <FieldAutocomplete
-              options={doctors}
-              getOptionLabel={option =>
-                `${option.firstName || ''} ${option.lastName || ''}`
-              }
-              filterOptions={(options, _state) => {
-                return options.filter(
-                  option => option.speciality === DoctorSpeciality.Embryologist,
-                );
-              }}
-              isOptionEqualToValue={(option, value) => option._id === value._id}
-              value={formik.values.details.embryologistA}
-              onChange={newValue =>
-                formik.setFieldValue(`details.embryologistA`, newValue)
-              }
+            <DoctorPicker
+              formState={formik}
+              fieldName={`details.embryologistA`}
               label="Embryologist 1"
               error={
                 formik.touched.details?.embryologistA &&
                 Boolean(formik.errors.details?.embryologistA)
               }
               helperText={
-                formik.touched.details?.embryologistA &&
-                formik.errors.details?.embryologistA
+                formik.touched.details?.embryologistA
+                  ? formik.errors.details?.embryologistA
+                  : undefined
               }
+              speciality={DoctorSpeciality.Embryologist}
             />
           </Grid>
           <Grid item xs={12} sm={6} md={3}>
-            <FieldAutocomplete
-              options={doctors}
-              getOptionLabel={option =>
-                `${option.firstName || ''} ${option.lastName || ''}`
-              }
-              filterOptions={(options, _state) => {
-                return options.filter(
-                  option => option.speciality === DoctorSpeciality.Embryologist,
-                );
-              }}
-              isOptionEqualToValue={(option, value) => option._id === value._id}
-              value={formik.values.details.embryologistB}
-              onChange={newValue =>
-                formik.setFieldValue(`details.embryologistB`, newValue)
-              }
+            <DoctorPicker
+              formState={formik}
+              fieldName={`details.embryologistB`}
               label="Embryologist 2"
               error={
                 formik.touched.details?.embryologistB &&
                 Boolean(formik.errors.details?.embryologistB)
               }
               helperText={
-                formik.touched.details?.embryologistB &&
-                formik.errors.details?.embryologistB
+                formik.touched.details?.embryologistB
+                  ? formik.errors.details?.embryologistB
+                  : undefined
               }
+              speciality={DoctorSpeciality.Embryologist}
             />
           </Grid>
         </Grid>
@@ -802,7 +774,7 @@ const Embryo: React.FC<EmbryoProps> = ({ doctors }) => {
         {/* <Grid container spacing={2} marginBottom={2}> */}
 
         <Typography variant="subtitle1" sx={{ mt: 2, mb: 2 }}>
-          Upload Images & Description
+          Upload Report
         </Typography>
         <Grid container spacing={2} marginBottom={2}>
           <Grid item xs={12}>

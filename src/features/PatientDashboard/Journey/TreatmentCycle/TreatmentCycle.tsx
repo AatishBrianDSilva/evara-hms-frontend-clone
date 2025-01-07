@@ -6,7 +6,6 @@ import Add from '@mui/icons-material/Add';
 import { useSelector } from 'react-redux';
 import { RootState } from '../../../../app/store';
 import AddTreatmentCycle from './AddTreatmentCycle';
-import { useGetDoctorsQuery } from '../../../../services/doctorsApi';
 import { useGetMasterTreatmentCyclesQuery } from '../../../../services/masterDashboardService/serviceData/cycles/masterTreatmentCycleApi';
 import { Chip, CircularProgress, Divider } from '@mui/material';
 import { useGetTreatmentCyclesQuery } from '../../../../services/patientDashboardService/treatmentCycleApi';
@@ -21,14 +20,6 @@ const TreatmentCycles: React.FC = () => {
   const { id, itemId } = useParams<{ id: string; itemId?: string }>();
 
   const { patient } = useSelector((state: RootState) => state.patients);
-
-  // Get doctors
-  const {
-    data: DoctorsData,
-    isLoading: DoctorsLoading,
-    isFetching: DoctorFetching,
-  } = useGetDoctorsQuery({});
-  const doctors = DoctorsData?.data?.records || [];
 
   // Get master treatmentCycles
   const {
@@ -73,11 +64,7 @@ const TreatmentCycles: React.FC = () => {
 
   console.log('Cycle', patientTreatmentCycles);
 
-  const loading =
-    DoctorsLoading ||
-    MasterTreatmentCyclesLoading ||
-    DoctorFetching ||
-    MasterTreatmentCycleFetching;
+  const loading = MasterTreatmentCyclesLoading || MasterTreatmentCycleFetching;
 
   const [addTreatmentCycleOpen, setAddTreatmentCycleOpen] =
     useState<boolean>(false);
@@ -160,7 +147,6 @@ const TreatmentCycles: React.FC = () => {
       {addTreatmentCycleOpen && (
         <AddTreatmentCycle
           masterTreatmentCycles={masterTreatmentCycles}
-          doctors={doctors}
           onClose={closeForm}
           open={addTreatmentCycleOpen}
         />

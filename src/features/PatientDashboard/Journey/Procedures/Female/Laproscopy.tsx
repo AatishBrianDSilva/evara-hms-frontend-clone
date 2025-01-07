@@ -17,7 +17,6 @@ import {
   useEditProcedureMutation,
   useGetProcedureByIdQuery,
 } from '../../../../../services/patientDashboardService/procedureApi';
-import { IDoctor } from '../../../../../types/doctor';
 import {
   IEditProcedureForm,
   IEditProcedurePayload,
@@ -74,11 +73,7 @@ const renderSkeletonLoader = () => {
   );
 };
 
-interface LaparoscopyProps {
-  doctors: IDoctor[];
-}
-
-const Laparoscopy: React.FC<LaparoscopyProps> = () => {
+const Laparoscopy: React.FC = () => {
   const dispatch = useDispatch();
   const { showPromiseToast } = useToast();
 
@@ -342,7 +337,7 @@ const Laparoscopy: React.FC<LaparoscopyProps> = () => {
 
         <Grid container pl={2}>
           <Typography variant="subtitle1" sx={{ mt: 2, mb: 2 }}>
-            Upload Images & Description
+            Upload Report
           </Typography>
           <Grid container spacing={2} marginBottom={2}>
             <Grid item xs={12}>

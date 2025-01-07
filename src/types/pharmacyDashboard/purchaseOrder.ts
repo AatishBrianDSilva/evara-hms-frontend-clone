@@ -7,6 +7,10 @@ export enum EPurchaseOrderStatus {
   Ordered = 'Ordered',
   PartiallyProcessed = 'PartiallyProcessed',
   Processed = 'Processed',
+  WaitingForApproval = 'WaitingForApproval',
+  PartialPOWaitingForApproval = 'PartialPOWaitingForApproval',
+  RejectedByAdmin = 'RejectedByAdmin',
+  PartialPORejectedByAdmin = 'PartialPORejectedByAdmin',
 }
 
 export interface IPurchaseOrderRequest {
@@ -65,6 +69,10 @@ export interface IPurchaseOrderResponse {
 }
 
 export interface IPurchaseOrder {
+  responses: any;
+  allResponsesTax: number;
+  allResponsesSubTotal: number;
+  allResponsesNetAmount: number;
   _id: string;
   branchId: string;
   poNumber: string;
@@ -81,4 +89,26 @@ export interface IPurchaseOrder {
   invoiceNumber: string;
   isDifferentAddress?: Boolean;
   newAddress?: string;
+  payloadForApproval?: {
+    invoiceNumber?: string;
+    files?: string[];
+    items?: {
+      item: IDrugItem;
+      packSize: number;
+      noOfPacks: number;
+      quantity: number;
+      mrp: number;
+      mrpPerPack: number;
+      buyPrice: number;
+      tax: number;
+      freeQuantity?: number;
+      discount?: number;
+      batchNo?: string;
+      expiryDate?: Date | null;
+    }[];
+    subTotal?: number;
+    tax?: number;
+    otherCharges?: number;
+    netAmount?: number;
+  };
 }

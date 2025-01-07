@@ -29,6 +29,7 @@ import Add from '@mui/icons-material/Add';
 import { IDrugLocation } from '../../../types/pharmacyDashboard/master';
 import { formatToIndianCurrencyFormat } from '../../../utils/formatToIndianCurrencyFormat';
 import { useGetDrugLocationsQuery } from '../../../services/pharmacyDashboardService/master/drugLocationApi';
+import DoctorPicker from '../../../components/DoctorPicker/DoctorPicker';
 
 type SummaryEntry = {
   name: string;
@@ -42,7 +43,6 @@ interface AddPatientPharmacyProps {
   openModal: boolean;
   onClose: () => void;
   pharmacyStocks: IPharmacyStock[];
-  doctors: IDoctor[];
   patientId: string;
 }
 
@@ -54,6 +54,7 @@ interface IFormValues {
     stock: IPharmacyStock | null;
     batchNumber: string | null;
     quantity: number;
+    sellPrice?: number;
   }[];
 }
 
@@ -61,7 +62,6 @@ const AddPatientPharmacy: React.FC<AddPatientPharmacyProps> = ({
   openModal,
   onClose,
   pharmacyStocks,
-  doctors,
   patientId,
 }) => {
   const { showPromiseToast } = useToast();
@@ -89,15 +89,21 @@ const AddPatientPharmacy: React.FC<AddPatientPharmacyProps> = ({
       location: values.location?._id,
       date: values.date,
       items: values.items.map(item => {
+        // Find the selected batch to extract the sellPrice
+        const selectedBatch = item.stock?.locations
+          .find(location => location.location._id === values.location?._id)
+          ?.batches.find(batch => batch.batchNo === item.batchNumber);
+
+        const sellPrice = selectedBatch?.sellPrice;
+
         return {
           stock: item.stock?._id,
           batchNumber: item.batchNumber,
           quantity: item.quantity,
+          sellPrice, // Add the sellPrice to the payload
         };
       }),
     };
-
-    console.log('payload', payload);
 
     const promise = addPharmacy(payload).unwrap();
 
@@ -251,51 +257,34 @@ const AddPatientPharmacy: React.FC<AddPatientPharmacyProps> = ({
   // };
 
   const calculateSummary = () => {
-    const summaryMap = new Map<string, SummaryEntry>();
+    const summaryData: SummaryEntry[] = [];
 
     formik.values.items.forEach(item => {
-      if (!item.stock || !item.stock.item) return;
+      if (!item.stock || !item.batchNumber) return;
 
-      const packSize = item.stock.item.packSize;
-      const pricePerUnit = packSize !== 0 ? item.stock.sellPrice / packSize : 0;
+      const packSize = item.stock.item.packSize || 1;
+
+      // Find the batch for the selected batch number
+      const selectedBatch = item.stock.locations
+        .find(location => location.location._id === formik.values.location?._id)
+        ?.batches.find(batch => batch.batchNo === item.batchNumber);
+
+      const batchSellPrice = selectedBatch?.sellPrice ?? 0;
+      const pricePerUnit = batchSellPrice / packSize;
 
       const totalQuantity = item.quantity ?? 0;
-      const batchNumber = item.batchNumber ? item.batchNumber : '';
-
       const total = pricePerUnit * totalQuantity;
 
-      const name = item.stock.item.name;
-
-      if (summaryMap.has(name)) {
-        const existingItem = summaryMap.get(name)!;
-        existingItem.quantity += totalQuantity;
-
-        if (batchNumber) {
-          existingItem.batchNumber = existingItem.batchNumber
-            ? `${existingItem.batchNumber}, ${batchNumber}`
-            : batchNumber;
-        }
-
-        // Optionally, verify if pricePerUnit is consistent
-        if (existingItem.price !== pricePerUnit) {
-          console.warn(`Price per unit for ${name} is inconsistent.`);
-          // Handle accordingly, e.g., average, throw error, etc.
-        }
-
-        existingItem.total += total;
-      } else {
-        const data: SummaryEntry = {
-          name: name,
-          quantity: totalQuantity,
-          batchNumber: batchNumber,
-          price: pricePerUnit,
-          total: total,
-        };
-        summaryMap.set(name, data);
-      }
+      summaryData.push({
+        name: item.stock.item.name,
+        quantity: totalQuantity,
+        batchNumber: item.batchNumber,
+        price: pricePerUnit,
+        total: total,
+      });
     });
 
-    return Array.from(summaryMap.values());
+    return summaryData;
   };
 
   const SummaryTable = () => {
@@ -407,21 +396,15 @@ const AddPatientPharmacy: React.FC<AddPatientPharmacyProps> = ({
                 />
               </Grid>
               <Grid item lg={2}>
-                <FieldAutocomplete
-                  options={doctors}
-                  getOptionLabel={option =>
-                    `${option.firstName} ${option.lastName}`
-                  }
-                  isOptionEqualToValue={(option, value) =>
-                    option?._id === value?._id
-                  }
-                  value={formik.values.doctor}
-                  onChange={newValue => {
-                    formik.setFieldValue('doctor', newValue);
-                  }}
+                <DoctorPicker
+                  formState={formik}
+                  fieldName={`doctor`}
                   label="Doctor"
                   error={formik.touched.doctor && Boolean(formik.errors.doctor)}
-                  helperText={formik.touched.doctor && formik.errors.doctor}
+                  helperText={
+                    formik.touched.doctor ? formik.errors.doctor : undefined
+                  }
+                  autoSelectIfDoctor={true}
                 />
               </Grid>
               <Grid item lg={3}>

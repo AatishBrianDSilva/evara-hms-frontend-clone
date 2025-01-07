@@ -28,13 +28,13 @@ import { useGetdonorQuery } from '../../../services/donorApi';
 import { useAssignCaseToDonorMutation } from '../../../services/donorApi';
 import { useToast } from '../../../context/ToastContext';
 import FieldAutocomplete from '../../../components/FieldAutoComplete/FieldAutoComplete';
-import { IDonor } from '../../../types/donor';
+// import { IDonor } from '../../../types/donor';
 
-interface DonorsResponse {
-  data: {
-    records: IDonor[];
-  };
-}
+// interface DonorsResponse {
+//   data: {
+//     records: IDonor[];
+//   };
+// }
 
 interface DonorData {
   donorId: string;
@@ -52,7 +52,6 @@ const PatientDetails: React.FC = () => {
     partner,
     case: patientCase,
   } = useSelector((state: RootState) => state.patients);
-  console.log('patient Case data', patientCase);
 
   // const defaultSelectedDonorId = "defaultDonorId";
   const [selectedDonorId, setSelectedDonorId] = useState<DonorData | undefined>(
@@ -71,9 +70,7 @@ const PatientDetails: React.FC = () => {
     },
   });
 
-  const donorsData = (donors as DonorsResponse)?.data?.records || [];
-
-  console.log('Donor Data', donorsData);
+  // const donorsData = (donors as DonorsResponse)?.data?.records || [];
 
   const [assignCaseToDonorMutation] = useAssignCaseToDonorMutation();
 

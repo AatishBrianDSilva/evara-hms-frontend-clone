@@ -19,7 +19,6 @@ import {
   useEditProcedureMutation,
   useGetProcedureByIdQuery,
 } from '../../../../../services/patientDashboardService/procedureApi';
-import { IDoctor } from '../../../../../types/doctor';
 import {
   IEditProcedureForm,
   IEditProcedurePayload,
@@ -90,11 +89,7 @@ const renderSkeletonLoader = () => {
   );
 };
 
-interface PGTProps {
-  doctors: IDoctor[];
-}
-
-const PGT: React.FC<PGTProps> = () => {
+const PGT: React.FC = () => {
   const dispatch = useDispatch();
   const { showPromiseToast } = useToast();
 
@@ -429,6 +424,7 @@ const PGT: React.FC<PGTProps> = () => {
                 name="result.noOfBiopsies"
                 label="No of Biopsies"
                 fullWidth
+                type="number"
                 value={formik.values.result.noOfBiopsies}
                 onChange={formik.handleChange}
               />
@@ -638,8 +634,17 @@ const PGT: React.FC<PGTProps> = () => {
                       fullWidth
                       label="PCR Tube ID"
                       name={`result.embryoBiopsyDetails[${index}].pcr_tube_id`}
-                      value={item.pcr_tube_id || ''}
-                      onChange={formik.handleChange}
+                      value={
+                        formik.values.result.embryoBiopsyDetails[index]
+                          .pcr_tube_id || ''
+                      }
+                      onChange={e => {
+                        const value = e.target.value.replace(/[^0-9]/g, ''); // Allow numbers only
+                        formik.setFieldValue(
+                          `result.embryoBiopsyDetails[${index}].pcr_tube_id`,
+                          `PCR_${value}`,
+                        );
+                      }}
                       error={isTubeIdError}
                       helperText={isTubeIdError && tubeIdErrorMessage}
                     />
@@ -659,6 +664,7 @@ const PGT: React.FC<PGTProps> = () => {
                     <TextField
                       fullWidth
                       label="No. of Cells"
+                      type="number"
                       name={`result.embryoBiopsyDetails[${index}].no_of_cells`}
                       value={item.no_of_cells || ''}
                       onChange={formik.handleChange}
@@ -690,6 +696,7 @@ const PGT: React.FC<PGTProps> = () => {
                   </Grid>
                   <Grid item flex={1}>
                     <TextField
+                      select
                       fullWidth
                       label="Nucleus Seen"
                       name={`result.embryoBiopsyDetails[${index}].nucleus_seen`}
@@ -697,10 +704,14 @@ const PGT: React.FC<PGTProps> = () => {
                       onChange={formik.handleChange}
                       error={isNucleusSeenError}
                       helperText={isNucleusSeenError && nucleusSeenErrorMessage}
-                    />
+                    >
+                      <MenuItem value="Yes">Yes</MenuItem>
+                      <MenuItem value="No">No</MenuItem>
+                    </TextField>
                   </Grid>
                   <Grid item flex={1}>
                     <TextField
+                      select
                       fullWidth
                       label="Cell Integrity"
                       name={`result.embryoBiopsyDetails[${index}].cell_integrity`}
@@ -710,7 +721,10 @@ const PGT: React.FC<PGTProps> = () => {
                       helperText={
                         isCellIntegrityError && cellIntegrityErrorMessage
                       }
-                    />
+                    >
+                      <MenuItem value="Intact">Intact</MenuItem>
+                      <MenuItem value="Lysed">Lysed</MenuItem>
+                    </TextField>
                   </Grid>
                   <Grid item flex={1}>
                     <TextField
@@ -756,7 +770,7 @@ const PGT: React.FC<PGTProps> = () => {
         </Grid>
 
         <Typography variant="subtitle1" sx={{ mt: 2, mb: 2, pl: 2 }}>
-          Upload Images & Description
+          Upload Report
         </Typography>
         <Grid container spacing={2} marginBottom={2} pl={2}>
           <Grid item xs={12}>

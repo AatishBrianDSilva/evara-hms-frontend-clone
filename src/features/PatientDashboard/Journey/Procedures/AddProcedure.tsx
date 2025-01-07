@@ -20,22 +20,20 @@ import { RootState } from '../../../../app/store';
 import { useSelector } from 'react-redux';
 import { useAddProcedureMutation } from '../../../../services/patientDashboardService/procedureApi';
 import { useToast } from '../../../../context/ToastContext';
-import { IDoctor } from '../../../../types/doctor';
 import { FilterOptionType } from '../../../../types/global';
 import { IMasterProcedures } from '../../../../types/master';
 import CustomDatePicker from '../../../../components/CustomDatePicker/CustomDatePicker';
+import DoctorPicker from '../../../../components/DoctorPicker/DoctorPicker';
 
 interface AddProcedureProps {
   open?: boolean;
   onClose?: () => void;
-  doctors: IDoctor[];
   masterProcedures: IMasterProcedures[];
 }
 
 const AddProcedure: React.FC<AddProcedureProps> = ({
   open,
   onClose,
-  doctors,
   masterProcedures,
 }) => {
   const { patient, case: patientCase } = useSelector(
@@ -83,7 +81,13 @@ const AddProcedure: React.FC<AddProcedureProps> = ({
 
   const createForm = useFormik({
     initialValues: {
-      fields: [{ procedure: null, doctor: null, date: null }],
+      fields: [
+        {
+          procedure: null,
+          doctor: null,
+          date: null,
+        },
+      ],
     },
     validationSchema: AddProcedureValidationSchema,
     onSubmit: handleSubmit,
@@ -102,7 +106,7 @@ const AddProcedure: React.FC<AddProcedureProps> = ({
         createForm.values.fields,
       );
     },
-    [createForm.values.fields, doctors, masterProcedures],
+    [createForm.values.fields, masterProcedures],
   );
 
   const getFieldErrorAndTouched = useCallback(
@@ -133,7 +137,11 @@ const AddProcedure: React.FC<AddProcedureProps> = ({
   const handleAddFields = () => {
     createForm.setFieldValue('fields', [
       ...createForm.values.fields,
-      { procedure: null, doctor: null, date: new Date() },
+      {
+        procedure: null,
+        doctor: createForm.values.fields[0].doctor,
+        date: new Date(),
+      },
     ]);
   };
 
@@ -214,31 +222,22 @@ const AddProcedure: React.FC<AddProcedureProps> = ({
                     </Grid>
                     {/* Abstracted Autocomplete for Doctors */}
                     <Grid item flex={3}>
-                      <FieldAutocomplete
-                        options={doctors}
-                        getOptionLabel={option =>
-                          `${option.firstName} ${option.lastName}`
-                        }
-                        isOptionEqualToValue={(option, value) =>
-                          option._id === value._id
-                        }
-                        value={createForm.values.fields[index].doctor}
-                        onChange={newValue =>
-                          createForm.setFieldValue(
-                            `fields.${index}.doctor`,
-                            newValue,
-                          )
-                        }
+                      <DoctorPicker
+                        formState={createForm}
+                        fieldName={`fields[${index}].doctor`}
                         label="Doctor"
                         error={isDoctorError}
                         helperText={isDoctorError ? doctorErrorMessage : ''}
+                        autoSelectIfDoctor={true}
                       />
                     </Grid>
                     {/* Date Picker */}
                     <Grid item flex={3}>
                       <CustomDatePicker
                         label="Date"
-                        minDate={new Date()}
+                        minDate={
+                          new Date(new Date().setDate(new Date().getDate() - 7))
+                        }
                         value={createForm.values.fields[index].date}
                         onChange={newValue =>
                           createForm.setFieldValue(

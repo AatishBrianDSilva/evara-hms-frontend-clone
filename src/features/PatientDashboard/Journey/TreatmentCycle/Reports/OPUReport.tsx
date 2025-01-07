@@ -15,9 +15,8 @@ import { IPatientTreatmentCycleReport } from '../../../../../types/patientDashbo
 import _ from 'lodash';
 import CustomDatePicker from '../../../../../components/CustomDatePicker/CustomDatePicker';
 import CustomTimePicker from '../../../../../components/CustomDatePicker/CustomTimePicker';
-import FieldAutocomplete from '../../../../../components/FieldAutoComplete/FieldAutoComplete';
 import { DoctorSpeciality } from '../../../../../types/masterDashboard/global';
-import { useGetDoctorsQuery } from '../../../../../services/doctorsApi';
+import DoctorPicker from '../../../../../components/DoctorPicker/DoctorPicker';
 
 interface IFormValues {
   preTreatments: string;
@@ -91,13 +90,6 @@ const OocyteAspirationReportForm: React.FC<OPUReportProps> = ({
   const [fileUploadedUrl, setFileUploadedUrl] = React.useState<string[]>(['']);
 
   const patient = useSelector((state: RootState) => state.patients.patient);
-
-  // console.log("File upload URL", fileUploadedUrl);
-  // console.log("Report prop", report);
-  // console.log("id prop", treatmentCycleId);
-
-  const { data: doctorData } = useGetDoctorsQuery({});
-  const doctors = doctorData?.data?.records || [];
 
   const { closeModal } = useContext(ModalContext);
   const { showPromiseToast } = useToast();
@@ -870,34 +862,30 @@ const OocyteAspirationReportForm: React.FC<OPUReportProps> = ({
           />
         </Grid>
         <Grid item lg={4}>
-          <FieldAutocomplete
-            options={doctors}
-            getOptionLabel={option =>
-              `${option.firstName || ''} ${option.lastName || ''}`
-            }
-            isOptionEqualToValue={(option, value) => option._id === value._id}
-            value={formik.values.surgeon}
-            onChange={newValue => formik.setFieldValue('surgeon', newValue)}
+          <DoctorPicker
+            formState={formik}
+            fieldName={`surgeon`}
             label="Surgeon"
+            error={formik.touched.surgeon && Boolean(formik.errors.surgeon)}
+            helperText={
+              formik.touched.surgeon ? formik.errors.surgeon : undefined
+            }
           />
         </Grid>
         <Grid item lg={4}>
-          <FieldAutocomplete
-            options={doctors}
-            getOptionLabel={option =>
-              `${option.firstName || ''} ${option.lastName || ''}`
-            }
-            filterOptions={(options, _state) => {
-              return options.filter(
-                option => option.speciality === DoctorSpeciality.Anaesthetist,
-              );
-            }}
-            isOptionEqualToValue={(option, value) => option._id === value._id}
-            value={formik.values.anaesthetist}
-            onChange={newValue =>
-              formik.setFieldValue('anaesthetist', newValue)
-            }
+          <DoctorPicker
+            formState={formik}
+            fieldName={`anaesthetist`}
             label="Anaesthetist"
+            error={
+              formik.touched.anaesthetist && Boolean(formik.errors.anaesthetist)
+            }
+            helperText={
+              formik.touched.anaesthetist
+                ? formik.errors.anaesthetist
+                : undefined
+            }
+            speciality={DoctorSpeciality.Anaesthetist}
           />
         </Grid>
         <Grid item lg={4}>
@@ -1059,7 +1047,7 @@ const OocyteAspirationReportForm: React.FC<OPUReportProps> = ({
 
         <Grid item xs={12}>
           <Typography variant="subtitle1" sx={{ mt: 2, mb: 2 }}>
-            Upload Images & Description
+            Upload Report
           </Typography>
           {/* <Grid container spacing={2} marginBottom={2}> */}
           <Grid item xs={12}>

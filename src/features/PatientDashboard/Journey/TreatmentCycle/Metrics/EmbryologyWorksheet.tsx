@@ -25,9 +25,8 @@ import { useSelector } from 'react-redux';
 import { RootState } from '../../../../../app/store';
 import CustomDatePicker from '../../../../../components/CustomDatePicker/CustomDatePicker';
 import CustomTimePicker from '../../../../../components/CustomDatePicker/CustomTimePicker';
-import FieldAutocomplete from '../../../../../components/FieldAutoComplete/FieldAutoComplete';
 import { DoctorSpeciality } from '../../../../../types/masterDashboard/global';
-import { useGetDoctorsQuery } from '../../../../../services/doctorsApi';
+import DoctorPicker from '../../../../../components/DoctorPicker/DoctorPicker';
 
 const steps = ['Day 0', 'Day 1', 'Day 2', 'Day 3', 'Day 4', 'Day 5', 'Day 6'];
 
@@ -163,10 +162,6 @@ const EmbryologyWorksheet: React.FC<EmbryologyWorksheetProps> = ({
 }) => {
   const { closeModal } = useContext(ModalContext);
   const { showPromiseToast } = useToast();
-
-  // Fetch doctors for the doctor selection
-  const { data: doctorData } = useGetDoctorsQuery({});
-  const doctors = doctorData?.data?.records || [];
 
   const [activeStep, setActiveStep] = useState(0);
 
@@ -663,31 +658,30 @@ const EmbryologyWorksheet: React.FC<EmbryologyWorksheetProps> = ({
           />
         </Grid>
         <Grid item lg={4}>
-          <FieldAutocomplete
-            options={doctors}
-            getOptionLabel={option =>
-              `${option.firstName || ''} ${option.lastName || ''}`
+          <DoctorPicker
+            formState={formik}
+            fieldName={`doctor`}
+            label="Doctor"
+            error={formik.touched.doctor && Boolean(formik.errors.doctor)}
+            helperText={
+              formik.touched.doctor ? formik.errors.doctor : undefined
             }
-            isOptionEqualToValue={(option, value) => option._id === value._id}
-            value={formik.values.doctor}
-            onChange={newValue => {
-              formik.setFieldValue('doctor', newValue);
-            }}
-            label="doctor"
           />
         </Grid>
         <Grid item lg={4}>
-          <FieldAutocomplete
-            options={doctors}
-            getOptionLabel={option =>
-              `${option.firstName || ''} ${option.lastName || ''}`
+          <DoctorPicker
+            formState={formik}
+            fieldName={`assistantDoctor`}
+            label="Assistant Doctor"
+            error={
+              formik.touched.assistantDoctor &&
+              Boolean(formik.errors.assistantDoctor)
             }
-            isOptionEqualToValue={(option, value) => option._id === value._id}
-            value={formik.values.assistantDoctor}
-            onChange={newValue => {
-              formik.setFieldValue('assistantDoctor', newValue);
-            }}
-            label="assistantDoctor"
+            helperText={
+              formik.touched.assistantDoctor
+                ? formik.errors.assistantDoctor
+                : undefined
+            }
           />
         </Grid>
         <Grid item lg={4}>
@@ -699,22 +693,19 @@ const EmbryologyWorksheet: React.FC<EmbryologyWorksheetProps> = ({
             value={formik.values.embryologist}
             onChange={formik.handleChange}
           /> */}
-          <FieldAutocomplete
-            options={doctors}
-            getOptionLabel={option =>
-              `${option.firstName || ''} ${option.lastName || ''}`
-            }
-            filterOptions={(options, _state) => {
-              return options.filter(
-                option => option.speciality === DoctorSpeciality.Embryologist,
-              );
-            }}
-            isOptionEqualToValue={(option, value) => option._id === value._id}
-            value={formik.values.embryologist}
-            onChange={newValue => {
-              formik.setFieldValue('embryologist', newValue); // Ensure 'embryologist' is a string
-            }}
+          <DoctorPicker
+            formState={formik}
+            fieldName={`embryologist`}
             label="Embryologist"
+            error={
+              formik.touched.embryologist && Boolean(formik.errors.embryologist)
+            }
+            helperText={
+              formik.touched.embryologist
+                ? formik.errors.embryologist
+                : undefined
+            }
+            speciality={DoctorSpeciality.Embryologist}
           />
         </Grid>
         <Grid item lg={4}>
@@ -1451,7 +1442,7 @@ const EmbryologyWorksheet: React.FC<EmbryologyWorksheetProps> = ({
 
       <Grid item xs={12}>
         <Typography variant="subtitle1" sx={{ mt: 2, mb: 2 }}>
-          Upload Images & Description
+          Upload Report
         </Typography>
         {/* <Grid container spacing={2} marginBottom={2}> */}
         <Grid item xs={12}>

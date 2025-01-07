@@ -19,12 +19,12 @@ import { useAddPackageMutation } from '../../../../services/patientDashboardServ
 import { useToast } from '../../../../context/ToastContext';
 import { RootState } from '../../../../app/store';
 import { useSelector } from 'react-redux';
+import DoctorPicker from '../../../../components/DoctorPicker/DoctorPicker';
 
 interface AddPackageProps {
   open?: boolean;
   onClose?: () => void;
   masterPackages: IMasterPackages[];
-  doctors: IDoctor[];
 }
 
 interface FieldType {
@@ -37,7 +37,6 @@ const AddPackage: React.FC<AddPackageProps> = ({
   open,
   onClose,
   masterPackages,
-  doctors,
 }) => {
   const { patient, case: patientCase } = useSelector(
     (state: RootState) => state.patients,
@@ -84,7 +83,13 @@ const AddPackage: React.FC<AddPackageProps> = ({
 
   const createForm = useFormik<{ fields: FieldType[] }>({
     initialValues: {
-      fields: [{ package: null, date: null, doctor: null }],
+      fields: [
+        {
+          package: null,
+          date: null,
+          doctor: null,
+        },
+      ],
     },
     onSubmit: handleSubmit,
   });
@@ -147,19 +152,14 @@ const AddPackage: React.FC<AddPackageProps> = ({
     createForm.setFieldValue('fields', updatedFields);
   };
 
-  const handleDoctorChange = (
-    selectedDoctor: IDoctor | null,
-    index: number,
-  ) => {
-    const updatedFields = [...createForm.values.fields];
-    updatedFields[index].doctor = selectedDoctor;
-    createForm.setFieldValue('fields', updatedFields);
-  };
-
   const handleAddFields = () => {
     createForm.setFieldValue('fields', [
       ...createForm.values.fields,
-      { package: null, date: new Date(), doctor: null },
+      {
+        package: null,
+        date: new Date(),
+        doctor: createForm.values.fields[0].doctor,
+      },
     ]);
   };
 
@@ -178,7 +178,7 @@ const AddPackage: React.FC<AddPackageProps> = ({
       scroll="paper"
     >
       <DialogTitle sx={{ textAlign: 'center', pt: 4 }} variant="h5">
-        Add Packages
+        Add Package
       </DialogTitle>
       <Box component={'form'} onSubmit={createForm.handleSubmit}>
         <Paper elevation={0} sx={{ p: 2, mb: 2 }}>
@@ -225,31 +225,23 @@ const AddPackage: React.FC<AddPackageProps> = ({
                     </Grid>
                     {/* Doctor Field */}
                     <Grid item flex={1}>
-                      <FieldAutocomplete
-                        options={doctors}
-                        getOptionLabel={option =>
-                          `${option.firstName} ${option.lastName}`
-                        }
-                        getOptionKey={option => option._id}
-                        isOptionEqualToValue={(option, value) =>
-                          option._id === value._id
-                        }
-                        value={createForm.values.fields[index].doctor}
-                        onChange={newValue =>
-                          handleDoctorChange(newValue, index)
-                        }
+                      <DoctorPicker
+                        formState={createForm}
+                        fieldName={`fields[${index}].doctor`}
                         label="Doctor"
                         error={isDoctorError}
                         helperText={isDoctorError ? doctorErrorMessage : ''}
+                        autoSelectIfDoctor={true}
                       />
                     </Grid>
                     {/* Date Field */}
                     <Grid item flex={1}>
                       <CustomDatePicker
                         label="Date"
-                        minDate={new Date()}
+                        value={new Date()} // Set current date as value
                         format="dd/MM/yyyy"
-                        value={createForm.values.fields[index].date}
+                        minDate={new Date()} // Set today's date as the minimum date
+                        maxDate={new Date()} // Set today's date as the maximum date
                         onChange={newValue =>
                           createForm.setFieldValue(
                             `fields.${index}.date`,

@@ -1,17 +1,17 @@
 import {
   Box,
   Button,
+  Checkbox,
   FormControlLabel,
   Grid,
   InputAdornment,
   MenuItem,
   Skeleton,
-  Switch,
   TextField,
   Typography,
 } from '@mui/material';
 import { useFormik } from 'formik';
-import React, { useState } from 'react';
+import React from 'react';
 import { useToast } from '../../../../../context/ToastContext';
 import { useDispatch, useSelector } from 'react-redux';
 import { RootState } from '../../../../../app/store';
@@ -19,9 +19,6 @@ import {
   useEditInvestigationMutation,
   useGetInvestigationByIdQuery,
 } from '../../../../../services/patientDashboardService/investigationApi';
-import Cancel from '@mui/icons-material/Cancel';
-import Add from '@mui/icons-material/Add';
-import _ from 'lodash';
 import { closeEditInvestigation } from '../investigationSlice';
 import ReportModalHeader from '../../../../../components/ReportModalHeader/ReportModalHeader';
 import {
@@ -32,54 +29,52 @@ import { ETestType, IBloodTestComponent } from '../../../../../types/master';
 import { getEditBloodTestReportValidationSchema } from '../../../../../yup/patientDashboard/investigation';
 import FileUploadButton from '../../../../../components/FileUploadAndPreview/FileUploadButton';
 import { EBuckets, EDocumentTypes } from '../../../../../types/global';
+import _ from 'lodash';
+import FileList from '../../../../../components/FileList/FileList';
 
-const renderSkeletonLoader = () => {
-  return (
-    <>
-      <Box
-        display={'flex'}
-        justifyContent={'space-between'}
-        borderBottom={1}
-        py={2}
-      >
-        <Box>
-          <Skeleton variant="text" width={100} height={20} />
-          <Skeleton variant="text" width={100} height={20} />
-        </Box>
-        <Box>
-          <Skeleton variant="text" width={100} height={20} />
-          <Skeleton variant="text" width={100} height={20} />
-        </Box>
+const renderSkeletonLoader = () => (
+  <>
+    <Box
+      display={'flex'}
+      justifyContent={'space-between'}
+      borderBottom={1}
+      py={2}
+    >
+      <Box>
+        <Skeleton variant="text" width={100} height={20} />
+        <Skeleton variant="text" width={100} height={20} />
       </Box>
-      <Box pt={2} mt={2}>
-        <Box>
-          <Grid container justifyContent={'space-between'}>
-            <Grid item md={6} lg={3}>
-              <Skeleton variant="text" width={100} height={20} />
-            </Grid>
-            <Grid item>
-              <Skeleton variant="text" width={100} height={20} />
-            </Grid>
-          </Grid>
-          <Grid container mt={2}>
-            <Grid item lg={3}>
-              <Skeleton variant="text" width={100} height={20} />
-            </Grid>
-            <Grid item lg={3}>
-              <Skeleton variant="text" width={100} height={20} />
-            </Grid>
-          </Grid>
-        </Box>
+      <Box>
+        <Skeleton variant="text" width={100} height={20} />
+        <Skeleton variant="text" width={100} height={20} />
       </Box>
-    </>
-  );
-};
+    </Box>
+    <Box pt={2} mt={2}>
+      <Box>
+        <Grid container justifyContent={'space-between'}>
+          <Grid item md={6} lg={3}>
+            <Skeleton variant="text" width={100} height={20} />
+          </Grid>
+          <Grid item>
+            <Skeleton variant="text" width={100} height={20} />
+          </Grid>
+        </Grid>
+        <Grid container mt={2}>
+          <Grid item lg={3}>
+            <Skeleton variant="text" width={100} height={20} />
+          </Grid>
+          <Grid item lg={3}>
+            <Skeleton variant="text" width={100} height={20} />
+          </Grid>
+        </Grid>
+      </Box>
+    </Box>
+  </>
+);
 
 const BloodTests: React.FC = () => {
   const dispatch = useDispatch();
   const { showPromiseToast } = useToast();
-
-  // const [fileUploadedUrl, setFileUploadedUrl] = React.useState<string[]>([""]);
 
   const openEditDialog = useSelector(
     (state: RootState) => state.investigation.editInvestigationOpen,
@@ -95,18 +90,11 @@ const BloodTests: React.FC = () => {
 
   const investigation = investigationData?.data;
 
-  // const files = investigation?.result?.files || [];
+  console.log('Investigation Data', investigationData);
 
   const [fileUploadedUrl, setFileUploadedUrl] = React.useState<string[]>(() => {
-    // Initialize with an empty array by default
-    let initialUrl: string[] = [];
-
-    // Check if the file upload URL is present in the investigation details
-    if (investigation?.result?.files) {
-      initialUrl = investigation.result.files.flat();
-    }
-
-    return initialUrl;
+    // Initialize with existing files if available
+    return investigation?.result?.files || [];
   });
 
   const loading = investigationLoading || investigationFetching;
@@ -117,11 +105,6 @@ const BloodTests: React.FC = () => {
   const investigationName = investigation?.investigation?.test?.testName;
   const components = investigation?.investigation?.test?.components;
   const actualProcedureName = investigation?.investigation?.name;
-
-  const [showReport, setShowReport] = useState(false);
-  const [addReport, setAddReport] = useState(false);
-
-  let validationSchema = getEditBloodTestReportValidationSchema(addReport);
 
   const patient = useSelector((state: RootState) => state.patients.patient);
 
@@ -139,53 +122,20 @@ const BloodTests: React.FC = () => {
         ?.referenceRange,
     }));
 
-    //if value is empty remove all the details
     const filteredDetails = details.filter(detail => detail.value == '');
-    const actualName = actualProcedureName || 'Default Investigation'; // Use a fallback if procedureName is null/undefined
-
-    // const payload: IEditInvestigationpayload = {
-    //   status: values.status,
-    //   testType: ETestType.BloodTest,
-    //   result: {
-    //     files: fileUploadedUrl,
-    //   },
-    // };
-
-    // if (filteredDetails.length == 0) {
-    //   payload["result"] = {
-    //     testName: investigationName!,
-    //     details: details,
-    //     notes: values.notes,
-    //     files: fileUploadedUrl,
-    //   };
-    // }
-
-    // const payload: IEditInvestigationpayload = {
-    //   status: values.status,
-    //   testType: ETestType.BloodTest,
-    //   result: {
-    //     files: fileUploadedUrl,
-    //     ...(filteredDetails.length === 0 && {
-    //       testName: investigationName!,
-    //       details: details,
-    //       notes: values.notes,
-    //     }),
-    //   },
-    // };
+    const actualName = actualProcedureName || 'Default Investigation';
 
     const payload: IEditInvestigationpayload = {
       status: values.status,
       testType: ETestType.BloodTest,
       result: {
         files: fileUploadedUrl,
-        testName: investigationName!, // Always include the testName
-        details: filteredDetails.length === 0 ? details : undefined, // Conditionally include details
+        testName: investigationName!,
+        details: filteredDetails.length === 0 ? details : undefined,
         notes: values.notes || undefined,
       },
-      actualName: actualName, // New field added to the payload
+      actualName: actualName,
     };
-
-    console.log('Payload', payload);
 
     const promise = editInvestigation({
       _id: openEditDialog.id,
@@ -200,65 +150,48 @@ const BloodTests: React.FC = () => {
 
     try {
       await promise;
-      setAddReport(false);
     } catch (error) {
       console.error('Failed to update investigation', error);
     }
   };
 
-  interface ReportDetailError {
-    id?: string;
-    name?: string;
-    value?: string; // This assumes your validation might set an error on the value field
-    unit?: string;
-    referenceRange?: string;
-    group?: string;
-    componentType?: string;
-  }
-
-  // Initial values setup
-  const initialValues: IEditInvestigationForm<IBloodTestComponent[]> = {
+  const initialValues: IEditInvestigationForm<any[]> = {
     status: investigation?.status || 'Scheduled',
     result:
-      components?.map(component => ({
-        _id: component._id,
-        componentName: component?.componentName,
-        referenceRange: component?.referenceRange || '',
-        componentType: component?.componentType,
-        options: component?.options || [],
-        value: '',
-        unit: component?.unit || '',
-      })) || [],
-    notes: '',
-    files: [],
+      Array.isArray(investigation?.result?.details) &&
+      investigation.result.details.length > 0
+        ? (investigation.result.details as any[]).map((detail: any) => ({
+            _id: detail._id,
+            componentName: detail.component,
+            referenceRange: detail.refernceRange || '',
+            componentType: 'text',
+            options: [],
+            value: detail.value || '',
+            unit: detail.unit || '',
+          }))
+        : Array.isArray(components)
+          ? (components as any[]).map((component: any) => ({
+              _id: component._id,
+              componentName: component?.componentName,
+              referenceRange: component?.referenceRange || '',
+              componentType: component?.componentType || 'text',
+              options: component?.options || [],
+              value: '',
+              unit: component?.unit || '',
+            }))
+          : [],
+    notes: investigation?.result?.notes || '',
+    files: investigation?.result?.files || [],
   };
 
   const formik = useFormik({
     initialValues: initialValues,
     onSubmit: handleSubmit,
-    validationSchema: validationSchema,
+    validationSchema: getEditBloodTestReportValidationSchema(false),
     enableReinitialize: true,
   });
 
-  // const handleFileSelection = (selectedFiles: File[]) => {
-  //   if (formik.values.files) {
-  //     const allFiles = [...formik.values?.files, ...selectedFiles];
-  //     formik.setFieldValue('files', allFiles);
-  //   }
-  // };
-
-  // const handleRemoveFile = (fileToRemove: File) => {
-  //   const updatedFiles = formik.values.files.filter(localFile => localFile !== fileToRemove);
-  //   formik.setFieldValue('files', updatedFiles);
-  // };
-
-  const handleAddReportButton = () => {
-    setAddReport(!addReport);
-    formik.resetForm();
-  };
-
   const onModalClose = () => {
-    setAddReport(false);
     formik.resetForm();
     dispatch(closeEditInvestigation());
   };
@@ -276,66 +209,37 @@ const BloodTests: React.FC = () => {
           />
           <Box display={'flex'} flexDirection={'column'} pt={2} mt={2} flex={1}>
             <Box>
-              <Grid container justifyContent={'space-between'}>
-                <Grid item md={6} lg={3}>
-                  <TextField
-                    select
-                    name="status"
-                    value={formik?.values?.status}
-                    onChange={formik.handleChange}
-                    label="Status"
-                    variant="outlined"
-                    onBlur={formik.handleBlur} // Add this to track field has been touched
-                    error={
-                      formik.touched.status && Boolean(formik.errors.status)
-                    }
-                    helperText={formik.touched.status && formik.errors.status} // Display validation message
-                    fullWidth
-                  >
-                    <MenuItem value="Scheduled">Scheduled</MenuItem>
-                    <MenuItem value="Completed">Completed</MenuItem>
-                  </TextField>
-                </Grid>
-                <Grid item>
-                  {investigation?.result ? (
-                    <FormControlLabel
-                      control={
-                        <Switch
-                          onClick={() => setShowReport(!showReport)}
-                          color="secondary"
-                        />
-                      }
-                      label="Show Reports"
-                    />
-                  ) : (
-                    <Button
-                      startIcon={addReport ? <Cancel /> : <Add />}
-                      variant="text"
-                      color="secondary"
-                      onClick={handleAddReportButton}
-                    >
-                      {' '}
-                      Report
-                    </Button>
-                  )}
-                </Grid>
-              </Grid>
+              <Box mt={2}>
+                <Grid mt={1} container gap={2}>
+                  {formik.values.result.map((detail, index) => {
+                    const fieldName = `result[${index}].value`;
 
-              {showReport && (
-                <Box mt={2}>
-                  <Typography variant="button" color={'primary'} gutterBottom>
-                    Report
-                  </Typography>
-                  <Grid mt={1} container gap={2}>
-                    {_.isArray(investigation?.result?.details) &&
-                      investigation?.result?.details?.map((detail, index) => (
+                    const touchedResult = Array.isArray(formik.touched.result)
+                      ? formik.touched.result
+                      : [];
+                    const errorsResult = Array.isArray(formik.errors.result)
+                      ? formik.errors.result
+                      : [];
+
+                    const isError = Boolean(
+                      touchedResult[index] && errorsResult[index], // Check the existence of touched and errors
+                    );
+
+                    const helperText = isError
+                      ? (errorsResult[index] as string)
+                      : '';
+
+                    if (detail.componentType === 'text') {
+                      return (
                         <Grid item lg={3} key={index}>
                           <TextField
-                            name={`result[${index}].value`}
-                            label={detail.component}
+                            name={fieldName}
+                            label={detail.componentName}
                             value={detail.value}
-                            disabled={true}
-                            helperText={detail.referenceRange}
+                            onChange={formik.handleChange}
+                            onBlur={formik.handleBlur}
+                            error={isError}
+                            helperText={helperText}
                             InputProps={{
                               endAdornment: detail.unit ? (
                                 <InputAdornment position="end">
@@ -349,172 +253,108 @@ const BloodTests: React.FC = () => {
                             fullWidth
                           />
                         </Grid>
-                      ))}
-                  </Grid>
-
-                  <Box display={'flex'} mt={2} gap={2}>
-                    <TextField
-                      name={`notes`}
-                      disabled={true}
-                      value={investigation?.result?.notes || ''}
-                      label={`Notes`}
-                      variant="outlined"
-                      multiline
-                      fullWidth
-                    />
-                  </Box>
-                  <Typography variant="subtitle1" sx={{ mt: 2, mb: 2 }}>
-                    Upload Images
-                  </Typography>
-                  {/* <Grid container spacing={2} marginBottom={2}> */}
-                  <Grid item xs={12}>
-                    {patient && (
-                      <FileUploadButton
-                        acceptTypes="image/*, application/pdf"
-                        maxFiles={5}
-                        maxFileSizeinMB={15}
-                        onUploadFiles={setFileUploadedUrl}
-                        bucket={EBuckets.UserReports}
-                        documentType={EDocumentTypes.Investigation}
-                        user={patient?._id}
-                        reportId={openEditDialog.id}
-                      />
-                    )}
-                  </Grid>
-                </Box>
-              )}
-
-              {addReport && (
-                <Box mt={2}>
-                  <Typography variant="button" color={'primary'} gutterBottom>
-                    Report
-                  </Typography>
-                  <Grid mt={1} container gap={2}>
-                    {formik.values.result.map((detail, index) => {
-                      const fieldName = `result[${index}].value`;
-                      const isError = Boolean(
-                        formik.touched.result?.[index]?.value &&
-                          formik.errors.result &&
-                          Array.isArray(formik.errors.result) &&
-                          (formik.errors.result[index] as ReportDetailError)
-                            ?.value,
                       );
-                      const helperText = isError
-                        ? (formik.errors.result?.[index] as ReportDetailError)
-                            ?.value
-                        : ''; // Type assertion here
-
-                      if (detail.componentType === 'text') {
-                        return (
-                          <Grid item lg={3} key={index}>
-                            <TextField
-                              name={fieldName} // Use corrected field name
-                              label={detail.componentName}
-                              value={detail.value}
-                              onChange={formik.handleChange}
-                              onBlur={formik.handleBlur}
-                              error={isError}
-                              helperText={helperText}
-                              InputProps={{
-                                endAdornment: detail.unit ? (
-                                  <InputAdornment position="end">
-                                    <Typography fontSize={13}>
-                                      {detail.unit}
-                                    </Typography>
-                                  </InputAdornment>
-                                ) : null,
-                              }}
-                              variant="outlined"
-                              fullWidth
-                            />
-                          </Grid>
-                        );
-                      } else if (detail.componentType === 'select') {
-                        return (
-                          <Grid item lg={3} key={index}>
-                            <TextField
-                              select
-                              name={fieldName} // Use corrected field name
-                              label={detail.componentName}
-                              value={detail.value}
-                              onChange={formik.handleChange}
-                              onBlur={formik.handleBlur}
-                              error={isError}
-                              helperText={helperText}
-                              InputProps={{
-                                endAdornment: detail.unit ? (
-                                  <InputAdornment position="end">
-                                    <Typography fontSize={13}>
-                                      {detail.unit}
-                                    </Typography>
-                                  </InputAdornment>
-                                ) : null,
-                              }}
-                              variant="outlined"
-                              fullWidth
-                            >
-                              {detail?.options?.map((option, index) => (
+                    } else if (detail.componentType === 'select') {
+                      return (
+                        <Grid item lg={3} key={index}>
+                          <TextField
+                            select
+                            name={fieldName}
+                            label={detail.componentName}
+                            value={detail.value}
+                            onChange={formik.handleChange}
+                            onBlur={formik.handleBlur}
+                            error={isError}
+                            helperText={helperText}
+                            variant="outlined"
+                            fullWidth
+                          >
+                            {detail?.options?.map(
+                              (option: string, index: number) => (
                                 <MenuItem key={index} value={option}>
                                   {option}
                                 </MenuItem>
-                              ))}
-                            </TextField>
-                          </Grid>
-                        );
-                      }
-                    })}
-                  </Grid>
-
-                  <Box display={'flex'} mt={2} gap={2}>
-                    <Grid container spacing={2} marginBottom={2}>
-                      <Grid item xs={12}>
-                        <TextField
-                          name="notes"
-                          value={formik.values.notes}
-                          onChange={formik.handleChange}
-                          onBlur={formik.handleBlur}
-                          label="Notes"
-                          variant="outlined"
-                          multiline
-                          fullWidth
-                          error={Boolean(
-                            formik.touched.notes && formik.errors.notes,
-                          )}
-                          helperText={
-                            formik.touched.notes && formik.errors.notes
-                              ? formik.errors.notes
-                              : ''
-                          }
-                        />
-                      </Grid>
-                      <Typography
-                        variant="subtitle1"
-                        sx={{ mt: 2, mb: 2, pl: 2 }}
-                      >
-                        Upload Images
-                      </Typography>
-                      {/* <Grid container spacing={2} marginBottom={2}> */}
-                      <Grid item xs={12}>
-                        {patient && (
-                          <FileUploadButton
-                            acceptTypes="image/*, application/pdf"
-                            maxFiles={5}
-                            maxFileSizeinMB={15}
-                            onUploadFiles={setFileUploadedUrl}
-                            bucket={EBuckets.UserReports}
-                            documentType={EDocumentTypes.Investigation}
-                            user={patient?._id}
-                            reportId={openEditDialog.id}
-                          />
-                        )}
-                      </Grid>
-                    </Grid>
-                  </Box>
+                              ),
+                            )}
+                          </TextField>
+                        </Grid>
+                      );
+                    }
+                  })}
+                </Grid>
+                <Box display={'flex'} mt={2} gap={2}>
+                  <TextField
+                    name="notes"
+                    value={formik.values.notes}
+                    onChange={formik.handleChange}
+                    onBlur={formik.handleBlur}
+                    label="Notes"
+                    variant="outlined"
+                    multiline
+                    fullWidth
+                    error={Boolean(formik.touched.notes && formik.errors.notes)}
+                    helperText={formik.touched.notes && formik.errors.notes}
+                  />
                 </Box>
-              )}
+              </Box>
             </Box>
           </Box>
+          <Grid container spacing={2} mb={4} pt={2}>
+            <Grid item xs={12}>
+              <Typography variant="h6">Upload Images</Typography>
+            </Grid>
+            <Grid item xs={12}>
+              {patient && (
+                <FileUploadButton
+                  showSubmitHint={true}
+                  acceptTypes="image/*"
+                  maxFiles={5}
+                  maxFileSizeinMB={15}
+                  onUploadFiles={files => {
+                    const existingFiles = investigation?.result?.files || [];
+                    const updatedFiles = [...existingFiles, ...files];
+                    const uniqueFiles = [...new Set(updatedFiles)];
+                    setFileUploadedUrl(uniqueFiles);
+                  }}
+                  bucket={EBuckets.UserReports}
+                  documentType={EDocumentTypes.Investigation}
+                  user={patient?._id}
+                  reportId={openEditDialog.id}
+                />
+              )}
+            </Grid>
+            <Grid item xs={12}>
+              {fileUploadedUrl.length > 0 && (
+                <FileList files={fileUploadedUrl} title="Uploaded Files" />
+              )}
+            </Grid>
+          </Grid>
 
+          <Box
+            display={'flex'}
+            justifyContent={'center'}
+            alignItems={'center'}
+            gap={2}
+            mb={2}
+          >
+            <Grid item xs={12}>
+              <FormControlLabel
+                control={
+                  <Checkbox
+                    checked={formik.values.status === 'Completed'}
+                    onChange={e =>
+                      formik.setFieldValue(
+                        'status',
+                        e.target.checked ? 'Completed' : 'Scheduled',
+                      )
+                    }
+                    color="primary"
+                  />
+                }
+                label="Status: Completed"
+              />
+            </Grid>
+          </Box>
           <Box display={'flex'} justifyContent={'center'} gap={2} p={2}>
             <Button
               variant="contained"

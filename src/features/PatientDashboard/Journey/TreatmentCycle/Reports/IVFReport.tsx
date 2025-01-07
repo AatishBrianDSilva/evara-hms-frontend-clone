@@ -17,9 +17,8 @@ import FileUploadButton from '../../../../../components/FileUploadAndPreview/Fil
 import { EBuckets, EDocumentTypes } from '../../../../../types/global';
 import { useSelector } from 'react-redux';
 import { RootState } from '../../../../../app/store';
-import FieldAutocomplete from '../../../../../components/FieldAutoComplete/FieldAutoComplete';
 import { DoctorSpeciality } from '../../../../../types/masterDashboard/global';
-import { useGetDoctorsQuery } from '../../../../../services/doctorsApi';
+import DoctorPicker from '../../../../../components/DoctorPicker/DoctorPicker';
 
 interface IFormValues {
   embryologistA: string;
@@ -63,10 +62,6 @@ const EmbryoTransferReport: React.FC<IVFReportProps> = ({
   const patient = useSelector((state: RootState) => state.patients.patient);
   const [fileUploadedUrl, setFileUploadedUrl] = React.useState<string[]>(['']);
   const [updateReport, { isLoading }] = useEditTreatmentCycleMutation();
-
-  // Fetch doctors for the doctor selection
-  const { data: doctorData } = useGetDoctorsQuery({});
-  const doctors = doctorData?.data?.records || [];
 
   const { data: treatmentCyclesData } = useGetTreatmentCyclesQuery(
     {
@@ -178,56 +173,38 @@ const EmbryoTransferReport: React.FC<IVFReportProps> = ({
 
       <Grid container spacing={2} mb={2}>
         <Grid item xs={12} sm={6} md={3}>
-          <FieldAutocomplete
-            options={doctors}
-            getOptionLabel={option =>
-              `${option.firstName || ''} ${option.lastName || ''}`
-            }
-            filterOptions={(options, _state) => {
-              return options.filter(
-                option => option.speciality === DoctorSpeciality.Embryologist,
-              );
-            }}
-            isOptionEqualToValue={(option, value) => option._id === value._id}
-            value={formik.values.embryologistA}
-            onChange={newValue =>
-              formik.setFieldValue('embryologistA', newValue)
-            }
+          <DoctorPicker
+            formState={formik}
+            fieldName={`embryologistA`}
             label="Embryologist A"
             error={
               formik.touched.embryologistA &&
               Boolean(formik.errors.embryologistA)
             }
             helperText={
-              formik.touched.embryologistA && formik.errors.embryologistA
+              formik.touched.embryologistA
+                ? formik.errors.embryologistA
+                : undefined
             }
+            speciality={DoctorSpeciality.Embryologist}
           />
         </Grid>
 
         <Grid item xs={12} sm={6} md={3}>
-          <FieldAutocomplete
-            options={doctors}
-            getOptionLabel={option =>
-              `${option.firstName || ''} ${option.lastName || ''}`
-            }
-            filterOptions={(options, _state) => {
-              return options.filter(
-                option => option.speciality === DoctorSpeciality.Embryologist,
-              );
-            }}
-            isOptionEqualToValue={(option, value) => option._id === value._id}
-            value={formik.values.embryologistB}
-            onChange={newValue =>
-              formik.setFieldValue('embryologistB', newValue)
-            }
+          <DoctorPicker
+            formState={formik}
+            fieldName={`embryologistB`}
             label="Embryologist B"
             error={
               formik.touched.embryologistB &&
               Boolean(formik.errors.embryologistB)
             }
             helperText={
-              formik.touched.embryologistB && formik.errors.embryologistB
+              formik.touched.embryologistB
+                ? formik.errors.embryologistB
+                : undefined
             }
+            speciality={DoctorSpeciality.Embryologist}
           />
         </Grid>
         {/* <Grid item xs={12} sm={6} md={3}>
@@ -247,56 +224,38 @@ const EmbryoTransferReport: React.FC<IVFReportProps> = ({
         </Grid> */}
 
         <Grid item xs={12} sm={6} md={3}>
-          <FieldAutocomplete
-            options={doctors}
-            getOptionLabel={option =>
-              `${option.firstName || ''} ${option.lastName || ''}`
-            }
-            filterOptions={(options, _state) => {
-              return options.filter(
-                option => option.speciality === DoctorSpeciality.Gynecologist,
-              );
-            }}
-            isOptionEqualToValue={(option, value) => option._id === value._id}
-            value={formik.values.gynecologistA}
-            onChange={newValue =>
-              formik.setFieldValue('gynecologistA', newValue)
-            }
+          <DoctorPicker
+            formState={formik}
+            fieldName={`gynecologistA`}
             label="Gynecologist A"
             error={
               formik.touched.gynecologistA &&
               Boolean(formik.errors.gynecologistA)
             }
             helperText={
-              formik.touched.gynecologistA && formik.errors.gynecologistA
+              formik.touched.gynecologistA
+                ? formik.errors.gynecologistA
+                : undefined
             }
+            speciality={DoctorSpeciality.Gynecologist}
           />
         </Grid>
 
         <Grid item xs={12} sm={6} md={3}>
-          <FieldAutocomplete
-            options={doctors}
-            getOptionLabel={option =>
-              `${option.firstName || ''} ${option.lastName || ''}`
-            }
-            filterOptions={(options, _state) => {
-              return options.filter(
-                option => option.speciality === DoctorSpeciality.Gynecologist,
-              );
-            }}
-            isOptionEqualToValue={(option, value) => option._id === value._id}
-            value={formik.values.gynecologistB}
-            onChange={newValue =>
-              formik.setFieldValue('gynecologistB', newValue)
-            }
+          <DoctorPicker
+            formState={formik}
+            fieldName={`gynecologistB`}
             label="Gynecologist B"
             error={
               formik.touched.gynecologistB &&
               Boolean(formik.errors.gynecologistB)
             }
             helperText={
-              formik.touched.gynecologistB && formik.errors.gynecologistB
+              formik.touched.gynecologistB
+                ? formik.errors.gynecologistB
+                : undefined
             }
+            speciality={DoctorSpeciality.Gynecologist}
           />
         </Grid>
         {/* <Typography variant='h6' color='primary' gutterBottom>Semen Details</Typography> */}
@@ -634,7 +593,7 @@ const EmbryoTransferReport: React.FC<IVFReportProps> = ({
       </Grid>
       <Grid item xs={12}>
         <Typography variant="subtitle1" sx={{ mt: 2, mb: 2 }}>
-          Upload Images & Description
+          Upload Report
         </Typography>
         {/* <Grid container spacing={2} marginBottom={2}> */}
         <Grid item xs={12}>

@@ -15,7 +15,6 @@ import {
 import { useSelector } from 'react-redux';
 import { RootState } from '../../../../app/store';
 import AddService from './AddService';
-import { useGetDoctorsQuery } from '../../../../services/doctorsApi';
 import { useGetMasterServicesQuery } from '../../../../services/masterDashboardService/serviceData/masterServicesApi';
 import { CircularProgress } from '@mui/material';
 import {
@@ -36,14 +35,6 @@ const Services: React.FC = () => {
   const [pageSize, setPageSize] = useState<number>(25);
 
   const { id, itemId } = useParams<{ id: string; itemId?: string }>();
-
-  // Get doctors
-  const {
-    data: DoctorsData,
-    isLoading: DoctorsLoading,
-    isFetching: DoctorFetching,
-  } = useGetDoctorsQuery({});
-  const doctors = DoctorsData?.data?.records || [];
 
   // Get master services
   const {
@@ -91,11 +82,7 @@ const Services: React.FC = () => {
   const [deleteService, { isLoading: deletingService }] =
     useDeleteServiceMutation();
 
-  const loading =
-    DoctorsLoading ||
-    MasterServicesLoading ||
-    DoctorFetching ||
-    MasterServiceFetching;
+  const loading = MasterServicesLoading || MasterServiceFetching;
 
   // State variables for controlling various dialogs
   const [addServiceOpen, setAddServiceOpen] = useState<boolean>(false);
@@ -252,7 +239,6 @@ const Services: React.FC = () => {
       {addServiceOpen && (
         <AddService
           masterServices={masterServices}
-          doctors={doctors}
           onClose={closeForm}
           open={addServiceOpen}
         />

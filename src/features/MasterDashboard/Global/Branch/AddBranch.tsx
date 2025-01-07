@@ -32,6 +32,8 @@ interface IFormValues {
   phone: string;
   email: string;
   isActive: boolean;
+  gstNumber: string;
+  drugLicenceNumber: string;
 }
 
 const AddBranch: React.FC<AddBranchProps> = ({ openModal, onClose }) => {
@@ -92,6 +94,8 @@ const AddBranch: React.FC<AddBranchProps> = ({ openModal, onClose }) => {
       phone: values.phone,
       email: values.email,
       isActive: values.isActive,
+      gstNumber: values.gstNumber,
+      drugLicenceNumber: values.drugLicenceNumber,
     };
 
     // console.log("Payload to be submitted:", payload); // Log the payload
@@ -126,6 +130,9 @@ const AddBranch: React.FC<AddBranchProps> = ({ openModal, onClose }) => {
     phone: '',
     email: '',
     isActive: false,
+
+    gstNumber: '',
+    drugLicenceNumber: '',
   };
 
   const formik = useFormik({
@@ -240,8 +247,31 @@ const AddBranch: React.FC<AddBranchProps> = ({ openModal, onClose }) => {
                 onChange={formik.handleChange}
               />
             </Grid>
-
             <Grid item xs={8} sm={4} lg={3}>
+              <TextField
+                fullWidth
+                id="gstNumber"
+                name="gstNumber"
+                label="GST Number"
+                placeholder="GST Number"
+                value={formik.values.gstNumber}
+                onChange={formik.handleChange}
+              />
+            </Grid>
+            <Grid item xs={8} sm={4} lg={6}>
+              <TextField
+                fullWidth
+                id="drugLicenceNumber"
+                name="drugLicenceNumber"
+                label="Drug Licence Number"
+                placeholder="Drug Licence Number"
+                value={formik.values.drugLicenceNumber}
+                onChange={formik.handleChange}
+                helperText="If more than one, please separate with comma"
+              />
+            </Grid>
+
+            <Grid item xs={12} sm={12} lg={12}>
               <FormControlLabel
                 label="Active ?"
                 control={

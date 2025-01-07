@@ -11,6 +11,7 @@ export enum EUserRole {
 }
 
 export enum DoctorSpeciality {
+  General = 'General',
   ReproductiveEndocrinologist = 'Reproductive Endocrinologist',
   Andrologist = 'Andrologist',
   Embryologist = 'Embryologist',
@@ -19,7 +20,7 @@ export enum DoctorSpeciality {
   Gynecologist = 'Gynecologist',
   FertilityCounselor = 'Fertility Counselor',
   GeneticCounselor = 'Genetic Counselor',
-  NursePractitionerRegisteredNurse = 'Nurse Practitioner/Registered Nurse',
+  // NursePractitionerRegisteredNurse = 'Nurse Practitioner/Registered Nurse',
   Sonographer = 'Sonographer',
   Anaesthetist = 'Anaesthetist',
 }

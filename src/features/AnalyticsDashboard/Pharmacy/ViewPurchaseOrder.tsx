@@ -74,6 +74,8 @@ const ViewPurchaseOrder: React.FC<ViewPurchaseOrderProps> = ({
   const purchaseOrderLoading =
     isPurchaseOrderLoading || isPurchaseorderFetching;
 
+    console.log("Purchase Order Data", purchaseOrder)
+
   const PurchaseOrderDetails: React.FC<{ purchaseOrder: IPurchaseOrder }> = ({
     purchaseOrder,
   }) => {
@@ -108,16 +110,15 @@ const ViewPurchaseOrder: React.FC<ViewPurchaseOrderProps> = ({
           </Grid>
           <Grid item xs={6}>
             <Typography>
-              Net Amount: ₹{purchaseOrder.request.netAmount}
+              Net Amount: ₹{purchaseOrder.allResponsesNetAmount}
             </Typography>
-            <Typography>Discount: ₹{purchaseOrder.request.discount}</Typography>
             <Typography>
               Other Charges: ₹{purchaseOrder.request.otherCharges}
             </Typography>
             <Typography>
-              Sub Total: ₹{purchaseOrder.request.subTotal}
+              Sub Total: ₹{purchaseOrder.allResponsesSubTotal}
             </Typography>
-            <Typography>Tax: ₹{purchaseOrder.request.tax}</Typography>
+            <Typography>Tax: ₹{purchaseOrder.allResponsesTax}</Typography>
           </Grid>
         </Grid>
         <Divider sx={{ my: 2 }} />
