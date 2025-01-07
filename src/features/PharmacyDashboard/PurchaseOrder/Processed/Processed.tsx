@@ -155,6 +155,7 @@ const Processed: React.FC = () => {
         ...order, // Include top-level fields
         ...response, // Include response-level fields
         id: response._id || `${order._id}-response-${index}`, // Unique ID for each response
+        parentId: order._id, // Add parent PO ID
         reportKey: response.report?.key || '', // Extract the report key
         netAmount: response.netAmount, // Response-specific amount
         invoiceNumber: response.invoiceNumber, // Response-specific invoice number
@@ -183,8 +184,8 @@ const Processed: React.FC = () => {
         <ViewProcessedPurchaseOrder
           openModal={isViewModalOpen}
           onClose={closeViewModal}
-          id={selectedRow.response._id} // Use response._id for modal data
-          purchaseOrderId={selectedRow._id} // Pass the purchase order's _id
+          id={selectedRow._id} // Use response._id for modal data
+          purchaseOrderId={selectedRow.parentId} // Pass the purchase order's _id
         />
       )}
     </Box>

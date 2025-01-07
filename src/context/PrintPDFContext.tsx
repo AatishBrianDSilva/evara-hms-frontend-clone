@@ -115,7 +115,7 @@ export const PrintProvider: React.FC<{ children: React.ReactNode }> = ({
     } catch (error) {
       console.error('Error fetching PDF:', error);
       toast.dismiss('fetch-toast');
-      toast.error('Error fetching PDF');
+      toast.error('Report is being generated. Please try again shortly.');
     }
   };
 
