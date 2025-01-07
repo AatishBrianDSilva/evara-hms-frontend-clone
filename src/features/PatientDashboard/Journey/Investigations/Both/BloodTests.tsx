@@ -214,16 +214,19 @@ const BloodTests: React.FC = () => {
                   {formik.values.result.map((detail, index) => {
                     const fieldName = `result[${index}].value`;
 
-                    // Suppress TypeScript errors by casting touched and errors as any
-                    const touchedResult = formik.touched.result as any;
-                    const errorsResult = formik.errors.result as any;
+                    const touchedResult = Array.isArray(formik.touched.result)
+                      ? formik.touched.result
+                      : [];
+                    const errorsResult = Array.isArray(formik.errors.result)
+                      ? formik.errors.result
+                      : [];
 
                     const isError = Boolean(
-                      touchedResult[index]?.value && errorsResult[index]?.value,
+                      touchedResult[index] && errorsResult[index], // Check the existence of touched and errors
                     );
 
                     const helperText = isError
-                      ? errorsResult[index]?.value
+                      ? (errorsResult[index] as string)
                       : '';
 
                     if (detail.componentType === 'text') {
@@ -296,7 +299,7 @@ const BloodTests: React.FC = () => {
               </Box>
             </Box>
           </Box>
-          <Grid container spacing={2} mb={4}>
+          <Grid container spacing={2} mb={4} pt={2}>
             <Grid item xs={12}>
               <Typography variant="h6">Upload Images</Typography>
             </Grid>
