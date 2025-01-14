@@ -294,6 +294,7 @@ const DesktopHeader: React.FC = () => {
             EUserRole.Admin,
             EUserRole.CenterManager,
             EUserRole.Billing,
+            EUserRole.Doctor,
           ]}
         >
           <Grid item display={'flex'} flexDirection={'column'} md={6} lg={4}>
