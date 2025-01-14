@@ -238,6 +238,7 @@ const SpermDFI: React.FC = () => {
             <TextField
               label="Number of Sperms Evaluated"
               fullWidth
+              type="number"
               name="result.spermEvaluated"
               value={formik.values.result.spermEvaluated}
               onChange={formik.handleChange}
@@ -251,6 +252,7 @@ const SpermDFI: React.FC = () => {
             <TextField
               label="Sperms with Normal HALO"
               fullWidth
+              type="number"
               name="result.normalHalo"
               value={formik.values.result.normalHalo}
               onChange={formik.handleChange}
@@ -265,6 +267,7 @@ const SpermDFI: React.FC = () => {
               label="Sperms with No/Abnormal Halo"
               fullWidth
               name="result.noAbnormalHalo"
+              type="number"
               value={formik.values.result.noAbnormalHalo}
               onChange={formik.handleChange}
               error={Boolean(formik.errors.result?.noAbnormalHalo)}

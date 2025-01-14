@@ -84,6 +84,7 @@ const Home: React.FC = () => {
                 EUserRole.PharmacyManager,
                 EUserRole.Billing,
                 EUserRole.CenterManager,
+                EUserRole.Doctor,
               ]}
             >
               <Box display="flex" justifyContent="space-between" gap={2}>
