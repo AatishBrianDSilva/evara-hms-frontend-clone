@@ -24,6 +24,7 @@ export interface IQueryOptions {
   searchQuery?: string;
   locationQuery?: string;
   dateRange?: { startDate: string | undefined; endDate: string | undefined };
+  allData?: boolean;
 }
 
 export interface IPagination {

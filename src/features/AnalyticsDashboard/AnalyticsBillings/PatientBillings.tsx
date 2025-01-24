@@ -182,13 +182,29 @@ const PatientBillings: React.FC = () => {
 
       case 'allData':
         action = 'all data';
-        params = { allData: 'true' };
+        params = generateQueryParams({
+          filters: {
+            allData: true, // Pass allData as part of filters
+            status: selectedStatus === 'All' ? undefined : selectedStatus,
+            searchQuery: searchQuery || undefined, // Avoid empty strings
+            paymentMethod:
+              selectedMethod === 'All' ? undefined : selectedMethod,
+            billType: selectedBillType === 'All' ? undefined : selectedBillType,
+          },
+          dateRange: {
+            startDate: startDateUTC?.toISOString(),
+            endDate: endDateUTC?.toISOString(),
+          },
+        });
         filename = `patient_billings_all-${date}.csv`;
         break;
 
       default:
         throw new Error('Invalid download type');
     }
+
+    // console.log('Download Action:', action);
+    // console.log('Query Parameters:', params);
 
     await downloadFileWithToast({
       endpoint: 'analytics/billings/patient-billings/download',

@@ -98,6 +98,8 @@ const AnalyticsProcedures: React.FC = () => {
   const records = data?.data?.records || [];
   const pagination = data?.data?.pagination;
 
+  // console.log('Data', records);
+
   // Handle CSV download
   const handleDownloadCSV = () => {
     if (records.length > 0) {
@@ -138,6 +140,11 @@ const AnalyticsProcedures: React.FC = () => {
     {
       field: 'patientId',
       headerName: 'Patient ID',
+      flex: 1,
+    },
+    {
+      field: 'patientName',
+      headerName: 'Patient Name',
       flex: 1,
     },
     {

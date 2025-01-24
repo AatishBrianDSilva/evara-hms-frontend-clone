@@ -74,6 +74,16 @@ const Invoices: React.FC = () => {
         return `${day}/${month}/${year}`;
       },
     },
+    {
+      field: 'totalAmount',
+      headerName: 'Total Amount',
+      flex: 1,
+    },
+    {
+      field: 'vendorName',
+      headerName: 'Vendor Name',
+      flex: 1,
+    },
 
     {
       field: 'actions',
@@ -84,7 +94,7 @@ const Invoices: React.FC = () => {
       // custom actions for the actions column
       getActions: (params: GridRowParams) => {
         const row = params.row;
-        console.log('row', row);
+        // console.log('row', row);
 
         return [
           <GridActionsCellItem
