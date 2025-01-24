@@ -109,6 +109,11 @@ const AnalyticsServices: React.FC = () => {
       flex: 1,
     },
     {
+      field: 'patientName',
+      headerName: 'Patient Name',
+      flex: 1,
+    },
+    {
       field: 'service',
       headerName: 'service',
       flex: 1,

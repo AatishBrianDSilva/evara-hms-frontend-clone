@@ -142,6 +142,11 @@ const AnalyticsTreatmentCycle: React.FC = () => {
       flex: 1,
     },
     {
+      field: 'patientName',
+      headerName: 'Patient Name',
+      flex: 1,
+    },
+    {
       field: 'treatmentCycle',
       headerName: 'TreatmentCycle',
       flex: 1,

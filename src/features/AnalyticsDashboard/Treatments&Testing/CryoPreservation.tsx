@@ -142,6 +142,11 @@ const AnalyticsCryoPreservation: React.FC = () => {
       flex: 1,
     },
     {
+      field: 'patientName',
+      headerName: 'Patient Name',
+      flex: 1,
+    },
+    {
       field: 'cryoPreservation',
       headerName: 'Cryo Preservation',
       flex: 1,
