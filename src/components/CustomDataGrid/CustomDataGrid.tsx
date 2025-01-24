@@ -15,11 +15,11 @@ import useResponsiveColumns from '../../hooks/useResponsiveColumn';
 interface CustomDataGridProps {
   columns: GridColDef[];
   rows: GridRowsProp;
-  page?: number; // Made optional
-  pageSize?: number; // Made optional
-  totalRows?: number; // Made optional
-  onPageChange?: (page: number) => void; // Made optional
-  onPageSizeChange?: (pageSize: number) => void; // Made optional
+  page?: number;
+  pageSize?: number;
+  totalRows?: number;
+  onPageChange?: (page: number) => void;
+  onPageSizeChange?: (pageSize: number) => void;
   rowHeight?: number;
   rowHover?: boolean;
   onRowClick?: (params: any) => void;
@@ -29,22 +29,21 @@ interface CustomDataGridProps {
   loading?: boolean;
   autoHeight?: boolean;
   onAdd?: () => Promise<void>;
-  enablePagination?: boolean; // New prop to control pagination
-  showGridToolBar?: boolean; // New prop to show/hide toolbar
+  enablePagination?: boolean;
+  showGridToolBar?: boolean;
   checkboxSelection?: boolean;
-  getRowId?: (row: any) => string; // New prop to get row id
-  onSelectionChange?: (selectedIds: (string | number)[]) => void; // New prop for handling selection changes
-  extendedPageSizeOptions?: Array<number | { label: string; value: number }>; // Optional prop for extended page sizes
-  paginationMode?: 'server' | 'client'; // Optional pagination mode prop
-  pageCount?: number; // New prop for total pages
-  useUpdatedPagination?: boolean; // New prop to enable updated pagination
+  getRowId?: (row: any) => string;
+  onSelectionChange?: (selectedIds: (string | number)[]) => void;
+  extendedPageSizeOptions?: Array<number | { label: string; value: number }>;
+  paginationMode?: 'server' | 'client';
+  pageCount?: number;
+  useUpdatedPagination?: boolean;
 }
 
 interface CustomToolbarProps {
   onAdd?: () => void;
 }
 
-// CustomToolbar remains unchanged
 const CustomToolbar: React.FC<CustomToolbarProps> = ({ onAdd }) => (
   <GridToolbarContainer sx={{ p: 0.5 }}>
     {onAdd && (
@@ -58,12 +57,6 @@ const CustomToolbar: React.FC<CustomToolbarProps> = ({ onAdd }) => (
         Add Row
       </Button>
     )}
-    {/* CSV Export Button */}
-    {/* <GridToolbarExport
-      csvOptions={{
-        allColumns: true, // This option ensures all columns are exported
-      }}
-    /> */}
   </GridToolbarContainer>
 );
 
@@ -75,9 +68,9 @@ const CustomDataGrid: React.FC<CustomDataGridProps> = ({
   rowHeight = 40,
   columnHeaderHeight = 40,
   sx = {},
-  pageSizeOptions = [25, 50, 100], // Default page size options
-  extendedPageSizeOptions, // New optional prop for extended page sizes
-  useUpdatedPagination = false, // New prop to toggle updated behavior
+  pageSizeOptions = [25, 50, 100],
+  extendedPageSizeOptions,
+  useUpdatedPagination = false,
   onAdd,
   loading,
   onPageChange,
@@ -86,18 +79,17 @@ const CustomDataGrid: React.FC<CustomDataGridProps> = ({
   pageSize,
   totalRows,
   autoHeight = true,
-  enablePagination = false, // Default to false
-  showGridToolBar = false, // Default to true
+  enablePagination = false,
+  showGridToolBar = false,
   onSelectionChange,
   getRowId,
   pageCount,
-  paginationMode = 'server', // Default to client pagination
+  paginationMode = 'server',
   ...rest
 }) => {
   const responsiveColumns = useResponsiveColumns(columns);
   const theme = useTheme();
 
-  // Use extendedPageSizeOptions if provided, otherwise use the default pageSizeOptions
   const effectivePageSizeOptions = extendedPageSizeOptions || pageSizeOptions;
 
   return (
@@ -114,8 +106,7 @@ const CustomDataGrid: React.FC<CustomDataGridProps> = ({
       slotProps={{
         toolbar: { onAdd },
       }}
-      rowCount={totalRows || 0} // Use 0 as a default value
-      // pageCount={pageCount || Math.ceil((totalRows || 0) / (pageSize || 25))}
+      rowCount={totalRows || 0}
       columns={responsiveColumns}
       rows={rows}
       getRowId={getRowId}
@@ -147,22 +138,29 @@ const CustomDataGrid: React.FC<CustomDataGridProps> = ({
         pagination: true,
         pageSizeOptions: effectivePageSizeOptions,
         paginationMode: paginationMode,
+
         ...(useUpdatedPagination
           ? {
+              // Updated Pagination Logic
               paginationModel: {
-                page: page ? page - 1 : 0, // Adjust for zero-based index
+                page: page ? page - 1 : 0,
                 pageSize: pageSize || 25,
               },
               onPaginationModelChange: model => {
-                if (onPageChange) onPageChange(model.page + 1); // Convert back to one-based index
+                if (onPageChange) onPageChange(model.page + 1);
                 if (onPageSizeChange) onPageSizeChange(model.pageSize);
               },
             }
           : {
-              page,
-              pageSize,
-              onPageChange,
-              onPageSizeChange,
+              // Default Pagination Logic
+              paginationModel: {
+                page: page ? page - 1 : 0,
+                pageSize: pageSize || 25,
+              },
+              onPaginationModelChange: model => {
+                if (onPageChange) onPageChange(model.page + 1);
+                if (onPageSizeChange) onPageSizeChange(model.pageSize);
+              },
             }),
       })}
       checkboxSelection={checkboxSelection}
