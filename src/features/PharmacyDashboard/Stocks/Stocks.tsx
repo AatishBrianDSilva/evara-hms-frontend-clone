@@ -50,7 +50,7 @@ const Stocks: React.FC = () => {
     paginate: true,
     page: page + 1,
     limit: pageSize,
-    sort: { updatedAt: -1 },
+    sort: { 'item.name': 1 },
     searchQuery: `searchTerm:${searchQuery}`,
   });
 
@@ -121,36 +121,40 @@ const Stocks: React.FC = () => {
     // "Other",
   ];
 
-  const transformedStocks = stocks.flatMap((stock, stockIndex) =>
-    stock.batches.map((batch, batchIndex) => {
-      const locationQuantities = locations.reduce(
-        (acc: { [key: string]: number }, location) => {
-          acc[location] = getQuantityByLocation(batch, location);
-          return acc;
-        },
-        {},
-      );
+  const transformedStocks = useMemo(() => {
+    return stocks
+      .flatMap((stock, stockIndex) =>
+        stock.batches.map((batch, batchIndex) => {
+          const locationQuantities = locations.reduce(
+            (acc: { [key: string]: number }, location) => {
+              acc[location] = getQuantityByLocation(batch, location);
+              return acc;
+            },
+            {},
+          );
 
-      const totalQuantity = Object.values(locationQuantities).reduce(
-        (sum, quantity) => sum + quantity,
-        0,
-      );
+          const totalQuantity = Object.values(locationQuantities).reduce(
+            (sum, quantity) => sum + quantity,
+            0,
+          );
 
-      return {
-        id: `${stockIndex}-${batchIndex}`,
-        itemName: stock.item?.name || 'N/A',
-        category: _.upperFirst(stock.item?.category?.name) || 'N/A',
-        type: _.upperFirst(stock.item?.type?.name) || 'N/A',
-        batchNo: batch.batchNo,
-        expiryDate: new Date(batch.expiryDate).toISOString(),
-        ...locationQuantities,
-        sellPrice: formatToIndianCurrencyFormat(batch.sellPrice),
-        latestExpiryDate: new Date(batch.expiryDate).toISOString(),
-        updatedAt: new Date(stock.updatedAt).toISOString(),
-        quantity: totalQuantity,
-      };
-    }),
-  );
+          return {
+            id: `${stockIndex}-${batchIndex}`,
+            itemName: stock.item?.name || 'N/A',
+            category: _.upperFirst(stock.item?.category?.name) || 'N/A',
+            type: _.upperFirst(stock.item?.type?.name) || 'N/A',
+            batchNo: batch.batchNo,
+            expiryDate: new Date(batch.expiryDate).toISOString(),
+            ...locationQuantities,
+            sellPrice: formatToIndianCurrencyFormat(batch.sellPrice),
+            latestExpiryDate: new Date(batch.expiryDate).toISOString(),
+            updatedAt: new Date(stock.updatedAt).toISOString(),
+            quantity: totalQuantity,
+          };
+        }),
+      )
+      .sort((a, b) => a.itemName.localeCompare(b.itemName)); // Sort transformed data
+  }, [stocks, locations]);
 
   const columnsConfig: GridColDef[] = useMemo(
     () => [
