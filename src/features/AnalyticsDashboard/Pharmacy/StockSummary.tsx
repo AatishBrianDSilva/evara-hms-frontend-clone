@@ -69,8 +69,12 @@ const StockSummaryReports: React.FC = () => {
 
       case 'allData':
         action = 'all data';
-        params = { allData: 'true' };
-        filename = `stock_report-${date}.csv`;
+        params = generateQueryParams({
+          filters: {
+            allData: true, // Pass allData as part of filters
+          },
+        });
+        filename = `patient_billings_all-${date}.csv`;
         break;
 
       default:
@@ -99,7 +103,6 @@ const StockSummaryReports: React.FC = () => {
 
   const records = data?.data?.records || [];
   const pagination = data?.data?.pagination;
-
 
   const columnsConfig: GridColDef[] = [
     { field: 'id', headerName: 'Sl.No', flex: 0.5 },

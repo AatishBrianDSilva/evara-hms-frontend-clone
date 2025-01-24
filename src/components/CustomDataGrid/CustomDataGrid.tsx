@@ -37,6 +37,7 @@ interface CustomDataGridProps {
   extendedPageSizeOptions?: Array<number | { label: string; value: number }>; // Optional prop for extended page sizes
   paginationMode?: 'server' | 'client'; // Optional pagination mode prop
   pageCount?: number; // New prop for total pages
+  useUpdatedPagination?: boolean; // New prop to enable updated pagination
 }
 
 interface CustomToolbarProps {
@@ -76,6 +77,7 @@ const CustomDataGrid: React.FC<CustomDataGridProps> = ({
   sx = {},
   pageSizeOptions = [25, 50, 100], // Default page size options
   extendedPageSizeOptions, // New optional prop for extended page sizes
+  useUpdatedPagination = false, // New prop to toggle updated behavior
   onAdd,
   loading,
   onPageChange,
@@ -145,14 +147,23 @@ const CustomDataGrid: React.FC<CustomDataGridProps> = ({
         pagination: true,
         pageSizeOptions: effectivePageSizeOptions,
         paginationMode: paginationMode,
-        paginationModel: {
-          page: page ? page - 1 : 0, // Adjust for zero-based index
-          pageSize: pageSize || 25, // Default page size
-        },
-        onPaginationModelChange: model => {
-          if (onPageChange) onPageChange(model.page + 1); // Convert back to one-based index
-          if (onPageSizeChange) onPageSizeChange(model.pageSize);
-        },
+        ...(useUpdatedPagination
+          ? {
+              paginationModel: {
+                page: page ? page - 1 : 0, // Adjust for zero-based index
+                pageSize: pageSize || 25,
+              },
+              onPaginationModelChange: model => {
+                if (onPageChange) onPageChange(model.page + 1); // Convert back to one-based index
+                if (onPageSizeChange) onPageSizeChange(model.pageSize);
+              },
+            }
+          : {
+              page,
+              pageSize,
+              onPageChange,
+              onPageSizeChange,
+            }),
       })}
       checkboxSelection={checkboxSelection}
       onRowSelectionModelChange={newSelection => {
