@@ -39,10 +39,10 @@ export const downloadFileWithToast = async ({
       headers,
       responseType: 'blob',
     });
+    console.log('Response Data:', response.data);
 
-    const blob = new Blob([response.data], {
-      type: response.headers['content-type'] || 'text/csv',
-    });
+    const blob = new Blob([response.data], { type: 'text/csv;charset=utf-8;' });
+
     const downloadUrl = window.URL.createObjectURL(blob);
 
     const link = document.createElement('a');
