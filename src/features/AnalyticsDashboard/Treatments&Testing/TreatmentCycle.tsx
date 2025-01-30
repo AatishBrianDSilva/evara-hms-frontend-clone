@@ -1,5 +1,5 @@
 import React, { useState, useCallback } from 'react';
-import { Box, TextField, Button, MenuItem } from '@mui/material';
+import { Box, TextField, Button, MenuItem, Typography } from '@mui/material';
 import ContentSection from '../../../components/ContentSection/ContentSection';
 import CustomDataGrid from '../../../components/CustomDataGrid/CustomDataGrid';
 import { GridActionsCellItem, GridColDef } from '@mui/x-data-grid';
@@ -98,6 +98,7 @@ const AnalyticsTreatmentCycle: React.FC = () => {
 
   const records = data?.data?.records || [];
   const pagination = data?.data?.pagination;
+  const summary = data?.data?.summary;
 
   // Handle CSV download
   const handleDownloadCSV = () => {
@@ -139,6 +140,11 @@ const AnalyticsTreatmentCycle: React.FC = () => {
     {
       field: 'patientId',
       headerName: 'Patient ID',
+      flex: 1,
+    },
+    {
+      field: 'patientName',
+      headerName: 'Patient Name',
       flex: 1,
     },
     {
@@ -241,6 +247,29 @@ const AnalyticsTreatmentCycle: React.FC = () => {
           files={selectedFiles}
         />
       )}
+
+      <Box
+        mt={4}
+        p={2}
+        width="40%"
+        display="flex"
+        flexDirection="column"
+        ml="auto"
+      >
+        <Typography variant="h5" gutterBottom color="primary" fontWeight="bold">
+          Summary
+        </Typography>
+        <Box mt={2} display="flex" flexDirection="column" gap={2} width="100%">
+          <Box display="flex" justifyContent="space-between" width="100%">
+            <Typography variant="h6" fontWeight="bold">
+              Total Amount
+            </Typography>
+            <Typography variant="body1" color="textSecondary">
+              {formatToIndianCurrencyFormat(summary?.totalAmount || 0)}
+            </Typography>
+          </Box>
+        </Box>
+      </Box>
     </ContentSection>
   );
 };

@@ -1,5 +1,5 @@
 import React, { useState, useCallback } from 'react';
-import { Box, TextField, Button } from '@mui/material';
+import { Box, TextField, Button, Typography } from '@mui/material';
 import ContentSection from '../../../components/ContentSection/ContentSection';
 import CustomDataGrid from '../../../components/CustomDataGrid/CustomDataGrid';
 import { GridColDef } from '@mui/x-data-grid';
@@ -75,6 +75,7 @@ const AnalyticsServices: React.FC = () => {
 
   const records = data?.data?.records || [];
   const pagination = data?.data?.pagination;
+  const summary = data?.data?.summary;
 
   // Handle CSV download
   const handleDownloadCSV = () => {
@@ -106,6 +107,11 @@ const AnalyticsServices: React.FC = () => {
     {
       field: 'patientId',
       headerName: 'Patient ID',
+      flex: 1,
+    },
+    {
+      field: 'patientName',
+      headerName: 'Patient Name',
       flex: 1,
     },
     {
@@ -160,6 +166,29 @@ const AnalyticsServices: React.FC = () => {
         loading={isLoading || isFetching} // Use the loading prop in DataGrid
         extendedPageSizeOptions={[25, 50, 100, { label: 'All', value: -1 }]} // Add pagination options
       />
+
+      <Box
+        mt={4}
+        p={2}
+        width="40%"
+        display="flex"
+        flexDirection="column"
+        ml="auto"
+      >
+        <Typography variant="h5" gutterBottom color="primary" fontWeight="bold">
+          Summary
+        </Typography>
+        <Box mt={2} display="flex" flexDirection="column" gap={2} width="100%">
+          <Box display="flex" justifyContent="space-between" width="100%">
+            <Typography variant="h6" fontWeight="bold">
+              Total Amount
+            </Typography>
+            <Typography variant="body1" color="textSecondary">
+              {formatToIndianCurrencyFormat(summary?.totalAmount || 0)}
+            </Typography>
+          </Box>
+        </Box>
+      </Box>
     </ContentSection>
   );
 };

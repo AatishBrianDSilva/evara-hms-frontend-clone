@@ -52,6 +52,7 @@ const PatientsList: React.FC = () => {
     limit: pageSize,
     searchQuery: searchQuery,
     paginate: true,
+    sort: { createdAt: -1 }, // Sort by patientId in descending order
   });
 
   console.log('Patients list', patients);

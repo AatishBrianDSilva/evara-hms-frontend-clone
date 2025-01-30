@@ -23,6 +23,7 @@ import _ from 'lodash';
 import CustomDatePicker from '../../components/CustomDatePicker/CustomDatePicker';
 import { IPatient } from '../../types/patient';
 import FieldAutocomplete from '../../components/FieldAutoComplete/FieldAutoComplete';
+import { useGetPatientSourcesQuery } from '../../services/masterDashboardService/local/patientSourceApi';
 
 interface IEditPatient {
   openEditPatientModal: boolean;
@@ -104,6 +105,19 @@ const EditPatient: React.FC<IEditPatient> = ({
   const [userId] = useState<string>(generateRandomUserId());
 
   const [updatePatient, { isLoading }] = useUpdatePatientMutation();
+
+  const {
+    data: PatientSourceData,
+    isLoading: PatientSourceLoading,
+    isFetching: PatientSourceFetching,
+  } = useGetPatientSourcesQuery({
+    paginate: false,
+    filters: { isAdmin: true, isGlobal: false },
+  });
+
+  const sourceLoading = PatientSourceFetching || PatientSourceLoading;
+
+  const PatientSources = PatientSourceData?.data || [];
 
   const handleSubmit = async (values: any) => {
     values.image = fileUploadedUrl[0];
@@ -926,23 +940,16 @@ const EditPatient: React.FC<IEditPatient> = ({
               />
             </Grid>
             <Grid item xs={12} sm={6} md={3}>
-              <TextField
-                ref={inputRefs.marketingSource}
-                fullWidth
-                id="register-marketingSource-id"
-                name="marketingSource"
+              <FieldAutocomplete
                 label="Marketing Source"
-                placeholder="Marketing Source"
+                options={PatientSources.map(source => source.name)}
+                isOptionEqualToValue={(option, value) => option === value}
+                getOptionLabel={option => option}
+                loading={sourceLoading}
                 value={formik.values.marketingSource}
-                onChange={formik.handleChange}
-                error={
-                  formik.touched.marketingSource &&
-                  Boolean(formik.errors.marketingSource)
-                }
-                helperText={
-                  formik.touched.marketingSource &&
-                  formik.errors.marketingSource
-                }
+                onChange={value => {
+                  formik.setFieldValue('marketingSource', value);
+                }}
               />
             </Grid>
             <Grid item xs={12} sm={6} md={4}>
