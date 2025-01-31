@@ -130,6 +130,8 @@ import AnalyticsServices from '../features/AnalyticsDashboard/Treatments&Testing
 import AnalyticsPatientPackages from '../features/AnalyticsDashboard/Treatments&Testing/PatientPackages';
 import AnalyticsMasterPackages from '../features/AnalyticsDashboard/Treatments&Testing/MasterPackages';
 
+const allRoles = Object.values(EUserRole);
+
 interface ProtectedRouteProps {
   allowedRoles: string[];
   navigateTo: '/login' | '/not-authorized';
@@ -158,12 +160,7 @@ const AppRoutes: React.FC = () => (
     <Route element={<Layout />}>
       <Route
         path="/"
-        element={
-          <ProtectedRoute
-            allowedRoles={Object.values(EUserRole)}
-            navigateTo="/login"
-          />
-        }
+        element={<ProtectedRoute allowedRoles={allRoles} navigateTo="/login" />}
       >
         <Route index element={<Home />} />
 
@@ -171,13 +168,7 @@ const AppRoutes: React.FC = () => (
           path="ivf-registration"
           element={
             <ProtectedRoute
-              allowedRoles={[
-                EUserRole.Admin,
-                EUserRole.Doctor,
-                EUserRole.Nurse,
-                EUserRole.Reception,
-                EUserRole.CenterManager,
-              ]}
+              allowedRoles={allRoles}
               navigateTo="/not-authorized"
             />
           }
@@ -206,7 +197,7 @@ const AppRoutes: React.FC = () => (
           path="patients"
           element={
             <ProtectedRoute
-              allowedRoles={Object.values(EUserRole)}
+              allowedRoles={allRoles}
               navigateTo={'/not-authorized'}
             />
           }
@@ -325,7 +316,7 @@ const AppRoutes: React.FC = () => (
           path="appointments"
           element={
             <ProtectedRoute
-              allowedRoles={Object.values(EUserRole)}
+              allowedRoles={allRoles}
               navigateTo={'/not-authorized'}
             />
           }
@@ -337,14 +328,7 @@ const AppRoutes: React.FC = () => (
           path="pharmacy"
           element={
             <ProtectedRoute
-              allowedRoles={[
-                EUserRole.Admin,
-                EUserRole.Billing,
-                EUserRole.Pharmacist,
-                EUserRole.PharmacyManager,
-                EUserRole.Embryologist,
-                EUserRole.CenterManager,
-              ]}
+              allowedRoles={allRoles}
               navigateTo={'/not-authorized'}
             />
           }
