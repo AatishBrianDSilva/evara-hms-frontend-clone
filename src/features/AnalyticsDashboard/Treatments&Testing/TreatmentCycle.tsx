@@ -1,20 +1,19 @@
 import React, { useState, useCallback } from 'react';
-import { Box, TextField, Button, MenuItem, Typography } from '@mui/material';
+import { Box, TextField, MenuItem, Typography } from '@mui/material';
 import ContentSection from '../../../components/ContentSection/ContentSection';
 import CustomDataGrid from '../../../components/CustomDataGrid/CustomDataGrid';
 import { GridActionsCellItem, GridColDef } from '@mui/x-data-grid';
 import { formatToIndianCurrencyFormat } from '../../../utils/formatToIndianCurrencyFormat';
 import debounce from 'lodash/debounce';
-import { exportToCSV } from '../../../utils/exportCSV'; // Import the CSV utility
 import CustomeDateRangePicker from '../../../components/CustomDateRangePicker/CustomDateRangePicker';
 import { endOfWeek, startOfWeek } from 'date-fns';
 import { Visibility } from '@mui/icons-material';
 import ViewReports from '../../PatientDashboard/Journey/ViewReports';
-import {
-  TreatmentCycleReportsResponse,
-  useGetTreatmentCycleReportsQuery,
-} from '../../../services/analyticsDashboardService/treatment&testing/treatmentTestingApi';
+import { useGetTreatmentCycleReportsQuery } from '../../../services/analyticsDashboardService/treatment&testing/treatmentTestingApi';
 import { IQueryOptions } from '../../../types/global';
+import { downloadFileWithToast } from '../../../utils/downloadFileWithToast';
+import generateQueryParams from '../../../utils/generateQueryParams';
+import DownloadMenu from '../../../components/CSVDownloadMenu/CSVDownloadMenu';
 
 const AnalyticsTreatmentCycle: React.FC = () => {
   const [page, setPage] = useState<number>(1);
@@ -101,32 +100,107 @@ const AnalyticsTreatmentCycle: React.FC = () => {
   const summary = data?.data?.summary;
 
   // Handle CSV download
-  const handleDownloadCSV = () => {
-    if (records.length > 0) {
-      const headers = [
-        'Date',
-        'Patient ID',
-        'Treatment Cycle',
-        'Doctor',
-        'Amount',
-        'Status',
-      ];
+  // const handleDownloadCSV = () => {
+  //   if (records.length > 0) {
+  //     const headers = [
+  //       'Date',
+  //       'Patient ID',
+  //       'Treatment Cycle',
+  //       'Doctor',
+  //       'Amount',
+  //       'Status',
+  //     ];
 
-      const formattedData = records.map(
-        (treatmentCycle: TreatmentCycleReportsResponse) => [
-          new Date(treatmentCycle.date).toLocaleDateString('en-In'),
-          treatmentCycle.patientId,
-          treatmentCycle.treatmentCycle,
-          treatmentCycle.doctor,
-          formatToIndianCurrencyFormat(treatmentCycle.amount),
-          treatmentCycle.status,
-        ],
-      );
+  //     const formattedData = records.map(
+  //       (treatmentCycle: TreatmentCycleReportsResponse) => [
+  //         new Date(treatmentCycle.date).toLocaleDateString('en-In'),
+  //         treatmentCycle.patientId,
+  //         treatmentCycle.treatmentCycle,
+  //         treatmentCycle.doctor,
+  //         formatToIndianCurrencyFormat(treatmentCycle.amount),
+  //         treatmentCycle.status,
+  //       ],
+  //     );
 
-      exportToCSV([headers, ...formattedData], 'Treatment Cycle');
-    } else {
-      console.log('No data to export');
+  //     exportToCSV([headers, ...formattedData], 'Treatment Cycle');
+  //   } else {
+  //     console.log('No data to export');
+  //   }
+  // };
+
+  const handleDownload = async (
+    downloadType: 'currentPage' | 'currentFilters' | 'allData',
+  ) => {
+    let params: any = {};
+    let action = '';
+    const date = new Date().toLocaleDateString('en-IN');
+    let filename = '';
+
+    // Define different download types and parameters
+    switch (downloadType) {
+      case 'currentPage':
+        action = 'current page';
+        params = generateQueryParams({
+          paginate: true,
+          page,
+          limit: pageSize,
+          dateRange: {
+            startDate: startDate?.toISOString(),
+            endDate: endDate?.toISOString(),
+          },
+          filters: {
+            search: searchValue || undefined,
+            status: status === 'All' ? undefined : status,
+          },
+        });
+        filename = `treatment_cycle_page_${page}_${date}.csv`;
+        break;
+
+      case 'currentFilters':
+        action = 'filtered data';
+        params = generateQueryParams({
+          paginate: false,
+          dateRange: {
+            startDate: startDate?.toISOString(),
+            endDate: endDate?.toISOString(),
+          },
+          filters: {
+            search: searchValue || undefined,
+            status: status === 'All' ? undefined : status,
+          },
+        });
+        filename = `treatment_cycle_filtered_${date}.csv`;
+        break;
+
+      case 'allData':
+        action = 'all data';
+        params = generateQueryParams({
+          paginate: false,
+          filters: {
+            allData: true,
+            search: searchValue || undefined,
+          },
+          dateRange: {
+            startDate: startDate?.toISOString(),
+            endDate: endDate?.toISOString(),
+          },
+        });
+        filename = `treatment_cycle_all_${date}.csv`;
+        break;
+
+      default:
+        throw new Error('Invalid download type');
     }
+
+    // Call the download utility with toast messages
+    await downloadFileWithToast({
+      endpoint: 'analytics/treatments-testing/treatment-cycle-reports/download',
+      params,
+      fileName: filename,
+      successMessage: `Successfully downloaded ${action}!`,
+      errorMessage: `Failed to download ${action}.`,
+      startMessage: `Preparing to download ${action}...`,
+    });
   };
 
   const columnsConfig: GridColDef[] = [
@@ -220,9 +294,7 @@ const AnalyticsTreatmentCycle: React.FC = () => {
           onChange={handleSearchChange}
         />
 
-        <Button variant="contained" color="primary" onClick={handleDownloadCSV}>
-          Download CSV
-        </Button>
+        <DownloadMenu handleDownload={handleDownload} />
       </Box>
 
       <CustomDataGrid

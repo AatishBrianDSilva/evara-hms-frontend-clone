@@ -1,19 +1,18 @@
 import React, { useState, useCallback } from 'react';
-import { Box, TextField, Button, Typography } from '@mui/material';
+import { Box, TextField, Typography } from '@mui/material';
 import ContentSection from '../../../components/ContentSection/ContentSection';
 import CustomDataGrid from '../../../components/CustomDataGrid/CustomDataGrid';
 import { GridColDef } from '@mui/x-data-grid';
 import { formatToIndianCurrencyFormat } from '../../../utils/formatToIndianCurrencyFormat';
 import debounce from 'lodash/debounce';
-import { exportToCSV } from '../../../utils/exportCSV'; // Import the CSV utility
 import CustomeDateRangePicker from '../../../components/CustomDateRangePicker/CustomDateRangePicker';
 import { endOfWeek, startOfWeek } from 'date-fns';
-import {
-  MasterPackagesReportResponse,
-  useGetMasterPackageReportsQuery,
-} from '../../../services/analyticsDashboardService/treatment&testing/treatmentTestingApi';
+import { useGetMasterPackageReportsQuery } from '../../../services/analyticsDashboardService/treatment&testing/treatmentTestingApi';
 import { IQueryOptions } from '../../../types/global';
 import PopoverCell from '../../../components/PopoverCell/PopoverCell';
+import { downloadFileWithToast } from '../../../utils/downloadFileWithToast';
+import generateQueryParams from '../../../utils/generateQueryParams';
+import DownloadMenu from '../../../components/CSVDownloadMenu/CSVDownloadMenu';
 
 const AnalyticsMasterPackages: React.FC = () => {
   const [page, setPage] = useState<number>(1);
@@ -79,38 +78,108 @@ const AnalyticsMasterPackages: React.FC = () => {
   const pagination = data?.data?.pagination;
 
   // Handle CSV download
-  const handleDownloadCSV = () => {
-    if (records.length > 0) {
-      const headers = [
-        'Name',
-        'Created Date',
-        'Gender',
-        'Investigations',
-        'Procedures',
-        'Cryo-Preservations',
-        'Services',
-        'Treatments',
-        'Price',
-      ];
+  // const handleDownloadCSV = () => {
+  //   if (records.length > 0) {
+  //     const headers = [
+  //       'Name',
+  //       'Created Date',
+  //       'Gender',
+  //       'Investigations',
+  //       'Procedures',
+  //       'Cryo-Preservations',
+  //       'Services',
+  //       'Treatments',
+  //       'Price',
+  //     ];
 
-      const formattedData = records.map(
-        (Package: MasterPackagesReportResponse) => [
-          Package.name,
-          new Date(Package.createdAt).toLocaleDateString('en-In'),
-          Package.gender,
-          Package.investigations,
-          Package.procedures,
-          Package.cryoPreservations,
-          Package.services,
-          Package.treatmentCycles,
-          formatToIndianCurrencyFormat(Package.price),
-        ],
-      );
+  //     const formattedData = records.map(
+  //       (Package: MasterPackagesReportResponse) => [
+  //         Package.name,
+  //         new Date(Package.createdAt).toLocaleDateString('en-In'),
+  //         Package.gender,
+  //         Package.investigations,
+  //         Package.procedures,
+  //         Package.cryoPreservations,
+  //         Package.services,
+  //         Package.treatmentCycles,
+  //         formatToIndianCurrencyFormat(Package.price),
+  //       ],
+  //     );
 
-      exportToCSV([headers, ...formattedData], 'Master Packages');
-    } else {
-      console.log('No data to export');
+  //     exportToCSV([headers, ...formattedData], 'Master Packages');
+  //   } else {
+  //     console.log('No data to export');
+  //   }
+  // };
+
+  const handleDownload = async (
+    downloadType: 'currentPage' | 'currentFilters' | 'allData',
+  ) => {
+    let params: any = {};
+    let action = '';
+    const date = new Date().toLocaleDateString('en-IN');
+    let filename = '';
+
+    switch (downloadType) {
+      case 'currentPage':
+        action = 'current page';
+        params = generateQueryParams({
+          paginate: false,
+          page,
+          limit: pageSize,
+          dateRange: {
+            startDate: startDate?.toISOString(),
+            endDate: endDate?.toISOString(),
+          },
+          filters: {
+            search: searchValue || undefined,
+          },
+        });
+        filename = `master_packages_page_${page}-${date}.csv`;
+        break;
+
+      case 'currentFilters':
+        action = 'filtered data';
+        params = generateQueryParams({
+          paginate: false,
+          dateRange: {
+            startDate: startDate?.toISOString(),
+            endDate: endDate?.toISOString(),
+          },
+          filters: {
+            search: searchValue || undefined,
+          },
+        });
+        filename = `master_packages_filtered-${date}.csv`;
+        break;
+
+      case 'allData':
+        action = 'all data';
+        params = generateQueryParams({
+          filters: {
+            allData: true,
+            search: searchValue || undefined,
+          },
+          dateRange: {
+            startDate: startDate?.toISOString(),
+            endDate: endDate?.toISOString(),
+          },
+        });
+        filename = `master_packages_all-${date}.csv`;
+        break;
+
+      default:
+        throw new Error('Invalid download type');
     }
+
+    await downloadFileWithToast({
+      endpoint: 'analytics/treatments-testing/master-package-reports/download',
+      params,
+      fileName: filename,
+      successMessage: `Successfully downloaded ${action}!`,
+      errorMessage: `Failed to download ${action}.`,
+      startMessage: `Preparing to download ${action}...`,
+    });
   };
 
   const columnsConfig: GridColDef[] = [
@@ -275,9 +344,7 @@ const AnalyticsMasterPackages: React.FC = () => {
           onChange={handleSearchChange}
         />
 
-        <Button variant="contained" color="primary" onClick={handleDownloadCSV}>
-          Download CSV
-        </Button>
+        <DownloadMenu handleDownload={handleDownload} />
       </Box>
 
       <CustomDataGrid

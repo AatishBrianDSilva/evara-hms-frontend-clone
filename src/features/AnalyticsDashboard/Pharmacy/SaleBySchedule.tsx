@@ -1,14 +1,16 @@
 import React, { useState } from 'react';
 import ContentSection from '../../../components/ContentSection/ContentSection';
-import { Box, Button, Grid } from '@mui/material';
+import { Box, Grid } from '@mui/material';
 import CustomDataGrid from '../../../components/CustomDataGrid/CustomDataGrid';
 import { GridColDef } from '@mui/x-data-grid';
-import { exportToCSV } from '../../../utils/exportCSV';
 import { useGetSalesByScheduleQuery } from '../../../services/analyticsDashboardService/pharmacy/salesByScheduleApi';
 import _ from 'lodash';
 import { format } from 'date-fns';
 import CustomeDateRangePicker from '../../../components/CustomDateRangePicker/CustomDateRangePicker';
 import { formatToIndianCurrencyFormat } from '../../../utils/formatToIndianCurrencyFormat';
+import { downloadFileWithToast } from '../../../utils/downloadFileWithToast';
+import generateQueryParams from '../../../utils/generateQueryParams';
+import DownloadMenu from '../../../components/CSVDownloadMenu/CSVDownloadMenu';
 
 const SaleBySchedule: React.FC = () => {
   const [page, setPage] = useState<number>(1);
@@ -59,50 +61,114 @@ const SaleBySchedule: React.FC = () => {
     setPageSize(newPageSize);
   };
 
-  const handleDownloadCSV = () => {
-    if (data?.data?.records && data.data.records.length > 0) {
-      // Define the headers for the CSV file
-      const headers = [
-        'S No',
-        'Sale Date',
-        'Doctor Name',
-        'Patient Name',
-        'Pharmacy Drug',
-        'Drug Category',
-        'Drug Type',
-        'Batch Num',
-        'Expiry Date',
-        'Quantity',
-        'Bill Amount',
-      ];
+  // const handleDownloadCSV = () => {
+  //   if (data?.data?.records && data.data.records.length > 0) {
+  //     // Define the headers for the CSV file
+  //     const headers = [
+  //       'S No',
+  //       'Sale Date',
+  //       'Doctor Name',
+  //       'Patient Name',
+  //       'Pharmacy Drug',
+  //       'Drug Category',
+  //       'Drug Type',
+  //       'Batch Num',
+  //       'Expiry Date',
+  //       'Quantity',
+  //       'Bill Amount',
+  //     ];
 
-      // Format the data with date fields in dd/MM/yyyy format
-      const formattedData = (data?.data?.records || []).map((record: any) => {
-        return {
-          serialNumber: record.serialNumber,
-          saleDate: record.saleDate
-            ? format(new Date(record.saleDate), 'dd/MM/yyyy')
-            : '',
-          doctorName: record.doctorName || '',
-          patientName: record.patientName || '',
-          pharmacyDrug: record.pharmacyDrug || '',
-          drugCategory: record.drugCategory || '',
-          drugType: record.drugType || '',
-          batchNum: record.batchNum || '',
-          expiryDate: record.expiryDate
-            ? format(new Date(record.expiryDate), 'dd/MM/yyyy')
-            : '',
-          quantity: record.quantity || '',
-          billAmount: formatToIndianCurrencyFormat(record.billAmount || ''),
-        };
-      });
+  //     // Format the data with date fields in dd/MM/yyyy format
+  //     const formattedData = (data?.data?.records || []).map((record: any) => {
+  //       return {
+  //         serialNumber: record.serialNumber,
+  //         saleDate: record.saleDate
+  //           ? format(new Date(record.saleDate), 'dd/MM/yyyy')
+  //           : '',
+  //         doctorName: record.doctorName || '',
+  //         patientName: record.patientName || '',
+  //         pharmacyDrug: record.pharmacyDrug || '',
+  //         drugCategory: record.drugCategory || '',
+  //         drugType: record.drugType || '',
+  //         batchNum: record.batchNum || '',
+  //         expiryDate: record.expiryDate
+  //           ? format(new Date(record.expiryDate), 'dd/MM/yyyy')
+  //           : '',
+  //         quantity: record.quantity || '',
+  //         billAmount: formatToIndianCurrencyFormat(record.billAmount || ''),
+  //       };
+  //     });
 
-      // Export formatted data to CSV
-      exportToCSV([headers, ...formattedData], 'SaleBySchedule_Report');
-    } else {
-      console.log('No data to export');
+  //     // Export formatted data to CSV
+  //     exportToCSV([headers, ...formattedData], 'SaleBySchedule_Report');
+  //   } else {
+  //     console.log('No data to export');
+  //   }
+  // };
+
+  const handleDownload = async (
+    downloadType: 'currentPage' | 'currentFilters' | 'allData',
+  ) => {
+    let params: any = {};
+    let action = '';
+    const date = new Date().toLocaleDateString('en-IN');
+    let filename = '';
+
+    switch (downloadType) {
+      case 'currentPage':
+        action = 'current page';
+        params = generateQueryParams({
+          paginate: false,
+          page,
+          limit: pageSize,
+          dateRange: {
+            startDate: startDate?.toISOString(),
+            endDate: endDate?.toISOString(),
+          },
+        });
+        filename = `sale_by_schedule_page_${page}-${date}.csv`;
+        break;
+
+      case 'currentFilters':
+        action = 'filtered data';
+        params = generateQueryParams({
+          paginate: false,
+          dateRange: {
+            startDate: startDate?.toISOString(),
+            endDate: endDate?.toISOString(),
+          },
+        });
+        filename = `sale_by_schedule_filtered-${date}.csv`;
+        break;
+
+      case 'allData':
+        action = 'all data';
+        params = generateQueryParams({
+          filters: {
+            allData: true,
+          },
+          dateRange: {
+            startDate: startDate?.toISOString(),
+            endDate: endDate?.toISOString(),
+          },
+        });
+        filename = `sale_by_schedule_all-${date}.csv`;
+        break;
+
+      default:
+        throw new Error('Invalid download type');
     }
+
+    await downloadFileWithToast({
+      endpoint: 'analytics/pharmacy/sales-by-schedule/download',
+      params,
+      fileName: filename,
+      successMessage: `Successfully downloaded ${action}!`,
+      errorMessage: `Failed to download ${action}.`,
+      startMessage: `Preparing to download ${action}...`,
+    });
   };
+
   const formatDate = (date: string) => format(new Date(date), 'dd/MM/yyyy');
 
   const columnsConfig: GridColDef[] = [
@@ -145,14 +211,7 @@ const SaleBySchedule: React.FC = () => {
         <Grid item>
           <Box display="flex" alignItems="center">
             <CustomeDateRangePicker onChange={handleDateChange} />
-            <Button
-              variant="contained"
-              color="primary"
-              onClick={handleDownloadCSV}
-              style={{ marginLeft: '8px' }}
-            >
-              Download CSV
-            </Button>
+            <DownloadMenu handleDownload={handleDownload} />
           </Box>
         </Grid>
       </Grid>
