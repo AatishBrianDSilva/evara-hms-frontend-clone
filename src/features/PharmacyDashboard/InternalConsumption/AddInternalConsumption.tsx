@@ -18,6 +18,7 @@ import { IDrugLocation } from '../../../types/pharmacyDashboard/master';
 import { useToast } from '../../../context/ToastContext';
 import { useAddInternalConsumptionMutation } from '../../../services/pharmacyDashboardService/internalConsumptionApi';
 import _ from 'lodash';
+import { useGetPatientsQuery } from '../../../services/patientsApi';
 
 interface AddInternalConsumptionProps {
   open: boolean;
@@ -34,6 +35,8 @@ interface IInternalConsumptionItem {
   item: IPharmacyStock | null;
   transferFrom: ITransferFrom | null;
   quantity: number | null;
+  patient: any | null; // Patient data for the item
+  notes: string;
 }
 
 interface IInternalConsumptionFormValues {
@@ -50,9 +53,24 @@ const AddInternalConsumption: React.FC<AddInternalConsumptionProps> = ({
   const [addInternalConsumption, { isLoading }] =
     useAddInternalConsumptionMutation();
 
+  const { data: patientsData, isLoading: isPatientsLoading } =
+    useGetPatientsQuery({
+      paginate: false,
+    });
+
+  console.log('Patients data', patientsData);
+
   const initialValues: IInternalConsumptionFormValues = {
     date: new Date(),
-    items: [{ item: null, transferFrom: null, quantity: null }],
+    items: [
+      {
+        item: null,
+        transferFrom: null,
+        quantity: null,
+        patient: null,
+        notes: '',
+      },
+    ],
   };
 
   const formik = useFormik({
@@ -67,6 +85,8 @@ const AddInternalConsumption: React.FC<AddInternalConsumptionProps> = ({
             location: item.transferFrom?.location._id,
             quantity: item.transferFrom?.quantity || 0,
           },
+          patientId: item.patient?.patientId || null,
+          notes: item.notes,
         })),
       };
 
@@ -91,9 +111,18 @@ const AddInternalConsumption: React.FC<AddInternalConsumptionProps> = ({
   });
 
   const handleAddFields = () => {
+    const lastPatient =
+      formik.values.items[formik.values.items.length - 1].patient;
+
     formik.setFieldValue('items', [
       ...formik.values.items,
-      { item: null, transferFrom: null, quantity: null },
+      {
+        item: null,
+        transferFrom: null,
+        quantity: null,
+        patient: lastPatient,
+        notes: '',
+      },
     ]);
   };
 
@@ -103,7 +132,7 @@ const AddInternalConsumption: React.FC<AddInternalConsumptionProps> = ({
   };
 
   const getFieldErrorAndTouched = useCallback(
-    (index: number, fieldName: 'item' | 'transferFrom' | 'quantity') => {
+    (index: number, fieldName: keyof IInternalConsumptionItem) => {
       const touched = formik?.touched
         ?.items as FormikTouched<IInternalConsumptionItem>[];
       const error = formik?.errors
@@ -231,6 +260,41 @@ const AddInternalConsumption: React.FC<AddInternalConsumptionProps> = ({
                           max: maxQuantity,
                         },
                       }}
+                    />
+                  </Grid>
+                  <Grid item flex={2}>
+                    <FieldAutocomplete
+                      options={patientsData?.data?.records || []} // Access the records from patientsData
+                      isLoading={isPatientsLoading}
+                      getOptionLabel={option =>
+                        `${option.patientId} - ${option.firstName} ${option.lastName}`
+                      }
+                      isOptionEqualToValue={(option, value) =>
+                        option.patientId === value?.patientId
+                      }
+                      value={item.patient}
+                      onChange={newValue =>
+                        formik.setFieldValue(
+                          `items[${index}].patient`,
+                          newValue,
+                        )
+                      }
+                      label="Patient"
+                    />
+                  </Grid>
+                  <Grid item xs={12}>
+                    <TextField
+                      label="Notes"
+                      fullWidth
+                      multiline
+                      rows={2}
+                      value={item.notes}
+                      onChange={e =>
+                        formik.setFieldValue(
+                          `items[${index}].notes`,
+                          e.target.value,
+                        )
+                      }
                     />
                   </Grid>
                   <Grid

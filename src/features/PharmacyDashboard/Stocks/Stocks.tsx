@@ -44,7 +44,7 @@ const Stocks: React.FC = () => {
   const pagination = stocksData?.data?.pagination;
   const loading = stocksLoading || stocksFetching;
 
-  // console.log('Batchwise Data', stocksData);
+  console.log('Batchwise Data', stocksData);
 
   // Search handling with debounce
   const handleSearchChange = useCallback((query: string) => {
