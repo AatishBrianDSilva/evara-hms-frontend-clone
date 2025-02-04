@@ -66,6 +66,8 @@ const LocalDonor: React.FC = () => {
   const getRowId = (row: RowType) => row._id;
 
   const columnsConfig: GridColDef[] = [
+    { field: 'donorId', headerName: 'Donor ID', flex: 1 },
+
     {
       field: 'name',
       headerName: 'Name',
