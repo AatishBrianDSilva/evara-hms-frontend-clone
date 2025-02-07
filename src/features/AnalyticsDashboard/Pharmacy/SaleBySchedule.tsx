@@ -209,7 +209,7 @@ const SaleBySchedule: React.FC = () => {
     <ContentSection title="Sale By Schedule Report">
       <Grid container justifyContent="flex-end" alignItems="center" mb={2}>
         <Grid item>
-          <Box display="flex" alignItems="center">
+          <Box display="flex" alignItems="center" gap={2}>
             <CustomeDateRangePicker onChange={handleDateChange} />
             <DownloadMenu handleDownload={handleDownload} />
           </Box>
@@ -228,10 +228,8 @@ const SaleBySchedule: React.FC = () => {
           getRowId={getRowId}
           sx={{ height: '100%' }}
           enablePagination={true}
-          paginationMode="server" // Optional: Use "server" or "client"
           onPageChange={handlePageChange}
           onPageSizeChange={handlePageSizeChange}
-          extendedPageSizeOptions={[25, 50, 100, { label: 'All', value: -1 }]} // Custom page sizes with "All" option
           rowHover={true}
         />
       </Box>

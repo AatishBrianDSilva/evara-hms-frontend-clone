@@ -23,22 +23,29 @@ const CriticalStocksReport: React.FC = () => {
   );
 
   // Fetch data from the API with dynamic query parameters
+  // const { data, isLoading } = useGetCriticalStocksQuery({
+  //   page: pageSize === -1 ? undefined : page, // If "All" is selected, remove page parameter
+  //   limit: pageSize === -1 ? undefined : pageSize, // If "All" is selected, remove limit parameter
+  //   filters: {
+  //     drugName, // Filter by drug name
+  //   },
+  //   paginate: pageSize !== -1, // Set pagination to false if "All" is selected
+  // });
+
   const { data, isLoading } = useGetCriticalStocksQuery({
-    page: pageSize === -1 ? undefined : page, // If "All" is selected, remove page parameter
-    limit: pageSize === -1 ? undefined : pageSize, // If "All" is selected, remove limit parameter
+    paginate: true,
+    page,
+    limit: pageSize,
+    // filters: { searchQuery },
     filters: {
       drugName, // Filter by drug name
     },
-    paginate: pageSize !== -1, // Set pagination to false if "All" is selected
+    sort: { createdAt: -1 },
   });
 
   console.log('Critical Stocks Data:', data);
 
-  const handlePageChange = (newPage: number) => {
-    if (newPage < 1) newPage = 1; // Ensure page doesn't go below 1
-    setPage(newPage);
-  };
-
+  const handlePageChange = (newPage: number) => setPage(newPage);
   const handlePageSizeChange = (newPageSize: number) => {
     setPageSize(newPageSize);
   };
@@ -222,11 +229,8 @@ const CriticalStocksReport: React.FC = () => {
           getRowId={getRowId} // Provide custom id for each row
           sx={{ height: '100%' }}
           enablePagination={true}
-          paginationMode="server" // Optional: Use "server" or "client"
           onPageChange={handlePageChange}
           onPageSizeChange={handlePageSizeChange}
-          extendedPageSizeOptions={[25, 50, 100, { label: 'All', value: -1 }]} // Custom page sizes with "All" option
-          rowHover={true}
         />
       </Box>
     </ContentSection>

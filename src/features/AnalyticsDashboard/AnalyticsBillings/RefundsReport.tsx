@@ -241,9 +241,7 @@ const RefundsReport: React.FC = () => {
         onPageChange={handlePageChange}
         onPageSizeChange={handlePageSizeChange}
         loading={isLoading || isFetching}
-        enablePagination
-        useUpdatedPagination
-        extendedPageSizeOptions={[25, 50, 100, { label: 'All', value: -1 }]}
+        enablePagination={true}
       />
 
       {isViewInvoicesModalOpen && (

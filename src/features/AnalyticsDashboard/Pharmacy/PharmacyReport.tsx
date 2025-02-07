@@ -44,11 +44,15 @@ const PharmacyReport: React.FC = () => {
         saleStartDate: startDateUTC || undefined, // Use the converted UTC date
         saleEndDate: endDateUTC || undefined, // Use the converted UTC date
       },
+      page: pageSize === -1 ? undefined : page, // If "All" is selected, remove page parameter
+      limit: pageSize === -1 ? undefined : pageSize, // If "All" is selected, remove limit parameter
+
+      paginate: pageSize !== -1, // Set pagination to false if "All" is selected
     });
 
   const allPharmacy = pharmacyData?.data?.records || [];
 
-  console.log('All Pharmacy data', allPharmacy);
+  console.log('All Pharmacy data', pharmacyData);
 
   const handlePageChange = (newPage: number) => {
     setPage(newPage);
@@ -135,9 +139,9 @@ const PharmacyReport: React.FC = () => {
       headerName: 'Total Sales Value',
       flex: 1,
       valueGetter: params => {
-        return formatToIndianCurrencyFormat(
-          params.row.totalItemPrice || 0
-        ) || 'N/A';
+        return (
+          formatToIndianCurrencyFormat(params.row.totalItemPrice || 0) || 'N/A'
+        );
       },
     },
   ];

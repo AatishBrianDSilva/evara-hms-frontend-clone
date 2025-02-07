@@ -231,7 +231,6 @@ const AnalyticsServices: React.FC = () => {
         onPageChange={handlePageChange}
         onPageSizeChange={handlePageSizeChange}
         loading={isLoading || isFetching} // Use the loading prop in DataGrid
-        extendedPageSizeOptions={[25, 50, 100, { label: 'All', value: -1 }]} // Add pagination options
       />
 
       <Box

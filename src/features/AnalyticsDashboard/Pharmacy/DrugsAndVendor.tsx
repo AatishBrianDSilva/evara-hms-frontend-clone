@@ -196,10 +196,8 @@ const DrugsAndVendorReports: React.FC = () => {
           getRowId={getRowId} // Provide custom id for each row
           sx={{ height: '100%' }}
           enablePagination={true}
-          paginationMode="server" // Optional: Use "server" or "client"
           onPageChange={handlePageChange}
           onPageSizeChange={handlePageSizeChange}
-          extendedPageSizeOptions={[25, 50, 100, { label: 'All', value: -1 }]} // Custom page sizes with "All" option
           rowHover={true}
         />
       </Box>

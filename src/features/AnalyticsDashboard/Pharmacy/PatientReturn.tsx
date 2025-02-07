@@ -232,7 +232,6 @@ const PatientReturnReports: React.FC = () => {
           enablePagination={true}
           onPageChange={handlePageChange}
           onPageSizeChange={handlePageSizeChange}
-          extendedPageSizeOptions={[25, 50, 100, { label: 'All', value: -1 }]}
           rowHover={true}
           getRowId={row => row.id} // Specify the unique id field
         />
