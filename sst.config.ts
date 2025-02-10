@@ -23,6 +23,30 @@ export default $config({
     };
   },
   async run() {
+    let VITE_API_BASE_URL = '';
+    let VITE_API_BASE_URL2 = '';
+
+    switch ($app.stage) {
+      case 'prod':
+        VITE_API_BASE_URL =
+          'https://aiekvwbyni.execute-api.ap-south-1.amazonaws.com';
+        VITE_API_BASE_URL2 =
+          'https://aiekvwbyni.execute-api.ap-south-1.amazonaws.com';
+        break;
+      case 'dev':
+        VITE_API_BASE_URL =
+          'https://nex0q2i42e.execute-api.ap-south-1.amazonaws.com';
+        VITE_API_BASE_URL2 =
+          'https://nex0q2i42e.execute-api.ap-south-1.amazonaws.com';
+        break;
+      default:
+        VITE_API_BASE_URL =
+          'https://nex0q2i42e.execute-api.ap-south-1.amazonaws.com';
+        VITE_API_BASE_URL2 =
+          'https://nex0q2i42e.execute-api.ap-south-1.amazonaws.com';
+        break;
+    }
+
     new sst.aws.StaticSite('hms-dashboard', {
       build: {
         command: 'npm run build',
@@ -38,6 +62,10 @@ export default $config({
         dns: sst.aws.dns({
           zone: 'Z013315912VIBEEY1T7WH',
         }),
+      },
+      environment: {
+        VITE_API_BASE_URL,
+        VITE_API_BASE_URL2,
       },
     });
   },
