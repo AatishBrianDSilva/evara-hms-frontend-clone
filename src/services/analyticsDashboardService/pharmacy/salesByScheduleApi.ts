@@ -6,12 +6,12 @@ import {
 } from '../../../types/global';
 import { IPatientBilling } from '../../../types/patientDashboard/billings';
 import generateQueryParams from '../../../utils/generateQueryParams';
-import { baseQuery } from '../../baseQuery';
+import { analyticsBaseQuery } from '../../baseQuery';
 
 // Define the salesByScheduleApi
 export const salesByScheduleApi = createApi({
   reducerPath: 'salesByScheduleApi',
-  baseQuery: baseQuery,
+  baseQuery: analyticsBaseQuery,
   tagTypes: ['Billing', 'PatientPharmacy'],
   endpoints: builder => ({
     getSalesBySchedule: builder.query<

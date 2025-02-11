@@ -5,7 +5,7 @@ import {
   PaginatedResponse,
 } from '../../../types/global';
 import generateQueryParams from '../../../utils/generateQueryParams';
-import { baseQuery } from '../../baseQuery';
+import { analyticsBaseQuery } from '../../baseQuery';
 
 export interface InvestigationReportsResponse {
   _id: string;
@@ -82,7 +82,7 @@ export interface MasterPackagesReportResponse {
 
 export const treatmentTestingApi = createApi({
   reducerPath: 'treatmentTestingApi',
-  baseQuery: baseQuery,
+  baseQuery: analyticsBaseQuery,
   endpoints: builder => ({
     getInvestigationReports: builder.query<
       ApiResponse<PaginatedResponse<InvestigationReportsResponse>>,

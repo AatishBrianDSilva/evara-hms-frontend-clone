@@ -5,7 +5,7 @@ import {
   PaginatedResponse,
 } from '../../../types/global';
 import generateQueryParams from '../../../utils/generateQueryParams';
-import { baseQuery } from '../../baseQuery';
+import { analyticsBaseQuery } from '../../baseQuery';
 
 export interface revenueBreakupResponse {
   totalAmount: number;
@@ -15,7 +15,7 @@ export interface revenueBreakupResponse {
 }
 export const revenueBreakupApi = createApi({
   reducerPath: 'revenueBreakupApi',
-  baseQuery: baseQuery,
+  baseQuery: analyticsBaseQuery,
   tagTypes: ['RevenueBreakup'],
   endpoints: builder => ({
     getRevenueBreakup: builder.query<

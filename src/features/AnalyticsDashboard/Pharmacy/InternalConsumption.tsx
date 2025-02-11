@@ -195,7 +195,7 @@ const InternalConsumptionReports: React.FC = () => {
       flex: 1,
       valueFormatter: params => formatToIndianCurrencyFormat(params.value),
     },
-    { field: 'tax', headerName: 'Tax', flex: 1 },
+    // { field: 'tax', headerName: 'Tax', flex: 1 },
     {
       field: 'totalTax',
       headerName: 'Total Tax',

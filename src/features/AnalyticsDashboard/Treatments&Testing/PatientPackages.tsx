@@ -182,7 +182,7 @@ const AnalyticsPatientPackages: React.FC = () => {
       headerName: 'Date',
       flex: 1,
       valueFormatter: params =>
-        new Date(params.value).toLocaleDateString('en-In'),
+        new Date(params.value).toLocaleDateString('en-GB'),
     },
     {
       field: 'patientId',

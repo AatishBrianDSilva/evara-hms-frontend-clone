@@ -137,7 +137,7 @@ const DrugsAndVendorReports: React.FC = () => {
     }
 
     await downloadFileWithToast({
-      endpoint: 'analytics/pharmacy/drugs-vendor/download',
+      endpoint: 'analytics/pharmacy/drugs-and-vendor/download',
       params,
       fileName: filename,
       successMessage: `Successfully downloaded ${action}!`,
@@ -159,7 +159,7 @@ const DrugsAndVendorReports: React.FC = () => {
     { field: 'drugCode', headerName: 'Drug Code', flex: 1 },
     { field: 'hsnCode', headerName: 'HSN Code', flex: 1 },
     { field: 'qtyPerPack', headerName: 'Qty Per Pack', flex: 1 },
-    { field: 'tax', headerName: 'Tax', flex: 1 },
+    // { field: 'tax', headerName: 'Tax', flex: 1 },
   ];
 
   const rows = data?.data?.records || [];

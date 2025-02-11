@@ -51,6 +51,8 @@ const PharmacyReport: React.FC = () => {
     });
 
   const allPharmacy = pharmacyData?.data?.records || [];
+  const totalRows =
+    pharmacyData?.data?.pagination?.totalDocs || allPharmacy.length;
 
   console.log('All Pharmacy data', pharmacyData);
 
@@ -67,33 +69,6 @@ const PharmacyReport: React.FC = () => {
   ) => {
     setSearchDrugName(event.target.value);
   };
-
-  const handleSearchPatientIDChange = (
-    event: React.ChangeEvent<HTMLInputElement>,
-  ) => {
-    setSearchPatientID(event.target.value);
-  };
-
-  const handleSearchFullNameChange = (
-    event: React.ChangeEvent<HTMLInputElement>,
-  ) => {
-    setSearchFullName(event.target.value);
-  };
-
-  // Filter data based on search input
-  const filteredPharmacy = useMemo(() => {
-    return allPharmacy.filter((record: IAggregatedPatientPharmacy) => {
-      const drugName = record.item?.stock?.item?.name?.toLowerCase() || '';
-      const patientID = record.patient?.toLowerCase() || '';
-      const fullName = record.patientDetails?.fullName?.toLowerCase() || '';
-
-      return (
-        drugName.includes(searchDrugName.toLowerCase()) &&
-        patientID.includes(searchPatientID.toLowerCase()) &&
-        fullName.includes(searchFullName.toLowerCase())
-      );
-    });
-  }, [allPharmacy, searchDrugName, searchPatientID, searchFullName]);
 
   // Define columns configuration for the DataGrid
   const columnsConfig: GridColDef[] = [
@@ -150,38 +125,16 @@ const PharmacyReport: React.FC = () => {
     <ContentSection title="Pharmacy Reports">
       <Box display="flex" justifyContent="flex-end" gap={2} mb={2}>
         <CustomeDateRangePicker onChange={handleDateChange} />
-
-        <TextField
-          label="Filter by Drug Name"
-          size="small"
-          variant="outlined"
-          onChange={handleSearchDrugNameChange}
-          placeholder="Enter drug name"
-        />
-        <TextField
-          label="Filter by Patient ID"
-          size="small"
-          variant="outlined"
-          onChange={handleSearchPatientIDChange}
-          placeholder="Enter patient ID"
-        />
-        <TextField
-          label="Filter by Patient Name"
-          size="small"
-          variant="outlined"
-          onChange={handleSearchFullNameChange}
-          placeholder="Enter full name"
-        />
       </Box>
 
       <Box mt={2} flex={'1 1 auto'}>
         <CustomDataGrid
           autoHeight={false}
           columns={columnsConfig}
-          rows={filteredPharmacy} // Use filtered data here
+          rows={allPharmacy} // Use filtered data here
           page={page}
           pageSize={pageSize}
-          totalRows={filteredPharmacy.length}
+          totalRows={totalRows}
           loading={pharmacyLoading}
           sx={{ height: '100%' }}
           enablePagination={true}

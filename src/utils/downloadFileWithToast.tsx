@@ -1,6 +1,6 @@
 import axios from 'axios';
 import { toast } from 'react-toastify';
-import { API_BASE_URL } from './apiConfig';
+import { API_BASE_URL, API_BASE_URL2 } from './apiConfig';
 import { store } from '../app/store';
 
 interface DownloadFileOptions {
@@ -22,7 +22,7 @@ export const downloadFileWithToast = async ({
 }: DownloadFileOptions) => {
   toast.info(startMessage, { autoClose: 2000 });
 
-  const baseUrl = API_BASE_URL;
+  const baseUrl = API_BASE_URL2;
   const url = `${baseUrl}/${endpoint}?${params}`;
 
   try {

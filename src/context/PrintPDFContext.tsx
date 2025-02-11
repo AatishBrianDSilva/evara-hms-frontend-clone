@@ -15,7 +15,8 @@ interface PrintPDFContextProps {
       | 'invoice'
       | 'uploadedFiles'
       | 'POInvoice'
-      | 'POInvoiceProcessed',
+      | 'POInvoiceProcessed'
+      | 'internalConsumption',
     sourceType?: 'patient' | 'pharmacy',
     key?: string,
   ) => void;
@@ -57,7 +58,8 @@ export const PrintProvider: React.FC<{ children: React.ReactNode }> = ({
       | 'invoice'
       | 'uploadedFiles'
       | 'POInvoice'
-      | 'POInvoiceProcessed' = 'report',
+      | 'POInvoiceProcessed'
+      | 'internalConsumption' = 'report',
     sourceType: 'patient' | 'pharmacy' = 'patient',
     key?: string,
   ) => {
@@ -81,6 +83,8 @@ export const PrintProvider: React.FC<{ children: React.ReactNode }> = ({
         url = `${API_BASE_URL}/invoices/download/${reportId}`;
       } else if (sourceType === 'pharmacy' && type === 'invoice') {
         url = `${API_BASE_URL}/pharmacy-dashboard/invoice/download/${reportId}`;
+      } else if (sourceType === 'pharmacy' && type === 'internalConsumption') {
+        url = `${API_BASE_URL}/pharmacy-dashboard/internal-consumption/download/${reportId}`;
       } else if (type === 'uploadedFiles') {
         url = `${API_BASE_URL}/files/download/${reportId}`;
       } else {
