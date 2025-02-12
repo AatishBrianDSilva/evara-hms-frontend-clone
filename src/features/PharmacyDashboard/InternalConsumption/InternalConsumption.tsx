@@ -11,10 +11,11 @@ import AddInternalConsumption from './AddInternalConsumption';
 import { useGetStocksQuery } from '../../../services/pharmacyDashboardService/stocksApi';
 import { useGetInternalConsumptionsQuery } from '../../../services/pharmacyDashboardService/internalConsumptionApi';
 import _ from 'lodash';
-import { Print, Download } from '@mui/icons-material';
+import { Print } from '@mui/icons-material';
 import { usePrint } from '../../../context/PrintPDFContext';
 
 interface InternalConsumptionRecord {
+  uniqueRowKey: any;
   _id: string;
   icNumber: string;
   date: Date;

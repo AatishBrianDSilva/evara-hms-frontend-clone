@@ -53,10 +53,9 @@ const AddInternalConsumption: React.FC<AddInternalConsumptionProps> = ({
   const [addInternalConsumption, { isLoading }] =
     useAddInternalConsumptionMutation();
 
-  const { data: patientsData, isLoading: isPatientsLoading } =
-    useGetPatientsQuery({
-      paginate: false,
-    });
+  const { data: patientsData } = useGetPatientsQuery({
+    paginate: false,
+  });
 
   console.log('Patients data', patientsData);
 
@@ -265,7 +264,6 @@ const AddInternalConsumption: React.FC<AddInternalConsumptionProps> = ({
                   <Grid item flex={2}>
                     <FieldAutocomplete
                       options={patientsData?.data?.records || []} // Access the records from patientsData
-                      isLoading={isPatientsLoading}
                       getOptionLabel={option =>
                         `${option.patientId} - ${option.firstName} ${option.lastName}`
                       }

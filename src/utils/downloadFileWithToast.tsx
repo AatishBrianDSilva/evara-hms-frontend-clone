@@ -1,6 +1,6 @@
 import axios from 'axios';
 import { toast } from 'react-toastify';
-import { API_BASE_URL, API_BASE_URL2 } from './apiConfig';
+import { API_BASE_URL2 } from './apiConfig';
 import { store } from '../app/store';
 
 interface DownloadFileOptions {

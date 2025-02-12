@@ -1,26 +1,16 @@
-import React, { useState, useMemo } from 'react';
+import React, { useState } from 'react';
 import ContentSection from '../../../components/ContentSection/ContentSection';
-import { Box, TextField } from '@mui/material';
+import { Box } from '@mui/material';
 import CustomDataGrid from '../../../components/CustomDataGrid/CustomDataGrid';
 import { GridColDef } from '@mui/x-data-grid';
 import _ from 'lodash';
 import { formatToIndianCurrencyFormat } from '../../../utils/formatToIndianCurrencyFormat';
-import { IPatientPharmacy } from '../../../types/patientDashboard/patientPharmacy';
 import CustomeDateRangePicker from '../../../components/CustomDateRangePicker/CustomDateRangePicker';
 import { useGetPharmacyReportQuery } from '../../../services/analyticsDashboardService/pharmacy/PharmacyReportApi';
-
-interface IAggregatedPatientPharmacy extends IPatientPharmacy {
-  patientDetails?: {
-    fullName?: string;
-  };
-}
 
 const PharmacyReport: React.FC = () => {
   const [page, setPage] = useState<number>(1);
   const [pageSize, setPageSize] = useState<number>(25);
-  const [searchDrugName, setSearchDrugName] = useState<string>('');
-  const [searchPatientID, setSearchPatientID] = useState<string>('');
-  const [searchFullName, setSearchFullName] = useState<string>('');
 
   const [startDate, setStartDate] = useState<Date | null>(null); // For start date
   const [endDate, setEndDate] = useState<Date | null>(null); // For end date
@@ -62,12 +52,6 @@ const PharmacyReport: React.FC = () => {
 
   const handlePageSizeChange = (newPageSize: number) => {
     setPageSize(newPageSize);
-  };
-
-  const handleSearchDrugNameChange = (
-    event: React.ChangeEvent<HTMLInputElement>,
-  ) => {
-    setSearchDrugName(event.target.value);
   };
 
   // Define columns configuration for the DataGrid

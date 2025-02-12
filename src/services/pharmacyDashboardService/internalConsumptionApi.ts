@@ -25,6 +25,9 @@ interface AddInternalConsumptionPayload {
 }
 
 interface IInternalConsumption {
+  drugName?: string;
+  batchNo?: any;
+  icNumber?: any;
   _id: string;
   date: Date;
   items: IInternalTransferItems[];
