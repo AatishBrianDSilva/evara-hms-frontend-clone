@@ -6,11 +6,11 @@ import {
 } from '../../../types/global';
 import { IPatientBilling } from '../../../types/patientDashboard/billings';
 import generateQueryParams from '../../../utils/generateQueryParams';
-import { baseQuery } from '../../baseQuery';
+import { analyticsBaseQuery } from '../../baseQuery';
 
 export const analyticsPatientBillingsApi = createApi({
   reducerPath: 'analyticsPatientBillingsApi',
-  baseQuery: baseQuery,
+  baseQuery: analyticsBaseQuery,
   tagTypes: ['Billing', 'Estimations'],
   endpoints: builder => ({
     getAnalyticsPatientBillings: builder.query<

@@ -1,5 +1,5 @@
 import React, { useState, useCallback, useRef } from 'react';
-import { Box, TextField, Button } from '@mui/material';
+import { Box, TextField } from '@mui/material';
 import ContentSection from '../../../components/ContentSection/ContentSection';
 import CustomDataGrid from '../../../components/CustomDataGrid/CustomDataGrid';
 import { GridActionsCellItem, GridColDef } from '@mui/x-data-grid';
@@ -8,7 +8,9 @@ import { useGetRefundReportsQuery } from '../../../services/analyticsDashboardSe
 import ViewReports from '../../PatientDashboard/Journey/ViewReports';
 import { Visibility } from '@mui/icons-material';
 import debounce from 'lodash/debounce';
-import { exportToCSV } from '../../../utils/exportCSV';
+import generateQueryParams from '../../../utils/generateQueryParams';
+import { downloadFileWithToast } from '../../../utils/downloadFileWithToast';
+import DownloadMenu from '../../../components/CSVDownloadMenu/CSVDownloadMenu';
 
 interface RowType {
   _id: string;
@@ -103,31 +105,82 @@ const RefundsReport: React.FC = () => {
     setIsViewInvoicesModalOpen(false);
   };
 
-  const handleDownloadCSV = () => {
-    console.log('Downloading CSV'); // Log CSV download
-    if (refundDetails.length > 0) {
-      const headers = [
-        'Refund Date',
-        'Patient Code',
-        'Patient Name',
-        'Refund Amount',
-        'Reason',
-        'Payment Method',
-      ];
-      const formattedData = refundDetails.map(refund => [
-        new Date(refund.refundDate).toLocaleDateString('en-GB', {
-          day: '2-digit',
-          month: '2-digit',
-          year: 'numeric',
-        }),
-        refund.patientCode,
-        refund.patientName,
-        formatToIndianCurrencyFormat(refund.refundAmount),
-        refund.reason,
-        refund.method,
-      ]);
-      exportToCSV([headers, ...formattedData], 'Refunds_Report');
+  // const handleDownloadCSV = () => {
+  //   console.log('Downloading CSV'); // Log CSV download
+  //   if (refundDetails.length > 0) {
+  //     const headers = [
+  //       'Refund Date',
+  //       'Patient Code',
+  //       'Patient Name',
+  //       'Refund Amount',
+  //       'Reason',
+  //       'Payment Method',
+  //     ];
+  //     const formattedData = refundDetails.map(refund => [
+  //       new Date(refund.refundDate).toLocaleDateString('en-GB', {
+  //         day: '2-digit',
+  //         month: '2-digit',
+  //         year: 'numeric',
+  //       }),
+  //       refund.patientCode,
+  //       refund.patientName,
+  //       formatToIndianCurrencyFormat(refund.refundAmount),
+  //       refund.reason,
+  //       refund.method,
+  //     ]);
+  //     exportToCSV([headers, ...formattedData], 'Refunds_Report');
+  //   }
+  // };
+
+  const handleDownload = async (
+    downloadType: 'currentPage' | 'currentFilters' | 'allData',
+  ) => {
+    let params: any = {};
+    let action = '';
+    const date = new Date().toLocaleDateString('en-IN');
+    let filename = '';
+
+    switch (downloadType) {
+      case 'currentPage':
+        action = 'current page';
+        params = generateQueryParams({
+          paginate: false,
+          page,
+          limit: pageSize,
+          filters: { searchQuery },
+        });
+        filename = `refunds_page_${page}-${date}.csv`;
+        break;
+
+      case 'currentFilters':
+        action = 'filtered data';
+        params = generateQueryParams({
+          paginate: false,
+          filters: { searchQuery },
+        });
+        filename = `refunds_filtered-${date}.csv`;
+        break;
+
+      case 'allData':
+        action = 'all data';
+        params = generateQueryParams({
+          filters: { allData: true, searchQuery },
+        });
+        filename = `refunds_all-${date}.csv`;
+        break;
+
+      default:
+        throw new Error('Invalid download type');
     }
+
+    await downloadFileWithToast({
+      endpoint: 'analytics/billings/refund-reports/download',
+      params,
+      fileName: filename,
+      successMessage: `Successfully downloaded ${action}!`,
+      errorMessage: `Failed to download ${action}.`,
+      startMessage: `Preparing to download ${action}...`,
+    });
   };
 
   const columnsConfig: GridColDef[] = [
@@ -175,9 +228,7 @@ const RefundsReport: React.FC = () => {
           placeholder="Enter Patient ID or Name"
           sx={{ width: 250 }}
         />
-        <Button variant="contained" color="primary" onClick={handleDownloadCSV}>
-          Download CSV
-        </Button>
+        <DownloadMenu handleDownload={handleDownload} />
       </Box>
       <CustomDataGrid
         autoHeight
@@ -190,9 +241,7 @@ const RefundsReport: React.FC = () => {
         onPageChange={handlePageChange}
         onPageSizeChange={handlePageSizeChange}
         loading={isLoading || isFetching}
-        enablePagination
-        useUpdatedPagination
-        extendedPageSizeOptions={[25, 50, 100, { label: 'All', value: -1 }]}
+        enablePagination={true}
       />
 
       {isViewInvoicesModalOpen && (

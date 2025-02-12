@@ -1,17 +1,16 @@
 import React, { useState, useCallback } from 'react';
-import { Box, TextField, Button, MenuItem, Typography } from '@mui/material';
+import { Box, TextField, MenuItem, Typography } from '@mui/material';
 import ContentSection from '../../../components/ContentSection/ContentSection';
 import CustomDataGrid from '../../../components/CustomDataGrid/CustomDataGrid';
 import { GridColDef } from '@mui/x-data-grid';
 import { formatToIndianCurrencyFormat } from '../../../utils/formatToIndianCurrencyFormat';
 import debounce from 'lodash/debounce';
-import { exportToCSV } from '../../../utils/exportCSV'; // Import the CSV utility
-import {
-  revenueBreakupResponse,
-  useGetRevenueBreakupQuery,
-} from '../../../services/analyticsDashboardService/billings/revenueBreakupApi';
+import { useGetRevenueBreakupQuery } from '../../../services/analyticsDashboardService/billings/revenueBreakupApi';
 import CustomeDateRangePicker from '../../../components/CustomDateRangePicker/CustomDateRangePicker';
 import { endOfWeek, startOfWeek } from 'date-fns';
+import generateQueryParams from '../../../utils/generateQueryParams';
+import { downloadFileWithToast } from '../../../utils/downloadFileWithToast';
+import DownloadMenu from '../../../components/CSVDownloadMenu/CSVDownloadMenu';
 
 const RevenueBreakupReport: React.FC = () => {
   const [page, setPage] = useState<number>(1);
@@ -100,26 +99,99 @@ const RevenueBreakupReport: React.FC = () => {
   // const totalRefunds = refundDetails.reduce((acc, refund) => acc + refund.refundAmount, 0);
 
   // Handle CSV download
-  const handleDownloadCSV = () => {
-    if (records.length > 0) {
-      const headers = [
-        'User',
-        'Payment Method',
-        'Billing Amount',
-        'Refund Amount',
-      ];
+  // const handleDownloadCSV = () => {
+  //   if (records.length > 0) {
+  //     const headers = [
+  //       'User',
+  //       'Payment Method',
+  //       'Billing Amount',
+  //       'Refund Amount',
+  //     ];
 
-      const formattedData = records.map((refund: revenueBreakupResponse) => [
-        refund.createdBy,
-        refund.paymentMethod,
-        formatToIndianCurrencyFormat(refund.totalAmount),
-        formatToIndianCurrencyFormat(refund.totalRefunded),
-      ]);
+  //     const formattedData = records.map((refund: revenueBreakupResponse) => [
+  //       refund.createdBy,
+  //       refund.paymentMethod,
+  //       formatToIndianCurrencyFormat(refund.totalAmount),
+  //       formatToIndianCurrencyFormat(refund.totalRefunded),
+  //     ]);
 
-      exportToCSV([headers, ...formattedData], 'Revenue Breakup');
-    } else {
-      console.log('No data to export');
+  //     exportToCSV([headers, ...formattedData], 'Revenue Breakup');
+  //   } else {
+  //     console.log('No data to export');
+  //   }
+  // };
+
+  const handleDownload = async (
+    downloadType: 'currentPage' | 'currentFilters' | 'allData',
+  ) => {
+    let params: any = {};
+    let action = '';
+    const date = new Date().toLocaleDateString('en-IN');
+    let filename = '';
+
+    switch (downloadType) {
+      case 'currentPage':
+        action = 'current page';
+        params = generateQueryParams({
+          paginate: false,
+          page,
+          limit: pageSize,
+          dateRange: {
+            startDate: startDate?.toISOString(),
+            endDate: endDate?.toISOString(),
+          },
+          filters: {
+            paymentMode: paymentMode === 'All' ? undefined : paymentMode,
+            createdBy: createdBy === 'All' ? undefined : createdBy,
+          },
+        });
+        filename = `revenue_breakup_page_${page}-${date}.csv`;
+        break;
+
+      case 'currentFilters':
+        action = 'filtered data';
+        params = generateQueryParams({
+          paginate: false,
+          dateRange: {
+            startDate: startDate?.toISOString(),
+            endDate: endDate?.toISOString(),
+          },
+          filters: {
+            paymentMode: paymentMode === 'All' ? undefined : paymentMode,
+            createdBy: createdBy === 'All' ? undefined : createdBy,
+          },
+        });
+        filename = `revenue_breakup_filtered-${date}.csv`;
+        break;
+
+      case 'allData':
+        action = 'all data';
+        params = generateQueryParams({
+          filters: {
+            allData: true,
+            paymentMode: paymentMode === 'All' ? undefined : paymentMode,
+            createdBy: createdBy === 'All' ? undefined : createdBy,
+          },
+          dateRange: {
+            startDate: startDate?.toISOString(),
+            endDate: endDate?.toISOString(),
+          },
+        });
+        filename = `revenue_breakup_all-${date}.csv`;
+        break;
+
+      default:
+        throw new Error('Invalid download type');
     }
+
+    await downloadFileWithToast({
+      endpoint: 'analytics/billings/revenue-breakup/download',
+      params,
+      fileName: filename,
+      successMessage: `Successfully downloaded ${action}!`,
+      errorMessage: `Failed to download ${action}.`,
+      startMessage: `Preparing to download ${action}...`,
+    });
   };
 
   const columnsConfig: GridColDef[] = [
@@ -177,10 +249,7 @@ const RevenueBreakupReport: React.FC = () => {
           <MenuItem value="All">All</MenuItem>
           <MenuItem value="testAdmin">testAdmin</MenuItem>
         </TextField>
-
-        <Button variant="contained" color="primary" onClick={handleDownloadCSV}>
-          Download CSV
-        </Button>
+        <DownloadMenu handleDownload={handleDownload} />
       </Box>
 
       <CustomDataGrid
@@ -195,7 +264,6 @@ const RevenueBreakupReport: React.FC = () => {
         onPageChange={handlePageChange}
         onPageSizeChange={handlePageSizeChange}
         loading={isLoading || isFetching} // Use the loading prop in DataGrid
-        extendedPageSizeOptions={[25, 50, 100, { label: 'All', value: -1 }]} // Add pagination options
       />
 
       <Box

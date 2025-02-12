@@ -44,13 +44,31 @@ export const stocksApi = createApi({
       providesTags: (_result, _error, id) => [{ type: 'Stocks', id }],
     }),
     getBatchesForStocks: builder.query<
-    ApiResponse<{ itemId: string; itemName: string; batchNumbers: string[] }[]>,
-    void
+      ApiResponse<
+        { itemId: string; itemName: string; batchNumbers: string[] }[]
+      >,
+      void
     >({
       query: () => ({
         url: `pharmacy-dashboard/batchesForStocks`,
         method: 'GET',
       }),
+    }),
+    getBatchWisePaginatedStocks: builder.query<
+      ApiResponse<PaginatedResponse<IPaginatedPharmacyStock>>,
+      IQueryOptions
+    >({
+      query: options => {
+        const queryParams = generateQueryParams(options);
+        return {
+          url: `pharmacy-dashboard/stocks-by-batch/paginate?${queryParams}`,
+          method: 'GET',
+        };
+      },
+      providesTags: (_result, _error, _args) => [
+        'Stocks',
+        'InternalConsumption',
+      ],
     }),
   }),
 });
@@ -60,4 +78,5 @@ export const {
   useGetPaginatedStocksQuery,
   useGetStockByIdQuery,
   useGetBatchesForStocksQuery,
+  useGetBatchWisePaginatedStocksQuery,
 } = stocksApi;

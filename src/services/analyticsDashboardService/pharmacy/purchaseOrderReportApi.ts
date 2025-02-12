@@ -5,11 +5,11 @@ import {
   PaginatedResponse,
 } from '../../../types/global';
 import generateQueryParams from '../../../utils/generateQueryParams';
-import { baseQuery } from '../../baseQuery';
+import { analyticsBaseQuery } from '../../baseQuery';
 
 export const purchaseOrderReportApi = createApi({
   reducerPath: 'purchaseOrderReportApi',
-  baseQuery: baseQuery,
+  baseQuery: analyticsBaseQuery,
   tagTypes: ['Stocks', 'PurchaseOrder'],
   endpoints: builder => ({
     getPurchaseOrderReport: builder.query<

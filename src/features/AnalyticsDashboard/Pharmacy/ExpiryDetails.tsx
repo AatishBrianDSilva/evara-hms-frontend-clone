@@ -1,14 +1,16 @@
 import React, { useState, useCallback } from 'react';
 import ContentSection from '../../../components/ContentSection/ContentSection';
-import { Box, TextField, Button } from '@mui/material';
+import { Box, TextField } from '@mui/material';
 import CustomDataGrid from '../../../components/CustomDataGrid/CustomDataGrid';
 import { GridColDef } from '@mui/x-data-grid';
 import { useGetExpiryDetailsQuery } from '../../../services/analyticsDashboardService/pharmacy/expiryDetailaApi';
-import { exportToCSV } from '../../../utils/exportCSV';
 import _ from 'lodash';
 import { format } from 'date-fns';
 import CustomeDateRangePicker from '../../../components/CustomDateRangePicker/CustomDateRangePicker';
 import { formatToIndianCurrencyFormat } from '../../../utils/formatToIndianCurrencyFormat';
+import { downloadFileWithToast } from '../../../utils/downloadFileWithToast';
+import generateQueryParams from '../../../utils/generateQueryParams';
+import DownloadMenu from '../../../components/CSVDownloadMenu/CSVDownloadMenu';
 
 const ExpiryDetails: React.FC = () => {
   const [page, setPage] = useState<number>(1);
@@ -59,47 +61,111 @@ const ExpiryDetails: React.FC = () => {
     setPageSize(newPageSize);
   };
 
-  const handleDownloadCSV = () => {
-    if (data?.data?.records && data.data.records.length > 0) {
-      // Define the headers for the CSV file
-      const headers = [
-        'S No',
-        'Centre',
-        'Invoice No',
-        'Vendor Name',
-        'Drug Category',
-        'Drug Name',
-        'Batch No',
-        'Expiry Date',
-        'Unit Cost',
-        'Total Qty',
-        'Sum Total Value',
-      ];
+  // const handleDownloadCSV = () => {
+  //   if (data?.data?.records && data.data.records.length > 0) {
+  //     // Define the headers for the CSV file
+  //     const headers = [
+  //       'S No',
+  //       'Centre',
+  //       'Invoice No',
+  //       'Vendor Name',
+  //       'Drug Category',
+  //       'Drug Name',
+  //       'Batch No',
+  //       'Expiry Date',
+  //       'Unit Cost',
+  //       'Total Qty',
+  //       'Sum Total Value',
+  //     ];
 
-      // Format the data for CSV export
-      const formattedData = data.data.records.map(record => {
-        return {
-          serialNumber: record.serialNumber,
-          centre: record.centre || '',
-          invoiceNo: record.invoiceNo || '',
-          vendorName: record.vendorName || '',
-          drugCategory: record.drugCategory || '',
-          drugName: record.drugName || '',
-          batchNo: record.batchNo || '',
-          expiryDate: record.expiryDate || '',
-          unitCost: record.unitCost || '',
-          totalQty: record.totalQty || '',
-          sumTotalValue: formatToIndianCurrencyFormat(
-            record.sumTotalValue || '',
-          ), // Ensure 2 decimal places
-        };
-      });
+  //     // Format the data for CSV export
+  //     const formattedData = data.data.records.map(record => {
+  //       return {
+  //         serialNumber: record.serialNumber,
+  //         centre: record.centre || '',
+  //         invoiceNo: record.invoiceNo || '',
+  //         vendorName: record.vendorName || '',
+  //         drugCategory: record.drugCategory || '',
+  //         drugName: record.drugName || '',
+  //         batchNo: record.batchNo || '',
+  //         expiryDate: record.expiryDate || '',
+  //         unitCost: record.unitCost || '',
+  //         totalQty: record.totalQty || '',
+  //         sumTotalValue: formatToIndianCurrencyFormat(
+  //           record.sumTotalValue || '',
+  //         ), // Ensure 2 decimal places
+  //       };
+  //     });
 
-      // Export formatted data to CSV
-      exportToCSV([headers, ...formattedData], 'ExpiryDetails_Report');
-    } else {
-      console.log('No data to export');
+  //     // Export formatted data to CSV
+  //     exportToCSV([headers, ...formattedData], 'ExpiryDetails_Report');
+  //   } else {
+  //     console.log('No data to export');
+  //   }
+  // };
+
+  const handleDownload = async (
+    downloadType: 'currentPage' | 'currentFilters' | 'allData',
+  ) => {
+    let params: any = {};
+    let action = '';
+    const date = new Date().toLocaleDateString('en-IN');
+    let filename = '';
+
+    switch (downloadType) {
+      case 'currentPage':
+        action = 'current page';
+        params = generateQueryParams({
+          paginate: false,
+          page,
+          limit: pageSize,
+          filters: {
+            drugName: drugName || undefined,
+            startDate: startDate?.toISOString() || undefined,
+            endDate: endDate?.toISOString() || undefined,
+          },
+        });
+        filename = `expiry_details_page_${page}-${date}.csv`;
+        break;
+
+      case 'currentFilters':
+        action = 'filtered data';
+        params = generateQueryParams({
+          paginate: false,
+          filters: {
+            drugName: drugName || undefined,
+            startDate: startDate?.toISOString() || undefined,
+            endDate: endDate?.toISOString() || undefined,
+          },
+        });
+        filename = `expiry_details_filtered-${date}.csv`;
+        break;
+
+      case 'allData':
+        action = 'all data';
+        params = generateQueryParams({
+          filters: {
+            allData: true,
+            drugName: drugName || undefined,
+            startDate: startDate?.toISOString() || undefined,
+            endDate: endDate?.toISOString() || undefined,
+          },
+        });
+        filename = `expiry_details_all-${date}.csv`;
+        break;
+
+      default:
+        throw new Error('Invalid download type');
     }
+
+    await downloadFileWithToast({
+      endpoint: 'analytics/pharmacy/expiry-details/download',
+      params,
+      fileName: filename,
+      successMessage: `Successfully downloaded ${action}!`,
+      errorMessage: `Failed to download ${action}.`,
+      startMessage: `Preparing to download ${action}...`,
+    });
   };
 
   const formatDate = (date: string) => format(new Date(date), 'dd/MM/yyyy');
@@ -144,9 +210,7 @@ const ExpiryDetails: React.FC = () => {
           onChange={e => handleSearchChange(e.target.value)}
           placeholder="Enter Drug Name"
         />
-        <Button variant="contained" color="primary" onClick={handleDownloadCSV}>
-          Download CSV
-        </Button>
+        <DownloadMenu handleDownload={handleDownload} />
       </Box>
 
       <Box mt={2} flex={'1 1 auto'}>

@@ -5,11 +5,11 @@ import {
   PaginatedResponse,
 } from '../../../types/global';
 import generateQueryParams from '../../../utils/generateQueryParams';
-import { baseQuery } from '../../baseQuery';
+import { analyticsBaseQuery } from '../../baseQuery';
 
 export const criticalStocksApi = createApi({
   reducerPath: 'criticalStocksApi',
-  baseQuery: baseQuery,
+  baseQuery: analyticsBaseQuery,
   tagTypes: ['Stocks'],
   endpoints: builder => ({
     getCriticalStocks: builder.query<
