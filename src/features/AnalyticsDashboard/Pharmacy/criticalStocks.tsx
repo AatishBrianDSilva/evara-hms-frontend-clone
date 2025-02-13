@@ -1,11 +1,13 @@
 import React, { useCallback, useState } from 'react';
 import ContentSection from '../../../components/ContentSection/ContentSection';
-import { Box, Button, Grid, TextField } from '@mui/material';
+import { Box, Grid, TextField } from '@mui/material';
 import CustomDataGrid from '../../../components/CustomDataGrid/CustomDataGrid';
 import { GridColDef } from '@mui/x-data-grid';
-import { exportToCSV } from '../../../utils/exportCSV';
 import _ from 'lodash';
 import { useGetCriticalStocksQuery } from '../../../services/analyticsDashboardService/pharmacy/criticalStocksApi';
+import { downloadFileWithToast } from '../../../utils/downloadFileWithToast';
+import generateQueryParams from '../../../utils/generateQueryParams';
+import DownloadMenu from '../../../components/CSVDownloadMenu/CSVDownloadMenu';
 
 const CriticalStocksReport: React.FC = () => {
   const [page, setPage] = useState<number>(1);
@@ -21,73 +23,138 @@ const CriticalStocksReport: React.FC = () => {
   );
 
   // Fetch data from the API with dynamic query parameters
+  // const { data, isLoading } = useGetCriticalStocksQuery({
+  //   page: pageSize === -1 ? undefined : page, // If "All" is selected, remove page parameter
+  //   limit: pageSize === -1 ? undefined : pageSize, // If "All" is selected, remove limit parameter
+  //   filters: {
+  //     drugName, // Filter by drug name
+  //   },
+  //   paginate: pageSize !== -1, // Set pagination to false if "All" is selected
+  // });
+
   const { data, isLoading } = useGetCriticalStocksQuery({
-    page: pageSize === -1 ? undefined : page, // If "All" is selected, remove page parameter
-    limit: pageSize === -1 ? undefined : pageSize, // If "All" is selected, remove limit parameter
+    paginate: true,
+    page,
+    limit: pageSize,
+    // filters: { searchQuery },
     filters: {
       drugName, // Filter by drug name
     },
-    paginate: pageSize !== -1, // Set pagination to false if "All" is selected
+    sort: { createdAt: -1 },
   });
 
   console.log('Critical Stocks Data:', data);
 
-  const handlePageChange = (newPage: number) => {
-    if (newPage < 1) newPage = 1; // Ensure page doesn't go below 1
-    setPage(newPage);
-  };
-
+  const handlePageChange = (newPage: number) => setPage(newPage);
   const handlePageSizeChange = (newPageSize: number) => {
     setPageSize(newPageSize);
   };
 
-  const handleDownloadCSV = () => {
-    if (data?.data?.records && data.data.records.length > 0) {
-      // Define the headers for the CSV file
-      const headers = [
-        'S No',
-        'Centre',
-        'Drug Category',
-        'Drug Name',
-        'Drug Code',
-        'Critical Count',
-        'Central',
-        'OPD',
-        'OT',
-        'Recovery',
-        'IVF',
-        'Returns',
-        'Internal',
-        'Staging',
-        'Other',
-        'Total Qty',
-      ];
+  // const handleDownloadCSV = () => {
+  //   if (data?.data?.records && data.data.records.length > 0) {
+  //     // Define the headers for the CSV file
+  //     const headers = [
+  //       'S No',
+  //       'Centre',
+  //       'Drug Category',
+  //       'Drug Name',
+  //       'Drug Code',
+  //       'Critical Count',
+  //       'Central',
+  //       'OPD',
+  //       'OT',
+  //       'Recovery',
+  //       'IVF',
+  //       'Returns',
+  //       'Internal',
+  //       'Staging',
+  //       'Other',
+  //       'Total Qty',
+  //     ];
 
-      // Format the data for CSV export
-      const formattedData = data.data.records.map(record => ({
-        serialNumber: record.serialNumber || 'N/A',
-        centre: record.centre || 'N/A',
-        drugCategory: record.drugCategory || 'N/A',
-        drugName: record.drugName || 'N/A',
-        drugCode: record.drugCode || 'N/A',
-        criticalCount: record.criticalCount || 10,
-        Central: record.Central || 0, // Use field names exactly as they appear in your data
-        OPD: record.OPD || 0,
-        OT: record.OT || 0,
-        Recovery: record.Recovery || 0,
-        IVF: record.IVF || 0,
-        Returns: record.Returns || 0,
-        Internal: record.Internal || 0,
-        Staging: record.Staging || 0,
-        Other: record.Other || 0,
-        totalQty: record.totalQty || 0,
-      }));
+  //     // Format the data for CSV export
+  //     const formattedData = data.data.records.map(record => ({
+  //       serialNumber: record.serialNumber || 'N/A',
+  //       centre: record.centre || 'N/A',
+  //       drugCategory: record.drugCategory || 'N/A',
+  //       drugName: record.drugName || 'N/A',
+  //       drugCode: record.drugCode || 'N/A',
+  //       criticalCount: record.criticalCount || 10,
+  //       Central: record.Central || 0, // Use field names exactly as they appear in your data
+  //       OPD: record.OPD || 0,
+  //       OT: record.OT || 0,
+  //       Recovery: record.Recovery || 0,
+  //       IVF: record.IVF || 0,
+  //       Returns: record.Returns || 0,
+  //       Internal: record.Internal || 0,
+  //       Staging: record.Staging || 0,
+  //       Other: record.Other || 0,
+  //       totalQty: record.totalQty || 0,
+  //     }));
 
-      // Export formatted data to CSV
-      exportToCSV([headers, ...formattedData], 'StockSummary_Report');
-    } else {
-      console.log('No data to export');
+  //     // Export formatted data to CSV
+  //     exportToCSV([headers, ...formattedData], 'StockSummary_Report');
+  //   } else {
+  //     console.log('No data to export');
+  //   }
+  // };
+
+  const handleDownload = async (
+    downloadType: 'currentPage' | 'currentFilters' | 'allData',
+  ) => {
+    let params: any = {};
+    let action = '';
+    const date = new Date().toLocaleDateString('en-IN');
+    let filename = '';
+
+    switch (downloadType) {
+      case 'currentPage':
+        action = 'current page';
+        params = generateQueryParams({
+          paginate: false,
+          page,
+          limit: pageSize,
+          filters: {
+            drugName: drugName || undefined,
+          },
+        });
+        filename = `critical_stocks_page_${page}-${date}.csv`;
+        break;
+
+      case 'currentFilters':
+        action = 'filtered data';
+        params = generateQueryParams({
+          paginate: false,
+          filters: {
+            drugName: drugName || undefined,
+          },
+        });
+        filename = `critical_stocks_filtered-${date}.csv`;
+        break;
+
+      case 'allData':
+        action = 'all data';
+        params = generateQueryParams({
+          filters: {
+            allData: true,
+            drugName: drugName || undefined,
+          },
+        });
+        filename = `critical_stocks_all-${date}.csv`;
+        break;
+
+      default:
+        throw new Error('Invalid download type');
     }
+
+    await downloadFileWithToast({
+      endpoint: 'analytics/pharmacy/critical-stocks/download',
+      params,
+      fileName: filename,
+      successMessage: `Successfully downloaded ${action}!`,
+      errorMessage: `Failed to download ${action}.`,
+      startMessage: `Preparing to download ${action}...`,
+    });
   };
 
   const columnsConfig: GridColDef[] = [
@@ -146,13 +213,7 @@ const CriticalStocksReport: React.FC = () => {
           />
         </Grid>
         <Grid item>
-          <Button
-            variant="contained"
-            color="primary"
-            onClick={handleDownloadCSV}
-          >
-            Download CSV
-          </Button>
+          <DownloadMenu handleDownload={handleDownload} />
         </Grid>
       </Grid>
 
@@ -168,11 +229,8 @@ const CriticalStocksReport: React.FC = () => {
           getRowId={getRowId} // Provide custom id for each row
           sx={{ height: '100%' }}
           enablePagination={true}
-          paginationMode="server" // Optional: Use "server" or "client"
           onPageChange={handlePageChange}
           onPageSizeChange={handlePageSizeChange}
-          extendedPageSizeOptions={[25, 50, 100, { label: 'All', value: -1 }]} // Custom page sizes with "All" option
-          rowHover={true}
         />
       </Box>
     </ContentSection>

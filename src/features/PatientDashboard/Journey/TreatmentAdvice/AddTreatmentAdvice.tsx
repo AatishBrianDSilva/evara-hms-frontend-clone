@@ -8,7 +8,7 @@ import Box from '@mui/material/Box';
 import TextField from '@mui/material/TextField';
 import Paper from '@mui/material/Paper';
 import { useFormik } from 'formik';
-import { Grid, IconButton, Typography } from '@mui/material';
+import { Grid, IconButton, MenuItem, Typography } from '@mui/material';
 import Add from '@mui/icons-material/Add';
 import Delete from '@mui/icons-material/Delete';
 import * as Yup from 'yup';
@@ -189,6 +189,7 @@ const AddTreatmentAdvice: React.FC<AddTreatmentAdviceProps> = ({
               </Grid>
               <Grid item xs={6}>
                 <TextField
+                  select
                   fullWidth
                   label="Status"
                   {...createForm.getFieldProps('status')}
@@ -199,7 +200,13 @@ const AddTreatmentAdvice: React.FC<AddTreatmentAdviceProps> = ({
                   helperText={
                     createForm.touched.status && createForm.errors.status
                   }
-                />
+                >
+                  <MenuItem value="Completed">Completed</MenuItem>
+                  <MenuItem value="Waiting">Waiting</MenuItem>
+                  <MenuItem value="Moved Out">Moved Out</MenuItem>
+                  <MenuItem value="Allocated">Allocated</MenuItem>
+                  <MenuItem value="Others">Others</MenuItem>
+                </TextField>
               </Grid>
               <Grid item xs={12}>
                 <TextField

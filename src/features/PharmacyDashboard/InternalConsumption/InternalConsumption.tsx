@@ -1,58 +1,45 @@
-import React, { useState, useMemo } from 'react';
-import { Box, Button } from '@mui/material';
+import React, { useCallback, useState } from 'react';
+import { Box, Button, TextField, Tooltip } from '@mui/material';
 import CustomDataGrid from '../../../components/CustomDataGrid/CustomDataGrid';
-import { GridColDef } from '@mui/x-data-grid';
+import {
+  GridActionsCellItem,
+  GridColDef,
+  GridRowParams,
+} from '@mui/x-data-grid';
 import ContentSection from '../../../components/ContentSection/ContentSection';
 import AddInternalConsumption from './AddInternalConsumption';
 import { useGetStocksQuery } from '../../../services/pharmacyDashboardService/stocksApi';
 import { useGetInternalConsumptionsQuery } from '../../../services/pharmacyDashboardService/internalConsumptionApi';
+import _ from 'lodash';
+import { Print } from '@mui/icons-material';
+import { usePrint } from '../../../context/PrintPDFContext';
 
-// Define the required interfaces
-interface Batch {
-  batchId: string;
-  deductedQuantity: number;
-}
-
-interface TransferFrom {
-  location: {
-    location: string;
+interface InternalConsumptionRecord {
+  uniqueRowKey: any;
+  _id: string;
+  icNumber: string;
+  date: Date;
+  quantity: number;
+  notes: string;
+  drugLocation: string;
+  drugName: string;
+  batchNo: string;
+  transferredBy: string;
+  patientName: string;
+  report?: {
+    reportName: string;
+    bucket: string;
+    key: string;
   };
 }
 
-interface ItemDetail {
-  name: string;
-}
-
-interface Item {
-  item: ItemDetail;
-}
-
-interface InternalTransferItem {
-  item: Item;
-  transferFrom: TransferFrom;
-  batches: Batch[];
-}
-
-interface InternalConsumptionRecord {
-  _id: string;
-  date: Date;
-  createdBy: string;
-  items: InternalTransferItem[];
-}
-
-interface RowType {
-  _id: string;
-  drugLocation: string;
-  date: string;
-  drugName: string;
-  batchNo: string;
-  quantity: number;
-  transferredBy: string;
-}
-
 const InternalConsumption: React.FC = () => {
-  const [isTransferModalOpen, setIsTransferModalOpen] =
-    useState<boolean>(false);
+  const [isTransferModalOpen, setIsTransferModalOpen] = useState(false);
+  const [searchQuery, setSearchQuery] = useState('');
+  const [page, setPage] = useState<number>(1);
+  const [pageSize, setPageSize] = useState<number>(25);
+
+  const { fetchAndPrintPdf } = usePrint();
 
   const {
     data: internalConsumptionData,
@@ -60,47 +47,22 @@ const InternalConsumption: React.FC = () => {
     isFetching: internalConsumptionFetching,
   } = useGetInternalConsumptionsQuery({
     paginate: true,
-    page: 1,
-    limit: 1000,
+    page,
+    limit: pageSize,
     sort: { createdAt: -1 },
+    searchQuery,
   });
-
-  console.log('Internal Consumptions Data', internalConsumptionData);
 
   const internalConsumptionsLoading =
     internalConsumptionLoading || internalConsumptionFetching;
 
-  // Map internal consumption data to table rows
-  const internalConsumptions: RowType[] = useMemo(() => {
-    return (
-      (
-        internalConsumptionData?.data
-          ?.records as unknown as InternalConsumptionRecord[]
-      )?.flatMap((record: InternalConsumptionRecord) => {
-        if (!record.items) return [];
-        return record.items.flatMap((item: InternalTransferItem) => {
-          if (!item.batches) return [];
-          return item.batches
-            .filter(batch => batch.deductedQuantity > 0) // Only include batches with deducted quantity > 0
-            .map(batch => ({
-              _id: `${record._id}-${batch.batchId}`,
-              drugLocation:
-                item.transferFrom?.location?.location || 'Unknown Location',
-              date: new Date(record.date).toLocaleDateString(),
-              drugName: item.item?.item?.name || 'Unknown Drug',
-              batchNo: batch.batchId || 'Unknown Batch',
-              quantity: batch.deductedQuantity || 0,
-              transferredBy: record.createdBy || 'Unknown',
-            }));
-        });
-      }) || []
-    );
-  }, [internalConsumptionData]);
+  const internalConsumptions =
+    internalConsumptionData?.data?.records.map((record, index) => ({
+      ...record,
+      uniqueRowKey: `${record.icNumber}-${record.batchNo}-${record.drugName || 'no-drugName'}-${index}`,
+    })) || [];
 
-  console.log(
-    'Internal Consumptions Data after transformation',
-    internalConsumptions,
-  );
+  console.log('InternalConsumption', internalConsumptions);
 
   const openTransferModal = () => {
     setIsTransferModalOpen(true);
@@ -110,7 +72,21 @@ const InternalConsumption: React.FC = () => {
     setIsTransferModalOpen(false);
   };
 
-  const getRowId = (row: RowType) => row._id;
+  const handleSearchChange = useCallback((query: string) => {
+    setPage(1);
+    setSearchQuery(query);
+  }, []);
+
+  const debouncedSearchChange = useCallback(
+    _.debounce(handleSearchChange, 500),
+    [handleSearchChange],
+  );
+
+  const handlePageChange = (newPage: number) => setPage(newPage);
+  const handlePageSizeChange = (newPageSize: number) =>
+    setPageSize(newPageSize);
+
+  const getRowId = (row: InternalConsumptionRecord) => row.uniqueRowKey;
 
   const columns: GridColDef[] = [
     {
@@ -118,60 +94,74 @@ const InternalConsumption: React.FC = () => {
       headerName: 'Drug Location',
       flex: 1,
       minWidth: 150,
-      maxWidth: 200,
     },
     {
       field: 'date',
       headerName: 'Date',
       flex: 1,
       minWidth: 100,
-      maxWidth: 150,
-      valueFormatter(params) {
+      valueFormatter: params => {
         const date = new Date(params.value);
-        const day = String(date.getDate()).padStart(2, '0');
-        const month = String(date.getMonth() + 1).padStart(2, '0'); // Months are 0-based
-        const year = String(date.getFullYear()).slice(-2); // Get last two digits of the year
-        return `${day}/${month}/${year}`;
+        return `${date.getDate().toString().padStart(2, '0')}/${(date.getMonth() + 1).toString().padStart(2, '0')}/${date.getFullYear()}`;
       },
     },
+    { field: 'drugName', headerName: 'Drug Name', flex: 1, minWidth: 150 },
+    { field: 'batchNo', headerName: 'Batch No', flex: 1, minWidth: 100 },
+    { field: 'quantity', headerName: 'Quantity', flex: 1, minWidth: 100 },
     {
-      field: 'drugName',
-      headerName: 'Drug Name',
+      field: 'patientName',
+      headerName: 'Patient Name',
       flex: 1,
       minWidth: 150,
-      maxWidth: 200,
     },
-    {
-      field: 'batchNo',
-      headerName: 'Batch No',
-      flex: 1,
-      minWidth: 100,
-      maxWidth: 150,
-    },
-    {
-      field: 'quantity',
-      headerName: 'Quantity',
-      flex: 1,
-      minWidth: 100,
-      maxWidth: 150,
-    },
+    { field: 'notes', headerName: 'Notes', flex: 2, minWidth: 200 },
     {
       field: 'transferredBy',
       headerName: 'Transferred By',
       flex: 1,
       minWidth: 150,
-      maxWidth: 200,
+    },
+    {
+      field: 'actions',
+      headerName: 'Actions',
+      flex: 1,
+      type: 'actions',
+      getActions: (params: GridRowParams) => {
+        const row = params.row as InternalConsumptionRecord;
+        const actions = [];
+
+        if (row.report?.reportName && row.report?.bucket && row.report?.key) {
+          actions.push(
+            <Tooltip title="Print">
+              <GridActionsCellItem
+                icon={<Print />}
+                label="Print"
+                onClick={() =>
+                  fetchAndPrintPdf(row._id, 'internalConsumption', 'pharmacy')
+                }
+              />
+            </Tooltip>,
+          );
+        }
+
+        return actions;
+      },
     },
   ];
 
-  // Get stocks
   const { data: stocksData } = useGetStocksQuery();
-
   const stocks = stocksData?.data || [];
 
   return (
     <ContentSection title="Internal Consumption">
-      <Box display="flex" justifyContent="flex-end" gap={2}>
+      <Box display="flex" justifyContent="end" alignItems="center" gap={2}>
+        <TextField
+          label="Search"
+          placeholder="Item Name, Batch Number"
+          size="small"
+          variant="outlined"
+          onChange={e => debouncedSearchChange(e.target.value)}
+        />
         <Button variant="contained" color="primary" onClick={openTransferModal}>
           + Add Item
         </Button>
@@ -183,9 +173,14 @@ const InternalConsumption: React.FC = () => {
           columns={columns}
           rows={internalConsumptions}
           getRowId={getRowId}
+          page={page}
+          pageSize={pageSize}
+          totalRows={internalConsumptionData?.data?.pagination?.totalDocs || 0}
           loading={internalConsumptionsLoading}
-          enablePagination={false}
           sx={{ height: '100%' }}
+          enablePagination={true}
+          onPageChange={handlePageChange}
+          onPageSizeChange={handlePageSizeChange}
         />
       </Box>
 

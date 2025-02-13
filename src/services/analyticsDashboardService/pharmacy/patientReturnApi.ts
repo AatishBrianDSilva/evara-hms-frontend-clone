@@ -5,11 +5,11 @@ import {
   PaginatedResponse,
 } from '../../../types/global';
 import generateQueryParams from '../../../utils/generateQueryParams';
-import { baseQuery } from '../../baseQuery';
+import { analyticsBaseQuery } from '../../baseQuery';
 
 export const patientReturnApi = createApi({
   reducerPath: 'patientReturnApi',
-  baseQuery: baseQuery,
+  baseQuery: analyticsBaseQuery,
   tagTypes: ['PatientReturn', 'Stocks'], // Change this to reflect the appropriate tags
   endpoints: builder => ({
     getPatientReturn: builder.query<

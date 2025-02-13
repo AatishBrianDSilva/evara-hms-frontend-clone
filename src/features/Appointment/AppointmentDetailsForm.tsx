@@ -102,6 +102,7 @@ const AppointmentDetailsForm: React.FC<AppointmentDetailsFormProps> = ({
     paginate: false,
     filters: { isAdmin: true },
   });
+
   const sources = sourcesData?.data || [];
   const sourcesLoading = isSourcesLoading || isSourcesFetching;
 

@@ -5,11 +5,11 @@ import {
   PaginatedResponse,
 } from '../../../types/global';
 import generateQueryParams from '../../../utils/generateQueryParams';
-import { baseQuery } from '../../baseQuery';
+import { analyticsBaseQuery } from '../../baseQuery';
 
 export const drugsAndVendorApi = createApi({
   reducerPath: 'drugsAndVendorApi',
-  baseQuery: baseQuery,
+  baseQuery: analyticsBaseQuery,
   tagTypes: ['Billing'],
   endpoints: builder => ({
     getDrugsAndVendor: builder.query<

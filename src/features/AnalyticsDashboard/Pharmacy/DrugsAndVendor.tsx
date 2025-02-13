@@ -1,11 +1,13 @@
 import React, { useCallback, useState } from 'react';
 import ContentSection from '../../../components/ContentSection/ContentSection';
-import { Box, Button, Grid, TextField } from '@mui/material';
+import { Box, Grid, TextField } from '@mui/material';
 import CustomDataGrid from '../../../components/CustomDataGrid/CustomDataGrid';
 import { GridColDef } from '@mui/x-data-grid';
 import { useGetDrugsAndVendorQuery } from '../../../services/analyticsDashboardService/pharmacy/drugsAndVendorApi';
-import { exportToCSV } from '../../../utils/exportCSV';
 import _ from 'lodash';
+import { downloadFileWithToast } from '../../../utils/downloadFileWithToast';
+import generateQueryParams from '../../../utils/generateQueryParams';
+import DownloadMenu from '../../../components/CSVDownloadMenu/CSVDownloadMenu';
 
 const DrugsAndVendorReports: React.FC = () => {
   const [page, setPage] = useState<number>(1);
@@ -41,49 +43,107 @@ const DrugsAndVendorReports: React.FC = () => {
     setPageSize(newPageSize);
   };
 
-  const handleDownloadCSV = () => {
-    if (data?.data?.records && data.data.records.length > 0) {
-      // Define the headers for the CSV file
-      const headers = [
-        'S No',
-        'Drug Category',
-        'Category Code',
-        'Drug Type',
-        'Type Code',
-        'Drug Company',
-        'Company Code',
-        'Drug Name',
-        'Generic Name',
-        'Drug Code',
-        'HSN Code',
-        'Qty Per Pack',
-        'Tax',
-      ];
+  // const handleDownloadCSV = () => {
+  //   if (data?.data?.records && data.data.records.length > 0) {
+  //     // Define the headers for the CSV file
+  //     const headers = [
+  //       'S No',
+  //       'Drug Category',
+  //       'Category Code',
+  //       'Drug Type',
+  //       'Type Code',
+  //       'Drug Company',
+  //       'Company Code',
+  //       'Drug Name',
+  //       'Generic Name',
+  //       'Drug Code',
+  //       'HSN Code',
+  //       'Qty Per Pack',
+  //       'Tax',
+  //     ];
 
-      // Format the data for CSV export
-      const formattedData = data.data.records.map(record => {
-        return {
-          serialNumber: record.serialNumber,
-          drugCategory: record.drugCategory || '',
-          categoryCode: record.categoryCode || '',
-          drugType: record.drugType || '',
-          typeCode: record.typeCode || '',
-          drugCompany: record.drugCompany || '',
-          companyCode: record.companyCode || '',
-          drugName: record.drugName || '',
-          genericName: record.genericName || '',
-          drugCode: record.drugCode || '',
-          hsnCode: record.hsnCode || '',
-          qtyPerPack: record.qtyPerPack || '',
-          tax: record.tax || '',
-        };
-      });
+  //     // Format the data for CSV export
+  //     const formattedData = data.data.records.map(record => {
+  //       return {
+  //         serialNumber: record.serialNumber,
+  //         drugCategory: record.drugCategory || '',
+  //         categoryCode: record.categoryCode || '',
+  //         drugType: record.drugType || '',
+  //         typeCode: record.typeCode || '',
+  //         drugCompany: record.drugCompany || '',
+  //         companyCode: record.companyCode || '',
+  //         drugName: record.drugName || '',
+  //         genericName: record.genericName || '',
+  //         drugCode: record.drugCode || '',
+  //         hsnCode: record.hsnCode || '',
+  //         qtyPerPack: record.qtyPerPack || '',
+  //         tax: record.tax || '',
+  //       };
+  //     });
 
-      // Export formatted data to CSV
-      exportToCSV([headers, ...formattedData], 'DrugsAndVendor_Report');
-    } else {
-      console.log('No data to export');
+  //     // Export formatted data to CSV
+  //     exportToCSV([headers, ...formattedData], 'DrugsAndVendor_Report');
+  //   } else {
+  //     console.log('No data to export');
+  //   }
+  // };
+
+  const handleDownload = async (
+    downloadType: 'currentPage' | 'currentFilters' | 'allData',
+  ) => {
+    let params: any = {};
+    let action = '';
+    const date = new Date().toLocaleDateString('en-IN');
+    let filename = '';
+
+    switch (downloadType) {
+      case 'currentPage':
+        action = 'current page';
+        params = generateQueryParams({
+          paginate: false,
+          page,
+          limit: pageSize,
+          filters: {
+            drugName: drugName || undefined,
+          },
+        });
+        filename = `drugs_vendor_page_${page}-${date}.csv`;
+        break;
+
+      case 'currentFilters':
+        action = 'filtered data';
+        params = generateQueryParams({
+          paginate: false,
+          filters: {
+            drugName: drugName || undefined,
+          },
+        });
+        filename = `drugs_vendor_filtered-${date}.csv`;
+        break;
+
+      case 'allData':
+        action = 'all data';
+        params = generateQueryParams({
+          filters: {
+            allData: true,
+            drugName: drugName || undefined,
+          },
+        });
+        filename = `drugs_vendor_all-${date}.csv`;
+        break;
+
+      default:
+        throw new Error('Invalid download type');
     }
+
+    await downloadFileWithToast({
+      endpoint: 'analytics/pharmacy/drugs-and-vendor/download',
+      params,
+      fileName: filename,
+      successMessage: `Successfully downloaded ${action}!`,
+      errorMessage: `Failed to download ${action}.`,
+      startMessage: `Preparing to download ${action}...`,
+    });
   };
 
   const columnsConfig: GridColDef[] = [
@@ -99,7 +159,7 @@ const DrugsAndVendorReports: React.FC = () => {
     { field: 'drugCode', headerName: 'Drug Code', flex: 1 },
     { field: 'hsnCode', headerName: 'HSN Code', flex: 1 },
     { field: 'qtyPerPack', headerName: 'Qty Per Pack', flex: 1 },
-    { field: 'tax', headerName: 'Tax', flex: 1 },
+    // { field: 'tax', headerName: 'Tax', flex: 1 },
   ];
 
   const rows = data?.data?.records || [];
@@ -120,13 +180,7 @@ const DrugsAndVendorReports: React.FC = () => {
           />
         </Grid>
         <Grid item>
-          <Button
-            variant="contained"
-            color="primary"
-            onClick={handleDownloadCSV}
-          >
-            Download CSV
-          </Button>
+          <DownloadMenu handleDownload={handleDownload} />
         </Grid>
       </Grid>
 
@@ -142,10 +196,8 @@ const DrugsAndVendorReports: React.FC = () => {
           getRowId={getRowId} // Provide custom id for each row
           sx={{ height: '100%' }}
           enablePagination={true}
-          paginationMode="server" // Optional: Use "server" or "client"
           onPageChange={handlePageChange}
           onPageSizeChange={handlePageSizeChange}
-          extendedPageSizeOptions={[25, 50, 100, { label: 'All', value: -1 }]} // Custom page sizes with "All" option
           rowHover={true}
         />
       </Box>

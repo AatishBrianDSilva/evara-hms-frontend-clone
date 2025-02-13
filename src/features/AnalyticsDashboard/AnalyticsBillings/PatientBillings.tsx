@@ -87,11 +87,7 @@ const PatientBillings: React.FC = () => {
 
   const scrollRef = useRef<HTMLDivElement>(null);
 
-  const handlePageChange = (newPage: number) => {
-    setPage(newPage);
-    scrollRef.current?.scrollTo(0, 0);
-  };
-
+  const handlePageChange = (newPage: number) => setPage(newPage);
   const handlePageSizeChange = (newPageSize: number) => {
     setPageSize(newPageSize);
     scrollRef.current?.scrollTo(0, 0);
@@ -371,12 +367,11 @@ const PatientBillings: React.FC = () => {
         page={page}
         pageSize={pageSize}
         totalRows={patientBillingsPagination?.totalDocs || 0}
-        onPageChange={handlePageChange}
-        onPageSizeChange={handlePageSizeChange}
         loading={patientBillingsLoading}
         sx={{ height: '100%' }}
-        enablePagination={pageSize !== -1} // Disable pagination when "All" is selected
-        extendedPageSizeOptions={[25, 50, 100, { label: 'All', value: -1 }]} // Add the "All" option
+        enablePagination={true}
+        onPageChange={handlePageChange}
+        onPageSizeChange={handlePageSizeChange}
       />
 
       {/* Payments Modal */}

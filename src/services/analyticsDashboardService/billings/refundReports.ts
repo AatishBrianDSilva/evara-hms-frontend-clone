@@ -5,7 +5,7 @@ import {
   PaginatedResponse,
 } from '../../../types/global';
 import generateQueryParams from '../../../utils/generateQueryParams';
-import { baseQuery } from '../../baseQuery';
+import { analyticsBaseQuery } from '../../baseQuery';
 
 interface Refund {
   _id: string;
@@ -24,7 +24,7 @@ interface Refund {
 // Define the refund reports API
 export const refundReportsApi = createApi({
   reducerPath: 'refundReportsApi',
-  baseQuery: baseQuery,
+  baseQuery: analyticsBaseQuery,
   tagTypes: ['Refunds'],
   endpoints: builder => ({
     getRefundReports: builder.query<
