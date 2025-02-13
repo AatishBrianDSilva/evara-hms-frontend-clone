@@ -22,6 +22,10 @@ interface AddTreatmentAdvicePayload {
   }[];
 }
 
+interface EditTreatmentAdvicePayload extends AddTreatmentAdvicePayload {
+  id: string;
+}
+
 export const treatmentAdviceApi = createApi({
   reducerPath: 'treatmentAdviceApi',
   baseQuery: baseQuery,
@@ -48,6 +52,17 @@ export const treatmentAdviceApi = createApi({
       }),
       invalidatesTags: ['TreatmentAdvice'],
     }),
+    editTreatmentAdvice: builder.mutation<
+      ApiResponse<ITreatmentAdvice>,
+      EditTreatmentAdvicePayload
+    >({
+      query: ({ id, ...adviceData }) => ({
+        url: `treatment-advice/${id}`,
+        method: 'PUT',
+        body: adviceData,
+      }),
+      invalidatesTags: ['TreatmentAdvice'],
+    }),
     deleteTreatmentAdvice: builder.mutation<ApiResponse<null>, string>({
       query: id => ({
         url: `treatment-advice/${id}`,
@@ -62,4 +77,5 @@ export const {
   useAddTreatmentAdviceMutation,
   useGetTreatmentAdvicesQuery,
   useDeleteTreatmentAdviceMutation,
+  useEditTreatmentAdviceMutation,
 } = treatmentAdviceApi;
