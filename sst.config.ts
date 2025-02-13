@@ -34,7 +34,7 @@ export default $config({
         VITE_API_BASE_URL =
           'https://aiekvwbyni.execute-api.ap-south-1.amazonaws.com';
         VITE_API_BASE_URL2 =
-          'https://aiekvwbyni.execute-api.ap-south-1.amazonaws.com';
+          'https://d7cue8za67.execute-api.ap-south-1.amazonaws.com';
         VITE_ENVIRONMENT = 'prod';
         break;
       case 'dev':
