@@ -21,10 +21,11 @@ import {
 import DeleteConfirmationModal from '../../../../components/DeleteConfirmationModal/DeleteConfirmationModal';
 import { useToast } from '../../../../context/ToastContext';
 import { useNavigate, useParams } from 'react-router-dom';
-import { Visibility } from '@mui/icons-material';
+import { Edit, Visibility } from '@mui/icons-material';
 import ViewTreatmentAdvice from './ViewTreatmentAdvice';
 import RoleGuard from '../../../../components/RoleGuard/RoleGuard';
 import { EUserRole } from '../../../../types/masterDashboard/global';
+import EditTreatmentAdvice from './EditTreatmentAdvice';
 
 const TreatmentAdvice: React.FC = () => {
   const { id, itemId } = useParams<{ id: string; itemId?: string }>();
@@ -37,6 +38,10 @@ const TreatmentAdvice: React.FC = () => {
 
   const [page, setPage] = useState<number>(1);
   const [pageSize, setPageSize] = useState<number>(25);
+
+  const [isEditModalOpen, setIsEditModalOpen] = useState<boolean>(false);
+  const [selectedEditTreatmentAdvice, setSelectedEditTreatmentAdvice] =
+    useState<any | null>(null);
 
   // Get patient treatment advice
   const {
@@ -91,6 +96,16 @@ const TreatmentAdvice: React.FC = () => {
     setIsViewModalOpen(false);
   };
 
+  const handleEditClick = (row: any) => {
+    setSelectedEditTreatmentAdvice(row);
+    setIsEditModalOpen(true);
+  };
+
+  const closeEditModal = () => {
+    setSelectedEditTreatmentAdvice(null);
+    setIsEditModalOpen(false);
+  };
+
   // Columns configuration for the data grid
   const columns: GridColDef[] = [
     {
@@ -127,6 +142,13 @@ const TreatmentAdvice: React.FC = () => {
               icon={<Visibility />}
               label="View"
               onClick={() => handleViewClick(params.row)}
+            />
+          </Tooltip>,
+          <Tooltip title="Edit">
+            <GridActionsCellItem
+              icon={<Edit />}
+              label="Edit"
+              onClick={() => handleEditClick(params.row)}
             />
           </Tooltip>,
         ];
@@ -244,6 +266,14 @@ const TreatmentAdvice: React.FC = () => {
           open={isViewModalOpen}
           onClose={closeViewModal}
           treatmentAdvice={selectedTreatmentAdvice}
+        />
+      )}
+
+      {isEditModalOpen && selectedEditTreatmentAdvice && (
+        <EditTreatmentAdvice
+          open={isEditModalOpen}
+          onClose={closeEditModal}
+          treatmentAdvice={selectedEditTreatmentAdvice}
         />
       )}
     </Box>
