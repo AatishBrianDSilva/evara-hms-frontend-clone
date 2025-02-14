@@ -56,6 +56,13 @@ export const patientsApi = createApi({
       }),
       invalidatesTags: ['Patient'],
     }),
+    getAllPatients: builder.query<ApiResponse<{ records: IPatient[] }>, void>({
+      query: () => ({
+        url: 'patients/all',
+        method: 'GET',
+      }),
+      providesTags: ['Patient'],
+    }),
   }),
 });
 
@@ -66,4 +73,5 @@ export const {
   useUpdatePatientMutation,
   useGetPatientByIdQuery,
   useDeletePatientMutation,
+  useGetAllPatientsQuery,
 } = patientsApi;

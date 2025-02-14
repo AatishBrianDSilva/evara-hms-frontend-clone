@@ -1,18 +1,14 @@
 import React, { useCallback, useState } from 'react';
-import { Box, Button, TextField, Tooltip } from '@mui/material';
+import { Box, Button, TextField } from '@mui/material';
 import CustomDataGrid from '../../../components/CustomDataGrid/CustomDataGrid';
-import {
-  GridActionsCellItem,
-  GridColDef,
-  GridRowParams,
-} from '@mui/x-data-grid';
+import { GridColDef } from '@mui/x-data-grid';
 import ContentSection from '../../../components/ContentSection/ContentSection';
 import AddInternalConsumption from './AddInternalConsumption';
 import { useGetStocksQuery } from '../../../services/pharmacyDashboardService/stocksApi';
 import { useGetInternalConsumptionsQuery } from '../../../services/pharmacyDashboardService/internalConsumptionApi';
 import _ from 'lodash';
-import { Print } from '@mui/icons-material';
-import { usePrint } from '../../../context/PrintPDFContext';
+
+// import { usePrint } from '../../../context/PrintPDFContext';
 
 interface InternalConsumptionRecord {
   uniqueRowKey: any;
@@ -39,7 +35,7 @@ const InternalConsumption: React.FC = () => {
   const [page, setPage] = useState<number>(1);
   const [pageSize, setPageSize] = useState<number>(25);
 
-  const { fetchAndPrintPdf } = usePrint();
+  // const { fetchAndPrintPdf } = usePrint();
 
   const {
     data: internalConsumptionData,
@@ -96,7 +92,7 @@ const InternalConsumption: React.FC = () => {
       minWidth: 150,
     },
     {
-      field: 'date',
+      field: 'createdAt',
       headerName: 'Date',
       flex: 1,
       minWidth: 100,
@@ -121,32 +117,32 @@ const InternalConsumption: React.FC = () => {
       flex: 1,
       minWidth: 150,
     },
-    {
-      field: 'actions',
-      headerName: 'Actions',
-      flex: 1,
-      type: 'actions',
-      getActions: (params: GridRowParams) => {
-        const row = params.row as InternalConsumptionRecord;
-        const actions = [];
+    // {
+    //   field: 'actions',
+    //   headerName: 'Actions',
+    //   flex: 1,
+    //   type: 'actions',
+    //   getActions: (params: GridRowParams) => {
+    //     const row = params.row as InternalConsumptionRecord;
+    //     const actions = [];
 
-        if (row.report?.reportName && row.report?.bucket && row.report?.key) {
-          actions.push(
-            <Tooltip title="Print">
-              <GridActionsCellItem
-                icon={<Print />}
-                label="Print"
-                onClick={() =>
-                  fetchAndPrintPdf(row._id, 'internalConsumption', 'pharmacy')
-                }
-              />
-            </Tooltip>,
-          );
-        }
+    //     if (row.report?.reportName && row.report?.bucket && row.report?.key) {
+    //       actions.push(
+    //         <Tooltip title="Print">
+    //           <GridActionsCellItem
+    //             icon={<Print />}
+    //             label="Print"
+    //             onClick={() =>
+    //               fetchAndPrintPdf(row._id, 'internalConsumption', 'pharmacy')
+    //             }
+    //           />
+    //         </Tooltip>,
+    //       );
+    //     }
 
-        return actions;
-      },
-    },
+    //     return actions;
+    //   },
+    // },
   ];
 
   const { data: stocksData } = useGetStocksQuery();
