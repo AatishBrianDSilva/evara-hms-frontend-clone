@@ -84,12 +84,32 @@ const Stocks: React.FC = () => {
 
   // Define the columns for the DataGrid
   const columnsConfig: GridColDef[] = [
-    { field: 'batchNo', headerName: 'Batch Number', flex: 1 },
-    { field: 'itemName', headerName: 'Item Name', flex: 1 },
-    { field: 'category', headerName: 'Category', flex: 1 },
+    {
+      field: 'batchNo',
+      headerName: 'Batch Number',
+      minWidth: 120,
+      maxWidth: 150,
+      flex: 1,
+    },
+    {
+      field: 'itemName',
+      headerName: 'Item Name',
+      minWidth: 200,
+      maxWidth: 250,
+      flex: 1.5,
+    },
+    {
+      field: 'category',
+      headerName: 'Category',
+      minWidth: 150,
+      maxWidth: 180,
+      flex: 1,
+    },
     {
       field: 'expiryDate',
       headerName: 'Expiry Date',
+      minWidth: 120,
+      maxWidth: 150,
       flex: 1,
       valueFormatter: params => {
         const date = new Date(params.value);
@@ -99,6 +119,8 @@ const Stocks: React.FC = () => {
     ...STOCK_LOCATIONS.map(location => ({
       field: location,
       headerName: location,
+      minWidth: 100,
+      maxWidth: 120, // ✅ Prevents columns from stretching
       flex: 1,
       valueGetter: (params: { row: { quantityAtLocation: any[] } }) =>
         getLocationQuantities(params.row.quantityAtLocation)[location] || 0,
@@ -106,6 +128,8 @@ const Stocks: React.FC = () => {
     {
       field: 'Other',
       headerName: 'Other',
+      minWidth: 100,
+      maxWidth: 120,
       flex: 1,
       valueGetter: params =>
         getLocationQuantities(params.row.quantityAtLocation).Other,
@@ -113,10 +137,18 @@ const Stocks: React.FC = () => {
     {
       field: 'sellPrice',
       headerName: 'Sell Price',
+      minWidth: 120,
+      maxWidth: 150,
       flex: 1,
       valueFormatter: params => formatToIndianCurrencyFormat(params.value),
     },
-    { field: 'totalQuantity', headerName: 'Total Quantity', flex: 1 },
+    {
+      field: 'totalQuantity',
+      headerName: 'Total Quantity',
+      minWidth: 120,
+      maxWidth: 150,
+      flex: 1,
+    },
   ];
 
   return (
@@ -132,7 +164,9 @@ const Stocks: React.FC = () => {
       </Box>
 
       {/* Data Grid */}
-      <Box mt={2} flex={'1 1 auto'}>
+      <Box sx={{ width: '100%', overflowX: 'auto' }}>
+        {' '}
+        {/* ✅ Prevent horizontal stretching */}
         <CustomDataGrid
           autoHeight={false}
           columns={columnsConfig}
@@ -142,7 +176,16 @@ const Stocks: React.FC = () => {
           pageSize={pageSize}
           totalRows={pagination?.totalDocs || 0}
           loading={loading}
-          sx={{ height: '100%' }}
+          sx={{
+            width: '100%',
+            maxWidth: '100%', // ✅ Prevents width overflow
+            '& .MuiDataGrid-root': { tableLayout: 'fixed' }, // ✅ Force fixed table layout
+            '& .MuiDataGrid-cell': {
+              whiteSpace: 'nowrap',
+              overflow: 'hidden',
+              textOverflow: 'ellipsis', // ✅ Truncate long text
+            },
+          }}
           enablePagination={true}
           onPageChange={handlePageChange}
           onPageSizeChange={handlePageSizeChange}

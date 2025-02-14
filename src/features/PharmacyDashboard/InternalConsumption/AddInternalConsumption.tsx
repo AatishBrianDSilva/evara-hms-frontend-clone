@@ -18,7 +18,7 @@ import { IDrugLocation } from '../../../types/pharmacyDashboard/master';
 import { useToast } from '../../../context/ToastContext';
 import { useAddInternalConsumptionMutation } from '../../../services/pharmacyDashboardService/internalConsumptionApi';
 import _ from 'lodash';
-import { useGetPatientsQuery } from '../../../services/patientsApi';
+import { useGetAllPatientsQuery } from '../../../services/patientsApi';
 
 interface AddInternalConsumptionProps {
   open: boolean;
@@ -53,11 +53,10 @@ const AddInternalConsumption: React.FC<AddInternalConsumptionProps> = ({
   const [addInternalConsumption, { isLoading }] =
     useAddInternalConsumptionMutation();
 
-  const { data: patientsData } = useGetPatientsQuery({
-    paginate: false,
-  });
+  const { data: allPatientsData } = useGetAllPatientsQuery();
 
-  console.log('Patients data', patientsData);
+  // console.log('Patients data', patientsData);
+  // console.log('All Patients data', allPatientsData);
 
   const initialValues: IInternalConsumptionFormValues = {
     date: new Date(),
@@ -263,7 +262,7 @@ const AddInternalConsumption: React.FC<AddInternalConsumptionProps> = ({
                   </Grid>
                   <Grid item flex={2}>
                     <FieldAutocomplete
-                      options={patientsData?.data?.records || []} // Access the records from patientsData
+                      options={allPatientsData?.data?.records || []} // Access the records from patientsData
                       getOptionLabel={option =>
                         `${option.patientId} - ${option.firstName} ${option.lastName}`
                       }
