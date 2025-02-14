@@ -176,7 +176,16 @@ const Stocks: React.FC = () => {
           pageSize={pageSize}
           totalRows={pagination?.totalDocs || 0}
           loading={loading}
-          sx={{ height: '100%' }}
+          sx={{
+            width: '100%',
+            maxWidth: '100%', // ✅ Prevents width overflow
+            '& .MuiDataGrid-root': { tableLayout: 'fixed' }, // ✅ Force fixed table layout
+            '& .MuiDataGrid-cell': {
+              whiteSpace: 'nowrap',
+              overflow: 'hidden',
+              textOverflow: 'ellipsis', // ✅ Truncate long text
+            },
+          }}
           enablePagination={true}
           onPageChange={handlePageChange}
           onPageSizeChange={handlePageSizeChange}
