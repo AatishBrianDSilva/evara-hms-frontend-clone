@@ -4,7 +4,7 @@ import { clearCredentials } from '../../features/Auth/authSlice';
 import { Snackbar, Button } from '@mui/material';
 import { formatDistanceToNow } from 'date-fns';
 import { handlePersistorPurge } from '../../app/store';
-import { TimeoutId } from '@reduxjs/toolkit/dist/query/core/buildMiddleware/types';
+// import { TimeoutId } from '@reduxjs/toolkit/dist/query/core/buildMiddleware/types';
 
 interface UserInactivityCheckerProps {
   timeoutInMinutes?: number;
@@ -21,7 +21,7 @@ const UserInactivityChecker: React.FC<UserInactivityCheckerProps> = ({
     new Date(Date.now() + timeoutInMinutes * 60 * 1000),
   );
 
-  let intervalId: TimeoutId;
+  let intervalId: NodeJS.Timeout;
 
   useEffect(() => {
     let timeoutId: number;
