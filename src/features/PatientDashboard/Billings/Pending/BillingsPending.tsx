@@ -35,6 +35,8 @@ const BillingsPending: React.FC = () => {
 
   const { patient } = useSelector((state: RootState) => state.patients);
 
+  const { user } = useSelector((state: RootState) => state.auth);
+
   const { data, isLoading, isFetching } = useGetBillingsQuery(
     {
       paginate: true,
@@ -314,7 +316,9 @@ const BillingsPending: React.FC = () => {
         <Button
           variant="contained"
           color="primary"
-          disabled={checkedRows.length === 0}
+          disabled={
+            checkedRows.length === 0 || !!(user && user.role === 'doctor')
+          }
           onClick={openProcessModal}
         >
           Pay

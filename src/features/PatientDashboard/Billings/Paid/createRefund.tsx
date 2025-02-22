@@ -56,6 +56,7 @@ const CreateRefund: React.FC<CreateRefundProps> = ({
   const billing = data?.data;
 
   const { patient } = useSelector((state: RootState) => state.patients);
+  const { user } = useSelector((state: RootState) => state.auth);
 
   const { showPromiseToast } = useToast();
 
@@ -603,7 +604,7 @@ const CreateRefund: React.FC<CreateRefundProps> = ({
               variant="contained"
               color="primary"
               onClick={handleProcessRefund}
-              disabled={isSubmitDisabled}
+              disabled={user?.role === 'doctor' || isSubmitDisabled}
             >
               Process Refund
             </Button>

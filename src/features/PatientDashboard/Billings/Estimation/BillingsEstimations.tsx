@@ -34,6 +34,10 @@ const BillingsEstimations: React.FC = () => {
   const { showPromiseToast } = useToast();
   const { patient } = useSelector((state: RootState) => state.patients);
 
+  const { user } = useSelector((state: RootState) => state.auth);
+
+  console.log('user', user);
+
   const [page, setPage] = useState<number>(1);
   const [pageSize, setPageSize] = useState<number>(25);
   const handlePageChange = (newPage: number) => {
@@ -162,18 +166,20 @@ const BillingsEstimations: React.FC = () => {
       cellClassName: 'actions',
       getActions: (params: GridRowParams) => {
         const row = params.row;
-        return [
-          // <GridActionsCellItem
-          //   icon={<Edit />}
-          //   label="Edit"
-          //   onClick={() => openEditModal(row)}
-          // />,
-          <GridActionsCellItem
-            icon={<Delete />}
-            label="Delete"
-            onClick={() => openDeleteModal(row)}
-          />,
-        ];
+        const actions = [];
+
+        // Allow all users to view, but restrict delete for doctors
+        if (user?.role !== 'doctor') {
+          actions.push(
+            <GridActionsCellItem
+              icon={<Delete />}
+              label="Delete"
+              onClick={() => openDeleteModal(row)}
+            />,
+          );
+        }
+
+        return actions;
       },
     },
   ];
@@ -229,6 +235,7 @@ const BillingsEstimations: React.FC = () => {
           variant="contained"
           color="primary"
           onClick={openAddModal}
+          disabled={user?.role === 'doctor'}
         >
           Estimation
         </Button>
@@ -313,7 +320,11 @@ const BillingsEstimations: React.FC = () => {
         <Button
           variant="contained"
           color="primary"
-          disabled={checkedRows.length === 0 || isAddBillingMutationLoading}
+          disabled={
+            checkedRows.length === 0 ||
+            isAddBillingMutationLoading ||
+            user?.role === 'doctor'
+          }
           onClick={handleContinue}
         >
           Generate Bill
