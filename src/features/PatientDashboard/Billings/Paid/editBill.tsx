@@ -19,6 +19,8 @@ import { useToast } from '../../../../context/ToastContext';
 import { formatToIndianCurrencyFormat } from '../../../../utils/formatToIndianCurrencyFormat';
 import { useFormik } from 'formik';
 import _ from 'lodash';
+import { useSelector } from 'react-redux';
+import { RootState } from '../../../../app/store';
 
 interface EditBillProps {
   openModal: boolean;
@@ -29,6 +31,8 @@ interface EditBillProps {
 const EditBill: React.FC<EditBillProps> = ({ openModal, onClose, id }) => {
   const { data, isLoading } = useGetBillingByIdQuery(id);
   const billing = data?.data;
+
+  const { user } = useSelector((state: RootState) => state.auth);
 
   console.log('Billing Payments', billing?.payments);
 
@@ -142,7 +146,9 @@ const EditBill: React.FC<EditBillProps> = ({ openModal, onClose, id }) => {
                 variant="contained"
                 color="primary"
                 disabled={
-                  _.isEqual(formik.values, formik.initialValues) || isMutating
+                  user?.role === 'doctor' ||
+                  _.isEqual(formik.values, formik.initialValues) ||
+                  isMutating
                 }
               >
                 Update

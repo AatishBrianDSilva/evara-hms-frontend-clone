@@ -280,6 +280,7 @@ const AppRoutes: React.FC = () => (
                   EUserRole.CenterManager,
                   EUserRole.Billing,
                   EUserRole.PharmacyManager,
+                  EUserRole.Doctor,
                 ]}
                 navigateTo={'/not-authorized'}
               />

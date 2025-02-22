@@ -34,6 +34,8 @@ const EditPending: React.FC<EditPendingProps> = ({
   const { showPromiseToast } = useToast();
 
   const patient = useSelector((state: RootState) => state.patients.patient);
+  const { user } = useSelector((state: RootState) => state.auth);
+
   const [fileUploadedUrl, setFileUploadedUrl] = React.useState<string[]>(['']);
 
   const { data, isLoading } = useGetBillingByIdQuery(id);
@@ -204,7 +206,7 @@ const EditPending: React.FC<EditPendingProps> = ({
                   type="submit"
                   variant="contained"
                   color="primary"
-                  disabled={isEditing}
+                  disabled={isEditing || user?.role === 'doctor'}
                 >
                   Save
                 </Button>
