@@ -103,6 +103,35 @@ const PharmacyReport: React.FC = () => {
         );
       },
     },
+    {
+      field: 'expiryDate',
+      headerName: 'Expiry Date',
+      flex: 1,
+      valueGetter: params =>
+        params.row.item?.details?.[0]?.expiryDate
+          ? new Date(params.row.item.details[0].expiryDate).toLocaleDateString(
+              'en-GB',
+              {
+                day: '2-digit',
+                month: '2-digit',
+                year: 'numeric',
+              },
+            )
+          : 'N/A',
+    },
+    {
+      field: 'hsnCode',
+      headerName: 'HSN Code',
+      flex: 1,
+      valueGetter: params => params.row.item?.stock?.item?.hsnCode || 'N/A',
+    },
+    {
+      field: 'batchNumber',
+      headerName: 'Batch Number',
+      flex: 1,
+      valueGetter: params =>
+        params.row.item?.details?.[0]?.batchNumber || 'N/A',
+    },
   ];
 
   return (
