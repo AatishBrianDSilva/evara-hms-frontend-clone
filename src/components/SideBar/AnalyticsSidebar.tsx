@@ -60,6 +60,11 @@ const AnalyticsSidebar: React.FC = () => {
         },
         {
           icon: FiberManualRecordIcon,
+          primaryText: 'Patient Payments',
+          path: '/analytics/billings/patient-payments',
+        },
+        {
+          icon: FiberManualRecordIcon,
           primaryText: 'Refund Reports',
           path: '/analytics/billings/refund-reports',
         },

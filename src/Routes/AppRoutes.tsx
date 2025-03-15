@@ -129,6 +129,7 @@ import AnalyticsTreatmentCycle from '../features/AnalyticsDashboard/Treatments&T
 import AnalyticsServices from '../features/AnalyticsDashboard/Treatments&Testing/Services';
 import AnalyticsPatientPackages from '../features/AnalyticsDashboard/Treatments&Testing/PatientPackages';
 import AnalyticsMasterPackages from '../features/AnalyticsDashboard/Treatments&Testing/MasterPackages';
+import PatientPayments from '../features/AnalyticsDashboard/AnalyticsBillings/PatientPayments';
 
 const allRoles = Object.values(EUserRole);
 
@@ -536,6 +537,7 @@ const AppRoutes: React.FC = () => (
             <Route path="billings">
               <Route index element={<Navigate to="patient-billings" />} />
               <Route path="patient-billings" element={<PatientBillings />} />
+              <Route path="patient-payments" element={<PatientPayments />} />
               <Route
                 path="billings-transactions"
                 element={<BillingsTransactions />}
