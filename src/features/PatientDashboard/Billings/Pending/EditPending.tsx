@@ -90,8 +90,8 @@ const EditPending: React.FC<EditPendingProps> = ({
   });
 
   const calculateDiscountAmount = (percentage: number) => {
-    if (billing?.subTotal) {
-      return Number(billing.subTotal * (percentage / 100)).toFixed(2);
+    if (billing?.amount) {
+      return Number(billing.amount * (percentage / 100)).toFixed(2);
     }
     return 0;
   };
