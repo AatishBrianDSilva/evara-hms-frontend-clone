@@ -84,6 +84,7 @@ import { refundReportsApi } from '../services/analyticsDashboardService/billings
 
 import { revenueBreakupApi } from '../services/analyticsDashboardService/billings/revenueBreakupApi';
 import { treatmentTestingApi } from '../services/analyticsDashboardService/treatment&testing/treatmentTestingApi';
+import { analyticsPatientPaymentsApi } from '../services/analyticsDashboardService/billings/analyticsPatientPaymentsApi';
 
 const persistConfig = {
   key: 'root',
@@ -159,6 +160,8 @@ const rootReducer = combineReducers({
   [refundReportsApi.reducerPath]: refundReportsApi.reducer,
   [revenueBreakupApi.reducerPath]: revenueBreakupApi.reducer,
   [treatmentTestingApi.reducerPath]: treatmentTestingApi.reducer,
+  [analyticsPatientPaymentsApi.reducerPath]:
+    analyticsPatientPaymentsApi.reducer,
   patients: patientsReducer,
   appointments: appointmentReducer,
   investigation: investigationReducer,
@@ -242,7 +245,8 @@ export const store = configureStore({
       .concat(purchaseOrderReportApi.middleware)
       .concat(refundReportsApi.middleware)
       .concat(revenueBreakupApi.middleware)
-      .concat(treatmentTestingApi.middleware),
+      .concat(treatmentTestingApi.middleware)
+      .concat(analyticsPatientPaymentsApi.middleware),
   enhancers(getDefaultEnhancers) {
     return getDefaultEnhancers();
   },
