@@ -108,6 +108,8 @@ const BillingsEstimations: React.FC = () => {
   const patientEstimationsPagination = estimationsData?.data?.pagination;
   const patientEstimationLoading = estimationsLoading || estimationsFetching;
 
+  console.log('patientEstimations', patientEstimations);
+
   const getRowId = (row: RowType) => row._id;
 
   const [deleteEstimation, { isLoading: isDeleteLoading }] =
