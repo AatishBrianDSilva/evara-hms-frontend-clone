@@ -85,6 +85,8 @@ import { refundReportsApi } from '../services/analyticsDashboardService/billings
 import { revenueBreakupApi } from '../services/analyticsDashboardService/billings/revenueBreakupApi';
 import { treatmentTestingApi } from '../services/analyticsDashboardService/treatment&testing/treatmentTestingApi';
 import { analyticsPatientPaymentsApi } from '../services/analyticsDashboardService/billings/analyticsPatientPaymentsApi';
+import { b2cReportsApi } from '../services/analyticsDashboardService/billings/b2cReportApi';
+import { hsnReportsApi } from '../services/analyticsDashboardService/billings/hsnReportApi';
 
 const persistConfig = {
   key: 'root',
@@ -160,6 +162,8 @@ const rootReducer = combineReducers({
   [refundReportsApi.reducerPath]: refundReportsApi.reducer,
   [revenueBreakupApi.reducerPath]: revenueBreakupApi.reducer,
   [treatmentTestingApi.reducerPath]: treatmentTestingApi.reducer,
+  [b2cReportsApi.reducerPath]: b2cReportsApi.reducer,
+  [hsnReportsApi.reducerPath]: hsnReportsApi.reducer,
   [analyticsPatientPaymentsApi.reducerPath]:
     analyticsPatientPaymentsApi.reducer,
   patients: patientsReducer,
@@ -246,6 +250,8 @@ export const store = configureStore({
       .concat(refundReportsApi.middleware)
       .concat(revenueBreakupApi.middleware)
       .concat(treatmentTestingApi.middleware)
+      .concat(b2cReportsApi.middleware)
+      .concat(hsnReportsApi.middleware)
       .concat(analyticsPatientPaymentsApi.middleware),
   enhancers(getDefaultEnhancers) {
     return getDefaultEnhancers();

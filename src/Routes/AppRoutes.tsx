@@ -130,6 +130,8 @@ import AnalyticsServices from '../features/AnalyticsDashboard/Treatments&Testing
 import AnalyticsPatientPackages from '../features/AnalyticsDashboard/Treatments&Testing/PatientPackages';
 import AnalyticsMasterPackages from '../features/AnalyticsDashboard/Treatments&Testing/MasterPackages';
 import PatientPayments from '../features/AnalyticsDashboard/AnalyticsBillings/PatientPayments';
+import B2CReports from '../features/AnalyticsDashboard/AnalyticsBillings/B2CReports';
+import HSNReports from '../features/AnalyticsDashboard/AnalyticsBillings/HSNReports';
 
 const allRoles = Object.values(EUserRole);
 
@@ -547,6 +549,8 @@ const AppRoutes: React.FC = () => (
                 path="revenue-breakup-reports"
                 element={<RevenueBreakupReport />}
               />
+              <Route path="b2c-reports" element={<B2CReports />} />
+              <Route path="hsn-reports" element={<HSNReports />} />
             </Route>
 
             <Route path="pharmacy">
