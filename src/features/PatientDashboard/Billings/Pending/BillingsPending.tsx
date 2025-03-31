@@ -63,6 +63,8 @@ const BillingsPending: React.FC = () => {
 
   const getRowId = (row: RowType) => row._id;
 
+  console.log('patientBillingsPending', patientBillingsPending);
+
   // // Delete investigation
   // const [deletePendingBillings, { isLoading: isDeleteLoading }] =
   //   useDeleteBillingMutation();
@@ -114,6 +116,11 @@ const BillingsPending: React.FC = () => {
       field: 'amount',
       headerName: 'Amount',
       flex: 1,
+      valueGetter: params => {
+        const amount = params.row?.amount || 0;
+        const discount = params.row?.discount || 0;
+        return amount + discount;
+      },
       valueFormatter: params => formatToIndianCurrencyFormat(params.value),
     },
     {
@@ -127,7 +134,12 @@ const BillingsPending: React.FC = () => {
       field: 'subTotal',
       headerName: 'Total',
       flex: 1,
-      valueGetter: params => formatToIndianCurrencyFormat(params.value),
+      valueGetter: params => {
+        const subTotal = params.row?.subTotal || 0;
+        const tax = params.row?.tax || 0;
+        return subTotal + tax;
+      },
+      valueFormatter: params => formatToIndianCurrencyFormat(params.value),
     },
     {
       field: 'discount',
