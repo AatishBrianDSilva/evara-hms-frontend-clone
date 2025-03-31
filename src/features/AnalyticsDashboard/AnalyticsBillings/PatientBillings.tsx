@@ -221,7 +221,7 @@ const PatientBillings: React.FC = () => {
       valueFormatter: params =>
         new Date(params.value).toLocaleDateString('en-IN'),
     },
-    { field: 'billingId', headerName: 'Bill No.', flex: 0.5 },
+    { field: 'billingId', headerName: 'Bill No.', flex: 1 },
     { field: 'caseId', headerName: 'Case ID', flex: 0.5 },
     { field: 'patientCode', headerName: 'Patient ID', flex: 0.75 },
     { field: 'patientName', headerName: 'Patient Name', flex: 1 },
