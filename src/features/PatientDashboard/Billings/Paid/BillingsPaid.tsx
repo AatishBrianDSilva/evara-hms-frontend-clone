@@ -114,6 +114,12 @@ const BillingsPaid: React.FC = () => {
       valueFormatter: params => formatToIndianCurrencyFormat(params.value),
     },
     {
+      field: 'discount',
+      headerName: 'Discount',
+      flex: 1,
+      valueFormatter: params => formatToIndianCurrencyFormat(params.value),
+    },
+    {
       field: 'tax',
       headerName: 'Tax',
       flex: 1,
@@ -126,12 +132,7 @@ const BillingsPaid: React.FC = () => {
       flex: 1,
       valueGetter: params => formatToIndianCurrencyFormat(params.value),
     },
-    {
-      field: 'discount',
-      headerName: 'Discount',
-      flex: 1,
-      valueFormatter: params => formatToIndianCurrencyFormat(params.value),
-    },
+
     {
       field: 'totalPaid',
       headerName: 'Paid',
@@ -205,13 +206,13 @@ const BillingsPaid: React.FC = () => {
             }
             color="primary"
           />
-          <Chip
+          {/* <Chip
             label={
               'Payment: ' +
               formatToIndianCurrencyFormat(patientBillingSummary.payment)
             }
             color="primary"
-          />
+          /> */}
           <Chip
             label={
               'Discount: ' +
@@ -219,12 +220,12 @@ const BillingsPaid: React.FC = () => {
             }
             color="primary"
           />
-          <Chip
+          {/* <Chip
             label={
               'Due: ' + formatToIndianCurrencyFormat(patientBillingSummary.due)
             }
             color="primary"
-          />
+          /> */}
         </Box>
       )}
 
