@@ -163,6 +163,12 @@ const B2CReports: React.FC = () => {
       valueFormatter: params => formatToIndianCurrencyFormat(params.value),
     },
     {
+      field: 'netTaxableValue',
+      headerName: 'Net Taxable Value',
+      flex: 1,
+      valueFormatter: params => formatToIndianCurrencyFormat(params.value),
+    },
+    {
       field: 'invoiceValue',
       headerName: 'Invoice Value',
       flex: 1,
