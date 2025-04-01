@@ -104,6 +104,8 @@ const StockSummaryReports: React.FC = () => {
   const records = data?.data?.records || [];
   const pagination = data?.data?.pagination;
 
+  console.log('Stock Summary Data', data);
+
   const columnsConfig: GridColDef[] = [
     { field: 'id', headerName: 'Sl.No', flex: 0.5 },
     { field: 'drugName', headerName: 'Drug Name', flex: 2 },

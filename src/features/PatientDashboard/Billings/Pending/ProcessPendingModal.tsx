@@ -140,7 +140,7 @@ const ProcessPendingModal: React.FC<ProcessPendingProps> = ({
         // setDiscount(Math.round(discount));
         setDiscount(discount);
         // setTotal(Math.round(amount - discount));
-        setTotal(amount - discount - alreadyPaid);
+        setTotal(amount - alreadyPaid);
       }
     }
   }, [

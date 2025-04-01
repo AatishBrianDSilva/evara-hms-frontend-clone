@@ -85,19 +85,20 @@ const Stocks: React.FC = () => {
   // Define the columns for the DataGrid
   const columnsConfig: GridColDef[] = [
     {
-      field: 'batchNo',
-      headerName: 'Batch Number',
-      minWidth: 120,
-      maxWidth: 150,
-      flex: 1,
-    },
-    {
       field: 'itemName',
       headerName: 'Item Name',
       minWidth: 200,
       maxWidth: 250,
       flex: 1.5,
     },
+    {
+      field: 'batchNo',
+      headerName: 'Batch Number',
+      minWidth: 120,
+      maxWidth: 150,
+      flex: 1,
+    },
+
     {
       field: 'category',
       headerName: 'Category',

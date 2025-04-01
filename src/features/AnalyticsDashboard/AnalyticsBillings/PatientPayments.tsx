@@ -200,23 +200,24 @@ const PatientPayments: React.FC = () => {
           : '';
       },
     },
-    { field: 'billingId', headerName: 'Bill No.', flex: 0.5 },
-    { field: 'caseId', headerName: 'Case ID', flex: 0.5 },
+    { field: 'billingId', headerName: 'Bill No.', flex: 1 },
+    { field: 'caseId', headerName: 'Case ID', flex: 0.75 },
     { field: 'patientCode', headerName: 'Patient ID', flex: 0.75 },
     { field: 'patientName', headerName: 'Patient Name', flex: 1 },
     { field: 'billType', headerName: 'Service', flex: 1 },
+    {
+      field: 'taxableValue',
+      headerName: 'Taxable Value',
+      flex: 0.5,
+      valueFormatter: params => formatToIndianCurrencyFormat(params.value),
+    },
     {
       field: 'tax',
       headerName: 'Tax',
       flex: 0.5,
       valueFormatter: params => formatToIndianCurrencyFormat(params.value),
     },
-    {
-      field: 'subTotal',
-      headerName: 'Total',
-      flex: 1,
-      valueFormatter: params => formatToIndianCurrencyFormat(params.value),
-    },
+
     {
       field: 'discount',
       headerName: 'Discount',
@@ -224,9 +225,21 @@ const PatientPayments: React.FC = () => {
       valueFormatter: params => formatToIndianCurrencyFormat(params.value),
     },
     {
+      field: 'totalValue',
+      headerName: 'Subtotal',
+      flex: 0.5,
+      valueFormatter: params => formatToIndianCurrencyFormat(params.value),
+    },
+    {
+      field: 'subTotal',
+      headerName: 'Net Payable',
+      flex: 0.5,
+      valueFormatter: params => formatToIndianCurrencyFormat(params.value),
+    },
+    {
       field: 'paymentAmount',
       headerName: 'Payment Amount',
-      flex: 1,
+      flex: 0.5,
       valueFormatter: params => {
         const row = params.id ? params.api.getRow(params.id) || {} : {};
         // Use paymentAmount if available; otherwise fallback to amount

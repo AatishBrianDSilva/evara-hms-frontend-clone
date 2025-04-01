@@ -110,10 +110,17 @@ const BillingsPending: React.FC = () => {
       headerName: 'Category',
       flex: 1,
     },
+
     {
       field: 'amount',
       headerName: 'Amount',
       flex: 1,
+      valueGetter: params => {
+        const amount = params.row?.grandTotal || 0;
+        const discount = params.row?.discount || 0;
+        const tax = params.row?.tax || 0;
+        return amount + discount - tax;
+      },
       valueFormatter: params => formatToIndianCurrencyFormat(params.value),
     },
     {
@@ -127,7 +134,13 @@ const BillingsPending: React.FC = () => {
       field: 'subTotal',
       headerName: 'Total',
       flex: 1,
-      valueGetter: params => formatToIndianCurrencyFormat(params.value),
+      valueGetter: params => {
+        const amount = params.row?.amount || 0;
+        const discount = params.row?.discount || 0;
+        const tax = params.row?.tax || 0;
+        return amount + tax + discount;
+      },
+      valueFormatter: params => formatToIndianCurrencyFormat(params.value),
     },
     {
       field: 'discount',
