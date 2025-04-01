@@ -135,9 +135,10 @@ const BillingsPending: React.FC = () => {
       headerName: 'Total',
       flex: 1,
       valueGetter: params => {
-        const subTotal = params.row?.subTotal || 0;
+        const amount = params.row?.amount || 0;
+        const discount = params.row?.discount || 0;
         const tax = params.row?.tax || 0;
-        return subTotal + tax;
+        return amount + tax + discount;
       },
       valueFormatter: params => formatToIndianCurrencyFormat(params.value),
     },
