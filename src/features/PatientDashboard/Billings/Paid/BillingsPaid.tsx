@@ -60,6 +60,8 @@ const BillingsPaid: React.FC = () => {
 
   const getRowId = (row: RowType) => row._id;
 
+  console.log('Billings Paid', patientBillingsPaid);
+
   const [selectedRow, setSelectedRow] = useState<any | undefined>();
   const [isEditModalOpen, setIsEditModalOpen] = useState<boolean>(false);
   const [isRefundModalOpen, setIsRefundModalOpen] = useState<boolean>(false);
@@ -143,6 +145,11 @@ const BillingsPaid: React.FC = () => {
       field: 'totalDues',
       headerName: 'Due',
       flex: 1,
+      valueGetter: params => {
+        const due = params.row.totalDues || 0;
+        const discount = params.row.discount || 0;
+        return due !== 0 ? due - discount : 0;
+      },
       valueFormatter: params => formatToIndianCurrencyFormat(params.value),
     },
     {
