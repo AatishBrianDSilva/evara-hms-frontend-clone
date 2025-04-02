@@ -61,6 +61,8 @@ const BillingsPending: React.FC = () => {
   const patientBillingsPagination = data?.data?.pagination;
   const patientBillingsLoading = isLoading || isFetching;
 
+  console.log('patientBillingsPending', patientBillingsPending);
+
   const getRowId = (row: RowType) => row._id;
 
   // // Delete investigation
@@ -116,11 +118,10 @@ const BillingsPending: React.FC = () => {
       headerName: 'Amount',
       flex: 1,
       valueGetter: params => {
-        const amount = params.row?.grandTotal || 0;
-        const discount = params.row?.discount || 0;
-        const tax = params.row?.tax || 0;
-        return amount + discount - tax;
+        const amount = params.row?.totalBeforeDiscount || 0;
+        return amount;
       },
+      //todo : mrp - tax
       valueFormatter: params => formatToIndianCurrencyFormat(params.value),
     },
     {
@@ -135,10 +136,9 @@ const BillingsPending: React.FC = () => {
       headerName: 'Total',
       flex: 1,
       valueGetter: params => {
-        const amount = params.row?.amount || 0;
-        const discount = params.row?.discount || 0;
+        const amount = params.row?.totalBeforeDiscount || 0;
         const tax = params.row?.tax || 0;
-        return amount + tax + discount;
+        return amount + tax;
       },
       valueFormatter: params => formatToIndianCurrencyFormat(params.value),
     },
