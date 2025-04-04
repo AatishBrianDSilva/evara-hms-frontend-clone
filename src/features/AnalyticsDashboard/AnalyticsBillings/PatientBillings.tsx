@@ -115,6 +115,8 @@ const PatientBillings: React.FC = () => {
 
   const patientBillingsLoading = isLoading || isFetching;
 
+  console.log('Analytics Billings', patientBillingsData);
+
   const handleOpen = (payments: any[], billId: string) => {
     setSelectedPayments(payments);
     setSelectedBillId(billId);

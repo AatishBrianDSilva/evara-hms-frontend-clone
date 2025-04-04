@@ -113,6 +113,11 @@ const BillingsPaid: React.FC = () => {
       field: 'amount',
       headerName: 'Amount',
       flex: 1,
+      valueGetter: params => {
+        const amount = params.row?.totalBeforeDiscount || 0;
+        return amount;
+      },
+      //todo : mrp - tax
       valueFormatter: params => formatToIndianCurrencyFormat(params.value),
     },
     {
@@ -132,9 +137,13 @@ const BillingsPaid: React.FC = () => {
       field: 'subTotal',
       headerName: 'Total',
       flex: 1,
-      valueGetter: params => formatToIndianCurrencyFormat(params.value),
+      valueGetter: params => {
+        const amount = params.row?.totalBeforeDiscount || 0;
+        const tax = params.row?.tax || 0;
+        return amount + tax;
+      },
+      valueFormatter: params => formatToIndianCurrencyFormat(params.value),
     },
-
     {
       field: 'totalPaid',
       headerName: 'Paid',
@@ -148,7 +157,7 @@ const BillingsPaid: React.FC = () => {
       valueGetter: params => {
         const due = params.row.totalDues || 0;
         const discount = params.row.discount || 0;
-        return due !== 0 ? due - discount : 0;
+        return due < 0 ? due - discount : 0;
       },
       valueFormatter: params => formatToIndianCurrencyFormat(params.value),
     },
