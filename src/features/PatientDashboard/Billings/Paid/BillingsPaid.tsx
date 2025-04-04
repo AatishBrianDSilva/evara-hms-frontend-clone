@@ -110,6 +110,24 @@ const BillingsPaid: React.FC = () => {
       flex: 1,
     },
     {
+      field: 'billAmount',
+      headerName: 'Bill Amount',
+      flex: 1,
+      valueGetter: params => {
+        const items = params.row?.items || [];
+        const billAmount = items.reduce((sum: number, item: any) => {
+          const mrp = Number(item?.mrpPerUnit || 0);
+          const qty = Number(item?.quantity || 0);
+          const taxRate = Number(item?.taxRate || 0); // e.g., 8 or 12
+          const taxMultiplier = 1 + taxRate / 100;
+          const basePrice = taxRate ? mrp / taxMultiplier : mrp; // If no tax, use MRP as-is
+          return sum + basePrice * qty;
+        }, 0);
+        return billAmount;
+      },
+      valueFormatter: params => formatToIndianCurrencyFormat(params.value),
+    },
+    {
       field: 'amount',
       headerName: 'Amount',
       flex: 1,

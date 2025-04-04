@@ -228,6 +228,7 @@ const PatientBillings: React.FC = () => {
     { field: 'patientCode', headerName: 'Patient ID', flex: 0.75 },
     { field: 'patientName', headerName: 'Patient Name', flex: 1 },
     { field: 'billType', headerName: 'Service', flex: 1 },
+
     {
       field: 'tax',
       headerName: 'Tax',
