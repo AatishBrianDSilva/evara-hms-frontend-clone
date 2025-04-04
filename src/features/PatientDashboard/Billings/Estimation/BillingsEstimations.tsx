@@ -137,7 +137,7 @@ const BillingsEstimations: React.FC = () => {
     { field: 'quantity', headerName: 'Quantity', flex: 1 },
     {
       field: 'estimatedUnitPrice',
-      headerName: 'MRP',
+      headerName: 'Unit Price',
       flex: 1,
       valueFormatter: params => formatToIndianCurrencyFormat(params.value),
     },
