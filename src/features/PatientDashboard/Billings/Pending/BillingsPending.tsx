@@ -118,10 +118,14 @@ const BillingsPending: React.FC = () => {
       headerName: 'Amount',
       flex: 1,
       valueGetter: params => {
-        const amount = params.row?.totalBeforeDiscount || 0;
-        return amount;
+        const items = params.row?.items || [];
+        const total = items.reduce((sum: number, item: any) => {
+          const mrp = Number(item?.mrpPerUnit || 0);
+          const qty = Number(item?.quantity || 0);
+          return sum + mrp * qty;
+        }, 0);
+        return total;
       },
-      //todo : mrp - tax
       valueFormatter: params => formatToIndianCurrencyFormat(params.value),
     },
     {
@@ -136,9 +140,16 @@ const BillingsPending: React.FC = () => {
       headerName: 'Total',
       flex: 1,
       valueGetter: params => {
-        const amount = params.row?.totalBeforeDiscount || 0;
-        const tax = params.row?.tax || 0;
-        return amount + tax;
+        const items = params.row?.items || [];
+        const tax = Number(params.row?.tax || 0);
+
+        const calculatedAmount = items.reduce((sum: number, item: any) => {
+          const mrp = Number(item?.mrpPerUnit || 0);
+          const qty = Number(item?.quantity || 0);
+          return sum + mrp * qty;
+        }, 0);
+
+        return calculatedAmount + tax;
       },
       valueFormatter: params => formatToIndianCurrencyFormat(params.value),
     },
@@ -148,6 +159,27 @@ const BillingsPending: React.FC = () => {
       flex: 1,
       valueFormatter: params => formatToIndianCurrencyFormat(params.value),
     },
+    {
+      field: 'netPayable',
+      headerName: 'Net Payable',
+      flex: 1,
+      valueGetter: params => {
+        const items = params.row?.items || [];
+        const tax = Number(params.row?.tax || 0);
+        const discount = Number(params.row?.discount || 0);
+
+        const calculatedAmount = items.reduce((sum: number, item: any) => {
+          const mrp = Number(item?.mrpPerUnit || 0);
+          const qty = Number(item?.quantity || 0);
+          return sum + mrp * qty;
+        }, 0);
+
+        const total = calculatedAmount + tax;
+        return total - discount;
+      },
+      valueFormatter: params => formatToIndianCurrencyFormat(params.value),
+    },
+
     {
       field: 'totalPaid',
       headerName: 'Paid',
