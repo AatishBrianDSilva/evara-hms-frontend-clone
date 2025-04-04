@@ -122,14 +122,17 @@ const BillingsPending: React.FC = () => {
           const mrp = Number(item?.mrpPerUnit || 0);
           const qty = Number(item?.quantity || 0);
           const taxRate = Number(item?.taxRate || 0); // e.g., 8 or 12
-          const taxMultiplier = 1 + taxRate / 100;
-          const basePrice = taxRate ? mrp / taxMultiplier : mrp; // If no tax, use MRP as-is
-          return sum + basePrice * qty;
+
+          const baseAmount = mrp * qty;
+          const tax = (baseAmount * taxRate) / 100;
+
+          return sum + baseAmount + tax;
         }, 0);
         return billAmount;
       },
       valueFormatter: params => formatToIndianCurrencyFormat(params.value),
     },
+
     {
       field: 'amount',
       headerName: 'Amount',
