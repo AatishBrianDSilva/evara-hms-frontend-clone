@@ -2,17 +2,8 @@ import Box from '@mui/material/Box';
 import React, { useState } from 'react';
 import CustomDataGrid from '../../../../components/CustomDataGrid/CustomDataGrid';
 import { GridActionsCellItem, GridColDef } from '@mui/x-data-grid';
-import {
-  Chip,
-  IconButton,
-  List,
-  ListItem,
-  ListItemText,
-  Popover,
-  Skeleton,
-  Typography,
-} from '@mui/material';
-import { Info, Print, Visibility } from '@mui/icons-material';
+import { Chip, Skeleton } from '@mui/material';
+import { Print, Visibility } from '@mui/icons-material';
 import { useGetRefundsQuery } from '../../../../services/patientDashboardService/billings/billingApi';
 import { useSelector } from 'react-redux';
 import { RootState } from '../../../../app/store';
@@ -59,6 +50,8 @@ const BillingsRefund: React.FC = () => {
     },
   );
 
+  console.log('Refunds data', data);
+
   const patientBillingsRefund = data?.data?.records || [];
   const summary = data?.data?.summary;
   const patientBillingsPagination = data?.data?.pagination;
@@ -104,69 +97,72 @@ const BillingsRefund: React.FC = () => {
       field: 'items',
       headerName: 'Items',
       flex: 1,
-      renderCell: params => {
-        const row = params.row;
-        const items = row.refundDetails.items;
-        const [anchorEl, setAnchorEl] = useState(null);
-
-        const handlePopoverOpen = (event: any) => {
-          setAnchorEl(event.currentTarget);
-        };
-
-        const handlePopoverClose = () => {
-          setAnchorEl(null);
-        };
-
-        const open = Boolean(anchorEl);
-
-        return (
-          <Box display="flex" alignItems="center">
-            <Box>{items.length}</Box>
-            <IconButton
-              onMouseEnter={handlePopoverOpen}
-              onMouseLeave={handlePopoverClose}
-              aria-owns={open ? 'mouse-over-popover' : undefined}
-              aria-haspopup="true"
-              size="small"
-              style={{ marginLeft: '8px' }}
-            >
-              <Info fontSize="small" sx={{ fontSize: '16px' }} />
-            </IconButton>
-            <Popover
-              id="mouse-over-popover"
-              sx={{
-                pointerEvents: 'none',
-              }}
-              open={open}
-              anchorEl={anchorEl}
-              anchorOrigin={{
-                vertical: 'bottom',
-                horizontal: 'right',
-              }}
-              transformOrigin={{
-                vertical: 'top',
-                horizontal: 'left',
-              }}
-              onClose={handlePopoverClose}
-              disableRestoreFocus
-            >
-              <Box p={2}>
-                <Typography variant="subtitle1">Item Details</Typography>
-                <List>
-                  {items.map((item: any, index: number) => (
-                    <ListItem key={item.id || index}>
-                      <ListItemText
-                        primary={`${item.itemName || 'N/A'} (Batch: ${item.batchNo || 'N/A'})`}
-                        secondary={`Quantity: ${item.qtyToRefund}, Amount: ${formatToIndianCurrencyFormat(item.amountToRefund)}`}
-                      />
-                    </ListItem>
-                  ))}
-                </List>
-              </Box>
-            </Popover>
-          </Box>
-        );
+      valueGetter: params => {
+        return params.row?.refundDetails?.items?.length || 0;
       },
+      // renderCell: params => {
+      //   const row = params.row;
+      //   const items = row.refundDetails.items;
+      //   const [anchorEl, setAnchorEl] = useState(null);
+
+      //   const handlePopoverOpen = (event: any) => {
+      //     setAnchorEl(event.currentTarget);
+      //   };
+
+      //   const handlePopoverClose = () => {
+      //     setAnchorEl(null);
+      //   };
+
+      //   const open = Boolean(anchorEl);
+
+      //   return (
+      //     <Box display="flex" alignItems="center">
+      //       <Box>{items.length}</Box>
+      //       <IconButton
+      //         onMouseEnter={handlePopoverOpen}
+      //         onMouseLeave={handlePopoverClose}
+      //         aria-owns={open ? 'mouse-over-popover' : undefined}
+      //         aria-haspopup="true"
+      //         size="small"
+      //         style={{ marginLeft: '8px' }}
+      //       >
+      //         <Info fontSize="small" sx={{ fontSize: '16px' }} />
+      //       </IconButton>
+      //       <Popover
+      //         id="mouse-over-popover"
+      //         sx={{
+      //           pointerEvents: 'none',
+      //         }}
+      //         open={open}
+      //         anchorEl={anchorEl}
+      //         anchorOrigin={{
+      //           vertical: 'bottom',
+      //           horizontal: 'right',
+      //         }}
+      //         transformOrigin={{
+      //           vertical: 'top',
+      //           horizontal: 'left',
+      //         }}
+      //         onClose={handlePopoverClose}
+      //         disableRestoreFocus
+      //       >
+      //         <Box p={2}>
+      //           <Typography variant="subtitle1">Item Details</Typography>
+      //           <List>
+      //             {items.map((item: any, index: number) => (
+      //               <ListItem key={item.id || index}>
+      //                 <ListItemText
+      //                   primary={`${item.itemName || 'N/A'} (Batch: ${item.batchNo || 'N/A'})`}
+      //                   secondary={`Quantity: ${item.qtyToRefund}, Amount: ${formatToIndianCurrencyFormat(item.amountToRefund)}`}
+      //                 />
+      //               </ListItem>
+      //             ))}
+      //           </List>
+      //         </Box>
+      //       </Popover>
+      //     </Box>
+      //   );
+      // },
     },
     {
       field: 'method',

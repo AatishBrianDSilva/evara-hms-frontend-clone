@@ -37,6 +37,9 @@ interface IBillingItem {
   quantity: number;
   price: number;
   category: string; // Added category to distinguish item types
+  mrpPerUnit: number; // <-- add this
+  tax: number;
+  taxRate: number;
 }
 
 interface RefundItem {
@@ -54,6 +57,8 @@ const CreateRefund: React.FC<CreateRefundProps> = ({
 }) => {
   const { data, isLoading } = useGetBillingByIdQuery(id);
   const billing = data?.data;
+
+  console.log('Bill to be refunded', billing);
 
   const { patient } = useSelector((state: RootState) => state.patients);
   const { user } = useSelector((state: RootState) => state.auth);
@@ -100,10 +105,16 @@ const CreateRefund: React.FC<CreateRefundProps> = ({
     const updatedRefundItems = [...refundItems];
 
     if (selectedItem) {
-      const totalPrice =
-        billing?.items.reduce((acc, item) => acc + item.price, 0) || 0;
+      const totalMRP =
+        billing?.items.reduce(
+          (acc, item) => acc + item.mrpPerUnit * item.quantity,
+          0,
+        ) || 0;
+
+      const itemTotalMRP = selectedItem.mrpPerUnit * selectedItem.quantity;
+
       const discountPerItem = billing?.discount
-        ? (billing.discount * selectedItem.price) / totalPrice
+        ? (billing.discount * itemTotalMRP) / totalMRP
         : 0;
 
       updatedRefundItems[index] = {
@@ -112,7 +123,7 @@ const CreateRefund: React.FC<CreateRefundProps> = ({
         batchNo: '',
         qtyToRefund: 0,
         amountToRefund: 0,
-        discount: discountPerItem, // Set the calculated discount
+        discount: discountPerItem,
       };
     } else {
       updatedRefundItems[index] = {
@@ -121,7 +132,7 @@ const CreateRefund: React.FC<CreateRefundProps> = ({
         batchNo: '',
         qtyToRefund: 0,
         amountToRefund: 0,
-        discount: 0, // Reset discount if no item selected
+        discount: 0,
       };
     }
 
@@ -149,21 +160,18 @@ const CreateRefund: React.FC<CreateRefundProps> = ({
 
   const handleQtyChange = (index: number, qtyToRefund: number) => {
     const updatedRefundItems = [...refundItems];
+    const currentItem = updatedRefundItems[index].item;
 
-    if (updatedRefundItems[index].item) {
-      const pricePerItem =
-        updatedRefundItems[index].item!.price /
-        updatedRefundItems[index].item!.quantity;
-      const totalDiscount =
-        qtyToRefund *
-        (updatedRefundItems[index].discount /
-          updatedRefundItems[index].item!.quantity);
-      const amountToRefund = qtyToRefund * pricePerItem - totalDiscount;
+    if (currentItem) {
+      const { quantity, price, tax } = currentItem;
+
+      const refundPerUnit = (price + tax) / quantity;
+      const amountToRefund = qtyToRefund * refundPerUnit;
 
       updatedRefundItems[index] = {
         ...updatedRefundItems[index],
         qtyToRefund,
-        amountToRefund: Math.round(amountToRefund * 100) / 100, // Round to 2 decimal places
+        amountToRefund: Math.round(amountToRefund * 100) / 100,
       };
     }
 
@@ -424,7 +432,14 @@ const CreateRefund: React.FC<CreateRefundProps> = ({
                 <TextField
                   fullWidth
                   label="Amount"
-                  value={refundItem.item?.price || ''}
+                  value={
+                    refundItem.item
+                      ? (
+                          refundItem.item.mrpPerUnit *
+                          (1 + (refundItem.item.taxRate || 0) / 100)
+                        ).toFixed(2)
+                      : ''
+                  }
                   disabled={!refundItem.item}
                 />
               </Grid>
@@ -500,9 +515,6 @@ const CreateRefund: React.FC<CreateRefundProps> = ({
             <Skeleton width="100%" height={30} />
           ) : (
             <>
-              <Typography variant="subtitle2" component="div">
-                <strong>Total Amount:</strong> Rs.{totalRefund}
-              </Typography>
               <TextField
                 label="Charges"
                 value={refundDetails.charges}

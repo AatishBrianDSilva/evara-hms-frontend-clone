@@ -40,6 +40,7 @@ interface PaymentDetail {
 }
 
 interface Item {
+  mrpPerUnit: number;
   batchNo: string;
   estimationId: string;
   masterServiceId: string;
