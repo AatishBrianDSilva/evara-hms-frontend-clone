@@ -153,24 +153,24 @@ const BillingsPaid: React.FC = () => {
       valueFormatter: params =>
         params.value ? formatToIndianCurrencyFormat(params.value) : 'NA',
     },
-    {
-      field: 'subTotal',
-      headerName: 'Total',
-      flex: 1,
-      valueGetter: params => {
-        const items = params.row?.items || [];
-        const tax = Number(params.row?.tax || 0);
+    // {
+    //   field: 'subTotal',
+    //   headerName: 'Total',
+    //   flex: 1,
+    //   valueGetter: params => {
+    //     const items = params.row?.items || [];
+    //     const tax = Number(params.row?.tax || 0);
 
-        const calculatedAmount = items.reduce((sum: number, item: any) => {
-          const mrp = Number(item?.mrpPerUnit || 0);
-          const qty = Number(item?.quantity || 0);
-          return sum + mrp * qty;
-        }, 0);
+    //     const calculatedAmount = items.reduce((sum: number, item: any) => {
+    //       const mrp = Number(item?.mrpPerUnit || 0);
+    //       const qty = Number(item?.quantity || 0);
+    //       return sum + mrp * qty;
+    //     }, 0);
 
-        return calculatedAmount + tax;
-      },
-      valueFormatter: params => formatToIndianCurrencyFormat(params.value),
-    },
+    //     return calculatedAmount + tax;
+    //   },
+    //   valueFormatter: params => formatToIndianCurrencyFormat(params.value),
+    // },
     {
       field: 'netPayable',
       headerName: 'Net Payable',

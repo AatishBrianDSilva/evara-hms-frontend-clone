@@ -86,7 +86,7 @@ const AddPackage: React.FC<AddPackageProps> = ({
       fields: [
         {
           package: null,
-          date: null,
+          date: new Date(), // ✅ Set initial date here
           doctor: null,
         },
       ],
@@ -238,7 +238,7 @@ const AddPackage: React.FC<AddPackageProps> = ({
                     <Grid item flex={1}>
                       <CustomDatePicker
                         label="Date"
-                        value={new Date()} // Set current date as value
+                        value={createForm.values.fields[index].date} // ✅ Bind to form state
                         format="dd/MM/yyyy"
                         minDate={new Date()} // Set today's date as the minimum date
                         maxDate={new Date()} // Set today's date as the maximum date
