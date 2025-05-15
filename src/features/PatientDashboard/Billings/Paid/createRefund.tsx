@@ -40,6 +40,8 @@ interface IBillingItem {
   mrpPerUnit: number; // <-- add this
   tax: number;
   taxRate: number;
+  total: number;
+  discount: number;
 }
 
 interface RefundItem {
@@ -159,23 +161,28 @@ const CreateRefund: React.FC<CreateRefundProps> = ({
   };
 
   const handleQtyChange = (index: number, qtyToRefund: number) => {
-    const updatedRefundItems = [...refundItems];
-    const currentItem = updatedRefundItems[index].item;
+    const updated = [...refundItems];
+    const cur = updated[index].item;
+    if (!cur) return;
 
-    if (currentItem) {
-      const { quantity, price, tax } = currentItem;
+    // 1) how much was actually paid per unit (post-discount + tax)
+    const unitTotal = cur.total / cur.quantity;
 
-      const refundPerUnit = (price + tax) / quantity;
-      const amountToRefund = qtyToRefund * refundPerUnit;
+    // 2) total refund for this row
+    const amountToRefund = unitTotal * qtyToRefund;
 
-      updatedRefundItems[index] = {
-        ...updatedRefundItems[index],
-        qtyToRefund,
-        amountToRefund: Math.round(amountToRefund * 100) / 100,
-      };
-    }
+    // 3) discount per unit (for display only)
+    const perUnitDiscount = cur.discount / cur.quantity;
+    const rowDiscount = perUnitDiscount * qtyToRefund;
 
-    setRefundItems(updatedRefundItems);
+    updated[index] = {
+      ...updated[index],
+      qtyToRefund,
+      amountToRefund: Math.round(amountToRefund * 100) / 100,
+      discount: Math.round(rowDiscount * 100) / 100,
+    };
+
+    setRefundItems(updated);
   };
 
   // const handleFieldChange = (index: number, field: string, value: any) => {
