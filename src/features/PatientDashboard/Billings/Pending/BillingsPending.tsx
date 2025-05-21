@@ -61,7 +61,8 @@ const BillingsPending: React.FC = () => {
   const patientBillingsPagination = data?.data?.pagination;
   const patientBillingsLoading = isLoading || isFetching;
 
-  console.log('patientBillingsPending', patientBillingsPending);
+  // console.log('patientBillingsPending', patientBillingsPending);
+  // console.log('patientBillingsSummary', patientBillingSummary);
 
   const getRowId = (row: RowType) => row._id;
 
@@ -327,7 +328,7 @@ const BillingsPending: React.FC = () => {
         >
           <Chip
             label={
-              'Amount: ' +
+              'Bill Amount: ' +
               formatToIndianCurrencyFormat(patientBillingSummary.amount)
             }
             color="primary"

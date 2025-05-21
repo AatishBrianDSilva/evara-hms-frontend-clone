@@ -60,7 +60,7 @@ const BillingsPaid: React.FC = () => {
 
   const getRowId = (row: RowType) => row._id;
 
-  console.log('Billings Paid', patientBillingsPaid);
+  console.log('patientBillingsSummary', patientBillingSummary);
 
   const [selectedRow, setSelectedRow] = useState<any | undefined>();
   const [isEditModalOpen, setIsEditModalOpen] = useState<boolean>(false);
@@ -270,18 +270,18 @@ const BillingsPaid: React.FC = () => {
         >
           <Chip
             label={
-              'Amount: ' +
+              'Bill Amount: ' +
               formatToIndianCurrencyFormat(patientBillingSummary.amount)
             }
             color="primary"
           />
-          {/* <Chip
+          <Chip
             label={
               'Payment: ' +
               formatToIndianCurrencyFormat(patientBillingSummary.payment)
             }
             color="primary"
-          /> */}
+          />
           <Chip
             label={
               'Discount: ' +
@@ -289,12 +289,12 @@ const BillingsPaid: React.FC = () => {
             }
             color="primary"
           />
-          {/* <Chip
+          <Chip
             label={
               'Due: ' + formatToIndianCurrencyFormat(patientBillingSummary.due)
             }
             color="primary"
-          /> */}
+          />
         </Box>
       )}
 
