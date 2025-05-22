@@ -115,6 +115,8 @@ const PatientBillings: React.FC = () => {
 
   const patientBillingsLoading = isLoading || isFetching;
 
+  console.log('Analytics Billings', patientBillingsData);
+
   const handleOpen = (payments: any[], billId: string) => {
     setSelectedPayments(payments);
     setSelectedBillId(billId);
@@ -226,6 +228,7 @@ const PatientBillings: React.FC = () => {
     { field: 'patientCode', headerName: 'Patient ID', flex: 0.75 },
     { field: 'patientName', headerName: 'Patient Name', flex: 1 },
     { field: 'billType', headerName: 'Service', flex: 1 },
+
     {
       field: 'tax',
       headerName: 'Tax',

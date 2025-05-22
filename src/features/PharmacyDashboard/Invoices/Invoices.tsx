@@ -10,46 +10,52 @@ import { Visibility } from '@mui/icons-material';
 import { useGetInvoicesQuery } from '../../../services/pharmacyDashboardService/invoiceApi';
 import { usePrint } from '../../../context/PrintPDFContext';
 import ContentSection from '../../../components/ContentSection/ContentSection';
+import _ from 'lodash';
 
-interface RowType {
+interface InvoiceRecord {
   _id: string;
+  purchaseOrderId: string;
+  invoiceNumber: string;
+  createdAt: string;
+  totalAmount: number;
+  vendorName: string;
 }
 
 const Invoices: React.FC = () => {
-  // const patient = useSelector((state: RootState) => state.patients.patient);
-
   const { fetchAndPrintPdf } = usePrint();
-
-  //   console.log("Patient Data", patient);
 
   const [page, setPage] = useState<number>(1);
   const [pageSize, setPageSize] = useState<number>(25);
-  const handlePageChange = (newPage: number) => {
-    setPage(newPage);
-  };
-  const handlePageSizeChange = (newPageSize: number) => {
-    setPageSize(newPageSize);
-  };
+  const [searchQuery] = useState<string>('');
 
   const {
     data: pharmacyInvoicesData,
-    isLoading: pharmacyInvoicesLoading,
-    isFetching: pharmacyInvoicesFetching,
-  } = useGetInvoicesQuery();
+    isLoading,
+    isFetching,
+  } = useGetInvoicesQuery({
+    page,
+    limit: pageSize,
+    searchQuery,
+  });
 
-  // const purchaseOrdersPagination = purchaseOrdersData?.data?.pagination;
-  const pharmacyInvoiceLoading =
-    pharmacyInvoicesLoading || pharmacyInvoicesFetching;
+  const loading = isLoading || isFetching;
 
-  console.log('Orders', pharmacyInvoicesData);
+  const rows = pharmacyInvoicesData?.data?.records || [];
+  interface Pagination {
+    totalDocs: number;
+    [key: string]: any; // Add other properties if needed
+  }
 
-  const data = pharmacyInvoicesData?.data;
+  const pagination: Pagination = pharmacyInvoicesData?.data?.pagination || {
+    totalDocs: 0,
+  };
+  const rowCount = pagination?.totalDocs || 0;
 
-  const rows = data ? data : []; // Accessing records if data exists, otherwise setting an empty array
+  const handlePageChange = (newPage: number) => setPage(newPage);
+  const handlePageSizeChange = (newSize: number) => setPageSize(newSize);
 
-  const getRowId = (row: RowType) => row._id;
+  const getRowId = (row: InvoiceRecord) => row._id;
 
-  // Columns configuration for the data grid
   const columns: GridColDef[] = [
     {
       field: 'purchaseOrderId',
@@ -61,16 +67,15 @@ const Invoices: React.FC = () => {
       headerName: 'Invoice Number',
       flex: 1,
     },
-
     {
       field: 'createdAt',
       headerName: 'Date',
       flex: 1,
-      valueFormatter(params) {
+      valueFormatter: params => {
         const date = new Date(params.value);
         const day = String(date.getDate()).padStart(2, '0');
-        const month = String(date.getMonth() + 1).padStart(2, '0'); // Months are 0-based
-        const year = String(date.getFullYear()).slice(-2); // Get last two digits of the year
+        const month = String(date.getMonth() + 1).padStart(2, '0');
+        const year = date.getFullYear();
         return `${day}/${month}/${year}`;
       },
     },
@@ -84,24 +89,18 @@ const Invoices: React.FC = () => {
       headerName: 'Vendor Name',
       flex: 1,
     },
-
     {
       field: 'actions',
       type: 'actions',
       headerName: 'Actions',
       flex: 1,
-      cellClassName: 'actions',
-      // custom actions for the actions column
       getActions: (params: GridRowParams) => {
         const row = params.row;
-        // console.log('row', row);
-
         return [
           <GridActionsCellItem
             icon={<Visibility />}
             label="Print"
             onClick={() => fetchAndPrintPdf(row?._id, 'invoice', 'pharmacy')}
-            // onClick={() => handlePrint(row?.response?.invoice[0])}
           />,
         ];
       },
@@ -110,18 +109,18 @@ const Invoices: React.FC = () => {
 
   return (
     <ContentSection title="Invoices">
-      <Box display="flex" justifyContent="flex-end" gap={2}></Box>
-
-      <Box mt={2} flex={'1 1 auto'}>
+      <Box mt={2} flex="1 1 auto" width="100%">
         <CustomDataGrid
           autoHeight={false}
           columns={columns}
           rows={rows}
+          getRowId={getRowId}
           page={page}
           pageSize={pageSize}
-          getRowId={getRowId}
-          loading={pharmacyInvoiceLoading}
-          enablePagination={true}
+          totalRows={rowCount}
+          loading={loading}
+          enablePagination
+          paginationMode="server"
           onPageChange={handlePageChange}
           onPageSizeChange={handlePageSizeChange}
           sx={{ height: '100%' }}

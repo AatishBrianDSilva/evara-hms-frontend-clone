@@ -132,6 +132,11 @@ const HSNReports: React.FC = () => {
       valueGetter: params => params.row.hsnCode || '-', // ✅ fallback if missing
     },
     {
+      field: 'drugName',
+      headerName: 'Drug Name',
+      flex: 1,
+    },
+    {
       field: 'quantity',
       headerName: 'Quantity',
       flex: 1,

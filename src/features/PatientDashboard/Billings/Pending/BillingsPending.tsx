@@ -61,7 +61,8 @@ const BillingsPending: React.FC = () => {
   const patientBillingsPagination = data?.data?.pagination;
   const patientBillingsLoading = isLoading || isFetching;
 
-  console.log('patientBillingsPending', patientBillingsPending);
+  // console.log('patientBillingsPending', patientBillingsPending);
+  // console.log('patientBillingsSummary', patientBillingSummary);
 
   const getRowId = (row: RowType) => row._id;
 
@@ -112,16 +113,40 @@ const BillingsPending: React.FC = () => {
       headerName: 'Category',
       flex: 1,
     },
+    {
+      field: 'billAmount',
+      headerName: 'Bill Amount',
+      flex: 1,
+      valueGetter: params => {
+        const items = params.row?.items || [];
+        const billAmount = items.reduce((sum: number, item: any) => {
+          const mrp = Number(item?.mrpPerUnit || 0);
+          const qty = Number(item?.quantity || 0);
+          const taxRate = Number(item?.taxRate || 0); // e.g., 8 or 12
+
+          const baseAmount = mrp * qty;
+          const tax = (baseAmount * taxRate) / 100;
+
+          return sum + baseAmount + tax;
+        }, 0);
+        return billAmount;
+      },
+      valueFormatter: params => formatToIndianCurrencyFormat(params.value),
+    },
 
     {
       field: 'amount',
       headerName: 'Amount',
       flex: 1,
       valueGetter: params => {
-        const amount = params.row?.totalBeforeDiscount || 0;
-        return amount;
+        const items = params.row?.items || [];
+        const total = items.reduce((sum: number, item: any) => {
+          const mrp = Number(item?.mrpPerUnit || 0);
+          const qty = Number(item?.quantity || 0);
+          return sum + mrp * qty;
+        }, 0);
+        return total;
       },
-      //todo : mrp - tax
       valueFormatter: params => formatToIndianCurrencyFormat(params.value),
     },
     {
@@ -131,23 +156,51 @@ const BillingsPending: React.FC = () => {
       valueFormatter: params =>
         params.value ? formatToIndianCurrencyFormat(params.value) : 'NA',
     },
-    {
-      field: 'subTotal',
-      headerName: 'Total',
-      flex: 1,
-      valueGetter: params => {
-        const amount = params.row?.totalBeforeDiscount || 0;
-        const tax = params.row?.tax || 0;
-        return amount + tax;
-      },
-      valueFormatter: params => formatToIndianCurrencyFormat(params.value),
-    },
+    // {
+    //   field: 'subTotal',
+    //   headerName: 'Total',
+    //   flex: 1,
+    //   valueGetter: params => {
+    //     const items = params.row?.items || [];
+    //     const tax = Number(params.row?.tax || 0);
+
+    //     const calculatedAmount = items.reduce((sum: number, item: any) => {
+    //       const mrp = Number(item?.mrpPerUnit || 0);
+    //       const qty = Number(item?.quantity || 0);
+    //       return sum + mrp * qty;
+    //     }, 0);
+
+    //     return calculatedAmount + tax;
+    //   },
+    //   valueFormatter: params => formatToIndianCurrencyFormat(params.value),
+    // },
     {
       field: 'discount',
       headerName: 'Discount',
       flex: 1,
       valueFormatter: params => formatToIndianCurrencyFormat(params.value),
     },
+    {
+      field: 'netPayable',
+      headerName: 'Net Payable',
+      flex: 1,
+      valueGetter: params => {
+        const items = params.row?.items || [];
+        const tax = Number(params.row?.tax || 0);
+        const discount = Number(params.row?.discount || 0);
+
+        const calculatedAmount = items.reduce((sum: number, item: any) => {
+          const mrp = Number(item?.mrpPerUnit || 0);
+          const qty = Number(item?.quantity || 0);
+          return sum + mrp * qty;
+        }, 0);
+
+        const total = calculatedAmount + tax;
+        return total - discount;
+      },
+      valueFormatter: params => formatToIndianCurrencyFormat(params.value),
+    },
+
     {
       field: 'totalPaid',
       headerName: 'Paid',
@@ -275,7 +328,7 @@ const BillingsPending: React.FC = () => {
         >
           <Chip
             label={
-              'Amount: ' +
+              'Bill Amount: ' +
               formatToIndianCurrencyFormat(patientBillingSummary.amount)
             }
             color="primary"

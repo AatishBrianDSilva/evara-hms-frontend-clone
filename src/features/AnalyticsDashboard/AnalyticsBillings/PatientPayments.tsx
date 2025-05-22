@@ -190,7 +190,7 @@ const PatientPayments: React.FC = () => {
     {
       field: 'paymentDate',
       headerName: 'Payment Date',
-      flex: 0.75,
+      flex: 0.6,
       valueFormatter: params => {
         const row = params.id ? params.api.getRow(params.id) || {} : {};
         // Use paymentDate if present; otherwise fallback to createdAt
@@ -200,11 +200,17 @@ const PatientPayments: React.FC = () => {
           : '';
       },
     },
-    { field: 'billingId', headerName: 'Bill No.', flex: 1 },
-    { field: 'caseId', headerName: 'Case ID', flex: 0.75 },
-    { field: 'patientCode', headerName: 'Patient ID', flex: 0.75 },
-    { field: 'patientName', headerName: 'Patient Name', flex: 1 },
-    { field: 'billType', headerName: 'Service', flex: 1 },
+    { field: 'billingId', headerName: 'Bill No.', flex: 0.6 },
+    { field: 'caseId', headerName: 'Case ID', flex: 0.5 },
+    { field: 'patientCode', headerName: 'Patient ID', flex: 0.6 },
+    { field: 'patientName', headerName: 'Patient Name', flex: 0.6 },
+    { field: 'billType', headerName: 'Service', flex: 0.5 },
+    {
+      field: 'billAmount',
+      headerName: 'Bill Amount',
+      flex: 0.5,
+      valueGetter: params => formatToIndianCurrencyFormat(params.value),
+    },
     {
       field: 'taxableValue',
       headerName: 'Taxable Value',
@@ -251,12 +257,12 @@ const PatientPayments: React.FC = () => {
     {
       field: 'paymentMethod',
       headerName: 'Payment Method',
-      flex: 0.75,
+      flex: 0.5,
     },
     {
       field: 'paymentDetails',
       headerName: 'Payment Details',
-      flex: 1,
+      flex: 0.5,
     },
   ];
 
