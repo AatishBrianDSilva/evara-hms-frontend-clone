@@ -7,6 +7,7 @@ import AddInternalConsumption from './AddInternalConsumption';
 import { useGetStocksQuery } from '../../../services/pharmacyDashboardService/stocksApi';
 import { useGetInternalConsumptionsQuery } from '../../../services/pharmacyDashboardService/internalConsumptionApi';
 import _ from 'lodash';
+import { formatToIndianCurrencyFormat } from '../../../utils/formatToIndianCurrencyFormat';
 
 // import { usePrint } from '../../../context/PrintPDFContext';
 
@@ -109,6 +110,13 @@ const InternalConsumption: React.FC = () => {
       headerName: 'Patient Name',
       flex: 1,
       minWidth: 150,
+    },
+    {
+      field: 'totalCost',
+      headerName: 'Total Cost',
+      flex: 1,
+      minWidth: 100,
+      valueFormatter: params => formatToIndianCurrencyFormat(params.value || 0),
     },
     { field: 'notes', headerName: 'Notes', flex: 2, minWidth: 200 },
     {

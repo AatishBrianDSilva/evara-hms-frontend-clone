@@ -61,6 +61,7 @@ const StockSummaryReports: React.FC = () => {
         params = generateQueryParams({
           paginate: false,
           filters: {
+            allData: true,
             search,
           },
         });
@@ -71,7 +72,7 @@ const StockSummaryReports: React.FC = () => {
         action = 'all data';
         params = generateQueryParams({
           filters: {
-            allData: true, // Pass allData as part of filters
+            allData: true, // only flag needed — other filters must be omitted
           },
         });
         filename = `patient_billings_all-${date}.csv`;

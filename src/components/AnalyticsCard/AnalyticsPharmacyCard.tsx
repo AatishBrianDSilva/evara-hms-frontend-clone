@@ -1,23 +1,28 @@
 import * as React from 'react';
 import { Box, Typography, Button, IconButton } from '@mui/material';
 import { ArrowForward, Assessment } from '@mui/icons-material'; // Importing icons
+import { formatToIndianCurrencyFormat } from '../../utils/formatToIndianCurrencyFormat';
 
 export interface AnalyticsPharmacyCardProps {
   title: string;
-  mainValue: string | number;
+  totalAmount: number;
+  totalRefunded: number;
+  netAmount: number;
   linkUrl?: string;
   linkText?: string;
 }
 
 const AnalyticsPharmacyCard: React.FC<AnalyticsPharmacyCardProps> = ({
   title,
-  mainValue,
+  totalAmount,
+  totalRefunded,
+  netAmount,
   linkUrl,
   linkText,
 }) => {
   const handleArrowClick = () => {
     if (linkUrl) {
-      window.location.href = linkUrl; // Redirect to the provided link URL
+      window.location.href = linkUrl;
     }
   };
 
@@ -30,12 +35,12 @@ const AnalyticsPharmacyCard: React.FC<AnalyticsPharmacyCardProps> = ({
       border="1px solid"
       borderColor="#D8D8D8"
       flex={1}
-      width={'95%'}
-      overflow={'hidden'}
+      width="95%"
+      overflow="hidden"
       bgcolor="#FFFFFF"
-      height="358px" // Full height
+      height="358px"
     >
-      {/* Header Section with Icon and Arrow */}
+      {/* Header */}
       <Box
         display="flex"
         justifyContent="space-between"
@@ -44,32 +49,37 @@ const AnalyticsPharmacyCard: React.FC<AnalyticsPharmacyCardProps> = ({
         bgcolor="#FFEDE2"
         px={2}
       >
-        {/* Title with Icon */}
         <Box display="flex" alignItems="center" gap={1}>
-          <Assessment fontSize="small" /> {/* Small icon next to the title */}
+          <Assessment fontSize="small" />
           <Typography variant="h6">{title}</Typography>
         </Box>
-
-        {/* Arrow Icon */}
-        <IconButton size="small" color="inherit" onClick={handleArrowClick}>
+        <IconButton size="small" onClick={handleArrowClick}>
           <ArrowForward fontSize="small" />
         </IconButton>
       </Box>
 
-      {/* Content Section */}
-      <Box display="flex" alignItems="center" flex={1} pl={3}>
-        {/* Main Value - Centered and Larger Size */}
-        <Typography
-          color="primary"
-          variant="h3"
-          align="center"
-          sx={{ fontWeight: 'bold' }}
-        >
-          {mainValue}
+      {/* Content */}
+      <Box
+        flex={1}
+        px={3}
+        py={2}
+        display="flex"
+        flexDirection="column"
+        justifyContent="center" // Vertically center content
+        gap={1}
+      >
+        <Typography variant="h5" fontWeight={600} color="primary">
+          Net Amount: {formatToIndianCurrencyFormat(netAmount)}
+        </Typography>
+        <Typography variant="h6" fontWeight={600} color="primary">
+          Total Amount: {formatToIndianCurrencyFormat(totalAmount)}
+        </Typography>
+        <Typography variant="h6" fontWeight={600} color="primary">
+          Refunded: {formatToIndianCurrencyFormat(totalRefunded)}
         </Typography>
       </Box>
 
-      {/* Link Button */}
+      {/* Footer */}
       {linkUrl && linkText && (
         <Box display="flex" justifyContent="flex-end" p={2}>
           <Button

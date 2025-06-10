@@ -141,6 +141,7 @@ const AnalyticsPatientPackages: React.FC = () => {
             endDate: endDate?.toISOString(),
           },
           filters: {
+            allData: true,
             search: searchValue || undefined,
           },
         });
@@ -151,12 +152,7 @@ const AnalyticsPatientPackages: React.FC = () => {
         action = 'all data';
         params = generateQueryParams({
           filters: {
-            allData: true,
-            search: searchValue || undefined,
-          },
-          dateRange: {
-            startDate: startDate?.toISOString(),
-            endDate: endDate?.toISOString(),
+            allData: true, // only flag needed — other filters must be omitted
           },
         });
         filename = `patient_packages_all-${date}.csv`;

@@ -93,6 +93,8 @@ const B2CReports: React.FC = () => {
             endDate: endDate?.toISOString(),
           },
           filters: {
+            allData: true, // <-- Add this line
+
             searchQuery,
           },
         });
@@ -102,12 +104,7 @@ const B2CReports: React.FC = () => {
       case 'allData':
         params = generateQueryParams({
           filters: {
-            allData: true,
-            searchQuery,
-          },
-          dateRange: {
-            startDate: startDate?.toISOString(),
-            endDate: endDate?.toISOString(),
+            allData: true, // only flag needed — other filters must be omitted
           },
         });
         filename = `b2c_report_all_${date}.csv`;
