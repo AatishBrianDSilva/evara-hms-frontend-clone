@@ -59,6 +59,7 @@ const BillingsPaid: React.FC = () => {
   const patientBillingsLoading = isLoading || isFetching;
 
   const getRowId = (row: RowType) => row._id;
+  console.log('patientBillingsPaid', patientBillingsPaid);
 
   console.log('patientBillingsSummary', patientBillingSummary);
 

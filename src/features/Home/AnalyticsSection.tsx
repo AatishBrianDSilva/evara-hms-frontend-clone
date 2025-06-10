@@ -106,9 +106,9 @@ const AnalyticsSection: React.FC<AnalyticsSectionProps> = ({
             />
             <AnalyticsPharmacyCard
               title="Pharmacy"
-              mainValue={formatToIndianCurrencyFormat(
-                summaryData?.pharmacy.totalAmount || 0,
-              )}
+              totalAmount={summaryData?.pharmacy.totalAmount || 0}
+              totalRefunded={summaryData?.pharmacy.totalRefunded || 0}
+              netAmount={summaryData?.pharmacy.netAmount || 0}
               // badgesData={[]}
               linkUrl="/analytics/pharmacy/pharmacy-reports"
             />

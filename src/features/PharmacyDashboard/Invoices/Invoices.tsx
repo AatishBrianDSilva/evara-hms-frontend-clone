@@ -1,5 +1,5 @@
 import React, { useState } from 'react';
-import { Box } from '@mui/material';
+import { Box, Typography } from '@mui/material';
 import CustomDataGrid from '../../../components/CustomDataGrid/CustomDataGrid';
 import {
   GridActionsCellItem,
@@ -11,6 +11,7 @@ import { useGetInvoicesQuery } from '../../../services/pharmacyDashboardService/
 import { usePrint } from '../../../context/PrintPDFContext';
 import ContentSection from '../../../components/ContentSection/ContentSection';
 import _ from 'lodash';
+import { formatToIndianCurrencyFormat } from '../../../utils/formatToIndianCurrencyFormat';
 
 interface InvoiceRecord {
   _id: string;
@@ -45,6 +46,8 @@ const Invoices: React.FC = () => {
     totalDocs: number;
     [key: string]: any; // Add other properties if needed
   }
+
+  const totalAmountSummary = _.sumBy(rows, 'totalAmount');
 
   const pagination: Pagination = pharmacyInvoicesData?.data?.pagination || {
     totalDocs: 0,
@@ -83,6 +86,7 @@ const Invoices: React.FC = () => {
       field: 'totalAmount',
       headerName: 'Total Amount',
       flex: 1,
+      valueFormatter: params => formatToIndianCurrencyFormat(params.value || 0),
     },
     {
       field: 'vendorName',
@@ -125,6 +129,28 @@ const Invoices: React.FC = () => {
           onPageSizeChange={handlePageSizeChange}
           sx={{ height: '100%' }}
         />
+      </Box>
+      <Box
+        mt={4}
+        p={2}
+        width="40%"
+        display="flex"
+        flexDirection="column"
+        ml="auto"
+      >
+        <Typography variant="h5" gutterBottom color="primary" fontWeight="bold">
+          Summary
+        </Typography>
+        <Box mt={2} display="flex" flexDirection="column" gap={2} width="100%">
+          <Box display="flex" justifyContent="space-between" width="100%">
+            <Typography variant="h6" fontWeight="bold">
+              Total Amount
+            </Typography>
+            <Typography variant="body1" color="textSecondary">
+              {formatToIndianCurrencyFormat(totalAmountSummary)}
+            </Typography>
+          </Box>
+        </Box>
       </Box>
     </ContentSection>
   );

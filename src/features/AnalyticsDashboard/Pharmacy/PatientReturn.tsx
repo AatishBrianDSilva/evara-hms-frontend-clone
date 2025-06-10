@@ -120,6 +120,7 @@ const PatientReturnReports: React.FC = () => {
         params = generateQueryParams({
           paginate: false,
           filters: {
+            allData: true,
             branch: branch || undefined,
             drugName: drugName || undefined,
             startDate: startDate?.toISOString() || undefined,
@@ -133,11 +134,7 @@ const PatientReturnReports: React.FC = () => {
         action = 'all data';
         params = generateQueryParams({
           filters: {
-            allData: true,
-            branch: branch || undefined,
-            drugName: drugName || undefined,
-            startDate: startDate?.toISOString() || undefined,
-            endDate: endDate?.toISOString() || undefined,
+            allData: true, // only flag needed — other filters must be omitted
           },
         });
         filename = `patient_return_all-${date}.csv`;

@@ -137,6 +137,7 @@ const AnalyticsCryoPreservation: React.FC = () => {
             endDate: endDate?.toISOString(),
           },
           filters: {
+            allData: true,
             status: status === 'All' ? undefined : status,
             search: searchValue || undefined,
           },
@@ -148,13 +149,7 @@ const AnalyticsCryoPreservation: React.FC = () => {
         action = 'all data';
         params = generateQueryParams({
           filters: {
-            allData: true,
-            status: status === 'All' ? undefined : status,
-            search: searchValue || undefined,
-          },
-          dateRange: {
-            startDate: startDate?.toISOString(),
-            endDate: endDate?.toISOString(),
+            allData: true, // only flag needed — other filters must be omitted
           },
         });
         filename = `cryo_preservation_all-${date}.csv`;

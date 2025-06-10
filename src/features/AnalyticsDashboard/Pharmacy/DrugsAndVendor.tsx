@@ -125,8 +125,7 @@ const DrugsAndVendorReports: React.FC = () => {
         action = 'all data';
         params = generateQueryParams({
           filters: {
-            allData: true,
-            drugName: drugName || undefined,
+            allData: true, // only flag needed — other filters must be omitted
           },
         });
         filename = `drugs_vendor_all-${date}.csv`;

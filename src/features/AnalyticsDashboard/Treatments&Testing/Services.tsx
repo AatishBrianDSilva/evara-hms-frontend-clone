@@ -130,6 +130,7 @@ const AnalyticsServices: React.FC = () => {
             endDate: endDate?.toISOString(),
           },
           filters: {
+            allData: true,
             search: searchValue || undefined,
           },
         });
@@ -140,12 +141,7 @@ const AnalyticsServices: React.FC = () => {
         action = 'all data';
         params = generateQueryParams({
           filters: {
-            allData: true,
-            search: searchValue || undefined,
-          },
-          dateRange: {
-            startDate: startDate?.toISOString(),
-            endDate: endDate?.toISOString(),
+            allData: true, // only flag needed — other filters must be omitted
           },
         });
         filename = `services_all-${date}.csv`;

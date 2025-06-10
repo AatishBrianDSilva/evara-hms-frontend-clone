@@ -165,6 +165,7 @@ const AnalyticsTreatmentCycle: React.FC = () => {
             endDate: endDate?.toISOString(),
           },
           filters: {
+            allData: true,
             search: searchValue || undefined,
             status: status === 'All' ? undefined : status,
           },
@@ -175,14 +176,8 @@ const AnalyticsTreatmentCycle: React.FC = () => {
       case 'allData':
         action = 'all data';
         params = generateQueryParams({
-          paginate: false,
           filters: {
-            allData: true,
-            search: searchValue || undefined,
-          },
-          dateRange: {
-            startDate: startDate?.toISOString(),
-            endDate: endDate?.toISOString(),
+            allData: true, // only flag needed — other filters must be omitted
           },
         });
         filename = `treatment_cycle_all_${date}.csv`;

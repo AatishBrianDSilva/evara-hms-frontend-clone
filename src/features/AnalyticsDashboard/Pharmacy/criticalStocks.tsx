@@ -126,6 +126,7 @@ const CriticalStocksReport: React.FC = () => {
         params = generateQueryParams({
           paginate: false,
           filters: {
+            allData: true, // <-- Add this line
             drugName: drugName || undefined,
           },
         });
@@ -136,8 +137,7 @@ const CriticalStocksReport: React.FC = () => {
         action = 'all data';
         params = generateQueryParams({
           filters: {
-            allData: true,
-            drugName: drugName || undefined,
+            allData: true, // only flag needed — other filters must be omitted
           },
         });
         filename = `critical_stocks_all-${date}.csv`;

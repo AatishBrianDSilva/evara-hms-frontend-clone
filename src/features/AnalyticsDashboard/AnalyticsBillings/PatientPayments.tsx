@@ -140,6 +140,7 @@ const PatientPayments: React.FC = () => {
             endDate: endDateUTC?.toISOString(),
           },
           filters: {
+            allData: true, // <-- Add this line
             status: selectedStatus === 'All' ? undefined : selectedStatus,
             searchQuery,
             paymentMethod:
@@ -154,16 +155,7 @@ const PatientPayments: React.FC = () => {
         action = 'all data';
         params = generateQueryParams({
           filters: {
-            allData: true,
-            status: selectedStatus === 'All' ? undefined : selectedStatus,
-            searchQuery: searchQuery || undefined,
-            paymentMethod:
-              selectedMethod === 'All' ? undefined : selectedMethod,
-            billType: selectedBillType === 'All' ? undefined : selectedBillType,
-          },
-          dateRange: {
-            startDate: startDateUTC?.toISOString(),
-            endDate: endDateUTC?.toISOString(),
+            allData: true, // only flag needed — other filters must be omitted
           },
         });
         filename = `patient_payments_all-${date}.csv`;
