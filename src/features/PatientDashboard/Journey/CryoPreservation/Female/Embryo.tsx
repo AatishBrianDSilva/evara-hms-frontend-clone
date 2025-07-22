@@ -31,6 +31,7 @@ import { EBuckets, EDocumentTypes } from '../../../../../types/global';
 import CustomTimePicker from '../../../../../components/CustomDatePicker/CustomTimePicker';
 import { DoctorSpeciality } from '../../../../../types/masterDashboard/global';
 import DoctorPicker from '../../../../../components/DoctorPicker/DoctorPicker';
+import FileList from '../../../../../components/FileList/FileList';
 
 const renderSkeletonLoader = () => {
   return (
@@ -789,6 +790,17 @@ const Embryo: React.FC = () => {
                   bucket={EBuckets.UserReports}
                   documentType={EDocumentTypes.CryoPreservation}
                   user={patient?._id}
+                  reportId={openEditDialog.id}
+                />
+              )}
+            </Grid>
+            <Grid item xs={12}>
+              {fileUploadedUrl.length > 0 && (
+                <FileList
+                  files={fileUploadedUrl}
+                  title="Uploaded Files"
+                  bucket={EBuckets.UserReports}
+                  documentType={EDocumentTypes.CryoPreservation}
                   reportId={openEditDialog.id}
                 />
               )}

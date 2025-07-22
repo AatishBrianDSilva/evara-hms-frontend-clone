@@ -324,8 +324,11 @@ const SpermDFI: React.FC = () => {
           <Grid item xs={12}>
             {investigation?.result?.files && (
               <FileList
-                files={investigation?.result?.files || []}
+                files={fileUploadedUrl}
                 title="Uploaded Files"
+                bucket={EBuckets.UserReports}
+                documentType={EDocumentTypes.Investigation}
+                reportId={openEditDialog.id}
               />
             )}
           </Grid>

@@ -18,7 +18,7 @@ import FieldAutocomplete from '../../components/FieldAutoComplete/FieldAutoCompl
 import { useGetReferralDoctorsQuery } from '../../services/masterDashboardService/local/referralDoctorApi';
 import { useGetPatientIdTypesQuery } from '../../services/masterDashboardService/local/patientIdTypeApi';
 import { useGetPatientSourcesQuery } from '../../services/masterDashboardService/local/patientSourceApi';
-
+import FileList from '../../components/FileList/FileList';
 
 const columnSpacing = 2;
 const rowSpacing = 2;
@@ -37,9 +37,8 @@ const PatientRegistration: React.FC = () => {
 
   const [userId] = useState<string>(generateRandomUserId());
 
-  const [fileUploadedUrl, setFileUploadedUrl] = React.useState<string[]>(['']);
-  const [IdUploadedUrl, setIdUploadedUrl] = React.useState<string[]>(['']);
-
+  const [fileUploadedUrl, setFileUploadedUrl] = React.useState<string[]>([]);
+  const [IdUploadedUrl, setIdUploadedUrl] = React.useState<string[]>([]);
 
   //import referral doctors
   const {
@@ -744,7 +743,7 @@ const PatientRegistration: React.FC = () => {
             getOptionLabel={option => option}
             loading={idLoading}
             value={formik.values.idProofType}
-            onChange={(value) => {
+            onChange={value => {
               formik.setFieldValue('idProofType', value);
             }}
             error={
@@ -828,6 +827,17 @@ const PatientRegistration: React.FC = () => {
               bucket={EBuckets.UserIdentifications}
               user={userId}
             />
+          </Grid>
+
+          <Grid item xs={12}>
+            {IdUploadedUrl.length > 0 && (
+              <FileList
+                files={IdUploadedUrl}
+                title="Uploaded Files"
+                bucket={EBuckets.UserIdentifications}
+                userId={userId}
+              />
+            )}
           </Grid>
         </Grid>
       </Grid>
@@ -1114,6 +1124,12 @@ const PatientRegistration: React.FC = () => {
             bucket={EBuckets.UserProfiles}
             user={userId}
           />
+        </Grid>
+
+        <Grid item xs={12}>
+          {fileUploadedUrl.length > 0 && (
+            <FileList files={fileUploadedUrl} title="Uploaded File" />
+          )}
         </Grid>
         <Grid item xs={12} sm={6} md={10}>
           <TextField

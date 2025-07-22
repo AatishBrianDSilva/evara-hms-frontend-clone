@@ -35,6 +35,7 @@ import { EBuckets, EDocumentTypes } from '../../../../../types/global';
 import FieldAutocomplete from '../../../../../components/FieldAutoComplete/FieldAutoComplete';
 import { DoctorSpeciality } from '../../../../../types/masterDashboard/global';
 import { useGetDoctorsQuery } from '../../../../../services/doctorsApi';
+import FileList from '../../../../../components/FileList/FileList';
 
 const renderSkeletonLoader = () => {
   return (
@@ -838,6 +839,17 @@ const Sperm: React.FC = () => {
                 bucket={EBuckets.UserReports}
                 documentType={EDocumentTypes.CryoPreservation}
                 user={patient?._id}
+                reportId={openEditDialog.id}
+              />
+            )}
+          </Grid>
+          <Grid item xs={12}>
+            {fileUploadedUrl.length > 0 && (
+              <FileList
+                files={fileUploadedUrl}
+                title="Uploaded Files"
+                bucket={EBuckets.UserReports}
+                documentType={EDocumentTypes.CryoPreservation}
                 reportId={openEditDialog.id}
               />
             )}

@@ -47,6 +47,8 @@ const PatientAppointment: React.FC = () => {
 
   const getRowId = (row: RowType) => row._id;
 
+  console.log('Appoiyments', records);
+
   // Columns configuration for the data grid
   const columns: GridColDef[] = [
     {
@@ -90,6 +92,11 @@ const PatientAppointment: React.FC = () => {
     {
       field: 'mode',
       headerName: 'Mode',
+      flex: 1,
+    },
+    {
+      field: 'status',
+      headerName: 'Status',
       flex: 1,
     },
     {

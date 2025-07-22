@@ -18,6 +18,7 @@ import FieldAutocomplete from '../../components/FieldAutoComplete/FieldAutoCompl
 import { useGetReferralDoctorsQuery } from '../../services/masterDashboardService/local/referralDoctorApi';
 import { useGetPatientIdTypesQuery } from '../../services/masterDashboardService/local/patientIdTypeApi';
 import { useGetPatientSourcesQuery } from '../../services/masterDashboardService/local/patientSourceApi';
+import FileList from '../../components/FileList/FileList';
 
 const columnSpacing = 2;
 const rowSpacing = 2;
@@ -35,7 +36,7 @@ const DonorRegistrationFromHospital: React.FC = () => {
   // const [_selectedImage, setSelectedImage] = useState<File | null>(null);
   const [addDonor, { isLoading }] = useAddDonorMutation();
 
-  const [fileUploadedUrl, setFileUploadedUrl] = React.useState<string[]>(['']);
+  const [fileUploadedUrl, setFileUploadedUrl] = React.useState<string[]>([]);
 
   //import referral doctors
   const {
@@ -1264,6 +1265,11 @@ const DonorRegistrationFromHospital: React.FC = () => {
             bucket={EBuckets.UserProfiles}
             user={generateRandomUserId()}
           />
+        </Grid>
+        <Grid item xs={12}>
+          {fileUploadedUrl.length > 0 && (
+            <FileList files={fileUploadedUrl} title="Uploaded Files" />
+          )}
         </Grid>
         <Grid item xs={12} sm={6} md={10}>
           <TextField
