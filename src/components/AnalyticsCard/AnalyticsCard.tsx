@@ -70,7 +70,7 @@ const AnalyticsCard: React.FC<AnalyticsCardProps> = ({
       <Box display="flex" justifyContent="space-between" flex={1} p={2}>
         {/* Main Value */}
         <Box display="flex" flexDirection="column" flex={1}>
-          <Typography color="primary" variant="h5">
+          <Typography color="primary" variant="h4">
             {mainValue}
           </Typography>
         </Box>
@@ -133,7 +133,10 @@ const AnalyticsCard: React.FC<AnalyticsCardProps> = ({
                       justifyContent="space-between"
                       sx={{ width: '100%' }} // Ensure the Box inside the Chip also takes full width
                     >
-                      <Typography variant="body2" sx={{ mr: 1 }}>
+                      <Typography
+                        variant="body2"
+                        sx={{ mr: 1, fontWeight: 'bold' }}
+                      >
                         {badge.label}
                       </Typography>
                       <Typography variant="body2" sx={{ fontWeight: 'bold' }}>
