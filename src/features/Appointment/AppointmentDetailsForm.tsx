@@ -9,7 +9,7 @@ import { useSelector } from 'react-redux';
 import { RootState } from '../../app/store';
 import { IAppointment } from '../../types/appointment';
 import { MuiTelInput } from 'mui-tel-input';
-import { useGetPatientsQuery } from '../../services/patientsApi';
+import { useGetAllPatientsQuery } from '../../services/patientsApi';
 import FieldAutocomplete from '../../components/FieldAutoComplete/FieldAutoComplete';
 import { useGetAppointmentReasonsQuery } from '../../services/masterDashboardService/local/appointmentReasonApi';
 import { useGetAppointmentSourcesQuery } from '../../services/masterDashboardService/local/appointmentSourceApi';
@@ -36,9 +36,7 @@ const AppointmentDetailsForm: React.FC<AppointmentDetailsFormProps> = ({
     data: patientsData,
     isLoading: isPatientsLoading,
     isFetching: isPatientsFetching,
-  } = useGetPatientsQuery({
-    paginate: false,
-  });
+  } = useGetAllPatientsQuery();
   console.log({ patientsData, isPatientsLoading, isPatientsFetching });
   const patients = patientsData?.data?.records || [];
   const patientsLoading = isPatientsLoading || isPatientsFetching;

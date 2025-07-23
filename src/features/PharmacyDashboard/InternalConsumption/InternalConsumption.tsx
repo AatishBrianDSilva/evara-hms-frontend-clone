@@ -112,8 +112,15 @@ const InternalConsumption: React.FC = () => {
       minWidth: 150,
     },
     {
-      field: 'totalCost',
-      headerName: 'Total Cost',
+      field: 'cost',
+      headerName: 'Cost',
+      flex: 1,
+      minWidth: 100,
+      valueFormatter: params => formatToIndianCurrencyFormat(params.value || 0),
+    },
+    {
+      field: 'sellPrice',
+      headerName: 'Sell Price',
       flex: 1,
       minWidth: 100,
       valueFormatter: params => formatToIndianCurrencyFormat(params.value || 0),

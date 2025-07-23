@@ -31,6 +31,7 @@ import FileUploadButton from '../../../../../components/FileUploadAndPreview/Fil
 import { EBuckets, EDocumentTypes } from '../../../../../types/global';
 import { DoctorSpeciality } from '../../../../../types/masterDashboard/global';
 import DoctorPicker from '../../../../../components/DoctorPicker/DoctorPicker';
+import FileList from '../../../../../components/FileList/FileList';
 
 const renderSkeletonLoader = () => {
   return (
@@ -95,7 +96,18 @@ const Tesa: React.FC = () => {
   const procedure = procedureData?.data;
   const loading = procedureLoading || procedureFetching;
 
-  const [fileUploadedUrl, setFileUploadedUrl] = React.useState<string[]>(['']);
+  // const [fileUploadedUrl, setFileUploadedUrl] = React.useState<string[]>(['']);
+  const [fileUploadedUrl, setFileUploadedUrl] = React.useState<string[]>(() => {
+    // Initialize with an empty array by default
+    let initialUrl: string[] = [];
+
+    // Check if the file upload URL is present in the investigation details
+    if (procedure?.result?.files) {
+      initialUrl = procedure.result.files.flat();
+    }
+
+    return initialUrl;
+  });
 
   const date = new Date(procedure?.date || new Date()).toLocaleDateString();
   const doctor =
@@ -451,6 +463,17 @@ const Tesa: React.FC = () => {
                 bucket={EBuckets.UserReports}
                 documentType={EDocumentTypes.Procedure}
                 user={patient?._id}
+                reportId={openEditDialog.id}
+              />
+            )}
+          </Grid>
+          <Grid item xs={12}>
+            {fileUploadedUrl.length > 0 && (
+              <FileList
+                files={fileUploadedUrl}
+                title="Uploaded Files"
+                bucket={EBuckets.UserReports}
+                documentType={EDocumentTypes.Procedure}
                 reportId={openEditDialog.id}
               />
             )}

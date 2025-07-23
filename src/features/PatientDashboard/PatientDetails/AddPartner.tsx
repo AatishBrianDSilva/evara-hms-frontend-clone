@@ -18,6 +18,7 @@ import CustomDatePicker from '../../../components/CustomDatePicker/CustomDatePic
 import FileUploadButton from '../../../components/FileUploadAndPreview/FileUploadButton';
 import { EBuckets } from '../../../types/global';
 import FieldAutocomplete from '../../../components/FieldAutoComplete/FieldAutoComplete';
+import FileList from '../../../components/FileList/FileList';
 
 interface IPatientDashboardAddPartnerProps {
   openAddPartnerModal: boolean;
@@ -102,6 +103,8 @@ const PatientDashboardAddPartner: React.FC<
       console.error('Failed to add partner', error);
     }
   };
+
+  console.log('File uploaded flag', setFileUploadedUrl);
 
   const formik = useFormik({
     initialValues: {
@@ -506,17 +509,28 @@ const PatientDashboardAddPartner: React.FC<
                   acceptTypes="image/*"
                   maxFiles={1}
                   maxFileSizeinMB={5}
-                  onUploadFiles={setFileUploadedUrl}
+                  onUploadFiles={urls => {
+                    // Immediately stash the first URL in Formik
+                    formik.setFieldValue('image', urls[0] ?? '');
+                  }}
                   bucket={EBuckets.UserProfiles}
-                  user={generateRandomUserId()}
+                  user={patientId || generateRandomUserId()}
                 />
               </Grid>
+              {formik.values.image && (
+                <Grid item xs={12}>
+                  <FileList
+                    files={[formik.values.image]}
+                    title="Selected Profile Photo"
+                  />
+                </Grid>
+              )}
             </Grid>
           </Box>
 
           <Divider />
 
-          <Box display={'flex'} gap={2} mt={2}>
+          <Box display="flex" gap={2} mt={2}>
             <Button
               variant="outlined"
               sx={{ width: '100px' }}
@@ -526,9 +540,9 @@ const PatientDashboardAddPartner: React.FC<
             </Button>
             <Button
               type="submit"
-              disabled={isLoading}
               variant="contained"
-              sx={{ width: '100px' }}
+              disabled={isLoading || !formik.dirty}
+              sx={{ width: 100 }}
             >
               Save
             </Button>

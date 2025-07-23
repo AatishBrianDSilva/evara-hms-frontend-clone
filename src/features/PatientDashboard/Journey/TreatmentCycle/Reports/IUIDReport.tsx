@@ -22,6 +22,7 @@ import FileUploadButton from '../../../../../components/FileUploadAndPreview/Fil
 import { EBuckets, EDocumentTypes } from '../../../../../types/global';
 import { useSelector } from 'react-redux';
 import { RootState } from '../../../../../app/store';
+import FileList from '../../../../../components/FileList/FileList';
 
 interface IFormValues {
   date: Date | null;
@@ -65,7 +66,7 @@ const IUIDReport: React.FC<IUIDReportProps> = ({
   const { showPromiseToast } = useToast();
 
   const patient = useSelector((state: RootState) => state.patients.patient);
-  const [fileUploadedUrl, setFileUploadedUrl] = React.useState<string[]>(['']);
+  // const [fileUploadedUrl, setFileUploadedUrl] = React.useState<string[]>(['']);
 
   const [updateReport, { isLoading }] = useEditTreatmentCycleMutation();
 
@@ -94,6 +95,18 @@ const IUIDReport: React.FC<IUIDReportProps> = ({
   const currentReport = currentTreatmentCycle?.reports.find(
     r => r._id === report._id,
   );
+
+  const [fileUploadedUrl, setFileUploadedUrl] = React.useState<string[]>(() => {
+    // Initialize with an empty array by default
+    let initialUrl: string[] = [];
+
+    // Check if the file upload URL is present in the investigation details
+    if (currentReport?.details?.files) {
+      initialUrl = currentReport.details.files.flat();
+    }
+
+    return initialUrl;
+  });
 
   // console.log("Current Cycle", currentTreatmentCycle);
   // console.log("Current Report", currentReport);
@@ -585,6 +598,17 @@ const IUIDReport: React.FC<IUIDReportProps> = ({
               bucket={EBuckets.UserReports}
               documentType={EDocumentTypes.TreatmentCycle}
               user={patient?._id}
+              reportId={treatmentCycleId}
+            />
+          )}
+        </Grid>
+        <Grid item xs={12}>
+          {fileUploadedUrl.length > 0 && (
+            <FileList
+              files={fileUploadedUrl}
+              title="Uploaded Files"
+              bucket={EBuckets.UserReports}
+              documentType={EDocumentTypes.TreatmentCycle}
               reportId={treatmentCycleId}
             />
           )}

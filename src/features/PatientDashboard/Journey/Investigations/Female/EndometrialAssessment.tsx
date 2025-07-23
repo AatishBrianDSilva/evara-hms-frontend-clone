@@ -32,6 +32,7 @@ import FileUploadButton from '../../../../../components/FileUploadAndPreview/Fil
 import { EBuckets, EDocumentTypes } from '../../../../../types/global';
 import { Add, Delete } from '@mui/icons-material';
 import DoctorPicker from '../../../../../components/DoctorPicker/DoctorPicker';
+import FileList from '../../../../../components/FileList/FileList';
 
 interface IEndometrialItems {
   date: Date | null;
@@ -468,6 +469,17 @@ const EndometrialAssessment: React.FC = () => {
                   bucket={EBuckets.UserReports}
                   documentType={EDocumentTypes.Investigation}
                   user={patient?._id}
+                  reportId={openEditDialog.id}
+                />
+              )}
+            </Grid>
+            <Grid item xs={12}>
+              {fileUploadedUrl.length > 0 && (
+                <FileList
+                  files={fileUploadedUrl}
+                  title="Uploaded Files"
+                  bucket={EBuckets.UserReports}
+                  documentType={EDocumentTypes.Investigation}
                   reportId={openEditDialog.id}
                 />
               )}

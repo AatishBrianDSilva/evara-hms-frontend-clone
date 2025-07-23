@@ -1085,6 +1085,8 @@ const EditApprovalPending: React.FC<EditPurchaseOrderDraftProps> = ({
                     <FileList
                       files={payloadForApproval?.files || []}
                       title="Uploaded Files"
+                      bucket={EBuckets.PharmacyInvoices}
+                      documentType={EDocumentTypes.Invoice}
                     />
                   )}
                 </Grid>

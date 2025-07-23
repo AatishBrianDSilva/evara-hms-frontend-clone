@@ -18,6 +18,7 @@ interface GetSignedUrlRequest {
   expires?: number; // Seconds
   isImage: boolean;
   reportId?: string;
+  key?: string;
 }
 
 interface DeleteFileRequest {
