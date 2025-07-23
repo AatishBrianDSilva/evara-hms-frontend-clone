@@ -1,6 +1,6 @@
 import * as React from 'react';
-import { Box, Typography, Button, IconButton } from '@mui/material';
-import { ArrowForward, Assessment } from '@mui/icons-material'; // Importing icons
+import { Box, Typography, Chip, IconButton } from '@mui/material';
+import { ArrowForward, Assessment } from '@mui/icons-material';
 import { formatToIndianCurrencyFormat } from '../../utils/formatToIndianCurrencyFormat';
 
 export interface AnalyticsPharmacyCardProps {
@@ -36,9 +36,9 @@ const AnalyticsPharmacyCard: React.FC<AnalyticsPharmacyCardProps> = ({
       borderColor="#D8D8D8"
       flex={1}
       width="95%"
+      height="358px"
       overflow="hidden"
       bgcolor="#FFFFFF"
-      height="358px"
     >
       {/* Header */}
       <Box
@@ -58,38 +58,72 @@ const AnalyticsPharmacyCard: React.FC<AnalyticsPharmacyCardProps> = ({
         </IconButton>
       </Box>
 
-      {/* Content */}
-      <Box
-        flex={1}
-        px={3}
-        py={2}
-        display="flex"
-        flexDirection="column"
-        justifyContent="center" // Vertically center content
-        gap={1}
-      >
-        <Typography variant="h5" fontWeight={600} color="primary">
-          Net Amount: {formatToIndianCurrencyFormat(netAmount)}
+      {/* Total Amount in white box */}
+
+      <Box px={3} pt={2} pb={1}>
+        <Typography variant="h4" color="primary">
+          {formatToIndianCurrencyFormat(totalAmount)}
         </Typography>
-        <Typography variant="h6" fontWeight={600} color="primary">
-          Total Amount: {formatToIndianCurrencyFormat(totalAmount)}
-        </Typography>
-        <Typography variant="h6" fontWeight={600} color="primary">
-          Refunded: {formatToIndianCurrencyFormat(totalRefunded)}
+        <Typography variant="caption" color="text.secondary">
+          Total Amount
         </Typography>
       </Box>
 
-      {/* Footer */}
+      {/* Spacer */}
+      <Box flex={1} />
+
+      {/* Badges: Net Amount and Refunded */}
+      <Box
+        display="flex"
+        flexDirection="column"
+        alignItems="flex-end"
+        gap={1}
+        pb={3}
+        pr={2}
+      >
+        <Chip
+          size="small"
+          label={`Net Amount: ${formatToIndianCurrencyFormat(netAmount)}`}
+          variant="outlined"
+          color="info"
+          sx={{
+            paddingLeft: 2,
+            paddingRight: 2,
+            justifyContent: 'center', // Center align the content
+            fontWeight: 'bold',
+          }}
+        />
+        <Chip
+          size="small"
+          label={`Refunded: ${formatToIndianCurrencyFormat(totalRefunded)}`}
+          variant="outlined"
+          color="error"
+          sx={{
+            paddingLeft: 2,
+            paddingRight: 2,
+            justifyContent: 'center', // Center align the content
+            fontWeight: 'bold',
+          }}
+        />
+      </Box>
+
+      {/* Footer Link */}
       {linkUrl && linkText && (
         <Box display="flex" justifyContent="flex-end" p={2}>
-          <Button
-            variant="text"
-            color="primary"
-            endIcon={<ArrowForward />}
+          <Typography
+            component="a"
             href={linkUrl}
+            variant="caption"
+            color="primary"
+            sx={{
+              display: 'flex',
+              alignItems: 'center',
+              textDecoration: 'none',
+            }}
           >
             {linkText}
-          </Button>
+            <ArrowForward fontSize="small" sx={{ ml: 0.5 }} />
+          </Typography>
         </Box>
       )}
     </Box>

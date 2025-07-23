@@ -98,7 +98,7 @@ const AnalyticsSection: React.FC<AnalyticsSectionProps> = ({
             <AnalyticsCard
               title="Billings"
               mainValue={formatToIndianCurrencyFormat(
-                summaryData?.billing.totalBillings || 0,
+                summaryData?.billing.totalPaid || 0,
               )}
               badgesData={statusBadges}
               paymentBadgesData={paymentBadges}
