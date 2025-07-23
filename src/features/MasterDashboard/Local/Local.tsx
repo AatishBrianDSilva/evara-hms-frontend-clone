@@ -104,6 +104,12 @@ const Local = () => {
 
       path: '/master/local/donors',
     },
+    {
+      icon: CorporateFareIcon,
+      primaryText: 'Patient List',
+
+      path: '/master/local/patient-list',
+    },
   ];
 
   return (
