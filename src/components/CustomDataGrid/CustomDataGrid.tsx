@@ -38,6 +38,7 @@ interface CustomDataGridProps {
   paginationMode?: 'server' | 'client';
   pageCount?: number;
   useUpdatedPagination?: boolean;
+  hideFooter?: boolean;
 }
 
 interface CustomToolbarProps {
@@ -83,6 +84,7 @@ const CustomDataGrid: React.FC<CustomDataGridProps> = ({
   showGridToolBar = false,
   onSelectionChange,
   getRowId,
+  hideFooter = false,
   pageCount,
   paginationMode = 'server',
   ...rest
@@ -110,6 +112,7 @@ const CustomDataGrid: React.FC<CustomDataGridProps> = ({
       columns={responsiveColumns}
       rows={rows}
       getRowId={getRowId}
+      hideFooter={hideFooter}
       sx={{
         ...sx,
         '& .MuiDataGrid-columnHeaders': {

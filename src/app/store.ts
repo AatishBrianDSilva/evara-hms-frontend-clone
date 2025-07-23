@@ -87,6 +87,8 @@ import { treatmentTestingApi } from '../services/analyticsDashboardService/treat
 import { analyticsPatientPaymentsApi } from '../services/analyticsDashboardService/billings/analyticsPatientPaymentsApi';
 import { b2cReportsApi } from '../services/analyticsDashboardService/billings/b2cReportApi';
 import { hsnReportsApi } from '../services/analyticsDashboardService/billings/hsnReportApi';
+import { stockValuesApi } from '../services/pharmacyDashboardService/stockValuesApi';
+import { patientListApi } from '../services/masterDashboardService/local/patientListApi';
 
 const persistConfig = {
   key: 'root',
@@ -166,6 +168,8 @@ const rootReducer = combineReducers({
   [hsnReportsApi.reducerPath]: hsnReportsApi.reducer,
   [analyticsPatientPaymentsApi.reducerPath]:
     analyticsPatientPaymentsApi.reducer,
+  [stockValuesApi.reducerPath]: stockValuesApi.reducer,
+  [patientListApi.reducerPath]: patientListApi.reducer,
   patients: patientsReducer,
   appointments: appointmentReducer,
   investigation: investigationReducer,
@@ -252,7 +256,9 @@ export const store = configureStore({
       .concat(treatmentTestingApi.middleware)
       .concat(b2cReportsApi.middleware)
       .concat(hsnReportsApi.middleware)
-      .concat(analyticsPatientPaymentsApi.middleware),
+      .concat(analyticsPatientPaymentsApi.middleware)
+      .concat(stockValuesApi.middleware)
+      .concat(patientListApi.middleware),
   enhancers(getDefaultEnhancers) {
     return getDefaultEnhancers();
   },

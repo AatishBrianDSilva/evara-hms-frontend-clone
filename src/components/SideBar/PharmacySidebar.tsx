@@ -76,6 +76,11 @@ const PharmacySidebar: React.FC = () => {
       primaryText: 'Stocks',
       path: '/pharmacy/stocks',
     },
+    {
+      icon: InventoryIcon,
+      primaryText: 'Stock values',
+      path: '/pharmacy/stock-values',
+    },
   ];
 
   return (

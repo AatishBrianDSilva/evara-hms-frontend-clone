@@ -132,6 +132,8 @@ import AnalyticsMasterPackages from '../features/AnalyticsDashboard/Treatments&T
 import PatientPayments from '../features/AnalyticsDashboard/AnalyticsBillings/PatientPayments';
 import B2CReports from '../features/AnalyticsDashboard/AnalyticsBillings/B2CReports';
 import HSNReports from '../features/AnalyticsDashboard/AnalyticsBillings/HSNReports';
+import StockValues from '../features/AnalyticsDashboard/Pharmacy/StockValues';
+import PatientList from '../features/MasterDashboard/Local/PatientList/PatientList';
 
 const allRoles = Object.values(EUserRole);
 
@@ -410,6 +412,7 @@ const AppRoutes: React.FC = () => (
               element={<InternalConsumption />}
             />
             <Route path="stocks" element={<Stocks />} />
+            <Route path="stock-values" element={<StockValues />} />
             <Route path="invoices" element={<Invoices />} />
 
             <Route path="*" element={<Navigate to="pharmacy" />} />
@@ -456,6 +459,8 @@ const AppRoutes: React.FC = () => (
               />
 
               <Route path="consents" element={<Consents />} />
+              <Route path="patient-list" element={<PatientList />} />
+
               <Route path="cryo-parameters" element={<CryoParameters />} />
               <Route
                 path="consultant-doctors"
