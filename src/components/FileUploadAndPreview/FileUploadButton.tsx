@@ -88,6 +88,10 @@ const FileUploadButton: React.FC<FileUploadButtonProps> = ({
     }
   };
 
+  const normalizeName = (name: string) =>
+    // replace spaces and other unsafe chars as needed
+    name.replace(/\s+/g, '_');
+
   const handleUploadClick = async () => {
     if (selectedFiles.length > 0 && user) {
       let toastId = undefined;
@@ -107,6 +111,7 @@ const FileUploadButton: React.FC<FileUploadButtonProps> = ({
         // Loop through each file
         for (let i = 0; i < selectedFiles.length; i++) {
           const file = selectedFiles[i];
+          const safeName = normalizeName(file.name);
 
           // Get the signed URL
           const signedUrlResponse = await getSignedUrl({
@@ -115,7 +120,7 @@ const FileUploadButton: React.FC<FileUploadButtonProps> = ({
             documentType: documentType,
             operation: 'putObject',
             expires: 600,
-            fileName: file.name,
+            fileName: safeName,
             isImage: file.type.startsWith('image/'),
             reportId,
           }).unwrap();
