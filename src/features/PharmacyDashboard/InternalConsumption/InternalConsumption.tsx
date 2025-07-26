@@ -125,6 +125,20 @@ const InternalConsumption: React.FC = () => {
       minWidth: 100,
       valueFormatter: params => formatToIndianCurrencyFormat(params.value || 0),
     },
+    {
+      field: 'taxRate',
+      headerName: 'Tax Rate',
+      flex: 1,
+      minWidth: 100,
+      valueFormatter: params => `${params.value ?? 0}%`,
+    },
+    {
+      field: 'taxAmount',
+      headerName: 'Total Tax',
+      flex: 1,
+      minWidth: 100,
+      valueFormatter: params => formatToIndianCurrencyFormat(params.value || 0),
+    },
     { field: 'notes', headerName: 'Notes', flex: 2, minWidth: 200 },
     {
       field: 'transferredBy',

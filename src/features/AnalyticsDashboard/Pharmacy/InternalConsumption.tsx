@@ -183,17 +183,25 @@ const InternalConsumptionReports: React.FC = () => {
     { field: 'categoryCode', headerName: 'Category Code', flex: 1 },
     { field: 'quantity', headerName: 'Qty', flex: 1 },
     {
-      field: 'unitCost',
-      headerName: 'Unit Cost',
+      field: 'cost',
+      headerName: 'Cost',
+      flex: 1,
+      valueFormatter: params => formatToIndianCurrencyFormat(params.value),
+    },
+
+    {
+      field: 'sellPrice',
+      headerName: 'Sell Price',
       flex: 1,
       valueFormatter: params => formatToIndianCurrencyFormat(params.value),
     },
     {
-      field: 'totalCost',
-      headerName: 'Total Cost',
+      field: 'taxRate',
+      headerName: 'Tax Rate',
       flex: 1,
-      valueFormatter: params => formatToIndianCurrencyFormat(params.value),
+      valueFormatter: params => `${params.value ?? 0}%`,
     },
+
     // { field: 'tax', headerName: 'Tax', flex: 1 },
     {
       field: 'totalTax',
