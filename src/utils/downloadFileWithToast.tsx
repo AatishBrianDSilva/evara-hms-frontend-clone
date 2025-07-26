@@ -1,6 +1,6 @@
 import axios from 'axios';
 import { toast } from 'react-toastify';
-import { API_BASE_URL2 } from './apiConfig';
+import { API_BASE_URL, API_BASE_URL2 } from './apiConfig';
 import { store } from '../app/store';
 
 interface DownloadFileOptions {
@@ -10,6 +10,7 @@ interface DownloadFileOptions {
   successMessage?: string;
   errorMessage?: string;
   startMessage?: string;
+  useMasterApi?: boolean;
 }
 
 export const downloadFileWithToast = async ({
@@ -19,10 +20,11 @@ export const downloadFileWithToast = async ({
   successMessage = 'Download successful!',
   errorMessage = 'File is being prepared, please try again later.',
   startMessage = 'Preparing download...',
+  useMasterApi = false, // ← default to false
 }: DownloadFileOptions) => {
   toast.info(startMessage, { autoClose: 2000 });
 
-  const baseUrl = API_BASE_URL2;
+  const baseUrl = useMasterApi ? API_BASE_URL : API_BASE_URL2;
   const url = `${baseUrl}/${endpoint}?${params}`;
 
   try {

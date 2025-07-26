@@ -22,6 +22,7 @@ import FileUploadButton from '../../../components/FileUploadAndPreview/FileUploa
 import { EBuckets } from '../../../types/global';
 import FieldAutocomplete from '../../../components/FieldAutoComplete/FieldAutoComplete';
 import { useGetPatientSourcesQuery } from '../../../services/masterDashboardService/local/patientSourceApi';
+import FileList from '../../../components/FileList/FileList';
 
 interface IEditPatient {
   openEditPatientModal: boolean;
@@ -45,12 +46,21 @@ const EditPatient: React.FC<IEditPatient> = ({
   const { showPromiseToast } = useToast();
   const [updatePatient, { isLoading }] = useUpdatePatientMutation();
 
-  const [fileUploadedUrl, setFileUploadedUrl] = React.useState<string[]>(['']);
+  // const [fileUploadedUrl, setFileUploadedUrl] = React.useState<string[]>(['']);
 
-  const [IdUploadedUrl, setIdUploadedUrl] = React.useState<string[]>(['']);
+  // maintain both new uploads *and* existing URLs
+  const [fileUploadedUrl, setFileUploadedUrl] = useState<string[]>([]);
+  const [IdUploadedUrl, setIdUploadedUrl] = useState<string[]>([]);
+
+  const initialFileUrlsRef = React.useRef<string[]>([]);
+  const initialIdUrlsRef = React.useRef<string[]>([]);
+
+  // const [IdUploadedUrl, setIdUploadedUrl] = React.useState<string[]>(['']);
 
   const patient = useSelector((state: RootState) => state.patients.patient);
   const patientId = useSelector((state: RootState) => state.patients.patientId);
+
+  console.log('Edit Patient Modal', patientId, patient);
 
   const [userId] = useState<string>(generateRandomUserId());
 
@@ -207,6 +217,22 @@ const EditPatient: React.FC<IEditPatient> = ({
       }
     }
   }, [formik.errors, formik.isSubmitting]);
+
+  // whenever patient data arrives (i.e. on modal open), seed our state
+  useEffect(() => {
+    if (patient) {
+      // profile image is a single URL
+      const images = patient.image ? [patient.image] : [];
+      initialFileUrlsRef.current = images;
+      setFileUploadedUrl(images);
+      // identifications is already an array
+      const ids = Array.isArray(patient.identifications)
+        ? patient.identifications
+        : [];
+      initialIdUrlsRef.current = ids;
+      setIdUploadedUrl(ids);
+    }
+  }, [patient]);
 
   const handleFormClose = () => {
     onClose(false);
@@ -1149,11 +1175,23 @@ const EditPatient: React.FC<IEditPatient> = ({
                 acceptTypes="image/*"
                 maxFiles={1}
                 maxFileSizeinMB={5}
-                onUploadFiles={setFileUploadedUrl}
+                onUploadFiles={urls => {
+                  setFileUploadedUrl(urls);
+                  formik.setFieldValue('image', urls[0] ?? '');
+                }}
                 bucket={EBuckets.UserProfiles}
                 user={userId}
               />
             </Grid>
+
+            {fileUploadedUrl.filter(Boolean).length > 0 && (
+              <Grid item xs={12}>
+                <FileList
+                  files={fileUploadedUrl.filter(Boolean)}
+                  title="Current Profile Image"
+                />
+              </Grid>
+            )}
 
             <Grid container pl={2} pt={2}>
               <Typography variant="h6">ID Documentation</Typography>
@@ -1162,11 +1200,25 @@ const EditPatient: React.FC<IEditPatient> = ({
                   acceptTypes="image/*, application/pdf"
                   maxFiles={5}
                   maxFileSizeinMB={15}
-                  onUploadFiles={setIdUploadedUrl}
+                  onUploadFiles={urls => {
+                    setIdUploadedUrl(urls);
+                    formik.setFieldValue('identifications', urls);
+                  }}
                   bucket={EBuckets.UserIdentifications}
                   user={userId}
                 />
               </Grid>
+
+              {IdUploadedUrl.filter(Boolean).length > 0 && (
+                <Grid item xs={12}>
+                  <FileList
+                    files={IdUploadedUrl}
+                    title="Current ID Documents"
+                    bucket={EBuckets.UserIdentifications}
+                    userId={userId}
+                  />
+                </Grid>
+              )}
             </Grid>
             <Grid item xs={12} sm={6} md={10}>
               <TextField
@@ -1203,12 +1255,7 @@ const EditPatient: React.FC<IEditPatient> = ({
               <Button
                 type="submit"
                 variant="outlined"
-                disabled={
-                  isLoading ||
-                  (_.isEqual(formik.values, formik.initialValues) &&
-                    fileUploadedUrl[0] === '' &&
-                    IdUploadedUrl[0] === '')
-                }
+                disabled={isLoading || !formik.dirty}
               >
                 {isLoading ? 'Updating patient' : 'Save'}
               </Button>

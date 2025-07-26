@@ -27,6 +27,7 @@ import FileUploadButton from '../../../../components/FileUploadAndPreview/FileUp
 import { EBuckets, EDocumentTypes } from '../../../../types/global';
 import { ContentCopy } from '@mui/icons-material';
 import { useGetBatchesForStocksQuery } from '../../../../services/pharmacyDashboardService/stocksApi';
+import FileList from '../../../../components/FileList/FileList';
 
 interface EditPurchaseOrderDraftProps {
   openModal: boolean;
@@ -1006,6 +1007,16 @@ const EditPurchaseOrderDraft: React.FC<EditPurchaseOrderDraftProps> = ({
                     documentType={EDocumentTypes.Invoice}
                     user={id}
                   />
+                </Grid>
+                <Grid item xs={12}>
+                  {fileUploadedUrl.length > 0 && (
+                    <FileList
+                      files={fileUploadedUrl}
+                      title="Uploaded Files"
+                      bucket={EBuckets.PharmacyInvoices}
+                      documentType={EDocumentTypes.Invoice}
+                    />
+                  )}
                 </Grid>
               </Grid>
               <Box

@@ -98,7 +98,7 @@ const AnalyticsSection: React.FC<AnalyticsSectionProps> = ({
             <AnalyticsCard
               title="Billings"
               mainValue={formatToIndianCurrencyFormat(
-                summaryData?.billing.totalBillings || 0,
+                summaryData?.billing.totalPaid || 0,
               )}
               badgesData={statusBadges}
               paymentBadgesData={paymentBadges}
@@ -106,9 +106,9 @@ const AnalyticsSection: React.FC<AnalyticsSectionProps> = ({
             />
             <AnalyticsPharmacyCard
               title="Pharmacy"
-              mainValue={formatToIndianCurrencyFormat(
-                summaryData?.pharmacy.totalAmount || 0,
-              )}
+              totalAmount={summaryData?.pharmacy.totalAmount || 0}
+              totalRefunded={summaryData?.pharmacy.totalRefunded || 0}
+              netAmount={summaryData?.pharmacy.netAmount || 0}
               // badgesData={[]}
               linkUrl="/analytics/pharmacy/pharmacy-reports"
             />

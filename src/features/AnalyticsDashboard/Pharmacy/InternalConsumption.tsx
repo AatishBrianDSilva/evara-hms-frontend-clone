@@ -135,6 +135,9 @@ const InternalConsumptionReports: React.FC = () => {
         action = 'filtered data';
         params = generateQueryParams({
           paginate: false,
+          filters: {
+            allData: true, // Include this to fetch all data with current filters
+          },
           dateRange: {
             startDate: startDate?.toISOString(),
             endDate: endDate?.toISOString(),
@@ -147,11 +150,7 @@ const InternalConsumptionReports: React.FC = () => {
         action = 'all data';
         params = generateQueryParams({
           filters: {
-            allData: true,
-          },
-          dateRange: {
-            startDate: startDate?.toISOString(),
-            endDate: endDate?.toISOString(),
+            allData: true, // only flag needed — other filters must be omitted
           },
         });
         filename = `internal_consumption_all-${date}.csv`;
@@ -184,17 +183,25 @@ const InternalConsumptionReports: React.FC = () => {
     { field: 'categoryCode', headerName: 'Category Code', flex: 1 },
     { field: 'quantity', headerName: 'Qty', flex: 1 },
     {
-      field: 'unitCost',
-      headerName: 'Unit Cost',
+      field: 'cost',
+      headerName: 'Cost',
+      flex: 1,
+      valueFormatter: params => formatToIndianCurrencyFormat(params.value),
+    },
+
+    {
+      field: 'sellPrice',
+      headerName: 'Sell Price',
       flex: 1,
       valueFormatter: params => formatToIndianCurrencyFormat(params.value),
     },
     {
-      field: 'totalCost',
-      headerName: 'Total Cost',
+      field: 'taxRate',
+      headerName: 'Tax Rate',
       flex: 1,
-      valueFormatter: params => formatToIndianCurrencyFormat(params.value),
+      valueFormatter: params => `${params.value ?? 0}%`,
     },
+
     // { field: 'tax', headerName: 'Tax', flex: 1 },
     {
       field: 'totalTax',

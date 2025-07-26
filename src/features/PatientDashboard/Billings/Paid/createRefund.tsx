@@ -23,6 +23,7 @@ import FileUploadButton from '../../../../components/FileUploadAndPreview/FileUp
 import { EBuckets, EDocumentTypes } from '../../../../types/global';
 import { useSelector } from 'react-redux';
 import { RootState } from '../../../../app/store';
+import FileList from '../../../../components/FileList/FileList';
 
 interface CreateRefundProps {
   openModal: boolean;
@@ -611,6 +612,17 @@ const CreateRefund: React.FC<CreateRefundProps> = ({
                 documentType={EDocumentTypes.Invoice}
                 user={id}
               />
+              {/* only show if there’s at least one non-empty URL */}
+              {refundDetails.files.filter(Boolean).length > 0 && (
+                <Box mt={2}>
+                  <FileList
+                    files={refundDetails.files.filter(Boolean)}
+                    title="Uploaded Invoices"
+                    bucket={EBuckets.PharmacyInvoices}
+                    documentType={EDocumentTypes.Invoice}
+                  />
+                </Box>
+              )}
             </Grid>
           </Grid>
         </Box>

@@ -19,6 +19,7 @@ import FileUploadButton from '../../../../components/FileUploadAndPreview/FileUp
 import { EBuckets, EDocumentTypes } from '../../../../types/global';
 import { useSelector } from 'react-redux';
 import { RootState } from '../../../../app/store';
+import FileList from '../../../../components/FileList/FileList';
 
 interface EditPendingProps {
   openModal: boolean;
@@ -36,11 +37,22 @@ const EditPending: React.FC<EditPendingProps> = ({
   const patient = useSelector((state: RootState) => state.patients.patient);
   const { user } = useSelector((state: RootState) => state.auth);
 
-  const [fileUploadedUrl, setFileUploadedUrl] = React.useState<string[]>(['']);
+  // const [fileUploadedUrl, setFileUploadedUrl] = React.useState<string[]>(['']);
 
   const { data, isLoading } = useGetBillingByIdQuery(id);
 
   const billing = data?.data;
+
+  console.log('Billing Data', billing);
+
+  const [fileUploadedUrl, setFileUploadedUrl] = React.useState<string[]>([]);
+  React.useEffect(() => {
+    if (billing?.discountFile) {
+      setFileUploadedUrl([billing.discountFile]);
+    } else {
+      setFileUploadedUrl([]);
+    }
+  }, [billing]);
 
   const [updateBilling, { isLoading: isEditing }] = useEditBillingMutation();
 
@@ -196,6 +208,17 @@ const EditPending: React.FC<EditPendingProps> = ({
                   user={patient?._id || ''}
                   reportId={billing?._id || ''}
                 />
+              </Grid>
+              <Grid item xs={12}>
+                {fileUploadedUrl.length > 0 && (
+                  <FileList
+                    files={fileUploadedUrl}
+                    title="Uploaded Files"
+                    bucket={EBuckets.UserReports}
+                    documentType={EDocumentTypes.BillingDiscount}
+                    reportId={billing?._id || ''}
+                  />
+                )}
               </Grid>
               <Grid
                 item

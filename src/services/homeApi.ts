@@ -28,6 +28,8 @@ export interface ISummary {
   };
   pharmacy: {
     totalAmount: number;
+    totalRefunded: number;
+    netAmount: number;
   };
 }
 

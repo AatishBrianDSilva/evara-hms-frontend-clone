@@ -157,6 +157,7 @@ const RevenueBreakupReport: React.FC = () => {
             endDate: endDate?.toISOString(),
           },
           filters: {
+            allData: true, // <-- Add this line
             paymentMode: paymentMode === 'All' ? undefined : paymentMode,
             createdBy: createdBy === 'All' ? undefined : createdBy,
           },

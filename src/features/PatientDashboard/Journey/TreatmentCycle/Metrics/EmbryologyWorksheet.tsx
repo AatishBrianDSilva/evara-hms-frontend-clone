@@ -27,6 +27,7 @@ import CustomDatePicker from '../../../../../components/CustomDatePicker/CustomD
 import CustomTimePicker from '../../../../../components/CustomDatePicker/CustomTimePicker';
 import { DoctorSpeciality } from '../../../../../types/masterDashboard/global';
 import DoctorPicker from '../../../../../components/DoctorPicker/DoctorPicker';
+import FileList from '../../../../../components/FileList/FileList';
 
 const steps = ['Day 0', 'Day 1', 'Day 2', 'Day 3', 'Day 4', 'Day 5', 'Day 6'];
 
@@ -169,7 +170,7 @@ const EmbryologyWorksheet: React.FC<EmbryologyWorksheetProps> = ({
 
   const [updateMetric, { isLoading }] = useEditTreatmentCycleMutation();
 
-  const [fileUploadedUrl, setFileUploadedUrl] = React.useState<string[]>(['']);
+  // const [fileUploadedUrl, setFileUploadedUrl] = React.useState<string[]>(['']);
 
   const {
     data: cyclesData,
@@ -203,6 +204,21 @@ const EmbryologyWorksheet: React.FC<EmbryologyWorksheetProps> = ({
   const currentMetric = currentTreatmentCycle?.metrics.find(
     m => m._id === metric._id,
   );
+
+  // console.log("Current Metric:", currentMetric);
+
+  // const [fileUploadedUrl, setFileUploadedUrl] = React.useState<string[]>(['']);
+  const [fileUploadedUrl, setFileUploadedUrl] = React.useState<string[]>(() => {
+    // Initialize with an empty array by default
+    let initialUrl: string[] = [];
+
+    // Check if the file upload URL is present in the investigation details
+    if (currentMetric?.details?.files) {
+      initialUrl = currentMetric.details.files.flat();
+    }
+
+    return initialUrl;
+  });
 
   const getDayMetrics = (day: number): IDayMetrics => {
     const key = `day${day}` as keyof IFormValues;
@@ -1455,6 +1471,17 @@ const EmbryologyWorksheet: React.FC<EmbryologyWorksheetProps> = ({
               bucket={EBuckets.UserReports}
               documentType={EDocumentTypes.TreatmentCycle}
               user={patient?._id}
+              reportId={treatmentCycleId}
+            />
+          )}
+        </Grid>
+        <Grid item xs={12}>
+          {fileUploadedUrl.length > 0 && (
+            <FileList
+              files={fileUploadedUrl}
+              title="Uploaded Files"
+              bucket={EBuckets.UserReports}
+              documentType={EDocumentTypes.TreatmentCycle}
               reportId={treatmentCycleId}
             />
           )}

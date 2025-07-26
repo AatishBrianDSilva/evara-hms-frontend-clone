@@ -133,6 +133,9 @@ const SaleBySchedule: React.FC = () => {
         action = 'filtered data';
         params = generateQueryParams({
           paginate: false,
+          filters: {
+            allData: true,
+          },
           dateRange: {
             startDate: startDate?.toISOString(),
             endDate: endDate?.toISOString(),
@@ -145,11 +148,7 @@ const SaleBySchedule: React.FC = () => {
         action = 'all data';
         params = generateQueryParams({
           filters: {
-            allData: true,
-          },
-          dateRange: {
-            startDate: startDate?.toISOString(),
-            endDate: endDate?.toISOString(),
+            allData: true, // only flag needed — other filters must be omitted
           },
         });
         filename = `sale_by_schedule_all-${date}.csv`;
@@ -169,7 +168,16 @@ const SaleBySchedule: React.FC = () => {
     });
   };
 
-  const formatDate = (date: string) => format(new Date(date), 'dd/MM/yyyy');
+  // const formatDate = (date: string) => format(new Date(date), 'dd/MM/yyyy');
+
+  const formatDate = (dateValue?: string | null) => {
+    if (!dateValue) return '';
+    // parse into a Date
+    const d = new Date(dateValue);
+    // if parsing failed, bail out
+    if (isNaN(d.getTime())) return '';
+    return format(d, 'dd/MM/yyyy');
+  };
 
   const columnsConfig: GridColDef[] = [
     { field: 'serialNumber', headerName: 'S No', flex: 0.5 },
@@ -185,13 +193,7 @@ const SaleBySchedule: React.FC = () => {
     { field: 'pharmacyDrug', headerName: 'Pharmacy Drug', flex: 1 },
     { field: 'drugCategory', headerName: 'Drug Category', flex: 1 },
     { field: 'drugType', headerName: 'Drug Type', flex: 1 },
-    { field: 'batchNum', headerName: 'Batch Num', flex: 1 },
-    {
-      field: 'expiryDate',
-      headerName: 'Expiry Date',
-      flex: 1,
-      valueFormatter: params => formatDate(params.value),
-    },
+
     { field: 'quantity', headerName: 'Quantity', flex: 1 },
     {
       field: 'billAmount',

@@ -98,9 +98,9 @@ const EditPatient: React.FC<IEditPatient> = ({
 
   // const patient = useSelector((state: RootState) => state.patients.patient);
 
-  const [fileUploadedUrl, setFileUploadedUrl] = React.useState<string[]>(['']);
+  const [fileUploadedUrl, setFileUploadedUrl] = React.useState<string[]>([]);
 
-  const [IdUploadedUrl, setIdUploadedUrl] = React.useState<string[]>(['']);
+  const [IdUploadedUrl, setIdUploadedUrl] = React.useState<string[]>([]);
 
   const [userId] = useState<string>(generateRandomUserId());
 

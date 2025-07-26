@@ -251,7 +251,7 @@ const Draft: React.FC = () => {
 
     {
       field: 'cost',
-      headerName: 'cost',
+      headerName: 'Cost',
       flex: 1,
       valueGetter: params =>
         params.row.request.items.map((item: any) => item.buyPrice).join(', '),

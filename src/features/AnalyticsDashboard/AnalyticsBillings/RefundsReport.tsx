@@ -89,6 +89,7 @@ const RefundsReport: React.FC = () => {
       patientCode: refund.patientCode || 'N/A',
       patientName: refund.patientName || 'N/A',
       files: refund.refundDetails?.files || [],
+      service: refund.service || 'N/A',
     })) || [];
 
   console.log('API Response:', data); // Log the full API response
@@ -156,7 +157,7 @@ const RefundsReport: React.FC = () => {
         action = 'filtered data';
         params = generateQueryParams({
           paginate: false,
-          filters: { searchQuery },
+          filters: { searchQuery, allData: true }, // <-- Add this line },
         });
         filename = `refunds_filtered-${date}.csv`;
         break;
@@ -164,7 +165,9 @@ const RefundsReport: React.FC = () => {
       case 'allData':
         action = 'all data';
         params = generateQueryParams({
-          filters: { allData: true, searchQuery },
+          filters: {
+            allData: true, // only flag needed — other filters must be omitted
+          },
         });
         filename = `refunds_all-${date}.csv`;
         break;
@@ -200,6 +203,8 @@ const RefundsReport: React.FC = () => {
       flex: 1,
       valueFormatter: params => formatToIndianCurrencyFormat(params.value),
     },
+    { field: 'service', headerName: 'Service', flex: 1.5 },
+
     { field: 'reason', headerName: 'Reason for Refund', flex: 2 },
     { field: 'method', headerName: 'Payment Method', flex: 1 },
     {

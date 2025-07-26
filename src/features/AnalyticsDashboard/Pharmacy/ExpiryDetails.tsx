@@ -133,6 +133,7 @@ const ExpiryDetails: React.FC = () => {
         params = generateQueryParams({
           paginate: false,
           filters: {
+            allData: true, // <-- Add this line
             drugName: drugName || undefined,
             startDate: startDate?.toISOString() || undefined,
             endDate: endDate?.toISOString() || undefined,
@@ -145,10 +146,7 @@ const ExpiryDetails: React.FC = () => {
         action = 'all data';
         params = generateQueryParams({
           filters: {
-            allData: true,
-            drugName: drugName || undefined,
-            startDate: startDate?.toISOString() || undefined,
-            endDate: endDate?.toISOString() || undefined,
+            allData: true, // only flag needed — other filters must be omitted
           },
         });
         filename = `expiry_details_all-${date}.csv`;

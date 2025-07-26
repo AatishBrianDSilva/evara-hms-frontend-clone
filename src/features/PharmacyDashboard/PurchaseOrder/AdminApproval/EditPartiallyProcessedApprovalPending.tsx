@@ -1040,6 +1040,8 @@ const EditPartiallyProcessedApprovalPending: React.FC<
                     <FileList
                       files={payloadForApproval?.files || []}
                       title="Uploaded Files"
+                      bucket={EBuckets.PharmacyInvoices}
+                      documentType={EDocumentTypes.Invoice}
                     />
                   )}
                 </Grid>

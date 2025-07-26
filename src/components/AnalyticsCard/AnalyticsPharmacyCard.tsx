@@ -1,23 +1,28 @@
 import * as React from 'react';
-import { Box, Typography, Button, IconButton } from '@mui/material';
-import { ArrowForward, Assessment } from '@mui/icons-material'; // Importing icons
+import { Box, Typography, Chip, IconButton } from '@mui/material';
+import { ArrowForward, Assessment } from '@mui/icons-material';
+import { formatToIndianCurrencyFormat } from '../../utils/formatToIndianCurrencyFormat';
 
 export interface AnalyticsPharmacyCardProps {
   title: string;
-  mainValue: string | number;
+  totalAmount: number;
+  totalRefunded: number;
+  netAmount: number;
   linkUrl?: string;
   linkText?: string;
 }
 
 const AnalyticsPharmacyCard: React.FC<AnalyticsPharmacyCardProps> = ({
   title,
-  mainValue,
+  totalAmount,
+  totalRefunded,
+  netAmount,
   linkUrl,
   linkText,
 }) => {
   const handleArrowClick = () => {
     if (linkUrl) {
-      window.location.href = linkUrl; // Redirect to the provided link URL
+      window.location.href = linkUrl;
     }
   };
 
@@ -30,12 +35,12 @@ const AnalyticsPharmacyCard: React.FC<AnalyticsPharmacyCardProps> = ({
       border="1px solid"
       borderColor="#D8D8D8"
       flex={1}
-      width={'95%'}
-      overflow={'hidden'}
+      width="95%"
+      height="358px"
+      overflow="hidden"
       bgcolor="#FFFFFF"
-      height="358px" // Full height
     >
-      {/* Header Section with Icon and Arrow */}
+      {/* Header */}
       <Box
         display="flex"
         justifyContent="space-between"
@@ -44,42 +49,81 @@ const AnalyticsPharmacyCard: React.FC<AnalyticsPharmacyCardProps> = ({
         bgcolor="#FFEDE2"
         px={2}
       >
-        {/* Title with Icon */}
         <Box display="flex" alignItems="center" gap={1}>
-          <Assessment fontSize="small" /> {/* Small icon next to the title */}
+          <Assessment fontSize="small" />
           <Typography variant="h6">{title}</Typography>
         </Box>
-
-        {/* Arrow Icon */}
-        <IconButton size="small" color="inherit" onClick={handleArrowClick}>
+        <IconButton size="small" onClick={handleArrowClick}>
           <ArrowForward fontSize="small" />
         </IconButton>
       </Box>
 
-      {/* Content Section */}
-      <Box display="flex" alignItems="center" flex={1} pl={3}>
-        {/* Main Value - Centered and Larger Size */}
-        <Typography
-          color="primary"
-          variant="h3"
-          align="center"
-          sx={{ fontWeight: 'bold' }}
-        >
-          {mainValue}
+      {/* Total Amount in white box */}
+
+      <Box px={3} pt={2} pb={1}>
+        <Typography variant="h4" color="primary">
+          {formatToIndianCurrencyFormat(totalAmount)}
+        </Typography>
+        <Typography variant="caption" color="text.secondary">
+          Total Amount
         </Typography>
       </Box>
 
-      {/* Link Button */}
+      {/* Spacer */}
+      <Box flex={1} />
+
+      {/* Badges: Net Amount and Refunded */}
+      <Box
+        display="flex"
+        flexDirection="column"
+        alignItems="flex-end"
+        gap={1}
+        pb={3}
+        pr={2}
+      >
+        <Chip
+          size="small"
+          label={`Net Amount: ${formatToIndianCurrencyFormat(netAmount)}`}
+          variant="outlined"
+          color="info"
+          sx={{
+            paddingLeft: 2,
+            paddingRight: 2,
+            justifyContent: 'center', // Center align the content
+            fontWeight: 'bold',
+          }}
+        />
+        <Chip
+          size="small"
+          label={`Refunded: ${formatToIndianCurrencyFormat(totalRefunded)}`}
+          variant="outlined"
+          color="error"
+          sx={{
+            paddingLeft: 2,
+            paddingRight: 2,
+            justifyContent: 'center', // Center align the content
+            fontWeight: 'bold',
+          }}
+        />
+      </Box>
+
+      {/* Footer Link */}
       {linkUrl && linkText && (
         <Box display="flex" justifyContent="flex-end" p={2}>
-          <Button
-            variant="text"
-            color="primary"
-            endIcon={<ArrowForward />}
+          <Typography
+            component="a"
             href={linkUrl}
+            variant="caption"
+            color="primary"
+            sx={{
+              display: 'flex',
+              alignItems: 'center',
+              textDecoration: 'none',
+            }}
           >
             {linkText}
-          </Button>
+            <ArrowForward fontSize="small" sx={{ ml: 0.5 }} />
+          </Typography>
         </Box>
       )}
     </Box>

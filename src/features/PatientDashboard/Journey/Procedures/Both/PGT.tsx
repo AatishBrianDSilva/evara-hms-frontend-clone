@@ -32,6 +32,7 @@ import FileUploadButton from '../../../../../components/FileUploadAndPreview/Fil
 import CustomDatePicker from '../../../../../components/CustomDatePicker/CustomDatePicker';
 import { Add, Delete } from '@mui/icons-material';
 import { EBuckets, EDocumentTypes } from '../../../../../types/global';
+import FileList from '../../../../../components/FileList/FileList';
 
 interface IEmbryoBiopsyDetails {
   id: string;
@@ -784,6 +785,17 @@ const PGT: React.FC = () => {
                 bucket={EBuckets.UserReports}
                 documentType={EDocumentTypes.Procedure}
                 user={patient?._id}
+                reportId={openEditDialog.id}
+              />
+            )}
+          </Grid>
+          <Grid item xs={12}>
+            {fileUploadedUrl.length > 0 && (
+              <FileList
+                files={fileUploadedUrl}
+                title="Uploaded Files"
+                bucket={EBuckets.UserReports}
+                documentType={EDocumentTypes.Procedure}
                 reportId={openEditDialog.id}
               />
             )}

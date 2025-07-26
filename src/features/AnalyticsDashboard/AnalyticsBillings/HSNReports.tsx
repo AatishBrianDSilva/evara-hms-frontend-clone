@@ -93,6 +93,7 @@ const HSNReports: React.FC = () => {
             endDate: endDate?.toISOString(),
           },
           filters: {
+            allData: true, // <-- Add this line
             searchQuery,
           },
         });
@@ -102,12 +103,7 @@ const HSNReports: React.FC = () => {
       case 'allData':
         params = generateQueryParams({
           filters: {
-            allData: true,
-            searchQuery,
-          },
-          dateRange: {
-            startDate: startDate?.toISOString(),
-            endDate: endDate?.toISOString(),
+            allData: true, // only flag needed — other filters must be omitted
           },
         });
         filename = `hsn_report_all_${date}.csv`;
