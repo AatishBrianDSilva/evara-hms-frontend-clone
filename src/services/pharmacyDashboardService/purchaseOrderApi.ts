@@ -91,7 +91,7 @@ export const purchaseOrderApi = createApi({
       query: purchaseOrderData => ({
         url: `pharmacy-dashboard/purchase-order/${purchaseOrderData.id}/status`,
         method: 'PATCH',
-        body: purchaseOrderData,
+        body: { status: purchaseOrderData.status },
       }),
       invalidatesTags: ['PurchaseOrder', 'Stocks'],
     }),
