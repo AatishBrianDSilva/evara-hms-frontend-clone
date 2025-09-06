@@ -89,9 +89,9 @@ export const purchaseOrderApi = createApi({
       EditPurchaseOrderStatusPayload
     >({
       query: purchaseOrderData => ({
-        url: `pharmacy-dashboard/purchase-order/${purchaseOrderData.id}/status`,
-        method: 'PATCH',
-        body: purchaseOrderData,
+        url: `pharmacy-dashboard/purchase-order/${purchaseOrderData.id}/status/${purchaseOrderData.status}`,
+        method: 'PUT',
+        // No body needed - status is in URL
       }),
       invalidatesTags: ['PurchaseOrder', 'Stocks'],
     }),
@@ -149,7 +149,7 @@ export const purchaseOrderApi = createApi({
     >({
       query: purchaseOrderData => ({
         url: `pharmacy-dashboard/purchase-order/${purchaseOrderData.id}/update-partial`,
-        method: 'PATCH',
+        method: 'PUT',
         body: purchaseOrderData,
       }),
       invalidatesTags: ['PurchaseOrder', 'Stocks'],

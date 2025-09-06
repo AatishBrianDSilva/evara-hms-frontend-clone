@@ -18,12 +18,14 @@ export const patientsApi = createApi({
       invalidatesTags: ['Patient'],
     }),
     updatePatient: builder.mutation({
-      query: ({ id, ...updateData }) => ({
-        url: `patients/${id}`,
+      query: ({ patientId, ...updateData }) => ({
+        url: `patients/${patientId}`,
         method: 'PUT',
         body: updateData,
       }),
-      invalidatesTags: (_result, _error, { id }) => [{ type: 'Patient', id }],
+      invalidatesTags: (_result, _error, { patientId }) => [
+        { type: 'Patient', id: patientId },
+      ],
     }),
     addPartner: builder.mutation({
       query: ({ partnerData, patientId }) => ({
