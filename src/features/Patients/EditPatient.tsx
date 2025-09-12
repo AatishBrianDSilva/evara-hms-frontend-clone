@@ -18,6 +18,8 @@ import {
 import { useToast } from '../../context/ToastContext';
 import FileUploadButton from '../../components/FileUploadAndPreview/FileUploadButton';
 import { EBuckets } from '../../types/global';
+import { useDispatch } from 'react-redux';
+import { setPatient } from './patientsSlice';
 
 import _ from 'lodash';
 import CustomDatePicker from '../../components/CustomDatePicker/CustomDatePicker';
@@ -47,6 +49,7 @@ const EditPatient: React.FC<IEditPatient> = ({
 }) => {
   const inputRefs: Record<string, RefObject<any>> = {};
   const { showPromiseToast } = useToast();
+  const dispatch = useDispatch();
 
   console.log('ID received in EditPatient:', id);
 
@@ -132,7 +135,11 @@ const EditPatient: React.FC<IEditPatient> = ({
     });
 
     try {
-      await promise;
+      const response = await promise;
+      // Update Redux state with the updated patient data
+      if (response?.data) {
+        dispatch(setPatient(response.data));
+      }
       handleFormClose();
     } catch (error: any) {
       console.error('Failed to update patient', error);

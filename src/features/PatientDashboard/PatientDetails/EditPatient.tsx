@@ -14,8 +14,9 @@ import { PatientRegistrationValidationSchema } from '../../../yup/patient';
 import { useUpdatePatientMutation } from '../../../services/patientsApi';
 import { useToast } from '../../../context/ToastContext';
 // import { FileUploadAndPreview } from '../../components/FileUploadAndPreview/FileUploadButton'
-import { useSelector } from 'react-redux';
+import { useSelector, useDispatch } from 'react-redux';
 import { RootState } from '../../../app/store';
+import { setPatient } from '../../Patients/patientsSlice';
 import _ from 'lodash';
 import CustomDatePicker from '../../../components/CustomDatePicker/CustomDatePicker';
 import FileUploadButton from '../../../components/FileUploadAndPreview/FileUploadButton';
@@ -44,6 +45,7 @@ const EditPatient: React.FC<IEditPatient> = ({
 }) => {
   const inputRefs: Record<string, RefObject<any>> = {};
   const { showPromiseToast } = useToast();
+  const dispatch = useDispatch();
   const [updatePatient, { isLoading }] = useUpdatePatientMutation();
 
   // const [fileUploadedUrl, setFileUploadedUrl] = React.useState<string[]>(['']);
@@ -130,8 +132,11 @@ const EditPatient: React.FC<IEditPatient> = ({
       });
 
       try {
-        await promise;
-        // console.log(response);
+        const response = await promise;
+        // Update Redux state with the updated patient data
+        if (response?.data) {
+          dispatch(setPatient(response.data));
+        }
         handleFormClose();
       } catch (error: any) {
         console.error('Failed to update patient', error);

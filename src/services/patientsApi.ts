@@ -25,6 +25,7 @@ export const patientsApi = createApi({
       }),
       invalidatesTags: (_result, _error, { patientId }) => [
         { type: 'Patient', id: patientId },
+        'Patient', // Also invalidate the general Patient tag to update patients list
       ],
     }),
     addPartner: builder.mutation({
