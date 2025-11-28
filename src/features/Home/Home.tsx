@@ -122,6 +122,7 @@ const Home: React.FC = () => {
                 EUserRole.Pharmacist,
                 EUserRole.Billing,
                 EUserRole.CenterManager,
+                EUserRole.Embryologist,
               ]}
             >
               <PharmacySection startDate={startDate} endDate={endDate} />
