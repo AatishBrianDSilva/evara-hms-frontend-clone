@@ -7,15 +7,17 @@ import _ from 'lodash';
 import { formatToIndianCurrencyFormat } from '../../../utils/formatToIndianCurrencyFormat';
 import CustomeDateRangePicker from '../../../components/CustomDateRangePicker/CustomDateRangePicker';
 import { useGetPharmacyReportQuery } from '../../../services/analyticsDashboardService/pharmacy/PharmacyReportApi';
+import { downloadFileWithToast } from '../../../utils/downloadFileWithToast';
+import generateQueryParams from '../../../utils/generateQueryParams';
+import DownloadMenu from '../../../components/CSVDownloadMenu/CSVDownloadMenu';
 
 const PharmacyReport: React.FC = () => {
   const [page, setPage] = useState<number>(1);
   const [pageSize, setPageSize] = useState<number>(25);
 
-  const [startDate, setStartDate] = useState<Date | null>(null); // For start date
-  const [endDate, setEndDate] = useState<Date | null>(null); // For end date
+  const [startDate, setStartDate] = useState<Date | null>(null);
+  const [endDate, setEndDate] = useState<Date | null>(null);
 
-  // Handle the date range change
   const handleDateChange = (ranges: any) => {
     if (ranges.selection) {
       if (ranges.selection.startDate) setStartDate(ranges.selection.startDate);
@@ -23,28 +25,75 @@ const PharmacyReport: React.FC = () => {
     }
   };
 
-  // Convert start and end dates to UTC date-only format for the API
-  const startDateUTC = startDate;
-  const endDateUTC = endDate;
-
-  // Fetch data from the backend
   const { data: pharmacyData, isLoading: pharmacyLoading } =
     useGetPharmacyReportQuery({
       filters: {
-        saleStartDate: startDateUTC || undefined, // Use the converted UTC date
-        saleEndDate: endDateUTC || undefined, // Use the converted UTC date
+        saleStartDate: startDate?.toISOString() || undefined,
+        saleEndDate: endDate?.toISOString() || undefined,
       },
-      page: pageSize === -1 ? undefined : page, // If "All" is selected, remove page parameter
-      limit: pageSize === -1 ? undefined : pageSize, // If "All" is selected, remove limit parameter
-
-      paginate: pageSize !== -1, // Set pagination to false if "All" is selected
+      page: pageSize === -1 ? undefined : page,
+      limit: pageSize === -1 ? undefined : pageSize,
+      paginate: pageSize !== -1,
     });
 
   const allPharmacy = pharmacyData?.data?.records || [];
   const totalRows =
     pharmacyData?.data?.pagination?.totalDocs || allPharmacy.length;
 
-  console.log('All Pharmacy data', pharmacyData);
+  const handleDownload = async (
+    downloadType: 'currentPage' | 'currentFilters' | 'allData',
+  ) => {
+    let params: any = {};
+    let action = '';
+    const date = new Date().toLocaleDateString('en-IN');
+    let filename = '';
+
+    switch (downloadType) {
+      case 'currentPage':
+        action = 'current page';
+        params = generateQueryParams({
+          paginate: false,
+          page,
+          limit: pageSize,
+          filters: {
+            saleStartDate: startDate?.toISOString(),
+            saleEndDate: endDate?.toISOString(),
+          },
+        });
+        filename = `pharmacy_report_page_${page}-${date}.csv`;
+        break;
+      case 'currentFilters':
+        action = 'filtered data';
+        params = generateQueryParams({
+          paginate: false,
+          filters: {
+            allData: true,
+            saleStartDate: startDate?.toISOString(),
+            saleEndDate: endDate?.toISOString(),
+          },
+        });
+        filename = `pharmacy_report_filtered-${date}.csv`;
+        break;
+      case 'allData':
+        action = 'all data';
+        params = generateQueryParams({
+          filters: { allData: true },
+        });
+        filename = `pharmacy_report_all-${date}.csv`;
+        break;
+      default:
+        throw new Error('Invalid download type');
+    }
+
+    await downloadFileWithToast({
+      endpoint: 'analytics/pharmacy/pharmacy-report/download',
+      params,
+      fileName: filename,
+      successMessage: `Successfully downloaded ${action}!`,
+      errorMessage: `Failed to download ${action}.`,
+      startMessage: `Preparing to download ${action}...`,
+    });
+  };
 
   const handlePageChange = (newPage: number) => {
     setPage(newPage);
@@ -54,7 +103,6 @@ const PharmacyReport: React.FC = () => {
     setPageSize(newPageSize);
   };
 
-  // Define columns configuration for the DataGrid
   const columnsConfig: GridColDef[] = [
     {
       field: 'name',
@@ -138,13 +186,14 @@ const PharmacyReport: React.FC = () => {
     <ContentSection title="Pharmacy Reports">
       <Box display="flex" justifyContent="flex-end" gap={2} mb={2}>
         <CustomeDateRangePicker onChange={handleDateChange} />
+        <DownloadMenu handleDownload={handleDownload} />
       </Box>
 
       <Box mt={2} flex={'1 1 auto'}>
         <CustomDataGrid
           autoHeight={false}
           columns={columnsConfig}
-          rows={allPharmacy} // Use filtered data here
+          rows={allPharmacy}
           page={page}
           pageSize={pageSize}
           totalRows={totalRows}

@@ -24,6 +24,9 @@ import {
 } from '../../../types/pharmacyDashboard/purchaseOrder';
 import { useGetPurchaseOrderReportQuery } from '../../../services/analyticsDashboardService/pharmacy/purchaseOrderReportApi';
 import CustomeDateRangePicker from '../../../components/CustomDateRangePicker/CustomDateRangePicker';
+import { downloadFileWithToast } from '../../../utils/downloadFileWithToast';
+import generateQueryParams from '../../../utils/generateQueryParams';
+import DownloadMenu from '../../../components/CSVDownloadMenu/CSVDownloadMenu';
 
 const PurchaseOrderReport: React.FC = () => {
   const [page, setPage] = useState<number>(1);
@@ -35,10 +38,9 @@ const PurchaseOrderReport: React.FC = () => {
     EPurchaseOrderStatus.Processed,
   );
 
-  const [startDate, setStartDate] = useState<Date | null>(null); // For start date
-  const [endDate, setEndDate] = useState<Date | null>(null); // For end date
+  const [startDate, setStartDate] = useState<Date | null>(null);
+  const [endDate, setEndDate] = useState<Date | null>(null);
 
-  // Handle the date range change
   const handleDateChange = (ranges: any) => {
     if (ranges.selection) {
       if (ranges.selection.startDate) setStartDate(ranges.selection.startDate);
@@ -46,10 +48,6 @@ const PurchaseOrderReport: React.FC = () => {
     }
   };
 
-  const startDateUTC = startDate;
-  const endDateUTC = endDate;
-
-  // Fetch purchase orders with filtering
   const {
     data: purchaseOrdersData,
     isLoading: purchaseOrdersLoading,
@@ -60,16 +58,13 @@ const PurchaseOrderReport: React.FC = () => {
     page,
     limit: pageSize,
     sort: { createdAt: -1 },
-    // vendorName: vendorNameQuery, // Pass vendorNameQuery to the backend request
     filters: {
       status: selectedStatus,
       vendorName: vendorNameQuery,
-      saleStartDate: startDateUTC || undefined,
-      saleEndDate: endDateUTC || undefined,
+      saleStartDate: startDate?.toISOString() || undefined,
+      saleEndDate: endDate?.toISOString() || undefined,
     },
   });
-
-console.log("Purcahse order report", purchaseOrdersData)
 
   const purchaseOrders = purchaseOrdersData?.data?.records || [];
   const purchaseOrdersPagination = purchaseOrdersData?.data?.pagination;
@@ -78,7 +73,6 @@ console.log("Purcahse order report", purchaseOrdersData)
   const getRowId = (row: any) => row._id;
 
   useEffect(() => {
-    console.log('Refetching with vendorNameQuery:', vendorNameQuery);
     refetch();
   }, [selectedStatus, vendorNameQuery, refetch]);
 
@@ -110,6 +104,65 @@ console.log("Purcahse order report", purchaseOrdersData)
   const closeViewModal = () => {
     setSelectedRow(undefined);
     setIsViewModalOpen(false);
+  };
+
+  const handleDownload = async (
+    downloadType: 'currentPage' | 'currentFilters' | 'allData',
+  ) => {
+    let params: any = {};
+    let action = '';
+    const date = new Date().toLocaleDateString('en-IN');
+    let filename = '';
+
+    switch (downloadType) {
+      case 'currentPage':
+        action = 'current page';
+        params = generateQueryParams({
+          paginate: false,
+          page,
+          limit: pageSize,
+          filters: {
+            status: selectedStatus,
+            vendorName: vendorNameQuery || undefined,
+            saleStartDate: startDate?.toISOString(),
+            saleEndDate: endDate?.toISOString(),
+          },
+        });
+        filename = `purchase_order_page_${page}-${date}.csv`;
+        break;
+      case 'currentFilters':
+        action = 'filtered data';
+        params = generateQueryParams({
+          paginate: false,
+          filters: {
+            allData: true,
+            status: selectedStatus,
+            vendorName: vendorNameQuery || undefined,
+            saleStartDate: startDate?.toISOString(),
+            saleEndDate: endDate?.toISOString(),
+          },
+        });
+        filename = `purchase_order_filtered-${date}.csv`;
+        break;
+      case 'allData':
+        action = 'all data';
+        params = generateQueryParams({
+          filters: { allData: true },
+        });
+        filename = `purchase_order_all-${date}.csv`;
+        break;
+      default:
+        throw new Error('Invalid download type');
+    }
+
+    await downloadFileWithToast({
+      endpoint: 'analytics/pharmacy/purchase-order-report/download',
+      params,
+      fileName: filename,
+      successMessage: `Successfully downloaded ${action}!`,
+      errorMessage: `Failed to download ${action}.`,
+      startMessage: `Preparing to download ${action}...`,
+    });
   };
 
   const columnsConfig: GridColDef[] = [
@@ -170,6 +223,7 @@ console.log("Purcahse order report", purchaseOrdersData)
             ))}
           </Select>
         </FormControl>
+        <DownloadMenu handleDownload={handleDownload} />
       </Box>
       <Box display="flex" justifyContent="flex-end" gap={2} mb={2}>
         <CustomeDateRangePicker onChange={handleDateChange} />

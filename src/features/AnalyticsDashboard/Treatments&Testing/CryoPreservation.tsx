@@ -170,14 +170,10 @@ const AnalyticsCryoPreservation: React.FC = () => {
     });
   };
 
+  const formatReportDate = (value?: string | null) =>
+    value ? new Date(value).toLocaleDateString('en-IN') : '—';
+
   const columnsConfig: GridColDef[] = [
-    {
-      field: 'date',
-      headerName: 'Date',
-      flex: 1,
-      valueFormatter: params =>
-        new Date(params.value).toLocaleDateString('en-In'),
-    },
     {
       field: 'patientId',
       headerName: 'Patient ID',
@@ -208,6 +204,18 @@ const AnalyticsCryoPreservation: React.FC = () => {
       field: 'status',
       headerName: 'Status',
       flex: 1,
+    },
+    {
+      field: 'date',
+      headerName: 'Preservation Date',
+      flex: 1,
+      valueFormatter: params => formatReportDate(params.value),
+    },
+    {
+      field: 'expiryDate',
+      headerName: 'Expiry Date',
+      flex: 1,
+      valueFormatter: params => formatReportDate(params.value),
     },
     {
       field: 'actions',

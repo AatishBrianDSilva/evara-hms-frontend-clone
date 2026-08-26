@@ -203,9 +203,9 @@ const OocyteAspirationReportForm: React.FC<OPUReportProps> = ({
     folliclesAtTrigger: currentReport?.details?.folliclesAtTrigger || '',
     oocytesRetrieved: currentReport?.details?.oocytesRetrieved || '',
     matureOocytes: currentReport?.details?.matureOocytes || '',
-    immatureOocytes: currentReport?.details?.matureOocytes || '',
+    immatureOocytes: currentReport?.details?.immatureOocytes || '',
     oocyteQuality: currentReport?.details?.oocyteQuality || '',
-    specificAbnormalities: currentReport?.details?.immatureOocytes || '',
+    specificAbnormalities: currentReport?.details?.specificAbnormalities || '',
 
     Freezing: currentReport?.details?.Freezing || '',
     description: currentReport?.details?.description || '',
@@ -223,8 +223,8 @@ const OocyteAspirationReportForm: React.FC<OPUReportProps> = ({
       id: treatmentCycleId,
       details: {
         ...values,
+        files: fileUploadedUrl,
       },
-      files: fileUploadedUrl,
       documentId: report._id,
     };
 

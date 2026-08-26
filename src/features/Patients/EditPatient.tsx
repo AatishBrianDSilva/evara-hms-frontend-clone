@@ -123,8 +123,13 @@ const EditPatient: React.FC<IEditPatient> = ({
   const PatientSources = PatientSourceData?.data || [];
 
   const handleSubmit = async (values: any) => {
-    values.image = fileUploadedUrl[0];
-    values.identifications = IdUploadedUrl;
+    // Preserve existing profile image / IDs when the user did not upload replacements
+    values.image =
+      fileUploadedUrl[0] || currentPatient?.image || values.image || '';
+    values.identifications =
+      IdUploadedUrl.length > 0
+        ? IdUploadedUrl
+        : currentPatient?.identifications || values.identifications || [];
     const promise = updatePatient({ patientId, values }).unwrap();
 
     showPromiseToast(promise, {
@@ -224,9 +229,23 @@ const EditPatient: React.FC<IEditPatient> = ({
     }
   }, [formik.errors, formik.isSubmitting]);
 
+  // Seed existing profile image / ID docs so Save does not wipe them
+  useEffect(() => {
+    if (currentPatient) {
+      setFileUploadedUrl(currentPatient.image ? [currentPatient.image] : []);
+      setIdUploadedUrl(
+        Array.isArray(currentPatient.identifications)
+          ? currentPatient.identifications
+          : [],
+      );
+    }
+  }, [currentPatient]);
+
   const handleFormClose = () => {
     onClose(false);
     formik.resetForm();
+    setFileUploadedUrl([]);
+    setIdUploadedUrl([]);
   };
 
   return (

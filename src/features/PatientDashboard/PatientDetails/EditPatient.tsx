@@ -120,8 +120,12 @@ const EditPatient: React.FC<IEditPatient> = ({
 
   const handleSubmit = async (values: any) => {
     if (patientId) {
-      values.image = fileUploadedUrl[0];
-      values.identifications = IdUploadedUrl;
+      // Preserve existing files if upload state was cleared / never reseeded
+      values.image = fileUploadedUrl[0] || patient?.image || values.image || '';
+      values.identifications =
+        IdUploadedUrl.length > 0
+          ? IdUploadedUrl
+          : patient?.identifications || values.identifications || [];
       const promise = updatePatient({ patientId, values }).unwrap();
 
       showPromiseToast(promise, {

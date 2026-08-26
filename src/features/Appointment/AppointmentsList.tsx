@@ -135,7 +135,7 @@ const AppointmentsList: React.FC = () => {
     { field: 'time', headerName: 'Time', flex: 1 },
     {
       field: 'fullName',
-      headerName: 'Patient',
+      headerName: 'Patient Name',
       flex: 1,
       renderCell: params => {
         const hasPatientId = !!params.row.patientId; // Check if patientId exists
@@ -170,6 +170,12 @@ const AppointmentsList: React.FC = () => {
         params.value ? format(params.value, 'hh:mm aa') : '',
     },
     { field: 'status', headerName: 'Status', flex: 1 },
+    {
+      field: 'patientId',
+      headerName: 'MRN / Patient ID',
+      flex: 1,
+      valueGetter: params => params.row.patientId || '—',
+    },
     {
       field: 'actions',
       headerName: 'Actions',

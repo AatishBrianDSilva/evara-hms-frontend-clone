@@ -80,6 +80,10 @@ import { patientReturnApi } from '../services/analyticsDashboardService/pharmacy
 import { criticalStocksApi } from '../services/analyticsDashboardService/pharmacy/criticalStocksApi';
 import { pharmacyReportApi } from '../services/analyticsDashboardService/pharmacy/PharmacyReportApi';
 import { purchaseOrderReportApi } from '../services/analyticsDashboardService/pharmacy/purchaseOrderReportApi';
+import {
+  patientConsumptionApi,
+  itemStockValuesApi,
+} from '../services/analyticsDashboardService/pharmacy/patientConsumptionApi';
 import { refundReportsApi } from '../services/analyticsDashboardService/billings/refundReports';
 
 import { revenueBreakupApi } from '../services/analyticsDashboardService/billings/revenueBreakupApi';
@@ -161,6 +165,8 @@ const rootReducer = combineReducers({
   [criticalStocksApi.reducerPath]: criticalStocksApi.reducer,
   [pharmacyReportApi.reducerPath]: pharmacyReportApi.reducer,
   [purchaseOrderReportApi.reducerPath]: purchaseOrderReportApi.reducer,
+  [patientConsumptionApi.reducerPath]: patientConsumptionApi.reducer,
+  [itemStockValuesApi.reducerPath]: itemStockValuesApi.reducer,
   [refundReportsApi.reducerPath]: refundReportsApi.reducer,
   [revenueBreakupApi.reducerPath]: revenueBreakupApi.reducer,
   [treatmentTestingApi.reducerPath]: treatmentTestingApi.reducer,
@@ -251,6 +257,8 @@ export const store = configureStore({
       .concat(criticalStocksApi.middleware)
       .concat(pharmacyReportApi.middleware)
       .concat(purchaseOrderReportApi.middleware)
+      .concat(patientConsumptionApi.middleware)
+      .concat(itemStockValuesApi.middleware)
       .concat(refundReportsApi.middleware)
       .concat(revenueBreakupApi.middleware)
       .concat(treatmentTestingApi.middleware)

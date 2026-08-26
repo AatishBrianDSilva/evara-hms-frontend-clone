@@ -120,6 +120,8 @@ import PatientReturnReports from '../features/AnalyticsDashboard/Pharmacy/Patien
 import StockSummaryReports from '../features/AnalyticsDashboard/Pharmacy/StockSummary';
 import ExpiryDetails from '../features/AnalyticsDashboard/Pharmacy/ExpiryDetails';
 import CriticalStocksReport from '../features/AnalyticsDashboard/Pharmacy/criticalStocks';
+import PatientConsumptionReports from '../features/AnalyticsDashboard/Pharmacy/PatientConsumption';
+import ItemStockValuesReports from '../features/AnalyticsDashboard/Pharmacy/ItemStockValues';
 import RefundsReport from '../features/AnalyticsDashboard/AnalyticsBillings/RefundsReport';
 import RevenueBreakupReport from '../features/AnalyticsDashboard/AnalyticsBillings/RevenueBreakupReport';
 import AnalyticsInvestigations from '../features/AnalyticsDashboard/Treatments&Testing/Investigations';
@@ -129,6 +131,11 @@ import AnalyticsTreatmentCycle from '../features/AnalyticsDashboard/Treatments&T
 import AnalyticsServices from '../features/AnalyticsDashboard/Treatments&Testing/Services';
 import AnalyticsPatientPackages from '../features/AnalyticsDashboard/Treatments&Testing/PatientPackages';
 import AnalyticsMasterPackages from '../features/AnalyticsDashboard/Treatments&Testing/MasterPackages';
+import AnalyticsProcedureMonthlyStats from '../features/AnalyticsDashboard/Treatments&Testing/ProcedureMonthlyStats';
+import {
+  AnalyticsOpuReports,
+  AnalyticsFetReports,
+} from '../features/AnalyticsDashboard/Treatments&Testing/OpuFetReports';
 import PatientPayments from '../features/AnalyticsDashboard/AnalyticsBillings/PatientPayments';
 import B2CReports from '../features/AnalyticsDashboard/AnalyticsBillings/B2CReports';
 import HSNReports from '../features/AnalyticsDashboard/AnalyticsBillings/HSNReports';
@@ -599,6 +606,14 @@ const AppRoutes: React.FC = () => (
                 path="critical-stocks"
                 element={<CriticalStocksReport />}
               />
+              <Route
+                path="patient-consumption-reports"
+                element={<PatientConsumptionReports />}
+              />
+              <Route
+                path="item-stock-values"
+                element={<ItemStockValuesReports />}
+              />
             </Route>
 
             <Route path="treatments-testing">
@@ -611,6 +626,12 @@ const AppRoutes: React.FC = () => (
                 path="procedure-reports"
                 element={<AnalyticsProcedures />}
               />
+              <Route
+                path="procedure-monthly-stats"
+                element={<AnalyticsProcedureMonthlyStats />}
+              />
+              <Route path="opu-reports" element={<AnalyticsOpuReports />} />
+              <Route path="fet-reports" element={<AnalyticsFetReports />} />
               <Route
                 path="treatment-reports"
                 element={<AnalyticsTreatmentCycle />}

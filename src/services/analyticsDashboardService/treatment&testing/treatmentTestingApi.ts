@@ -11,9 +11,12 @@ export interface InvestigationReportsResponse {
   _id: string;
   date: string;
   patientId: string;
+  patientName?: string;
   doctor: string;
   investigation: string;
   amount: number;
+  discount?: number | null;
+  netBilled?: number | null;
   status: string;
   files: string[];
 }
@@ -21,16 +24,21 @@ export interface ProcedureReportsResponse {
   _id: string;
   date: string;
   patientId: string;
+  patientName?: string;
   doctor: string;
   procedure: string;
   amount: number;
+  discount?: number | null;
+  netBilled?: number | null;
   status: string;
   files: string[];
 }
 export interface CryoPreservationReportsResponse {
   _id: string;
   date: string;
+  expiryDate?: string | null;
   patientId: string;
+  patientName?: string;
   doctor: string;
   cryoPreservation: string;
   amount: number;
@@ -41,9 +49,12 @@ export interface TreatmentCycleReportsResponse {
   _id: string;
   date: string;
   patientId: string;
+  patientName?: string;
   doctor: string;
   treatmentCycle: string;
   amount: number;
+  discount?: number | null;
+  netBilled?: number | null;
   status: string;
   files: string[];
 }
@@ -78,6 +89,31 @@ export interface MasterPackagesReportResponse {
   services: string;
   treatmentCycles: string;
   price: number;
+}
+
+export interface ProcedureMonthlyStatsResponse {
+  id: string;
+  month: string;
+  procedure: string;
+  count: number;
+  totalAmount: number;
+}
+
+export interface OpuFetReportsResponse {
+  _id: string;
+  cycleId: string;
+  date: string;
+  month: string;
+  patientId: string;
+  patientName: string;
+  doctor: string;
+  cycleName: string;
+  cycleNo: number;
+  reportName: string;
+  reportType: string;
+  reportStatus: string;
+  cycleStatus: string;
+  files?: string[];
 }
 
 export const treatmentTestingApi = createApi({
@@ -168,6 +204,47 @@ export const treatmentTestingApi = createApi({
         };
       },
     }),
+    getProcedureMonthlyStats: builder.query<
+      ApiResponse<{
+        records: ProcedureMonthlyStatsResponse[];
+        summary: { totalCount: number; totalAmount: number };
+      }>,
+      IQueryOptions
+    >({
+      query: options => {
+        const queryParams = generateQueryParams(options);
+        return {
+          url: `analytics/treatments-testing/procedure-monthly-stats?${queryParams}`,
+          method: 'GET',
+        };
+      },
+    }),
+    getOpuFetReports: builder.query<
+      ApiResponse<
+        PaginatedResponse<OpuFetReportsResponse> & {
+          summary: {
+            totalCount: number;
+            byMonth: { month: string; count: number }[];
+          };
+        }
+      >,
+      IQueryOptions & { reportType: 'OPUReport' | 'EmbryoTransferReport' }
+    >({
+      query: options => {
+        const { reportType, ...rest } = options;
+        const queryParams = generateQueryParams({
+          ...rest,
+          filters: {
+            ...(rest.filters || {}),
+            reportType,
+          },
+        });
+        return {
+          url: `analytics/treatments-testing/opu-fet-reports?${queryParams}`,
+          method: 'GET',
+        };
+      },
+    }),
   }),
 });
 
@@ -179,4 +256,6 @@ export const {
   useGetServiceReportsQuery,
   useGetPatientPackageReportsQuery,
   useGetMasterPackageReportsQuery,
+  useGetProcedureMonthlyStatsQuery,
+  useGetOpuFetReportsQuery,
 } = treatmentTestingApi;

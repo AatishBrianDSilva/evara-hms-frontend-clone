@@ -263,9 +263,16 @@ const AppointmentDetailsForm: React.FC<AppointmentDetailsFormProps> = ({
             error={formik.touched.source && Boolean(formik.errors.source)}
             helperText={formik.touched.source && formik.errors.source}
             fullWidth
+            SelectProps={{ displayEmpty: true }}
+            InputLabelProps={{ shrink: true }}
           >
+            <MenuItem value="">
+              <em>Select source</em>
+            </MenuItem>
             {sourcesLoading ? (
-              <MenuItem value="">Loading...</MenuItem>
+              <MenuItem value="" disabled>
+                Loading...
+              </MenuItem>
             ) : (
               sources.map(source => (
                 <MenuItem key={source.name} value={source.name}>

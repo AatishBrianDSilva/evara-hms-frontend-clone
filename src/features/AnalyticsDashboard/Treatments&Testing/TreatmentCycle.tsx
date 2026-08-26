@@ -228,7 +228,7 @@ const AnalyticsTreatmentCycle: React.FC = () => {
     },
     {
       field: 'amount',
-      headerName: 'Amount',
+      headerName: 'Amount (list)',
       flex: 1,
       valueFormatter: params => formatToIndianCurrencyFormat(params.value),
     },
@@ -236,6 +236,24 @@ const AnalyticsTreatmentCycle: React.FC = () => {
       field: 'status',
       headerName: 'Status',
       flex: 1,
+    },
+    {
+      field: 'discount',
+      headerName: 'Discount',
+      flex: 1,
+      valueFormatter: params =>
+        params.value == null || params.value === ''
+          ? '—'
+          : formatToIndianCurrencyFormat(params.value),
+    },
+    {
+      field: 'netBilled',
+      headerName: 'Net Billed',
+      flex: 1,
+      valueFormatter: params =>
+        params.value == null || params.value === ''
+          ? '—'
+          : formatToIndianCurrencyFormat(params.value),
     },
     {
       field: 'actions',
@@ -328,10 +346,26 @@ const AnalyticsTreatmentCycle: React.FC = () => {
         <Box mt={2} display="flex" flexDirection="column" gap={2} width="100%">
           <Box display="flex" justifyContent="space-between" width="100%">
             <Typography variant="h6" fontWeight="bold">
-              Total Amount
+              Total Amount (list)
             </Typography>
             <Typography variant="body1" color="textSecondary">
               {formatToIndianCurrencyFormat(summary?.totalAmount || 0)}
+            </Typography>
+          </Box>
+          <Box display="flex" justifyContent="space-between" width="100%">
+            <Typography variant="h6" fontWeight="bold">
+              Total Discount
+            </Typography>
+            <Typography variant="body1" color="textSecondary">
+              {formatToIndianCurrencyFormat(summary?.totalDiscount || 0)}
+            </Typography>
+          </Box>
+          <Box display="flex" justifyContent="space-between" width="100%">
+            <Typography variant="h6" fontWeight="bold">
+              Total Net Billed
+            </Typography>
+            <Typography variant="body1" color="textSecondary">
+              {formatToIndianCurrencyFormat(summary?.totalNetBilled || 0)}
             </Typography>
           </Box>
         </Box>

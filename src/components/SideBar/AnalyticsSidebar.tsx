@@ -149,6 +149,16 @@ const AnalyticsSidebar: React.FC = () => {
           primaryText: 'Critical Stocks',
           path: '/analytics/pharmacy/critical-stocks',
         },
+        {
+          icon: FiberManualRecordIcon,
+          primaryText: 'Patient Consumption',
+          path: '/analytics/pharmacy/patient-consumption-reports',
+        },
+        {
+          icon: FiberManualRecordIcon,
+          primaryText: 'Item Stock Values',
+          path: '/analytics/pharmacy/item-stock-values',
+        },
       ],
     },
     {
@@ -164,6 +174,21 @@ const AnalyticsSidebar: React.FC = () => {
           icon: FiberManualRecordIcon,
           primaryText: 'Procedure Reports',
           path: '/analytics/treatments-testing/procedure-reports',
+        },
+        {
+          icon: FiberManualRecordIcon,
+          primaryText: 'Procedure Monthly Stats',
+          path: '/analytics/treatments-testing/procedure-monthly-stats',
+        },
+        {
+          icon: FiberManualRecordIcon,
+          primaryText: 'OPU Reports',
+          path: '/analytics/treatments-testing/opu-reports',
+        },
+        {
+          icon: FiberManualRecordIcon,
+          primaryText: 'FET Reports',
+          path: '/analytics/treatments-testing/fet-reports',
         },
         {
           icon: FiberManualRecordIcon,
